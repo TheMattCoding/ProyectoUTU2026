@@ -1,0 +1,128 @@
+@import url("inicio.css");
+
+/* --- Encabezado de la búsqueda --- */
+.search-results-header {
+    width: 100%;
+    max-width: 450px;
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.results-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--bg-dark); /* Texto oscuro para que resalte sobre el fondo blanco */
+    font-family: Arial, sans-serif;
+}
+
+.search-keyword {
+    color: #555555;
+    font-style: italic;
+}
+
+/* --- Lista de Tarjetas --- */
+.tournaments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    width: 100%;
+    max-width: 450px; /* Almeado con el max-width de tus tarjetas de inicio */
+}
+
+/* --- Tarjeta Adaptada a tu Estética --- */
+.tournament-card {
+    background-color: var(--card-bg); /* Color oscuro por defecto del inicio */
+    width: 100%;
+    border-radius: 24px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    height: 180px; /* Altura fija para que todas las islas midan igual */
+    display: flex;
+    flex-direction: column;
+}
+
+/* Contenedor de imagen para manejo mobile-first */
+.card-image-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+/* La imagen se adapta mágicamente sin deformarse */
+.tournament-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Recorta y llena el espacio como un background-size: cover */
+    display: block;
+}
+
+.img-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(0,0,0,0.1));
+}
+
+/* Título de Torneo */
+.card-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.2) 100%);
+    z-index: 2;
+}
+
+/* --- Textos y Botones sobre la imagen --- */
+.tournament-title {
+    position: absolute;
+    top: 24px;
+    left: 24px;
+    margin: 0;
+    font-size: 22px;
+    font-weight: bold;
+    color: var(--white);
+    z-index: 3; /* Por encima de la foto y la capa oscura */
+    font-family: Arial, sans-serif;
+}
+
+/* --- Bloque de Info Inferior Derecho --- */
+.card-info {
+    position: absolute;
+    bottom: 20px;
+    right: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+    z-index: 3; /* Por encima de la foto */
+}
+
+.tournament-date {
+    color: var(--white);
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.btn-more {
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+/* ==========================================================================
+   Media Query para Escala Desktop (Alineado a tus breakpoints del inicio)
+   ========================================================================== */
+@media (min-width: 768px) {
+    .search-results-header, .tournaments-list {
+        max-width: 100%; /* Deja que se expanda en pantallas grandes */
+    }
+    
+    .tournaments-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(450px, 1fr)); /* Se vuelven grilla en PC */
+        gap: 32px;
+    }
+}
