@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SGDM - Plataforma de Torneos</title>
+    
+    <link rel="icon" type="image/png" href="../img/logoapp2.jpeg">
+    
     <link rel="stylesheet" href="../css/inicio.css">
 </head>
 <body>
@@ -17,7 +20,7 @@
         </div>
         
         <nav class="sidebar-nav">
-            <a href="inicio.html" class="sidebar-link">Inicio</a>
+            <a href="inicio.html" class="sidebar-link active">Inicio</a>
             <a href="#" class="sidebar-link">Calendario de torneos</a>
             <a href="#" class="sidebar-link">Crea tu torneo</a>
             <a href="#" class="sidebar-link">Configuración</a>
@@ -36,7 +39,6 @@
     <label for="menu-toggle" class="sidebar-overlay"></label>
 
     <nav class="navbar" aria-label="Navegación principal">
-        
         <label for="menu-toggle" class="nav-button" aria-label="Abrir menú de navegación">
             <div class="hamburger-box">
                 <span class="line"></span>
@@ -86,8 +88,11 @@
     </nav>
 
     <main class="main-container">
-        
-        <section class="news-carousel-card" aria-labelledby="banner-title">
+    
+    <section class="news-carousel-card" aria-labelledby="banner-title">
+        <div class="carousel-inner">
+            <button class="carousel-btn prev-btn" aria-label="Noticia anterior">&#10094;</button>
+            
             <div class="banner-content">
                 <h1 id="banner-title" class="banner-heading">Súmate al próximo torneo de la comunidad</h1>
                 <p class="banner-description">Inscripciones abiertas para la copa de invierno. Miles de jugadores ya están listos para competir.</p>
@@ -97,18 +102,22 @@
                 </div>
             </div>
 
+            <button class="carousel-btn next-btn" aria-label="Siguiente noticia">&#10095;</button>
+
             <div class="carousel-dots" aria-hidden="true">
                 <span class="dot active"></span>
                 <span class="dot"></span>
                 <span class="dot"></span>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <section class="welcome-container" aria-label="Bienvenida">
-            <img src="../img/logoapp.png" alt="Logo SGDM" class="welcome-logo">
-            <h2 class="welcome-text">Bienvenido a SGDM</h2>
-        </section>
+    <section class="welcome-container" aria-label="Bienvenida">
+        <img src="../img/logoapp.png" alt="Logo SGDM" class="welcome-logo">
+        <h2 class="welcome-text">Bienvenido a SGDM</h2>
+    </section>
 
+    <div class="cards-row-wrapper">
         <section class="info-card" aria-labelledby="calendar-title">
             <div class="card-header-row">
                 <h2 id="calendar-title" class="card-main-title">Calendario de torneos</h2>
@@ -124,8 +133,9 @@
             <p class="card-short-desc">Crea tu propia competencia, define las reglas, gestiona los equipos inscritos y comparte el fixture con tus amigos.</p>
             <a href="#" class="card-action-link">Comenzar a crear →</a>
         </section>
+    </div>
 
-    </main>
+</main>
 
     <footer class="main-footer">
         <div class="footer-content">

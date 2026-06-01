@@ -115,14 +115,56 @@
 /* ==========================================================================
    Media Query para Escala Desktop (Alineado a tus breakpoints del inicio)
    ========================================================================== */
-@media (min-width: 768px) {
+
+/* --- TABLET --- */
+@media (min-width: 768px) and (max-width: 1023px) {
     .search-results-header, .tournaments-list {
-        max-width: 100%; /* Deja que se expanda en pantallas grandes */
+        max-width: 100%;
     }
-    
     .tournaments-list {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(450px, 1fr)); /* Se vuelven grilla en PC */
-        gap: 32px;
+        grid-template-columns: 1fr 1fr; /* 2 columnas en tablet */
+        gap: 24px;
+    }
+}
+
+/* --- ESCRITORIO (A partir de 1024px) --- */
+@media (min-width: 1024px) {
+    
+    /* 1. Anulamos el Grid de 2 columnas de la Home en el contenedor principal */
+    .main-container {
+        margin-left: 280px; 
+        width: calc(100% - 280px);
+        max-width: none; 
+        padding: 0; /* 👈 Cambiado a 0 para que el carrusel negro pegue perfecto al menú */
+        background-color: #ffffff !important; /* 👈 Mantenemos el fondo blanco de la página */
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center;
+        gap: 0; 
+    }
+
+    /* 2. El encabezado "Resultados para..." ocupa el 100% arriba */
+    .search-results-header {
+        max-width: 100%;
+        margin-bottom: 10px;
+    }
+    
+    .results-title {
+        font-size: 24px; /* Un poco más grande para destacar en PC */
+    }
+
+    /* 3. La lista pasa a tener exactamente 3 columnas equilibradas */
+    .tournaments-list {
+        max-width: 100%;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr; /* Tres columnas idénticas */
+        gap: 30px; /* Espaciado elegante entre tarjetas */
+        width: 100%;
+    }
+
+    /* 4. Ajuste opcional para las tarjetas en PC */
+    .tournament-card {
+        height: 200px; /* Un poquito más de altura en escritorio para que luzcan las fotos */
     }
 }

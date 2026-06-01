@@ -199,7 +199,7 @@ body {
 .profile-menu-item.logout-item:hover { background-color: rgba(255, 69, 58, 0.1); }
 
 /* ==========================================================================
-   5. Contenedor Principal y Tarjetas Base
+   5. Contenedor Principal y Tarjetas Base (Modo Celular por defecto)
    ========================================================================== */
 .main-container {
     background-color: var(--white); 
@@ -225,6 +225,44 @@ body {
     flex-direction: column;
     align-items: center;
     text-align: center;
+}
+
+/* Flechas ocultas en mobile para no obstruir las acciones táctiles */
+.carousel-btn {
+    display: none; 
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: var(--white);
+    color: #111111;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 18px;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    z-index: 10;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.carousel-btn:hover {
+    background-color: #eeeeee;
+    transform: translateY(-50%) scale(1.05);
+}
+
+.prev-btn { left: 20px; }
+.next-btn { right: 20px; }
+
+/* Contenedor de las tarjetas en Mobile */
+.cards-row-wrapper {
+    width: 100%;
+    max-width: 450px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
 }
 
 .info-card {
@@ -454,61 +492,146 @@ body {
 }
 
 /* ==========================================================================
-   9. Media Queries (Optimización y Escala Desktop)
+   9. Media Queries (Distribución Modular para Tablet y Escritorio)
    ========================================================================== */
-@media (min-width: 768px) {
+
+/* --- TABLET (De 768px a 1023px) --- */
+@media (min-width: 768px) and (max-width: 1023px) {
     .main-container {
-        max-width: 1000px;
+        max-width: 720px;
         margin: 0 auto;
         padding: 40px 24px;
-        gap: 32px;
+        gap: 24px;
     }
 
-    .news-carousel-card, .info-card { 
+    .news-carousel-card, .info-card, .cards-row-wrapper { 
         max-width: 100%; 
     }
     
     .news-carousel-card {
-        flex-direction: row;     
-        padding: 56px 48px;
+        padding: 40px;
         text-align: left;
-        border-radius: 24px;
     }
     
-    .banner-heading { 
-        font-size: 32px; 
-        line-height: 1.2; 
-        margin-bottom: 16px; 
-    }
-    
-    .banner-description { 
-        font-size: 16px; 
-        max-width: 600px; 
-        margin: 0 0 28px 0; 
-    }
-
+    .banner-heading { font-size: 28px; }
+    .banner-description { font-size: 15px; }
     .banner-actions { justify-content: flex-start; }
-    .carousel-dots { bottom: 20px; left: auto; right: 48px; transform: none; }
+    .carousel-dots { bottom: 20px; left: auto; right: 40px; transform: none; }
     
-    .info-card { 
-        padding: 36px 40px; 
-        border-radius: 20px;
-        margin-top: 0; /* Controlado ahora por el gap del contenedor principal */
+    .info-card { padding: 30px; margin-top: 0; }
+    .card-main-title { font-size: 22px; }
+
+    .footer-content { max-width: 720px; }
+}
+
+/* --- ESCRITORIO (A partir de 1024px) --- */
+@media (min-width: 1024px) {
+    
+    body {
+        background-color: #ffffff !important;
     }
 
-    .card-main-title { font-size: 24px;  margin-bottom: 12px; }
-    .card-short-desc { font-size: 15px; max-width: 700px; margin-bottom: 20px; }
-    .card-action-link { font-size: 15px; }
+    /* Fijar la barra lateral estática a la izquierda */
+    .sidebar {
+        left: 0 !important;
+        position: fixed;
+        width: 280px;
+        height: 100vh;
+        box-shadow: 2px 0 15px rgba(0, 0, 0, 0.15);
+        z-index: 100;
+    }
 
+    /* Ocultar disparadores móviles */
+    .close-sidebar-btn,
+    .nav-button,
+    .sidebar-overlay {
+        display: none !important;
+    }
+
+    /* Desplazar Navbar horizontal de forma proporcional */
+    .navbar {
+        left: 280px;
+        width: calc(100% - 280px);
+        padding: 0 40px;
+    }
+
+    /* Contenedor Principal Full-Width respectivo al menú izquierdo */
+    .main-container {
+        margin-left: 280px; 
+        width: calc(100% - 280px);
+        max-width: none; 
+        padding: 0; 
+        background-color: transparent !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 0; 
+    }
+
+    /* Carrusel extendido de extremo a extremo */
+    .news-carousel-card {
+        max-width: 100% !important;
+        width: 100%;
+        border-radius: 0; 
+        padding: 60px 120px; /* Más aire horizontal por las flechas */
+        text-align: center;
+    }
+
+    /* ACTIVACIÓN DE LAS FLECHAS LATERALELES EXCLUSIVO EN PC */
+    .carousel-btn {
+        display: flex;
+        width: 48px;
+        height: 48px;
+        font-size: 22px;
+    }
+    
+    .prev-btn { left: 40px; }
+    .next-btn { right: 40px; }
+
+    /* Sección de Bienvenida Continua */
+    .welcome-container {
+        width: 100%;
+        background-color: #ffffff;
+        padding: 60px 0 20px 0;
+        margin: 0;
+    }
+    
+    .welcome-text {
+        font-size: 22px; 
+    }
+
+    /* Fila Horizontal de las dos islas */
+    .cards-row-wrapper {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        gap: 32px;
+        width: 100%;
+        max-width: 1150px;
+        margin: 0 auto;
+        padding: 20px 40px 70px 40px;
+        background-color: #ffffff;
+    }
+
+    .info-card {
+        flex: 1;
+        max-width: 480px; 
+        margin-top: 0;
+    }
+    
+    /* Desplazar Footer para alinearlo a la zona útil */
+    .main-footer {
+        margin-left: 280px;
+        width: calc(100% - 280px);
+        padding: 30px 40px;
+    }
+    
     .footer-content {
-        max-width: 1000px;
-        flex-direction: row;     
-        justify-content: space-between;
+        max-width: 1150px;
     }
 }
 
 /* ==========================================================================
-   10. Animaciones Criptográficas
+   10. Animaciones
    ========================================================================== */
 @keyframes fadeInDropdown {
     from { opacity: 0; transform: translateY(-8px); }
