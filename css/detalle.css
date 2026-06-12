@@ -1,0 +1,219 @@
+/* ==========================================
+   Estilos exclusivos para la vista de Detalle
+   ========================================== */
+
+.main-content {
+    padding: 20px;
+    flex-grow: 1;
+}
+
+/* Tarjeta Principal (Hero con Imagen) */
+.tournament-hero {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    border-radius: 20px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+}
+
+.tournament-hero img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to top, rgba(0,0,0,0.85) 30%, rgba(0,0,0,0.2));
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 20px;
+    color: white;
+}
+
+.tournament-name {
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.tournament-category {
+    font-size: 0.95rem;
+    color: #e0e0e0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 500;
+}
+
+/* Sección de Información Rápida (Estilo Google Maps) */
+.quick-info-section {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 12px;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.95rem;
+}
+
+/* Icono de ubicación estilo Google Maps (Pin Rojo) */
+.info-item i {
+    color: #e74c3c; 
+    font-size: 1.2rem;
+    width: 20px;
+    text-align: center;
+}
+
+/* Icono de fecha (Azul) */
+.info-item i.fa-calendar-alt {
+    color: #3498db;
+}
+
+/* Bloques de Texto de Detalles */
+.description-block {
+    margin-bottom: 20px;
+}
+
+.section-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.description-text {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: #555;
+}
+
+/* Grilla de Datos Técnicos (Formato de competencia) */
+.tech-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.tech-card {
+    background-color: #f9f9f9;
+    padding: 12px;
+    border-radius: 10px;
+    border-left: 4px solid #2ecc71; /* Detalle verde deportivo */
+}
+
+.tech-card-label {
+    font-size: 0.8rem;
+    color: #777;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+
+.tech-card-value {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+/* Barra de Cupos Disponibles */
+.slots-container {
+    margin-bottom: 30px;
+}
+
+.slots-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 10px;
+    background-color: #e0e0e0;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    width: 50%; /* Controla el llenado (8/16 = 50%) */
+    background-color: #2ecc71;
+    border-radius: 5px;
+}
+
+/* Botón de Inscripción Abierta */
+.btn-register {
+    display: block;
+    width: 100%;
+    background-color: #ffffff;
+    color: #27ae60;
+    border: 2px solid #27ae60;
+    padding: 15px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-align: center;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.btn-register:hover {
+    background-color: #27ae60;
+    color: white;
+}
+
+/* ========================================================
+   Ajustes de contraste para acoplar con inicio.css
+   ======================================================== */
+
+/* Forzamos que el cuerpo de la página de detalle sea claro */
+.phone-container {
+    background-color: #ffffff !important;
+    color: #1a1a1a !important;
+}
+
+/* Ajustes para el contenedor de la información (estilo Maps) */
+.quick-info-section {
+    background-color: #f5f5f5 !important; /* Un gris sutil para que resalte sobre el fondo blanco */
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
+
+/* Aseguramos que el texto de la ubicación y fecha sea gris oscuro/negro */
+.info-item span {
+    color: #333333 !important;
+    font-weight: 500;
+}
+
+/* Ajustes para la sección de descripción */
+.section-title {
+    color: #1a1a1a !important;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-top: 15px;
+    margin-bottom: 8px;
+}
+
+.description-text {
+    color: #555555 !important;
+    line-height: 1.5;
+}
