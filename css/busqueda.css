@@ -1,5 +1,9 @@
 @import url("inicio.css");
 
+/* ==========================================================================
+   1. Estilos Base / Mobile First (Resultados de Búsqueda)
+   ========================================================================== */
+
 /* --- Encabezado de la búsqueda --- */
 .search-results-header {
     width: 100%;
@@ -11,7 +15,7 @@
 .results-title {
     font-size: 18px;
     font-weight: bold;
-    color: var(--bg-dark); /* Texto oscuro para que resalte sobre el fondo blanco */
+    color: var(--bg-dark); /* Texto oscuro sobre el fondo blanco */
     font-family: Arial, sans-serif;
 }
 
@@ -20,29 +24,29 @@
     font-style: italic;
 }
 
-/* --- Lista de Tarjetas --- */
+/* --- Lista de Tarjetas (Contenedor Móvil) --- */
 .tournaments-list {
     display: flex;
     flex-direction: column;
     gap: 24px;
     width: 100%;
-    max-width: 450px; /* Almeado con el max-width de tus tarjetas de inicio */
+    max-width: 450px; 
 }
 
-/* --- Tarjeta Adaptada a tu Estética --- */
+/* --- Tarjeta de Torneo --- */
 .tournament-card {
-    background-color: var(--card-bg); /* Color oscuro por defecto del inicio */
+    background-color: var(--card-bg); 
     width: 100%;
     border-radius: 24px;
     overflow: hidden;
     position: relative;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-    height: 180px; /* Altura fija para que todas las islas midan igual */
+    height: 180px; 
     display: flex;
     flex-direction: column;
 }
 
-/* Contenedor de imagen para manejo mobile-first */
+/* Contenedor de imagen */
 .card-image-wrapper {
     position: absolute;
     top: 0;
@@ -52,11 +56,10 @@
     z-index: 1;
 }
 
-/* La imagen se adapta mágicamente sin deformarse */
 .tournament-img {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Recorta y llena el espacio como un background-size: cover */
+    object-fit: cover; 
     display: block;
 }
 
@@ -66,7 +69,7 @@
     background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(0,0,0,0.1));
 }
 
-/* Título de Torneo */
+/* Capa oscura sobre la imagen para legibilidad */
 .card-overlay {
     position: absolute;
     top: 0;
@@ -77,7 +80,7 @@
     z-index: 2;
 }
 
-/* --- Textos y Botones sobre la imagen --- */
+/* Textos sobre la imagen */
 .tournament-title {
     position: absolute;
     top: 24px;
@@ -86,11 +89,11 @@
     font-size: 22px;
     font-weight: bold;
     color: var(--white);
-    z-index: 3; /* Por encima de la foto y la capa oscura */
+    z-index: 3; 
     font-family: Arial, sans-serif;
 }
 
-/* --- Bloque de Info Inferior Derecho --- */
+/* Bloque de Info Inferior Derecho */
 .card-info {
     position: absolute;
     bottom: 20px;
@@ -99,7 +102,7 @@
     flex-direction: column;
     align-items: flex-end;
     gap: 8px;
-    z-index: 3; /* Por encima de la foto */
+    z-index: 3; 
 }
 
 .tournament-date {
@@ -113,10 +116,8 @@
 }
 
 /* ==========================================================================
-   Media Query para Escala Desktop (Alineado a tus breakpoints del inicio)
+   2. Media Query - Tablet (768px a 1023px)
    ========================================================================== */
-
-/* --- TABLET --- */
 @media (min-width: 768px) and (max-width: 1023px) {
     .search-results-header, .tournaments-list {
         max-width: 100%;
@@ -128,43 +129,48 @@
     }
 }
 
-/* --- ESCRITORIO (A partir de 1024px) --- */
+/* ==========================================================================
+   3. Media Query - Escritorio unificado (A partir de 1024px)
+   ========================================================================== */
 @media (min-width: 1024px) {
-    
-    /* 1. Anulamos el Grid de 2 columnas de la Home en el contenedor principal */
+    /* Reseteamos el contenedor heredado de la home para adaptarlo a la grilla de búsqueda */
     .main-container {
-        margin-left: 280px; 
-        width: calc(100% - 280px);
-        max-width: none; 
-        padding: 0; /* 👈 Cambiado a 0 para que el carrusel negro pegue perfecto al menú */
-        background-color: #ffffff !important; /* 👈 Mantenemos el fondo blanco de la página */
+        width: 100% !important;
+        max-width: none !important;
+        padding: 40px !important;
+        background-color: #ffffff !important;
         display: flex !important;
         flex-direction: column !important;
-        align-items: center;
-        gap: 0; 
+        align-items: flex-start !important; /* Alinea el título "Resultados para..." a la izquierda */
+        gap: 32px !important;
+        margin-left: 0 !important; /* Desactivado: El espacio ya lo genera el padding del body */
     }
 
-    /* 2. El encabezado "Resultados para..." ocupa el 100% arriba */
+    /* El encabezado se estira de manera limpia en PC */
     .search-results-header {
-        max-width: 100%;
-        margin-bottom: 10px;
+        max-width: 1150px !important;
+        width: 100% !important;
+        margin: 0 auto !important;
+        padding: 0 20px !important;
     }
     
     .results-title {
-        font-size: 24px; /* Un poco más grande para destacar en PC */
+        font-size: 26px !important; 
     }
 
-    /* 3. La lista pasa a tener exactamente 3 columnas equilibradas */
+    /* La lista pasa a tener 3 columnas perfectas y centradas */
     .tournaments-list {
-        max-width: 100%;
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr; /* Tres columnas idénticas */
-        gap: 30px; /* Espaciado elegante entre tarjetas */
-        width: 100%;
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr) !important; /* Tres columnas idénticas */
+        gap: 32px !important;
+        width: 100% !important;
+        max-width: 1150px !important;
+        margin: 0 auto !important;
+        padding: 0 20px 40px 20px !important;
     }
 
-    /* 4. Ajuste opcional para las tarjetas en PC */
+    /* Tarjetas optimizadas para pantallas grandes */
     .tournament-card {
-        height: 200px; /* Un poquito más de altura en escritorio para que luzcan las fotos */
+        height: 200px !important; /* Un poco más de altura en PC para lucir las imágenes */
     }
 }
