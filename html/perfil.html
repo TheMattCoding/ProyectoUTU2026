@@ -86,27 +86,48 @@
         </details>
     </nav>
     
-    <main class="main-container" style="max-width: 600px; margin: 40px auto; padding: 20px;">
+   <main class="main-container">
         
-        <!-- Tarjeta de Perfil siguiendo el diseño de tu inicio -->
-        <section class="info-card" style="text-align: center; padding: 40px;">
-            <div class="user-avatar" style="width: 100px; height: 100px; font-size: 50px; margin: 0 auto 20px;">
-                👤
-            </div>
-            <h1 class="card-main-title" style="font-size: 24px;">Nombre de Usuario</h1>
-            <p style="color: #777; margin-bottom: 30px;">usuario@correo.com</p>
+        <div class="profile-layout">
+            
+            <section class="profile-card island-main">
+                <div class="user-profile-info">
+                    <div class="user-avatar-large">
+                        👤
+                    </div>
+                    <div class="user-text-info">
+                        <h1 class="profile-name">Nombre de Usuario</h1>
+                        <p class="profile-email">usuario@correo.com</p>
+                    </div>
+                </div>
 
-            <div style="text-align: left; border-top: 1px solid #eee; padding-top: 20px;">
-                <h2 class="card-main-title">Tus trofeos</h2>
-                <div style="font-size: 30px; margin: 10px 0;">⭐⭐</div>
+                <div class="profile-section trophy-section">
+                    <h2 class="section-title">Tus trofeos</h2>
+                    <div class="trophy-row">🏆🥇🏅</div>
+                </div>
+            </section>
+
+            <div class="sub-islands-row">
+                
+                <section class="profile-card island-sub">
+                    <h2 class="section-title">Tus torneos</h2>
+                    <div class="island-body">
+                        <p class="island-description">Revisa tus inscripciones activas, los fixtures asignados y tus próximas partidas en la comunidad.</p>
+                    </div>
+                    <a href="#" class="card-action-link">Ver torneos activos →</a>
+                </section>
+
+                <section class="profile-card island-sub">
+                    <h2 class="section-title">Historial</h2>
+                    <div class="island-body">
+                        <p class="island-description">Consulta los resultados de tus competencias anteriores, tablas de posiciones y tus estadísticas de juego.</p>
+                    </div>
+                    <a href="#" class="card-action-link">Historial de torneos →</a>
+                </section>
+
             </div>
 
-            <div style="text-align: left; margin-top: 20px;">
-                <h2 class="card-main-title">Tu actividad</h2>
-                <a href="#" class="card-action-link">Torneos activos →</a>
-                <a href="#" class="card-action-link">Historial de torneo →</a>
-            </div>
-        </section>
+        </div>
 
     </main>
 
