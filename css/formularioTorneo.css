@@ -1,25 +1,39 @@
+/* ==========================================================================
+   1. Corrección del Flujo y Adaptación del Body
+   ========================================================================== */
+/* Eliminamos el flex-center del body viejo para que herede el comportamiento 
+   de inicio.css y conviva bien con la .navbar y la .sidebar fixed en PC */
 body {
-    margin: 0;
-    padding: 10px 0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #121212;
-    color: #ffffff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
+    background-color: #ffffff; /* Fondo claro por defecto en celulares según inicio.css */
 }
 
+/* Ajuste del contenedor principal de la aplicación */
+.main-container {
+    width: 100% !important;
+    max-width: none !important;
+    padding: 24px 16px !important;
+    background-color: #ffffff !important; /* Mantiene la coherencia visual */
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 0px !important; /* Desactivamos el gap genérico para controlar el formulario */
+}
+
+/* ==========================================================================
+   2. El Contenedor del Formulario (Hereda la estética oscura de tus tarjetas)
+   ========================================================================== */
 .container {
-    background-color: #1e1e1e;
-    padding: 25px;
-    border-radius: 8px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-    width: 90%;
-    max-width: 450px;
+    background-color: var(--card-bg, #1a1a1a); /* Hereda el color oscuro institucional */
+    padding: 30px 25px;
+    border-radius: 24px; /* Cambiado a 24px para heredar el look de las info-cards */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    width: 100%;
+    max-width: 550px; /* Le damos un poco más de margen por los campos nuevos */
     border: 1px solid #333333;
     box-sizing: border-box;
-    margin: 20px auto;
+    margin: 10px auto 30px auto;
 }
 
 h2 {
@@ -27,13 +41,19 @@ h2 {
     margin-bottom: 25px;
     text-transform: uppercase;
     letter-spacing: 1px;
-    color: #ffffff;
-    border-bottom: 2px solid #ffffff;
+    color: var(--white, #ffffff);
+    border-bottom: 2px solid var(--white, #ffffff);
     padding-bottom: 10px;
+    font-size: 1.5rem;
 }
 
+/* ==========================================================================
+   3. Elementos de los Formularios (Inputs, Selects e Inputs Especiales)
+   ========================================================================== */
 .form-group {
     margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
 }
 
 label {
@@ -45,25 +65,51 @@ label {
 }
 
 input[type="text"],
+input[type="number"],
 input[type="date"],
 input[type="time"],
 select {
     width: 100%;
-    padding: 12px;
+    height: 44px; /* Altura estandarizada y cómoda */
+    padding: 0 12px;
     box-sizing: border-box;
     background-color: #2d2d2d;
-    border: 1px solid #444444;
-    color: #ffffff;
-    border-radius: 4px;
-    font-size: 16px;
+    border: 1px solid var(--search-border, #444444);
+    color: var(--white, #ffffff);
+    border-radius: 10px; /* Bordes más curvos alineados al nuevo diseño */
+    font-size: 15px;
+    outline: none;
     transition: border-color 0.3s ease;
 }
 
-input:focus, select:focus {
+/* Estilos de la nueva Descripción (Textarea) */
+textarea {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    width: 100%;
+    background-color: #2d2d2d;
+    border: 1px solid var(--search-border, #444444);
+    color: var(--white, #ffffff);
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 15px;
     outline: none;
-    border-color: #ffffff;
+    box-sizing: border-box;
+    resize: vertical;
+    transition: border-color 0.3s ease;
 }
 
+input:focus, select:focus, textarea:focus {
+    border-color: var(--white, #ffffff);
+}
+
+/* Input de tipo archivo (Imagen) */
+input[type="file"] {
+    color: #aaaaaa;
+    font-size: 14px;
+    padding: 8px 0;
+}
+
+/* Manejo de columnas (Diseño de escritorio) */
 .form-row {
     display: flex;
     gap: 15px;
@@ -73,6 +119,25 @@ input:focus, select:focus {
     flex: 1;
 }
 
+/* ==========================================================================
+   4. Elementos Nuevos e Integrados (Google Maps)
+   ========================================================================== */
+.map-container {
+    width: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #444444;
+    margin-top: 8px;
+    background-color: #2d2d2d;
+}
+
+.map-container iframe {
+    display: block;
+}
+
+/* ==========================================================================
+   5. Botonera Integrada (Look Premium)
+   ========================================================================== */
 .btn-group {
     display: flex;
     gap: 15px;
@@ -83,8 +148,8 @@ input:focus, select:focus {
     flex: 1;
     padding: 12px;
     border: none;
-    border-radius: 4px;
-    font-size: 16px;
+    border-radius: 20px; /* Botones completamente redondeados tipo píldora */
+    font-size: 14px;
     font-weight: bold;
     cursor: pointer;
     text-transform: uppercase;
@@ -95,39 +160,31 @@ input:focus, select:focus {
     transform: scale(0.98);
 }
 
+/* Botón Crear: Fondo blanco con letras oscuras como los botones integrados de inicio */
 .btn-submit {
-    background-color: #2e7d32;
-    color: #ffffff;
+    background-color: var(--white, #ffffff) !important;
+    color: #111111 !important;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
 
 .btn-submit:hover {
-    background-color: #1b5e20;
+    background-color: #e0e0e0 !important;
 }
 
+/* Botón Cancelar: Transparente con borde blanco */
 .btn-cancel {
-    background-color: #c62828;
-    color: #ffffff;
+    background-color: transparent !important;
+    border: 1.5px solid var(--white, #ffffff) !important;
+    color: var(--white, #ffffff) !important;
 }
 
 .btn-cancel:hover {
-    background-color: #b71c1c;
+    background-color: rgba(255, 255, 255, 0.05) !important;
 }
 
-@media (max-width: 480px) {
-    .form-row {
-        flex-direction: column;
-        gap: 0;
-    }
-
-    .btn-group {
-        flex-direction: column-reverse;
-        gap: 10px;
-    }
-
-    h2 {
-        font-size: 1.3rem;
-    }
-}
+/* ==========================================================================
+   6. Logotipos
+   ========================================================================== */
 .app-logo-container {
     display: flex;
     justify-content: center;
@@ -138,6 +195,7 @@ input:focus, select:focus {
     height: 60px;
     width: auto;
     object-fit: contain;
+    border-radius: 50%;
 }
 
 .company-logo-container {
@@ -152,4 +210,34 @@ input:focus, select:focus {
     height: 35px;
     width: auto;
     object-fit: contain;
+}
+
+/* ==========================================================================
+   7. Adaptación Responsiva (Media Queries)
+   ========================================================================== */
+/* Se activa a menos de 1024px para acoplarse perfecto a la ruptura de inicio.css */
+@media (max-width: 1024px) {
+    .main-container {
+        background-color: #ffffff !important;
+    }
+    
+    .form-row {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .btn-group {
+        flex-direction: column-reverse; /* El de cancelar baja y el de crear sube en móvil */
+        gap: 10px;
+    }
+
+    h2 {
+        font-size: 1.3rem;
+    }
+    
+    .container {
+        width: 100%;
+        border-radius: 20px;
+        padding: 20px 15px;
+    }
 }
