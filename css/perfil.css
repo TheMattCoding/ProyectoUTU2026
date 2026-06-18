@@ -64,3 +64,44 @@
     padding-left: 8px;
     color: #cccccc;
 }
+/* ==========================================================================
+   Agregados exclusivos para la distribución en islas 
+   ========================================================================== */
+
+/* Cambiamos el contenedor para que no clave todo en el centro como un bloque único */
+.main-container {
+    align-items: flex-start; 
+}
+
+/* Contenedor que agrupa todo el diseño del perfil */
+.profile-layout {
+    width: 100%;
+    max-width: 900px; /* Ancho ideal para que las dos sub-islas entren cómodas */
+    display: flex;
+    flex-direction: column;
+    gap: 24px; /* Separación vertical entre la isla de arriba y las de abajo */
+}
+
+/* Modificación quirúrgica para la isla de arriba: rompe el max-width original */
+.island-main {
+    max-width: 100% !important;
+}
+
+/* Contenedor Flex para alinear las dos sub-islas inferiores lado a lado */
+.sub-islands-row {
+    display: flex;
+    gap: 24px; /* Separación horizontal entre ambas sub-islas */
+    width: 100%;
+}
+
+/* Forzamos a las sub-islas a repartirse el espacio equitativamente (50% cada una) */
+.sub-islands-row .profile-card {
+    flex: 1;
+}
+
+/* Responsive para celulares: se apilan una abajo de la otra si el espacio es chico */
+@media (max-width: 768px) {
+    .sub-islands-row {
+        flex-direction: column;
+    }
+}
