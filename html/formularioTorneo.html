@@ -9,6 +9,83 @@
     <link rel="stylesheet" href="../css/formularioTorneo.css">
 </head>
 <body>
+    
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <span class="sidebar-title">Menú</span>
+            <label for="menu-toggle" class="close-sidebar-btn" aria-label="Cerrar menú">&times;</label>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <a href="inicio.html" class="sidebar-link active">Inicio</a>
+            <a href="#" class="sidebar-link">Calendario de torneos</a>
+            <a href="formularioTorneo.html" class="sidebar-link">Crea tu torneo</a>
+            <a href="#" class="sidebar-link">Configuración</a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="theme-switch-container">
+                <span class="theme-label">Modo Oscuro</span>
+                <button class="theme-toggle-btn" aria-label="Cambiar tema">
+                    <span class="theme-toggle-icon">🌙</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <label for="menu-toggle" class="sidebar-overlay"></label>
+
+    <nav class="navbar" aria-label="Navegación principal">
+        <label for="menu-toggle" class="nav-button" aria-label="Abrir menú de navegación">
+            <div class="hamburger-box">
+                <span class="line"></span>
+                <span class="line"></span>
+                <span class="line"></span>
+            </div>
+        </label>
+
+        <form action="busquedaTorneo.html" method="GET" class="search-form" style="display: flex; flex: 1; max-width: 420px; margin: 0 12px;">
+            <div class="search-container" style="margin: 0; width: 100%;">
+                <svg class="search-google-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" fill="#777777"/>
+                </svg>
+                <input type="text" class="search-input" placeholder="Buscar un torneo" aria-label="Buscar torneos" name="query">
+            </div>
+        </form>
+
+        <details class="profile-dropdown">
+            <summary class="profile-dropdown-button" aria-label="Menú de usuario">
+                <div class="user-avatar">
+                    <span class="avatar-icon">👤</span>
+                </div>
+            </summary>
+            
+            <div class="profile-menu-card">
+                <div class="profile-menu-header">
+                    <span class="profile-menu-name">Usuario</span>
+                </div>
+                <div class="profile-menu-divider"></div>
+                <nav class="profile-menu-links">
+                    <a href="login.html" class="profile-menu-item">
+                        <span class="item-icon">➜]</span> Iniciar sesión
+                    </a>
+                    <a href="perfil.html" class="profile-menu-item">
+                        <span class="item-icon">👤</span> Perfil
+                    </a>
+                    <a href="#" class="profile-menu-item">
+                        <span class="item-icon">⚙️</span> Configuración
+                    </a>
+                    <div class="profile-menu-divider"></div>
+                    <a href="#" class="profile-menu-item logout-item">
+                        <span class="item-icon">🚪</span> Cierre de sesión
+                    </a>
+                </nav>
+            </div>
+        </details>
+    </nav>
+
+    <main class="main-container">
+    
 
     <input type="checkbox" id="menu-toggle" class="menu-checkbox">
 
