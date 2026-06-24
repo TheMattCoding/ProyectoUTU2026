@@ -1,0 +1,396 @@
+/* ==========================================================================
+   Configuración y Layout de la Pantalla de Ajustes
+   ========================================================================== */
+
+/* Ajuste general para centrar el bloque principal */
+.settings-wrapper {
+    width: 100%;
+    max-width: 450px; /* Consistencia estricta con el carrusel y las islas */
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Título de la sección */
+.settings-title {
+    font-size: 22px;
+    font-weight: bold;
+    color: #111111; /* Color oscuro porque el fondo del main es blanco */
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Pestañas de navegación interna (Mobile por defecto) */
+.settings-tabs {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+}
+
+.tab-btn {
+    background-color: #f1f1f1;
+    border: 1px solid #e0e0e0;
+    color: #555555;
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s ease;
+}
+
+.tab-btn:hover {
+    background-color: #e5e5e5;
+    color: #111111;
+}
+
+.tab-btn.active {
+    background-color: #111111;
+    border-color: #111111;
+    color: #ffffff;
+}
+
+/* Tarjeta contenedora de los formularios (Estilo Isla Negra) */
+.settings-content-card {
+    background-color: var(--card-bg); /* #1a1a1a */
+    border-radius: 24px;
+    padding: 24px 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+}
+
+/* Secciones internas */
+.settings-section {
+    display: flex;
+    flex-direction: column;
+}
+
+.section-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--white);
+    margin-bottom: 4px;
+}
+
+.section-subtitle {
+    font-size: 12.5px;
+    color: #aaaaaa;
+    margin-bottom: 20px;
+    line-height: 1.4;
+}
+
+/* Divisor estético */
+.settings-divider {
+    height: 1px;
+    background-color: #2c2c2e;
+    width: 100%;
+}
+
+/* Formularios y campos de entrada */
+.settings-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+.form-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: #cccccc;
+}
+
+.form-control-input {
+    width: 100%;
+    height: 42px;
+    padding: 0 14px;
+    background-color: #222222;
+    border: 1.5px solid #444444;
+    border-radius: 10px;
+    color: var(--white);
+    font-size: 13.5px;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.form-control-input:focus {
+    border-color: #777777;
+}
+
+.form-control-input::placeholder {
+    color: #555555;
+}
+
+/* Botón de acción (Estética del proyecto: botón integrado blanco) */
+.btn-save {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--white);
+    color: #111111;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: bold;
+    min-height: 38px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    align-self: flex-start;
+    transition: background-color 0.2s ease;
+}
+
+.btn-save:hover {
+    background-color: #e0e0e0;
+}
+
+
+/* ==========================================================================
+   MEDIA QUERY: ESCRITORIO (>= 1024px)
+   ========================================================================== */
+@media (min-width: 1024px) {
+    .settings-wrapper {
+        max-width: 1150px; /* Alineación perfecta con el resto del dashboard */
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 32px;
+    }
+
+    /* En PC la barra interna se vuelve una columna fija a la izquierda */
+    .settings-tabs {
+        width: 260px;
+        flex-shrink: 0;
+        position: sticky;
+        top: 100px; /* Se queda fija al hacer scroll por debajo de la navbar */
+    }
+
+    .settings-title {
+        font-size: 26px;
+        margin-bottom: 16px;
+    }
+
+    .tab-btn {
+        padding: 14px 20px;
+        font-size: 14.5px;
+    }
+
+    /* La tarjeta de los formularios se expande y toma el resto del espacio */
+    .settings-content-card {
+        flex: 1;
+        padding: 40px;
+        border-radius: 20px;
+    }
+
+    /* Grid de inputs en paralelo para contraseñas en escritorio */
+    .form-row-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        width: 100%;
+    }
+
+    .section-title {
+        font-size: 20px;
+    }
+
+    .btn-save {
+        padding: 10px 32px;
+    }
+}
+/* Clase para ocultar las secciones inactivas */
+.settings-section.hide {
+    display: none !important;
+}
+
+/* Como ahora se alterna de pantalla, removemos el divisor fijo */
+.settings-divider {
+    display: none;
+}
+/* Campo de texto extendido (Bio) */
+.form-control-textarea {
+    width: 100%;
+    min-height: 100px;
+    padding: 12px 14px;
+    background-color: #222222;
+    border: 1.5px solid #444444;
+    border-radius: 10px;
+    color: var(--white);
+    font-size: 13.5px;
+    outline: none;
+    resize: vertical;
+    font-family: Arial, sans-serif;
+}
+.form-control-textarea:focus { border-color: #777777; }
+
+/* Selectores de menú (Menús desplegables de Preferencias) */
+.form-control-select {
+    width: 100%;
+    height: 42px;
+    padding: 0 14px;
+    background-color: #222222;
+    border: 1.5px solid #444444;
+    border-radius: 10px;
+    color: var(--white);
+    font-size: 13.5px;
+    outline: none;
+    cursor: pointer;
+}
+
+/* Gestión del Avatar dentro de Configuración */
+.avatar-edit-container {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 8px;
+}
+.big-avatar {
+    width: 60px !important;
+    height: 60px !important;
+    background-color: #2c2c2e;
+}
+.big-avatar .avatar-icon { font-size: 28px; }
+
+/* Botón secundario pequeño */
+.btn-secondary-sm {
+    background-color: #2c2c2e;
+    color: var(--white);
+    border: 1px solid #444444;
+    padding: 6px 14px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.btn-secondary-sm:hover { background-color: #3a3a3c; }
+
+/* Agrupaciones para las filas de opciones con checkbox/switch */
+.checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 10px 0;
+    border-bottom: 1px solid #222222;
+}
+.checkbox-group:last-of-type { border-bottom: none; }
+.checkbox-desc {
+    font-size: 12px;
+    color: #888888;
+    padding-left: 0;
+}
+
+/* Estructura del Switch Desplazable Estilo iOS/Moderno */
+.switch-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--white);
+    font-weight: 500;
+}
+.switch-container input { display: none; }
+
+/* Si preferís usar checkboxes comunes podés omitir el slider, pero el switch le da categoría */
+.switch-container .slider {
+    width: 34px;
+    height: 18px;
+    background-color: #444444;
+    border-radius: 9px;
+    position: relative;
+    transition: background-color 0.2s ease;
+    display: inline-block;
+}
+.switch-container .slider::before {
+    content: "";
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    left: 2px;
+    top: 2px;
+    background-color: var(--white);
+    border-radius: 50%;
+    transition: transform 0.2s ease;
+}
+.switch-container input:checked + .slider { background-color: var(--white); }
+.switch-container input:checked + .slider::before {
+    transform: translateX(16px);
+    background-color: #111111;
+}
+
+/* En Escritorio, ordenamos los inputs en paralelo si es necesario */
+@media (min-width: 1024px) {
+    .checkbox-desc { padding-left: 0; }
+}
+/* Contenedor de acciones con soporte para separar botones */
+.form-actions.space-between {
+    display: flex;
+    flex-direction: column; /* En mobile se apilan por espacio */
+    gap: 12px;
+    width: 100%;
+}
+
+/* Botón de peligro (Borrar cuenta) */
+.btn-danger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #ff453a; /* Rojo vibrante estilo iOS/Dark */
+    color: var(--white);
+    border: none;
+    padding: 10px 24px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: bold;
+    min-height: 38px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(255, 69, 58, 0.2);
+    transition: background-color 0.2s ease;
+    align-self: flex-start; /* Por defecto en mobile hereda la izquierda */
+}
+
+.btn-danger:hover {
+    background-color: #ff3b30; /* Un rojo un toque más oscuro al pasar el mouse */
+}
+
+/* ==========================================================================
+   Ajuste para Escritorio (Dentro o abajo de tu Media Query de >= 1024px)
+   ========================================================================== */
+@media (min-width: 1024px) {
+    .form-actions.space-between {
+        flex-direction: row; /* Se ponen en la misma línea */
+        justify-content: space-between; /* Uno a cada extremo */
+        align-items: center;
+    }
+    
+    .btn-danger {
+        align-self: auto; /* Remueve el alineado a la izquierda automático */
+    }
+}
+/* Botón destructivo integrado perfectamente en la lista de pestañas */
+.tab-btn.btn-tab-danger {
+    background-color: #ff453a; /* Rojo vibrante estilo iOS/Dark */
+    border: 1px solid #ff453a;
+    color: var(--white);
+    font-weight: bold;
+    margin-top: 12px; /* Un pequeño espacio extra para separarlo de 'Preferencias' */
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+/* Efecto hover manteniendo la consistencia de interacción */
+.tab-btn.btn-tab-danger:hover {
+    background-color: #ff3b30; /* Un rojo un toque más oscuro al pasar el mouse */
+    border-color: #ff3b30;
+    color: var(--white);
+}
