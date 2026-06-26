@@ -556,11 +556,19 @@ body {
         width: 100% !important;
         max-width: 100% !important;
         padding: 0 40px !important;
+        /* CAMBIO: Evita que Flexbox separe los elementos con aire en el medio */
+        justify-content: flex-start !important; 
     }
 
     /* Corrección del flujo horizontal de notificaciones en escritorio */
     .notifications-dropdown {
-        margin-left: 0; 
+        /* CAMBIO: Actúa como imán para empujar campana + perfil juntos a la derecha */
+        margin-left: auto !important; 
+    }
+
+    .profile-dropdown {
+        /* CAMBIO: Mantiene una separación fija y elegante con la campana */
+        margin-left: 16px !important;
     }
 
     .notifications-menu-card {

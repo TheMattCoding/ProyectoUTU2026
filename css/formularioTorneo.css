@@ -1,33 +1,26 @@
 /* ==========================================================================
-   1. Integración con el Contenedor de inicio.css
+   1. Configuración de Tipografía y Estructura de Isla
    ========================================================================== */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* Modificamos el contenedor general para centrar horizontalmente */
+/* Ajustes del contenedor principal sin romper la cascada base de la app */
 .main-container {
-    width: 100% !important;
-    max-width: none !important;
-    padding: 20px 40px !important;
-    background-color: #ffffff !important; /* Mantiene el fondo de la app */
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    justify-content: flex-start !important;
+    background-color: #ffffff !important; /* Mantiene el fondo limpio en PC */
 }
 
-/* LA ISLA: Ahora es ancha (1050px) para usar los laterales y no generar scroll vertical */
+/* LA ISLA: Contenedor oscuro centrado y responsivo */
 .container {
-    background-color: var(--card-bg, #1a1a1a) !important;
-    padding: 25px 35px !important;
-    border-radius: 24px !important;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5) !important;
-    width: 100% !important;
-    max-width: 1050px !important; 
-    border: 1px solid #333333 !important;
-    box-sizing: border-box !important;
-    margin: 10px auto 30px auto !important;
+    background-color: var(--card-bg, #1a1a1a);
+    padding: 25px 35px;
+    border-radius: 24px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+    width: 100%;
+    max-width: 1050px; 
+    border: 1px solid #333333;
+    box-sizing: border-box;
+    margin: 10px auto 30px auto;
 }
 
 /* ==========================================================================
@@ -58,10 +51,10 @@ body {
 }
 
 /* ==========================================================================
-   3. Inputs, Selects y Textarea Estilizados (Estética Oscura Original)
+   3. Inputs, Selects y Textarea Estilizados (Exclusivos del Formulario)
    ========================================================================== */
 .form-group {
-    margin-bottom: 12px; /* Espaciado compacto para ganar altura */
+    margin-bottom: 12px; 
     display: flex;
     flex-direction: column;
 }
@@ -74,11 +67,13 @@ label {
     color: #aaaaaa;
 }
 
-input[type="text"],
-input[type="number"],
-input[type="date"],
-input[type="time"],
-select, textarea {
+/* CAMBIO CRÍTICO: Agregamos ".container form" antes para no pisar el buscador de la navbar */
+.container form input[type="text"],
+.container form input[type="number"],
+.container form input[type="date"],
+.container form input[type="time"],
+.container form select, 
+.container form textarea {
     width: 100%;
     box-sizing: border-box;
     background-color: #2d2d2d;
@@ -90,16 +85,16 @@ select, textarea {
     transition: border-color 0.3s ease;
 }
 
-input[type="text"],
-input[type="number"],
-input[type="date"],
-input[type="time"],
-select {
+.container form input[type="text"],
+.container form input[type="number"],
+.container form input[type="date"],
+.container form input[type="time"],
+.container form select {
     height: 40px;
     padding: 0 12px;
 }
 
-textarea {
+.container form textarea {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     padding: 12px;
     height: 100%;
@@ -107,7 +102,9 @@ textarea {
     resize: none;
 }
 
-input:focus, select:focus, textarea:focus {
+.container form input:focus, 
+.container form select:focus, 
+.container form textarea:focus {
     border-color: var(--white, #ffffff);
 }
 
@@ -117,20 +114,12 @@ input:focus, select:focus, textarea:focus {
     width: 100%;
 }
 
-.flex-1 { flex: 1; }
-
-.map-container {
-    width: 100%;
-    border-radius: 14px;
-    overflow: hidden;
-    border: 1px solid #444444;
-    background-color: #2d2d2d;
+.flex-1 { 
+    flex: 1; 
 }
 
-.map-container iframe { display: block; }
-
 /* ==========================================================================
-   4. Botones y Ajuste Definitivo del Buscador (Lupa)
+   4. Botones y Ajustes de Cierre
    ========================================================================== */
 .btn-group {
     display: flex;
@@ -151,43 +140,50 @@ input:focus, select:focus, textarea:focus {
     transition: background-color 0.3s ease, transform 0.1s ease;
 }
 
-.btn:active { transform: scale(0.98); }
+.btn:active { 
+    transform: scale(0.98); 
+}
 
 .btn-submit {
-    background-color: var(--white, #ffffff) !important;
-    color: #111111 !important;
+    background-color: var(--white, #ffffff);
+    color: #111111;
 }
-.btn-submit:hover { background-color: #e0e0e0 !important; }
+
+.btn-submit:hover { 
+    background-color: #e0e0e0; 
+}
 
 .btn-cancel {
-    background-color: transparent !important;
-    border: 1.5px solid var(--white, #ffffff) !important;
-    color: var(--white, #ffffff) !important;
+    background-color: transparent;
+    border: 1.5px solid var(--white, #ffffff);
+    color: var(--white, #ffffff);
 }
 
-.company-logo-container {
-    display: flex;
-    justify-content: center;
-    margin-top: 15px;
-    border-top: 1px solid #333333;
-    padding-top: 12px;
+.btn-cancel:hover {
+    background-color: rgba(255, 255, 255, 0.05);
 }
-.company-logo { height: 28px; width: auto; opacity: 0.7; }
-
-/* REGLAS DE CONTROL PARA LA NAVBAR (Arregla la superposición del buscador) */
-.search-form { display: flex !important; flex: 1 !important; max-width: 420px !important; margin: 0 24px !important; }
-.search-container { display: flex !important; position: relative !important; align-items: center !important; width: 100% !important; }
-.search-input { width: 100% !important; height: 38px !important; padding: 0 15px 0 45px !important; }
-.search-google-icon { position: absolute !important; left: 16px !important; top: 50% !important; transform: translateY(-50%) !important; width: 18px !important; height: 18px !important; }
 
 /* ==========================================================================
-   5. Responsivo Móvil (Vuelve a una sola columna en celulares)
+   5. Responsivo Móvil (Colapsa a una sola columna en celulares)
    ========================================================================== */
 @media (max-width: 1024px) {
-    .main-container { padding: 15px 12px !important; }
-    .container { padding: 20px 18px !important; border-radius: 20px !important; }
-    .form-flex-columns { flex-direction: column; gap: 0; }
-    .form-row { flex-direction: column; gap: 0; }
-    textarea { min-height: 100px; }
-    .btn-group { flex-direction: column-reverse; gap: 10px; }
+    .container { 
+        padding: 20px 18px; 
+        border-radius: 20px; 
+    }
+    .form-flex-columns { 
+        flex-direction: column; 
+        gap: 0; 
+    }
+    .form-row { 
+        flex-direction: column; 
+        gap: 0; 
+    }
+    textarea { 
+        min-height: 120px; 
+    }
+    .btn-group { 
+        flex-direction: column-reverse; 
+        gap: 10px; 
+    }
 }

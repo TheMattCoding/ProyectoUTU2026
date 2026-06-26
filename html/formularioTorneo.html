@@ -9,7 +9,6 @@
     
     <link rel="stylesheet" href="../css/inicio.css">
     <link rel="stylesheet" href="../css/formularioTorneo.css">
-    
 </head>
 <body>
 
@@ -22,9 +21,10 @@
         </div>
         
         <nav class="sidebar-nav">
-            <a href="inicio.html" class="sidebar-link active">Inicio</a>
-            <a href="#" class="sidebar-link">Calendario de torneos</a>
-            <a href="formularioTorneo.html" class="sidebar-link">Crea tu torneo</a>
+            <a href="inicio.html" class="sidebar-link">Inicio</a>
+            <a href="calendario.html" class="sidebar-link">Calendario de torneos</a>
+            <a href="formularioTorneo.html" class="sidebar-link active">Crea tu torneo</a>
+            <a href="organizador.html" class="sidebar-link active-link">Panel Organizador</a>
             <a href="configuracion.html" class="sidebar-link">Configuración</a>
         </nav>
 
@@ -58,6 +58,40 @@
             </div>
         </form>
 
+        <details class="notifications-dropdown">
+            <summary class="notifications-dropdown-button" aria-haspopup="true" aria-label="Notificaciones">
+                <div class="notifications-icon-wrapper">
+                    <svg class="bell-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z" fill="#cccccc"/>
+                    </svg>
+                    <span class="notification-dot"></span>
+                </div>
+            </summary>
+            
+            <div class="notifications-menu-card">
+                <div class="notifications-menu-header">
+                    <span class="notifications-menu-title">Notificaciones</span>
+                </div>
+                <div class="notifications-menu-divider"></div>
+                <div class="notifications-menu-list">
+                    <a href="#" class="notification-item unread">
+                        <div class="noti-indicator"></div>
+                        <div class="noti-content">
+                            <p class="noti-text">Tu inscripción para la <strong>Copa de Invierno</strong> ha sido confirmada exitosamente.</p>
+                            <span class="noti-time">Hace 10 min</span>
+                        </div>
+                    </a>
+                    <a href="#" class="notification-item">
+                        <div class="noti-indicator"></div>
+                        <div class="noti-content">
+                            <p class="noti-text">El fixture del <strong>Torneo Relámpago</strong> ya se encuentra disponible.</p>
+                            <span class="noti-time">Hace 2 horas</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </details>
+
         <details class="profile-dropdown">
             <summary class="profile-dropdown-button" aria-label="Menú de usuario">
                 <div class="user-avatar">
@@ -77,9 +111,6 @@
                     <a href="perfil.html" class="profile-menu-item">
                         <span class="item-icon">👤</span> Perfil
                     </a>
-                    <a href="#" class="profile-menu-item">
-                        <span class="item-icon">⚙️</span> Configuración
-                    </a>
                     <div class="profile-menu-divider"></div>
                     <a href="#" class="profile-menu-item logout-item">
                         <span class="item-icon">🚪</span> Cierre de sesión
@@ -89,123 +120,87 @@
         </details>
     </nav>
 
-    <div class="main-container">
-    <div class="container">
-        <div class="app-logo-container" style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px; border-bottom: 2px solid var(--white); padding-bottom: 10px;">
-            <img src="../img/logoapp2.jpeg" alt="Logo" class="app-logo" style="height: 45px; width: auto; border-radius: 50%;">
-            <h2 style="margin: 0; border: none; padding: 0; font-size: 1.4rem;">CREAR NUEVO TORNEO</h2>
+    <main class="main-container">
+        <div class="container">
+            <div class="app-logo-container" style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px; border-bottom: 2px solid var(--white); padding-bottom: 10px;">
+                <img src="../img/logoapp2.jpeg" alt="Logo" class="app-logo" style="height: 45px; width: auto; border-radius: 50%;">
+                <h2 style="margin: 0; border: none; padding: 0; font-size: 1.4rem;">CREAR NUEVO TORNEO</h2>
+            </div>
+
+            <form action="#" method="POST">
+                <div class="form-flex-columns">
+                    <div class="col-form">
+                        <div class="form-group">
+                            <label for="nombre">Nombre del Torneo</label>
+                            <input type="text" id="nombre" placeholder="Ej: Torneo Relámpago" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="disciplina">Disciplina</label>
+                            <select id="disciplina" required>
+                                <option value="" disabled selected>Seleccione una opción</option>
+                                <option value="futbol">Fútbol</option>
+                                <option value="basquet">Básquetbol</option>
+                            </select>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group flex-1">
+                                <label for="formato">Formato de Clasificación</label>
+                                <select id="formato" required>
+                                    <option value="" disabled selected>Seleccione el formato</option>
+                                    <option value="eliminatoria">Eliminación directa</option>
+                                    <option value="liga">Liga (Todos contra todos)</option>
+                                </select>
+                            </div>
+                            <div class="form-group flex-1">
+                                <label for="modalidad">Modalidad</label>
+                                <select id="modalidad" required>
+                                    <option value="equipos">Por Equipos</option>
+                                    <option value="individual">Individual</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group flex-1">
+                                <label for="fecha">Fecha de Inicio</label>
+                                <input type="date" id="fecha" required>
+                            </div>
+                            <div class="form-group flex-1">
+                                <label for="hora">Hora de Inicio</label>
+                                <input type="time" id="hora" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cantidad">Cantidad de Equipos</label>
+                            <input type="number" id="cantidad" placeholder="Ej: 16">
+                        </div>
+                    </div>
+
+                    <div class="col-form flex-column-right">
+                        <div class="form-group textarea-container">
+                            <label for="descripcion">Descripción del Torneo</label>
+                            <textarea id="descripcion" placeholder="Escribe las reglas o detalles del torneo..."></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Ubicación del Torneo</label>
+                            <div class="map-container">
+                                <iframe src="https://maps.google.com/maps?q=Montevideo&t=&z=13&ie=UTF8&iwloc=&output=embed" width="100%" height="150" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <button type="button" class="btn btn-cancel">Cancelar</button>
+                    <button type="submit" class="btn btn-submit">Crear Torneo</button>
+                </div>
+            </form>
         </div>
-        <form action="#" method="POST">
-             <div class="form-flex-columns">
-                <div class="col-form">
-                    <div class="form-group">
-                        <label for="nombre">Nombre del Torneo</label>
-                        <input type="text" id="nombre" placeholder="Ej: Torneo Relámpago" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="disciplina">Disciplina</label>
-                        <select id="disciplina" required>
-                            <option value="" disabled selected>Seleccione una opción</option>
-                            <option value="futbol">Fútbol</option>
-                            <option value="basquet">Básquetbol</option>
-                        </select>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group flex-1">
-                            <label for="formato">Formato de Clasificación</label>
-                            <select id="formato" required>
-                                <option value="" disabled selected>Seleccione el formato</option>
-                            </select>
-                        </div>
-                        <div class="form-group flex-1">
-                            <label for="modalidad">Modalidad</label>
-                            <select id="modalidad" required>
-                                <option value="equipos">Por Equipos</option>
-                                <option value="individual">Individual</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-
-                        <div class="form-group flex-1">
-                            <label for="fecha">Fecha de Inicio</label>
-                            <input type="date" id="fecha" required>
-                        </div>
-
-                        <div class="form-group flex-1">
-                            <label for="hora">Hora de Inicio</label>
-                            <input type="time" id="hora" required>
-                        </div>
-
-                    </div>
-
-
-
-                    <div class="form-group">
-
-                        <label for="cantidad">Cantidad de Equipos</label>
-
-                        <input type="number" id="cantidad" placeholder="Ej: 16">
-
-                    </div>
-
-                </div>
-
-
-
-                <div class="col-form flex-column-right">
-
-                    <div class="form-group textarea-container">
-
-                        <label for="descripcion">Descripción del Torneo</label>
-
-                        <textarea id="descripcion" placeholder="Escribe las reglas o detalles del torneo..."></textarea>
-
-                    </div>
-
-
-
-                    <div class="form-group">
-
-                        <label>Ubicación del Torneo</label>
-
-                        <div class="map-container">
-
-                            <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d13091.751336906207!2d-56.16012480000001!3d-34.9079296!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1ses!2suy!4v1718890000000!5m2!1ses!2suy" width="100%" height="150" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-
-            </div>
-
-
-
-            <div class="btn-group">
-
-                <button type="button" class="btn btn-cancel">Cancelar</button>
-
-                <button type="submit" class="btn btn-submit">Crear Torneo</button>
-
-            </div>
-
-
-
-        </form>
-
-
-
-
-    </div>
-
-
-
-</div>
+    </main>
 
     <footer class="main-footer">
         <div class="footer-content">

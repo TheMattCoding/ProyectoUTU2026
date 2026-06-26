@@ -4,12 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perfil de Usuario - SGDM</title>
-    <!-- Mantenemos el mismo CSS de inicio para asegurar diseño coherente -->
+    
+    <link rel="icon" type="image/png" href="../img/logoapp2.jpeg">
+    
     <link rel="stylesheet" href="../css/inicio.css">
     <link rel="stylesheet" href="../css/perfil.css">
 </head>
 <body>
-    <!-- Incluimos el mismo Header/Navbar que en inicio.html -->
+
     <input type="checkbox" id="menu-toggle" class="menu-checkbox">
 
     <div class="sidebar">
@@ -19,9 +21,10 @@
         </div>
         
         <nav class="sidebar-nav">
-            <a href="inicio.html" class="sidebar-link active">Inicio</a>
-            <a href="#" class="sidebar-link">Calendario de torneos</a>
+            <a href="inicio.html" class="sidebar-link">Inicio</a>
+            <a href="calendario.html" class="sidebar-link">Calendario de torneos</a>
             <a href="formularioTorneo.html" class="sidebar-link">Crea tu torneo</a>
+            <a href="organizador.html" class="sidebar-link active-link">Panel Organizador</a>
             <a href="configuracion.html" class="sidebar-link">Configuración</a>
         </nav>
 
@@ -55,6 +58,33 @@
             </div>
         </form>
 
+        <details class="notifications-dropdown">
+            <summary class="notifications-dropdown-button" aria-haspopup="true" aria-label="Notificaciones">
+                <div class="notifications-icon-wrapper">
+                    <svg class="bell-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z" fill="#cccccc"/>
+                    </svg>
+                    <span class="notification-dot"></span>
+                </div>
+            </summary>
+            
+            <div class="notifications-menu-card">
+                <div class="notifications-menu-header">
+                    <span class="notifications-menu-title">Notificaciones</span>
+                </div>
+                <div class="notifications-menu-divider"></div>
+                <div class="notifications-menu-list">
+                    <a href="#" class="notification-item unread">
+                        <div class="noti-indicator"></div>
+                        <div class="noti-content">
+                            <p class="noti-text">Tu inscripción para la <strong>Copa de Invierno</strong> ha sido confirmada exitosamente.</p>
+                            <span class="noti-time">Hace 10 min</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </details>
+
         <details class="profile-dropdown">
             <summary class="profile-dropdown-button" aria-label="Menú de usuario">
                 <div class="user-avatar">
@@ -74,9 +104,6 @@
                     <a href="perfil.html" class="profile-menu-item">
                         <span class="item-icon">👤</span> Perfil
                     </a>
-                    <a href="configuracion.html" class="profile-menu-item">
-                        <span class="item-icon">⚙️</span> Configuración
-                    </a>
                     <div class="profile-menu-divider"></div>
                     <a href="#" class="profile-menu-item logout-item">
                         <span class="item-icon">🚪</span> Cierre de sesión
@@ -86,8 +113,7 @@
         </details>
     </nav>
     
-   <main class="main-container">
-        
+    <main class="main-container">
         <div class="profile-layout">
             
             <section class="profile-card island-main">
@@ -103,7 +129,7 @@
 
                 <div class="profile-section trophy-section">
                     <h2 class="section-title">Tus trofeos</h2>
-                    <div class="trophy-row">🏆🥇🏅</div>
+                    <div class="trophy-row">🏆 🥇 🏅</div>
                 </div>
             </section>
 
@@ -126,12 +152,9 @@
                 </section>
 
             </div>
-
         </div>
-
     </main>
 
-    <!-- Footer igual al de inicio -->
     <footer class="main-footer">
         <div class="footer-content">
             <img src="../img/epsilonSoftware2.png" alt="Logo Epsilon Software" class="footer-logo">
