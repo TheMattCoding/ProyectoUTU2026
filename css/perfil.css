@@ -99,6 +99,15 @@
     flex: 1;
 }
 
+/* Controla el tamaño del SVG dentro de la lista de opciones */
+.profile-menu-card .avatar-svg {
+    width: 16px;           /* Achica el lienzo gigante a un tamaño de emoji estándar */
+    height: 16px;          /* Mantiene la proporción cuadrada */
+    fill: currentColor;    /* IMPORTANTE: Hace que el icono adopte el mismo color del texto (gris/blanco) */
+    margin-right: 8px;     /* Separa el icono del texto "Perfil" para que no quede pegado */
+    vertical-align: middle; /* Centra el icono verticalmente respecto al texto de la derecha */
+}
+
 /* Responsive para celulares: se apilan una abajo de la otra si el espacio es chico */
 @media (max-width: 768px) {
     .sub-islands-row {

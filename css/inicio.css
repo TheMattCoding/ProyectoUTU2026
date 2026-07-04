@@ -417,6 +417,15 @@ body {
 .footer-copyright { color: #555555; font-size: 10px; }
 
 
+/* Controla el tamaño del SVG dentro de la lista de opciones */
+.profile-menu-card .avatar-svg {
+    width: 16px;           /* Achica el lienzo gigante a un tamaño de emoji estándar */
+    height: 16px;          /* Mantiene la proporción cuadrada */
+    fill: currentColor;    /* IMPORTANTE: Hace que el icono adopte el mismo color del texto (gris/blanco) */
+    margin-right: 8px;     /* Separa el icono del texto "Perfil" para que no quede pegado */
+    vertical-align: middle; /* Centra el icono verticalmente respecto al texto de la derecha */
+}
+
 /* ==========================================================================
    8. MEDIA QUERY INTEGRAL: ESCRITORIO (>= 1024px)
    ========================================================================== */
