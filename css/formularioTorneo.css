@@ -1,155 +1,189 @@
+/* ==========================================================================
+   1. Configuración de Tipografía y Estructura de Isla
+   ========================================================================== */
 body {
-    margin: 0;
-    padding: 10px 0;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #121212;
-    color: #ffffff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
 }
 
+/* Ajustes del contenedor principal sin romper la cascada base de la app */
+.main-container {
+    background-color: #ffffff !important; /* Mantiene el fondo limpio en PC */
+}
+
+/* LA ISLA: Contenedor oscuro centrado y responsivo */
 .container {
-    background-color: #1e1e1e;
-    padding: 25px;
-    border-radius: 8px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-    width: 90%;
-    max-width: 450px;
+    background-color: var(--card-bg, #1a1a1a);
+    padding: 25px 35px;
+    border-radius: 24px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+    width: 100%;
+    max-width: 1050px; 
     border: 1px solid #333333;
     box-sizing: border-box;
-    margin: 20px auto;
+    margin: 10px auto 30px auto;
 }
 
-h2 {
-    text-align: center;
-    margin-bottom: 25px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: #ffffff;
-    border-bottom: 2px solid #ffffff;
-    padding-bottom: 10px;
+/* ==========================================================================
+   2. Sistema de Dos Columnas (Flexbox)
+   ========================================================================== */
+.form-flex-columns {
+    display: flex;
+    flex-direction: row;
+    gap: 35px;
+    width: 100%;
 }
 
+.col-form {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+/* Forzamos a la descripción a estirarse uniformemente */
+.flex-column-right {
+    justify-content: space-between;
+}
+
+.textarea-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ==========================================================================
+   3. Inputs, Selects y Textarea Estilizados (Exclusivos del Formulario)
+   ========================================================================== */
 .form-group {
-    margin-bottom: 20px;
+    margin-bottom: 12px; 
+    display: flex;
+    flex-direction: column;
 }
 
 label {
     display: block;
-    margin-bottom: 8px;
-    font-size: 14px;
+    margin-bottom: 6px;
+    font-size: 13.5px;
     font-weight: 600;
     color: #aaaaaa;
 }
 
-input[type="text"],
-input[type="date"],
-input[type="time"],
-select {
+/* CAMBIO CRÍTICO: Agregamos ".container form" antes para no pisar el buscador de la navbar */
+.container form input[type="text"],
+.container form input[type="number"],
+.container form input[type="date"],
+.container form input[type="time"],
+.container form select, 
+.container form textarea {
     width: 100%;
-    padding: 12px;
     box-sizing: border-box;
     background-color: #2d2d2d;
-    border: 1px solid #444444;
-    color: #ffffff;
-    border-radius: 4px;
-    font-size: 16px;
+    border: 1px solid var(--search-border, #444444);
+    color: var(--white, #ffffff);
+    border-radius: 10px;
+    font-size: 14.5px;
+    outline: none;
     transition: border-color 0.3s ease;
 }
 
-input:focus, select:focus {
-    outline: none;
-    border-color: #ffffff;
+.container form input[type="text"],
+.container form input[type="number"],
+.container form input[type="date"],
+.container form input[type="time"],
+.container form select {
+    height: 40px;
+    padding: 0 12px;
+}
+
+.container form textarea {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 12px;
+    height: 100%;
+    min-height: 110px;
+    resize: none;
+}
+
+.container form input:focus, 
+.container form select:focus, 
+.container form textarea:focus {
+    border-color: var(--white, #ffffff);
 }
 
 .form-row {
     display: flex;
     gap: 15px;
+    width: 100%;
 }
 
-.flex-1 {
-    flex: 1;
+.flex-1 { 
+    flex: 1; 
 }
 
+/* ==========================================================================
+   4. Botones y Ajustes de Cierre
+   ========================================================================== */
 .btn-group {
     display: flex;
-    gap: 15px;
-    margin-top: 25px;
+    gap: 20px;
+    margin-top: 20px;
+    width: 100%;
 }
 
 .btn {
     flex: 1;
     padding: 12px;
     border: none;
-    border-radius: 4px;
-    font-size: 16px;
+    border-radius: 25px;
+    font-size: 14px;
     font-weight: bold;
     cursor: pointer;
     text-transform: uppercase;
     transition: background-color 0.3s ease, transform 0.1s ease;
 }
 
-.btn:active {
-    transform: scale(0.98);
+.btn:active { 
+    transform: scale(0.98); 
 }
 
 .btn-submit {
-    background-color: #2e7d32;
-    color: #ffffff;
+    background-color: var(--white, #ffffff);
+    color: #111111;
 }
 
-.btn-submit:hover {
-    background-color: #1b5e20;
+.btn-submit:hover { 
+    background-color: #e0e0e0; 
 }
 
 .btn-cancel {
-    background-color: #c62828;
-    color: #ffffff;
+    background-color: transparent;
+    border: 1.5px solid var(--white, #ffffff);
+    color: var(--white, #ffffff);
 }
 
 .btn-cancel:hover {
-    background-color: #b71c1c;
+    background-color: rgba(255, 255, 255, 0.05);
 }
 
-@media (max-width: 480px) {
-    .form-row {
-        flex-direction: column;
-        gap: 0;
+/* ==========================================================================
+   5. Responsivo Móvil (Colapsa a una sola columna en celulares)
+   ========================================================================== */
+@media (max-width: 1024px) {
+    .container { 
+        padding: 20px 18px; 
+        border-radius: 20px; 
     }
-
-    .btn-group {
-        flex-direction: column-reverse;
-        gap: 10px;
+    .form-flex-columns { 
+        flex-direction: column; 
+        gap: 0; 
     }
-
-    h2 {
-        font-size: 1.3rem;
+    .form-row { 
+        flex-direction: column; 
+        gap: 0; 
     }
-}
-.app-logo-container {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 15px;
-}
-
-.app-logo {
-    height: 60px;
-    width: auto;
-    object-fit: contain;
-}
-
-.company-logo-container {
-    display: flex;
-    justify-content: center;
-    margin-top: 30px;
-    border-top: 1px solid #333333;
-    padding-top: 15px;
-}
-
-.company-logo {
-    height: 35px;
-    width: auto;
-    object-fit: contain;
+    textarea { 
+        min-height: 120px; 
+    }
+    .btn-group { 
+        flex-direction: column-reverse; 
+        gap: 10px; 
+    }
 }

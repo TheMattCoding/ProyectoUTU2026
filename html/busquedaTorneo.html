@@ -21,9 +21,10 @@
         
         <nav class="sidebar-nav">
             <a href="inicio.html" class="sidebar-link">Inicio</a>
-            <a href="#" class="sidebar-link">Calendario de torneos</a>
-            <a href="#" class="sidebar-link">Crea tu torneo</a>
-            <a href="#" class="sidebar-link">Configuración</a>
+            <a href="calendario.html" class="sidebar-link">Calendario de torneos</a>
+            <a href="formularioTorneo.html" class="sidebar-link">Crea tu torneo</a>
+            <a href="organizador.html" class="sidebar-link active-link">Panel Organizador</a>
+            <a href="configuracion.html" class="sidebar-link">Configuración</a>
         </nav>
 
         <div class="sidebar-footer">
@@ -58,6 +59,40 @@
             </div>
         </form>
 
+        <details class="notifications-dropdown">
+            <summary class="notifications-dropdown-button" aria-haspopup="true" aria-label="Notificaciones">
+                <div class="notifications-icon-wrapper">
+                    <svg class="bell-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z" fill="#cccccc"/>
+                    </svg>
+                    <span class="notification-dot"></span>
+                </div>
+            </summary>
+            
+            <div class="notifications-menu-card">
+                <div class="notifications-menu-header">
+                    <span class="notifications-menu-title">Notificaciones</span>
+                </div>
+                <div class="notifications-menu-divider"></div>
+                <div class="notifications-menu-list">
+                    <a href="#" class="notification-item unread">
+                        <div class="noti-indicator"></div>
+                        <div class="noti-content">
+                            <p class="noti-text">Tu inscripción para la <strong>Copa de Invierno</strong> ha sido confirmada exitosamente.</p>
+                            <span class="noti-time">Hace 10 min</span>
+                        </div>
+                    </a>
+                    <a href="#" class="notification-item">
+                        <div class="noti-indicator"></div>
+                        <div class="noti-content">
+                            <p class="noti-text">El fixture del <strong>Torneo Relámpago</strong> ya se encuentra disponible.</p>
+                            <span class="noti-time">Hace 2 horas</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </details>
+
         <details class="profile-dropdown">
             <summary class="profile-dropdown-button" aria-label="Menú de usuario">
                 <div class="user-avatar">
@@ -83,11 +118,6 @@
                         <svg class="avatar-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
         <path d="M320 312C386.3 312 440 258.3 440 192C440 125.7 386.3 72 320 72C253.7 72 200 125.7 200 192C200 258.3 253.7 312 320 312zM290.3 368C191.8 368 112 447.8 112 546.3C112 562.7 125.3 576 141.7 576L498.3 576C514.7 576 528 562.7 528 546.3C528 447.8 448.2 368 349.7 368L290.3 368z" />
       </svg> Perfil
-                    </a>
-                    <a href="#" class="profile-menu-item">
-                        <svg class="avatar-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                <path d="M195.1 9.5C198.1-5.3 211.2-16 226.4-16l59.8 0c15.2 0 28.3 10.7 31.3 25.5L332 79.5c14.1 6 27.3 13.7 39.3 22.8l67.8-22.5c14.4-4.8 30.2 1.2 37.8 14.4l29.9 51.8c7.6 13.2 4.9 29.8-6.5 39.9L447 233.3c.9 7.4 1.3 15 1.3 22.7s-.5 15.3-1.3 22.7l53.4 47.5c11.4 10.1 14 26.8 6.5 39.9l-29.9 51.8c-7.6 13.1-23.4 19.2-37.8 14.4l-67.8-22.5c-12.1 9.1-25.3 16.7-39.3 22.8l-14.4 69.9c-3.1 14.9-16.2 25.5-31.3 25.5l-59.8 0c-15.2 0-28.3-10.7-31.3-25.5l-14.4-69.9c-14.1-6-27.2-13.7-39.3-22.8L73.5 432.3c-14.4 4.8-30.2-1.2-37.8-14.4L5.8 366.1c-7.6-13.2-4.9-29.8 6.5-39.9l53.4-47.5c-.9-7.4-1.3-15-1.3-22.7s.5-15.3 1.3-22.7L12.3 185.8c-11.4-10.1-14-26.8-6.5-39.9L35.7 94.1c7.6-13.2 23.4-19.2 37.8-14.4l67.8 22.5c12.1-9.1 25.3-16.7 39.3-22.8L195.1 9.5zM256.3 336a80 80 0 1 0 -.6-160 80 80 0 1 0 .6 160z"/>
-            </svg> Configuración
                     </a>
                     <div class="profile-menu-divider"></div>
                     <a href="#" class="profile-menu-item logout-item">
