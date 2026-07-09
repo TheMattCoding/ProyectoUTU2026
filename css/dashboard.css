@@ -1,0 +1,279 @@
+/* ==========================================================================
+   dashboard.css - Módulo de la Gran Isla Única Compacta (SGDM 2026)
+   ========================================================================== */
+
+/* --- 1. CABECERA INTERNA DEL PANEL --- */
+.cabecera-panel {
+    width: 100%;
+    max-width: 1150px;
+    align-self: flex-start;
+}
+
+.cabecera-panel h2 {
+    margin: 0 0 4px 0;
+    color: #111111;
+    font-size: 26px;
+    font-weight: 700;
+}
+
+.cabecera-panel p.estado-sistema {
+    margin: 0;
+    font-size: 13px;
+    color: #2ecc71;
+    font-weight: 600;
+}
+
+/* --- 2. CONTENEDOR DE LA GRAN ISLA NEGRA --- */
+.isla-organizador-unica {
+    background-color: #1a1a1a;
+    color: #ffffff;
+    border-radius: 24px;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    width: 100%;
+    max-width: 1150px;
+    box-sizing: border-box;
+}
+
+.divisor-isla {
+    border: 0;
+    border-top: 1px solid #262626;
+    margin: 0;
+}
+
+/* --- 3. BLOQUE SUPERIOR (KPIs EN REJILLA) --- */
+.seccion-kpis {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.tarjeta-kpi h3 {
+    margin: 0 0 8px 0;
+    font-size: 12px;
+    color: #888888;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.valor-kpi {
+    margin: 0;
+    font-size: 30px;
+    font-weight: 700;
+}
+
+.texto-exito { color: #2ecc71; }
+.texto-peligro { color: #ff6b6b; }
+
+/* --- 4. BLOQUE INTERMEDIO (GRÁFICO Y CONSOLA) --- */
+.seccion-intermedia {
+    display: flex;
+    gap: 30px;
+    width: 100%;
+}
+
+.bloque-grafico {
+    flex: 2;
+}
+
+.bloque-consola {
+    flex: 1;
+}
+
+.grafico-marcador {
+    border: 2px dashed #262626;
+    border-radius: 14px;
+    height: 240px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.01);
+}
+
+.texto-marcador {
+    color: #555555;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.consola-terminal {
+    background-color: #111111;
+    border-radius: 14px;
+    padding: 15px;
+    height: 240px;
+    overflow-y: auto;
+    font-family: monospace;
+    font-size: 13px;
+    border: 1px solid #222222;
+    box-sizing: border-box;
+}
+
+.linea-log {
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #1a1a1a;
+    line-height: 1.4;
+    color: #aaaaaa;
+}
+
+.linea-log.linea-error { color: #ff6b6b; }
+.linea-log.linea-advertencia { color: #feca57; }
+
+/* --- 5. BLOQUE INFERIOR (TABLA DE HISTORIAL) --- */
+.seccion-tabla {
+    width: 100%;
+}
+
+.tabla-panel {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.tabla-panel th {
+    color: #666666;
+    font-weight: 600;
+    font-size: 13px;
+    padding: 10px;
+    border-bottom: 1px solid #262626;
+}
+
+.tabla-panel td {
+    padding: 12px 10px;
+    border-bottom: 1px solid #202020;
+    color: #ffffff;
+    font-size: 13.5px;
+}
+
+.etiqueta-estado-exito {
+    background-color: rgba(46, 204, 113, 0.1);
+    color: #2ecc71;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+/* ==========================================================================
+   6. RESPONSIVE COMPACTO (PANTALLAS CELULARES)
+   ========================================================================== */
+@media (max-width: 768px) {
+    .cabecera-panel h2 {
+        font-size: 22px;
+    }
+
+    .isla-organizador-unica {
+        padding: 20px 15px;
+        gap: 20px;
+        border-radius: 20px;
+    }
+
+    /* Transformación de KPIs de Grid a Filas Flexibles compactas */
+    .seccion-kpis {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .tarjeta-kpi {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 8px;
+        border-bottom: 1px solid #222222;
+    }
+
+    .tarjeta-kpi:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+    }
+
+    .tarjeta-kpi h3 {
+        margin: 0;
+    }
+
+    .valor-kpi {
+        font-size: 22px;
+    }
+
+    /* El gráfico y la consola se apilan verticalmente */
+    .seccion-intermedia {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .grafico-marcador {
+        height: 180px;
+    }
+
+    .consola-terminal {
+        height: 150px;
+    }
+
+    /* Caja de seguridad para que la tabla no rompa el ancho total */
+    .contenedor-tabla-adaptable {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .tabla-panel {
+        min-width: 450px;
+    }
+}
+.seccion-lista-torneos {
+    display: flex;
+    flex-direction: column;
+    gap: 12px; /* Separación entre tarjetas */
+    width: 100%;
+}
+
+.tarjeta-torneo-registro {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #222222; /* Un gris un poco más claro que la isla */
+    padding: 16px 20px;
+    border-radius: 12px;
+    border: 1px solid #2d2d2d;
+}
+
+.detalles-torneo {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.detalles-torneo h4 {
+    margin: 0;
+    font-size: 14.5px;
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.fecha-torneo {
+    font-size: 12px;
+    color: #888888;
+}
+
+/* Estados */
+.etiqueta-estado-exito {
+    background-color: rgba(46, 204, 113, 0.1);
+    color: #2ecc71;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.etiqueta-estado-finalizado {
+    background-color: rgba(136, 136, 136, 0.1);
+    color: #aaaaaa;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+}

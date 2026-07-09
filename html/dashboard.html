@@ -3,21 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SGDM - Plataforma de Torneos</title>
-    
+    <title>SGDM - Panel Organizador</title>
     <link rel="icon" type="image/png" href="../img/logoapp2.jpeg">
-    
     <link rel="stylesheet" href="../css/inicio.css">
-    <link rel="stylesheet" href="../css/formularioTorneo.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
 </head>
 <body>
 
-    <!-- Menú lateral -->
     <input type="checkbox" id="menu-toggle" class="menu-checkbox">
 
     <div class="sidebar">
-
-        <!-- Movil cerrar menú -->
         <div class="sidebar-header">
             <span class="sidebar-title">Menú</span>
             <label for="menu-toggle" class="close-sidebar-btn" aria-label="Cerrar menú">&times;</label>
@@ -31,7 +26,6 @@
             <a href="configuracion.html" class="sidebar-link">Configuración</a>
         </nav>
 
-        <!-- Modo Oscuro-Claro -->
         <div class="sidebar-footer">
     <div class="theme-switch-container">
         <span class="theme-label">Modo Oscuro</span>
@@ -47,7 +41,6 @@
 
     <label for="menu-toggle" class="sidebar-overlay"></label>
 
-    <!-- Menú hamburgesa -->
     <nav class="navbar" aria-label="Navegación principal">
         <label for="menu-toggle" class="nav-button" aria-label="Abrir menú de navegación">
             <div class="hamburger-box">
@@ -57,7 +50,6 @@
             </div>
         </label>
 
-        <!-- Busqueda de Torneo -->
         <form action="busquedaTorneo.html" method="GET" class="search-form" style="display: flex; flex: 1; max-width: 420px; margin: 0 12px;">
             <div class="search-container" style="margin: 0; width: 100%;">
                 <svg class="search-google-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -67,7 +59,6 @@
             </div>
         </form>
 
-        <!-- Campana de Notificaciones -->
         <details class="notifications-dropdown">
             <summary class="notifications-dropdown-button" aria-haspopup="true" aria-label="Notificaciones">
                 <div class="notifications-icon-wrapper">
@@ -78,7 +69,6 @@
                 </div>
             </summary>
             
-            <!-- Apartado de Notificaciones -->
             <div class="notifications-menu-card">
                 <div class="notifications-menu-header">
                     <span class="notifications-menu-title">Notificaciones</span>
@@ -96,7 +86,6 @@
             </div>
         </details>
 
-        <!-- Apartado de perfil -->
         <details class="profile-dropdown">
             <summary class="profile-dropdown-button" aria-label="Menú de usuario">
                 <div class="user-avatar">
@@ -106,7 +95,6 @@
                 </div>
             </summary>
             
-            <!-- Menú de perfil -->
             <div class="profile-menu-card">
                 <div class="profile-menu-header">
                     <span class="profile-menu-name">Usuario</span>
@@ -119,13 +107,11 @@
             </svg>
             Iniciar sesión
                     </a>
-
                     <a href="perfil.html" class="profile-menu-item">
                         <svg class="avatar-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
         <path d="M320 312C386.3 312 440 258.3 440 192C440 125.7 386.3 72 320 72C253.7 72 200 125.7 200 192C200 258.3 253.7 312 320 312zM290.3 368C191.8 368 112 447.8 112 546.3C112 562.7 125.3 576 141.7 576L498.3 576C514.7 576 528 562.7 528 546.3C528 447.8 448.2 368 349.7 368L290.3 368z" />
       </svg> Perfil
                     </a>
-                    
                     <div class="profile-menu-divider"></div>
                     <a href="#" class="profile-menu-item logout-item">
                         <svg class="avatar-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
@@ -138,88 +124,87 @@
     </nav>
 
     <main class="main-container">
-        <div class="container">
-            <div class="app-logo-container" style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px; border-bottom: 2px solid var(--white); padding-bottom: 10px;">
-                <img src="../img/logoapp2.jpeg" alt="Logo" class="app-logo" style="height: 45px; width: auto; border-radius: 50%;">
-                <h2 style="margin: 0; border: none; padding: 0; font-size: 1.4rem;">CREAR NUEVO TORNEO</h2>
-            </div>
+        
+        <header class="cabecera-panel">
+            <h2>Panel de Control Organizador</h2>
+            <p class="estado-sistema">● Servidor Activo</p>
+        </header>
 
-            <form action="#" method="POST">
-                <div class="form-flex-columns">
-                    <div class="col-form">
-                        <div class="form-group">
-                            <label for="nombre">Nombre del Torneo</label>
-                            <input type="text" id="nombre" placeholder="Ej: Torneo Relámpago" required>
-                        </div>
+        <article class="isla-organizador-unica">
+            
+            <section class="seccion-kpis">
+                <div class="tarjeta-kpi">
+                    <h3>Torneos Creados</h3>
+                    <p class="valor-kpi">12</p>
+                </div>
+                <div class="tarjeta-kpi">
+                    <h3>Equipos Inscritos</h3>
+                    <p class="valor-kpi texto-exito">148</p>
+                </div>
+                <div class="tarjeta-kpi">
+                    <h3>Partidos Pendientes</h3>
+                    <p class="valor-kpi texto-peligro">7</p>
+                </div>
+            </section>
 
-                        <div class="form-group">
-                            <label for="disciplina">Disciplina</label>
-                            <select id="disciplina" required>
-                                <option value="" disabled selected>Seleccione una opción</option>
-                                <option value="futbol">Fútbol</option>
-                                <option value="basquet">Básquetbol</option>
-                            </select>
-                        </div>
+            <hr class="divisor-isla">
 
-                        <div class="form-row">
-                            <div class="form-group flex-1">
-                                <label for="formato">Formato de Clasificación</label>
-                                <select id="formato" required>
-                                    <option value="" disabled selected>Seleccione el formato</option>
-                                    <option value="eliminatoria">Eliminación directa</option>
-                                    <option value="liga">Liga (Todos contra todos)</option>
-                                </select>
-                            </div>
-                            <div class="form-group flex-1">
-                                <label for="modalidad">Modalidad</label>
-                                <select id="modalidad" required>
-                                    <option value="equipos">Por Equipos</option>
-                                    <option value="individual">Individual</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group flex-1">
-                                <label for="fecha">Fecha de Inicio</label>
-                                <input type="date" id="fecha" required>
-                            </div>
-                            <div class="form-group flex-1">
-                                <label for="hora">Hora de Inicio</label>
-                                <input type="time" id="hora" required>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="cantidad">Cantidad de Equipos</label>
-                            <input type="number" id="cantidad" placeholder="Ej: 16">
-                        </div>
-                    </div>
-
-                    <div class="col-form flex-column-right">
-                        <div class="form-group textarea-container">
-                            <label for="descripcion">Descripción del Torneo</label>
-                            <textarea id="descripcion" placeholder="Escribe las reglas o detalles del torneo..."></textarea>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Ubicación del Torneo</label>
-                            <div class="map-container">
-                                <iframe src="https://maps.google.com/maps?q=Montevideo&t=&z=13&ie=UTF8&iwloc=&output=embed" width="100%" height="150" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
-                            </div>
-                        </div>
+            <section class="seccion-intermedia">
+                <div class="bloque-grafico">
+                    <div class="grafico-marcador">
+                        <span class="texto-marcador">Visualización de Estadísticas Mensuales</span>
                     </div>
                 </div>
-
-                <div class="btn-group">
-                    <button type="button" class="btn btn-cancel">Cancelar</button>
-                    <button type="submit" class="btn btn-submit">Crear Torneo</button>
+                
+                <div class="bloque-consola">
+                    <div class="consola-terminal">
+                        <div class="linea-log">[11:42:10] Registro de nuevo equipo: 'Malvín FC'</div>
+                        <div class="linea-log">[11:30:15] Partido ID #432 finalizado con éxito.</div>
+                        <div class="linea-log linea-advertencia">[10:15:00] Alerta: Reporte de conducta en cancha 2.</div>
+                        <div class="linea-log linea-error">[09:00:22] Error: Intento de registro duplicado omitido.</div>
+                    </div>
                 </div>
-            </form>
-        </div>
+            </section>
+
+            <hr class="divisor-isla">
+
+            <section class="seccion-tabla">
+                <div class="contenedor-tabla-adaptable">
+                    <table class="tabla-panel">
+                        <thead>
+                            <tr>
+                                <th>Torneo</th>
+                                <th>Fecha</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <section class="seccion-lista-torneos">
+    
+                        <div class="tarjeta-torneo-registro">
+                            <div class="detalles-torneo">
+                                <h4>Copa de Invierno 2026</h4>
+                                <span class="fecha-torneo">07 Jul 2026</span>
+                            </div>
+                                <span class="etiqueta-estado-exito">En curso</span>
+                        </div>
+
+                        <div class="tarjeta-torneo-registro">
+                            <div class="detalles-torneo">
+                                <h4>Torneo Relámpago Nocturno</h4>
+                                <span class="fecha-torneo">05 Jul 2026</span>
+                            </div>
+                                <span class="etiqueta-estado-finalizado">Finalizado</span>
+                        </div>
+
+                        </section>
+                    </table>
+                </div>
+            </section>
+
+        </article>
+
     </main>
 
-     <!-- Footer -->
     <footer class="main-footer">
         <div class="footer-content">
             <img src="../img/epsilonSoftware2.png" alt="Logo Epsilon Software" class="footer-logo">
