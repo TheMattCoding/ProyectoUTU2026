@@ -11,9 +11,12 @@
 </head>
 <body>
 
+<!-- Menú lateral -->
     <input type="checkbox" id="menu-toggle" class="menu-checkbox">
 
     <div class="sidebar">
+
+        <!-- Movil cerrar menú -->
         <div class="sidebar-header">
             <span class="sidebar-title">Menú</span>
             <label for="menu-toggle" class="close-sidebar-btn" aria-label="Cerrar menú">&times;</label>
@@ -27,6 +30,7 @@
             <a href="configuracion.html" class="sidebar-link">Configuración</a>
         </nav>
 
+        <!-- Modo Oscuro-Claro -->
         <div class="sidebar-footer">
     <div class="theme-switch-container">
         <span class="theme-label">Modo Oscuro</span>
@@ -42,6 +46,7 @@
 
     <label for="menu-toggle" class="sidebar-overlay"></label>
 
+    <!-- Menú hamburgesa -->
     <nav class="navbar" aria-label="Navegación principal">
         <label for="menu-toggle" class="nav-button" aria-label="Abrir menú de navegación">
             <div class="hamburger-box">
@@ -60,6 +65,7 @@
             </div>
         </form>
 
+        <!-- Campana de Notificaciones -->
         <details class="notifications-dropdown">
             <summary class="notifications-dropdown-button" aria-haspopup="true" aria-label="Notificaciones">
                 <div class="notifications-icon-wrapper">
@@ -83,10 +89,18 @@
                             <span class="noti-time">Hace 10 min</span>
                         </div>
                     </a>
+                    <a href="#" class="notification-item">
+                        <div class="noti-indicator"></div>
+                        <div class="noti-content">
+                            <p class="noti-text">El fixture del <strong>Torneo Relámpago</strong> ya se encuentra disponible.</p>
+                            <span class="noti-time">Hace 2 horas</span>
+                        </div>
+                    </a>
                 </div>
             </div>
         </details>
 
+        <!-- Apartado de perfil -->
         <details class="profile-dropdown">
             <summary class="profile-dropdown-button" aria-label="Menú de usuario">
                 <div class="user-avatar">
