@@ -295,9 +295,9 @@ body {
 
 .profile-menu-item.logout-item { color: #ff453a; }
 
-/* ==========================================================================
-   5. Menú Lateral (Sidebar Comportamiento Base)
-   ========================================================================== */
+
+//=============5. Menú Lateral ======================
+
 .menu-checkbox { display: none; }
 
 .sidebar {
