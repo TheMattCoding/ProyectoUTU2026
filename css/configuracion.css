@@ -1,15 +1,17 @@
 /* ==========================================================================
    1. Variables, Resets y Wrapper General (Mobile First)
    ========================================================================== */
-.main-container {
+.contenedor-principal {
     background-color: #ffffff;
     padding: 40px 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    min-height: calc(100vh - 140px); 
+    box-sizing: border-box;
 }
 
-.settings-wrapper {
+.envoltura-configuracion {
     width: 100%;
     max-width: 450px; /* Consistencia exacta con el resto de las islas */
     display: flex;
@@ -17,7 +19,7 @@
     gap: 20px;
 }
 
-.settings-title {
+.titulo-configuracion {
     font-size: 22px;
     font-weight: bold;
     color: #111111;
@@ -29,18 +31,18 @@
 /* ==========================================================================
    2. Sistema de Pestañas (CSS Puro - Sin JavaScript)
    ========================================================================== */
-.tab-radio-control {
+.control-radio-pestana {
     display: none; /* Oculta los inputs de radio controladores de la pantalla */
 }
 
-.settings-tabs {
+.pestanas-configuracion {
     display: flex;
     flex-direction: column;
     gap: 8px;
     width: 100%;
 }
 
-.tab-btn {
+.btn-pestana {
     background-color: #f1f1f1;
     border: 1px solid #e0e0e0;
     color: #555555;
@@ -53,36 +55,36 @@
     transition: all 0.2s ease;
 }
 
-.tab-btn:hover {
+.btn-pestana:hover {
     background-color: #e5e5e5;
     color: #111111;
 }
 
 /* Botón destructivo integrado en la lista de pestañas */
-.tab-btn.btn-tab-danger {
+.btn-pestana.btn-pestana-peligro {
     background-color: #ff453a;
     border: 1px solid #ff453a;
-    color: var(--white);
+    color: var(--blanco);
     font-weight: bold;
     margin-top: 12px;
 }
 
-.tab-btn.btn-tab-danger:hover {
+.btn-pestana.btn-pestana-peligro:hover {
     background-color: #ff3b30;
     border-color: #ff3b30;
 }
 
 /* LÓGICA DE INTERCAMBIO ACTIVO: Estilo dinámico de la pestaña activa */
-#tab-radio-perfil:checked ~ .settings-wrapper .label-perfil,
-#tab-radio-seguridad:checked ~ .settings-wrapper .label-seguridad,
-#tab-radio-notificaciones:checked ~ .settings-wrapper .label-notificaciones,
-#tab-radio-preferencias:checked ~ .settings-wrapper .label-preferencias {
+#radio-pestana-perfil:checked ~ .envoltura-configuracion .etiqueta-perfil,
+#radio-pestana-seguridad:checked ~ .envoltura-configuracion .etiqueta-seguridad,
+#radio-pestana-notificaciones:checked ~ .envoltura-configuracion .etiqueta-notificaciones,
+#radio-pestana-preferencias:checked ~ .envoltura-configuracion .etiqueta-preferencias {
     background-color: #111111;
     border-color: #111111;
     color: #ffffff;
 }
 
-#tab-radio-borrar:checked ~ .settings-wrapper .label-borrar {
+#radio-pestana-borrar:checked ~ .envoltura-configuracion .etiqueta-borrar {
     background-color: #b3241c; /* Tono rojo oscuro cuando está presionado */
     border-color: #b3241c;
     color: #ffffff;
@@ -91,8 +93,8 @@
 /* ==========================================================================
    3. Tarjeta Contenedora de Formularios (Isla Negra) y Paneles
    ========================================================================== */
-.settings-content-card {
-    background-color: var(--card-bg, #1a1a1a);
+.tarjeta-contenido-config {
+    background-color: var(--tarjeta-bg, #1a1a1a);
     border-radius: 24px;
     padding: 24px 20px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
@@ -102,28 +104,28 @@
     gap: 28px;
 }
 
-.settings-section {
+.seccion-configuracion {
     display: none; /* Por defecto ocultamos todas las secciones */
     flex-direction: column;
 }
 
 /* LÓGICA DE VISUALIZACIÓN: Muestra el panel correspondiente según el radio activo */
-#tab-radio-perfil:checked ~ .settings-wrapper .panel-perfil,
-#tab-radio-seguridad:checked ~ .settings-wrapper .panel-seguridad,
-#tab-radio-notificaciones:checked ~ .settings-wrapper .panel-notificaciones,
-#tab-radio-preferencias:checked ~ .settings-wrapper .panel-preferencias,
-#tab-radio-borrar:checked ~ .settings-wrapper .panel-borrar {
+#radio-pestana-perfil:checked ~ .envoltura-configuracion .panel-perfil,
+#radio-pestana-seguridad:checked ~ .envoltura-configuracion .panel-seguridad,
+#radio-pestana-notificaciones:checked ~ .envoltura-configuracion .panel-notificaciones,
+#radio-pestana-preferencias:checked ~ .envoltura-configuracion .panel-preferencias,
+#radio-pestana-borrar:checked ~ .envoltura-configuracion .panel-borrar {
     display: flex;
 }
 
-.section-title {
+.titulo-seccion {
     font-size: 18px;
     font-weight: bold;
-    color: var(--white);
+    color: var(--blanco);
     margin-bottom: 4px;
 }
 
-.section-subtitle {
+.subtitulo-seccion {
     font-size: 12.5px;
     color: #aaaaaa;
     margin-bottom: 20px;
@@ -131,84 +133,92 @@
 }
 
 /* ==========================================================================
-   4. Componentes de Formulario (Inputs, Selects, Switches)
+   4. Componentes de Formulario (Inputs, Selects, Switches - COMPLETADO)
    ========================================================================== */
-.settings-form {
+   
+.formulario-configuracion {
     display: flex;
     flex-direction: column;
     gap: 16px;
 }
 
-.form-group {
+.grupo-formulario {
     display: flex;
     flex-direction: column;
     gap: 6px;
     width: 100%;
 }
 
-.form-label {
+.etiqueta-formulario {
     font-size: 13px;
     font-weight: 500;
     color: #cccccc;
 }
 
-.form-control-input,
-.form-control-textarea,
-.form-control-select {
+.control-input-formulario,
+.control-textarea-formulario,
+.control-select-formulario {
     width: 100%;
     background-color: #222222;
     border: 1.5px solid #444444;
     border-radius: 10px;
-    color: var(--white);
+    color: #ffffff;
     font-size: 13.5px;
     outline: none;
     transition: border-color 0.2s ease;
     box-sizing: border-box;
 }
 
-.form-control-input,
-.form-control-select {
+.control-input-formulario,
+.control-select-formulario {
     height: 42px;
     padding: 0 14px;
 }
 
-.form-control-select {
+.control-select-formulario {
     cursor: pointer;
 }
 
-.form-control-textarea {
+.control-textarea-formulario {
     min-height: 100px;
     padding: 12px 14px;
     resize: vertical;
     font-family: Arial, sans-serif;
 }
 
-.form-control-input:focus,
-.form-control-textarea:focus,
-.form-control-select:focus {
+.control-input-formulario:focus,
+.control-textarea-formulario:focus,
+.control-select-formulario:focus {
     border-color: #777777;
 }
 
-.form-control-input::placeholder { color: #555555; }
+.control-input-formulario::placeholder { color: #555555; }
 
-/* Avatar del Perfil */
-.avatar-edit-container {
+.contenedor-edicion-avatar {
     display: flex;
     align-items: center;
     gap: 16px;
     margin-bottom: 8px;
 }
 
-.big-avatar {
+.avatar-usuario.avatar-grande {
     width: 60px !important;
     height: 60px !important;
     background-color: #2c2c2e;
+    border-radius: 50%;
+    border: 2px solid #636363;
+    box-sizing: border-box;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.big-avatar .avatar-icon { font-size: 28px; }
+.avatar-usuario.avatar-grande .avatar-svg { 
+    font-size: 28px; 
+}
 
-/* Componente Switch Estilo iOS */
-.checkbox-group {
+.grupo-checkbox {
     display: flex;
     flex-direction: column;
     gap: 4px;
@@ -216,55 +226,60 @@
     border-bottom: 1px solid #222222;
 }
 
-.checkbox-group:last-of-type { border-bottom: none; }
-.checkbox-desc { font-size: 12px; color: #888888; }
+.grupo-checkbox:last-of-type { border-bottom: none; }
+.desc-checkbox { font-size: 12px; color: #888888; }
 
-.switch-container {
+.contenedor-interruptor {
     display: flex;
     align-items: center;
     gap: 12px;
     cursor: pointer;
     font-size: 14px;
-    color: var(--white);
+    color: #ffffff;
     font-weight: 500;
 }
 
-.switch-container input { display: none; }
+.contenedor-interruptor input { 
+    display: none !important; 
+}
 
-.switch-container .slider {
-    width: 34px;
-    height: 18px;
+.contenedor-interruptor .deslizador {
+    width: 36px;
+    height: 20px;
     background-color: #444444;
-    border-radius: 9px;
+    border-radius: 10px;
     position: relative;
     transition: background-color 0.2s ease;
     display: inline-block;
+    flex-shrink: 0;
 }
 
-.switch-container .slider::before {
+.contenedor-interruptor .deslizador::before {
     content: "";
     position: absolute;
     width: 14px;
     height: 14px;
-    left: 2px;
-    top: 2px;
-    background-color: var(--white);
+    left: 3px;
+    top: 3px;
+    background-color: #ffffff;
     border-radius: 50%;
     transition: transform 0.2s ease;
 }
 
-.switch-container input:checked + .slider { background-color: var(--white); }
-.switch-container input:checked + .slider::before {
+.contenedor-interruptor input:checked + .deslizador { 
+    background-color: #ffffff; 
+}
+
+.contenedor-interruptor input:checked + .deslizador::before {
     transform: translateX(16px);
     background-color: #111111;
 }
-
 /* ==========================================================================
    5. Botonería y Acciones
    ========================================================================== */
-.btn-save,
-.btn-danger,
-.btn-secondary-sm {
+.btn-guardar,
+.btn-peligro,
+.btn-secundario-sm {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -274,9 +289,10 @@
     transition: background-color 0.2s ease;
 }
 
-.btn-save {
-    background-color: var(--white);
+.btn-guardar {
+    background-color: var(--blanco);
     color: #111111;
+    background-color: #7c7c7c;
     padding: 10px 24px;
     border-radius: 20px;
     font-size: 13px;
@@ -285,11 +301,11 @@
     align-self: flex-start;
 }
 
-.btn-save:hover { background-color: #e0e0e0; }
+.btn-guardar:hover { background-color: #e0e0e0; }
 
-.btn-danger {
+.btn-peligro {
     background-color: #ff453a;
-    color: var(--white);
+    color: var(--blanco);
     padding: 10px 24px;
     border-radius: 20px;
     font-size: 13px;
@@ -298,80 +314,68 @@
     align-self: flex-start;
 }
 
-.btn-danger:hover { background-color: #ff3b30; }
+.btn-peligro:hover { background-color: #ff3b30; }
 
-.btn-secondary-sm {
+.btn-secundario-sm {
     background-color: #2c2c2e;
-    color: var(--white);
+    color: var(--blanco);
     border: 1px solid #444444;
     padding: 6px 14px;
     border-radius: 12px;
     font-size: 12px;
 }
 
-.btn-secondary-sm:hover { background-color: #3a3a3c; }
+.btn-secundario-sm:hover { background-color: #3a3a3c; }
 
-.form-actions {
+.acciones-formulario {
     display: flex;
     flex-direction: column;
     gap: 12px;
     width: 100%;
 }
 
-
 /* ==========================================================================
-   6. MEDIA QUERY UNIFICADA: ESCRITORIO (>= 1024px)
+   6. MEDIA QUERY UNIFICADA: ESCRITORIO
    ========================================================================== */
 @media (min-width: 1024px) {
-    .settings-wrapper {
+    .envoltura-configuracion {
         max-width: 1150px; /* Alineación perfecta con el resto del dashboard */
         flex-direction: row;
         align-items: flex-start;
         gap: 32px;
     }
 
-    .settings-tabs {
+    .pestanas-configuracion {
         width: 260px;
         flex-shrink: 0;
         position: sticky;
         top: 100px; /* Se queda fija al hacer scroll por debajo de la navbar */
     }
 
-    .settings-title {
+    .titulo-configuracion {
         font-size: 26px;
         margin-bottom: 16px;
     }
 
-    .tab-btn {
+    .btn-pestana {
         padding: 14px 20px;
         font-size: 14.5px;
     }
 
-    .settings-content-card {
+    .tarjeta-contenido-config {
         flex: 1;
         padding: 40px;
         border-radius: 20px;
     }
-
-    .section-title { font-size: 20px; }
-    .btn-save { padding: 10px 32px; }
-
-    /* Grid de inputs en paralelo para contraseñas y datos del perfil */
-    .form-row-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 16px;
-        width: 100%;
-    }
-
+   
     /* Acciones en paralelo para separar botones en el extremo */
-    .form-actions {
+    .acciones-formulario {
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
     }
     
-    .btn-danger {
+    .btn-peligro {
         align-self: auto;
     }
 }

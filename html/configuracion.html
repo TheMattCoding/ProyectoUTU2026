@@ -109,7 +109,6 @@
                    <svg class="avatar-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
                        <path d="M320 312C386.3 312 440 258.3 440 192C440 125.7 386.3 72 320 72C253.7 72 200 125.7 200 192C200 258.3 253.7 312 320 312zM290.3 368C191.8 368 112 447.8 112 546.3C112 562.7 125.3 576 141.7 576L498.3 576C514.7 576 528 562.7 528 546.3C528 447.8 448.2 368 349.7 368L290.3 368z" />
                    </svg>
-
                 </div>
             </summary>
             
@@ -143,160 +142,163 @@
         </details>
     </nav>
 
-    <main class="main-container">
+    <main class="contenedor-principal">
         
-        <input type="radio" name="settings-tab-group" id="tab-radio-perfil" checked class="tab-radio-control">
-        <input type="radio" name="settings-tab-group" id="tab-radio-seguridad" class="tab-radio-control">
-        <input type="radio" name="settings-tab-group" id="tab-radio-notificaciones" class="tab-radio-control">
-        <input type="radio" name="settings-tab-group" id="tab-radio-preferencias" class="tab-radio-control">
-        <input type="radio" name="settings-tab-group" id="tab-radio-borrar" class="tab-radio-control">
+        <input type="radio" name="grupo-pestanas-config" id="radio-pestana-perfil" checked class="control-radio-pestana">
+        <input type="radio" name="grupo-pestanas-config" id="radio-pestana-seguridad" class="control-radio-pestana">
+        <input type="radio" name="grupo-pestanas-config" id="radio-pestana-notificaciones" class="control-radio-pestana">
+        <input type="radio" name="grupo-pestanas-config" id="radio-pestana-preferencias" class="control-radio-pestana">
+        <input type="radio" name="grupo-pestanas-config" id="radio-pestana-borrar" class="control-radio-pestana">
 
-        <div class="settings-wrapper">
+        <div class="envoltura-configuracion">
             
-            <aside class="settings-tabs">
-                <h2 class="settings-title">Configuración</h2>
-                <label for="tab-radio-perfil" class="tab-btn label-perfil">Editar Perfil</label>
-                <label for="tab-radio-seguridad" class="tab-btn label-seguridad">Cuenta y seguridad</label>
-                <label for="tab-radio-notificaciones" class="tab-btn label-notificaciones">Notificaciones</label>
-                <label for="tab-radio-preferencias" class="tab-btn label-preferencias">Preferencias</label>
-                
-                <label for="tab-radio-borrar" class="tab-btn btn-tab-danger label-borrar">Borrar cuenta</label>
+            <aside class="pestanas-configuracion">
+                <h2 class="titulo-configuracion">Configuración</h2>
+                <label for="radio-pestana-perfil" class="btn-pestana etiqueta-perfil">Editar Perfil</label>
+                <label for="radio-pestana-seguridad" class="btn-pestana etiqueta-seguridad">Cuenta y seguridad</label>
+                <label for="radio-pestana-notificaciones" class="btn-pestana etiqueta-notificaciones">Notificaciones</label>
+                <label for="radio-pestana-preferencias" class="btn-pestana etiqueta-preferencias">Preferencias</label>
+                <label for="radio-pestana-borrar" class="btn-pestana btn-pestana-peligro etiqueta-borrar">Borrar cuenta</label>
             </aside>
 
-            <section class="settings-content-card">
+            <section class="tarjeta-contenido-config">
                 
-                <div id="perfil" class="settings-section panel-perfil">
-                    <h3 class="section-title">Información del Perfil</h3>
-                    <p class="section-subtitle">Personaliza tu identity dentro de la plataforma de torneos.</p>
+                <!-- Editar perfil -->              
+                <div id="perfil" class="seccion-configuracion panel-perfil">
+                    <h3 class="titulo-seccion">Información del Perfil</h3>
+                    <p class="subtitulo-seccion">Personaliza tu identidad dentro de la plataforma de torneos.</p>
                     
-                    <form action="#" method="POST" class="settings-form">
-                        <div class="avatar-edit-container">
-                            <div class="user-avatar big-avatar">
+                    <form action="#" method="POST" class="formulario-configuracion">
+                        <div class="contenedor-edicion-avatar">
+                            <div class="avatar-usuario avatar-grande">
                                 <svg class="avatar-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
-        <path d="M320 312C386.3 312 440 258.3 440 192C440 125.7 386.3 72 320 72C253.7 72 200 125.7 200 192C200 258.3 253.7 312 320 312zM290.3 368C191.8 368 112 447.8 112 546.3C112 562.7 125.3 576 141.7 576L498.3 576C514.7 576 528 562.7 528 546.3C528 447.8 448.2 368 349.7 368L290.3 368z" />
-      </svg>
+                                    <path d="M320 312C386.3 312 440 258.3 440 192C440 125.7 386.3 72 320 72C253.7 72 200 125.7 200 192C200 258.3 253.7 312 320 312zM290.3 368C191.8 368 112 447.8 112 546.3C112 562.7 125.3 576 141.7 576L498.3 576C514.7 576 528 562.7 528 546.3C528 447.8 448.2 368 349.7 368L290.3 368z" />
+                                </svg>
                             </div>
-                            <button type="button" class="btn-secondary-sm">Cambiar foto</button>
+                            <button type="button" class="btn-secundario-sm">Cambiar foto</button>
                         </div>
 
-                        <div class="form-row-grid">
-                            <div class="form-group">
-                                <label for="username" class="form-label">Nombre de usuario</label>
-                                <input type="text" id="username" name="username" class="form-control-input" value="Santiago_UTU">
+                        <div class="cuadrícula-fila-formulario">
+                            <div class="grupo-formulario">
+                                <label for="nombre-usuario" class="etiqueta-formulario">Nombre de usuario</label>
+                                <input type="text" id="nombre-usuario" name="nombre_usuario" class="control-input-formulario" value="Santiago_UTU">
                             </div>
-                            <div class="form-group">
-                                <label for="email" class="form-label">Correo Electrónico</label>
-                                <input type="email" id="email" name="email" class="form-control-input" value="santiago@ejemplo.com">
+                            <div class="grupo-formulario">
+                                <label for="correo" class="etiqueta-formulario">Correo Electrónico</label>
+                                <input type="email" id="correo" name="correo" class="control-input-formulario" value="santiago@ejemplo.com">
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="bio" class="form-label">Biografía / Presentación</label>
-                            <textarea id="bio" name="bio" class="form-control-textarea" placeholder="Contale a la comunidad sobre tu nivel, tu equipo o tu rol favorito..."></textarea>
+                        <div class="grupo-formulario">
+                            <label for="biografia" class="etiqueta-formulario">Biografía / Presentación</label>
+                            <textarea id="biografia" name="biografia" class="control-textarea-formulario" placeholder="Contale a la comunidad sobre tu nivel, tu equipo o tu rol favorito..."></textarea>
                         </div>
 
-                        <div class="form-actions">
-                            <button type="submit" class="btn-save">Guardar perfil</button>
+                        <div class="acciones-formulario">
+                            <button type="submit" class="btn-guardar">Guardar perfil</button>
+                        </div>
+                    </form>
+                </div>
+                <!-- Cuenta y Seguridad -->
+                <div id="seguridad" class="seccion-configuracion panel-seguridad">
+                    <h3 class="titulo-seccion">Seguridad de la Cuenta</h3>
+                    <p class="subtitulo-seccion">Gestiona tus credenciales de acceso de forma segura.</p>
+                    
+                    <form action="#" method="POST" class="formulario-configuracion">
+                        <div class="grupo-formulario">
+                            <label for="contrasena-actual" class="etiqueta-formulario">Contraseña actual</label>
+                            <input type="password" id="contrasena-actual" name="contrasena_actual" class="control-input-formulario" placeholder="••••••••">
+                        </div>
+
+                        <div class="cuadrícula-fila-formulario">
+                            <div class="grupo-formulario">
+                                <label for="nueva-contrasena" class="etiqueta-formulario">Nueva contraseña</label>
+                                <input type="password" id="nueva-contrasena" name="nueva_contrasena" class="control-input-formulario" placeholder="Mínimo 8 caracteres">
+                            </div>
+                            <div class="grupo-formulario">
+                                <label for="confirmar-contrasena" class="etiqueta-formulario">Confirmar nueva contraseña</label>
+                                <input type="password" id="confirmar-contrasena" name="confirmar_contrasena" class="control-input-formulario" placeholder="Repite la contraseña">
+                            </div>
+                        </div>
+
+                        <div class="acciones-formulario">
+                            <button type="submit" class="btn-guardar">Actualizar contraseña</button>
                         </div>
                     </form>
                 </div>
 
-                <div id="seguridad" class="settings-section panel-seguridad">
-                    <h3 class="section-title">Seguridad de la Cuenta</h3>
-                    <p class="section-subtitle">Gestiona tus credenciales de acceso de forma segura.</p>
+                <!-- Notificaciones -->
+                <div id="notificaciones" class="seccion-configuracion panel-notificaciones">
+                    <h3 class="titulo-seccion">Preferencias de Alertas</h3>
+                    <p class="subtitulo-seccion">Elige qué eventos del torneo querés recibir en la campana de notificaciones.</p>
                     
-                    <form action="#" method="POST" class="settings-form">
-                        <div class="form-group">
-                            <label for="current-password" class="form-label">Contraseña actual</label>
-                            <input type="password" id="current-password" name="current_password" class="form-control-input" placeholder="••••••••">
-                        </div>
-
-                        <div class="form-row-grid">
-                            <div class="form-group">
-                                <label for="new-password" class="form-label">Nueva contraseña</label>
-                                <input type="password" id="new-password" name="new_password" class="form-control-input" placeholder="Mínimo 8 caracteres">
-                            </div>
-                            <div class="form-group">
-                                <label for="confirm-password" class="form-label">Confirmar nueva contraseña</label>
-                                <input type="password" id="confirm-password" name="confirm_password" class="form-control-input" placeholder="Repite la contraseña">
-                            </div>
-                        </div>
-
-                        <div class="form-actions">
-                            <button type="submit" class="btn-save">Actualizar contraseña</button>
-                        </div>
-                    </form>
-                </div>
-
-                <div id="notificaciones" class="settings-section panel-notificaciones">
-                    <h3 class="section-title">Preferencias de Alertas</h3>
-                    <p class="section-subtitle">Elige qué eventos del torneo querés recibir en la campana de notificaciones.</p>
-                    
-                    <form action="#" method="POST" class="settings-form">
-                        <div class="checkbox-group">
-                            <label class="switch-container">
+                    <form action="#" method="POST" class="formulario-configuracion">
+                        <div class="grupo-checkbox">
+                            <label class="contenedor-interruptor">
                                 <input type="checkbox" checked>
-                                <span class="slider"></span>
-                                <span class="switch-label">Publicación de Fixtures (Calendarios)</span>
+                                <span class="deslizador"></span>
+                                <span class="etiqueta-interruptor">Publicación de Fixtures (Calendarios)</span>
                             </label>
-                            <p class="checkbox-desc">Te avisaremos cuando el organizador genere las llaves o cruces del torneo.</p>
+                            <p class="desc-checkbox">Te avisaremos cuando el organizador genere las llaves o cruces del torneo.</p>
                         </div>
 
-                        <div class="checkbox-group">
-                            <label class="switch-container">
+                        <div class="grupo-checkbox">
+                            <label class="contenedor-interruptor">
                                 <input type="checkbox" checked>
-                                <span class="slider"></span>
-                                <span class="switch-label">Recordatorios de partidos próximos</span>
+                                <span class="deslizador"></span>
+                                <span class="etiqueta-interruptor">Recordatorios de partidos próximos</span>
                             </label>
-                            <p class="checkbox-desc">Recibe un aviso 30 minutos antes de que empiece tu encuentro programado.</p>
+                            <p class="desc-checkbox">Recibe un aviso 30 minutos antes de que empiece tu encuentro programado.</p>
                         </div>
 
-                        <div class="checkbox-group">
-                            <label class="switch-container">
+                        <div class="grupo-checkbox">
+                            <label class="contenedor-interruptor">
                                 <input type="checkbox">
-                                <span class="slider"></span>
-                                <span class="switch-label">Resultados y tablas de posiciones</span>
+                                <span class="deslizador"></span>
+                                <span class="etiqueta-interruptor">Resultados y tablas de posiciones</span>
                             </label>
-                            <p class="checkbox-desc">Alertas cuando finalice un partido del grupo en el que estás compitiendo.</p>
+                            <p class="desc-checkbox">Alertas cuando finalice un partido del grupo en el que estás compitiendo.</p>
                         </div>
 
-                        <div class="form-actions">
-                            <button type="submit" class="btn-save">Guardar alertas</button>
+                        <div class="acciones-formulario">
+                            <button type="submit" class="btn-guardar">Guardar alertas</button>
                         </div>
                     </form>
                 </div>
-
-                <div id="preferencias" class="settings-section panel-preferencias">
-                    <h3 class="section-title">Preferencias de la Aplicación</h3>
-                    <p class="section-subtitle">Configura el comportamiento visual de tu cuenta.</p>
+                
+                <!-- Preferencias -->
+                <div id="preferencias" class="seccion-configuracion panel-preferencias">
+                    <h3 class="titulo-seccion">Preferencias de la Aplicación</h3>
+                    <p class="subtitulo-seccion">Configura el comportamiento visual de tu cuenta.</p>
                     
-                    <form action="#" method="POST" class="settings-form">
-                        <div class="form-group">
-                            <label for="theme-select" class="form-label">Tema Visual Principal</label>
-                            <select id="theme-select" class="form-control-select">
+                    <form action="#" method="POST" class="formulario-configuracion">
+                        <div class="grupo-formulario">
+                            <label for="seleccion-tema" class="etiqueta-formulario">Tema Visual Principal</label>
+                            <select id="seleccion-tema" class="control-select-formulario">
                                 <option value="dark" selected>Modo Oscuro Predeterminado</option>
                                 <option value="light">Modo Claro</option>
                             </select>
                         </div>
 
-                        <div class="form-actions">
-                            <button type="submit" class="btn-save">Aplicar preferencias</button>
+                        <div class="acciones-formulario">
+                            <button type="submit" class="btn-guardar">Aplicar preferencias</button>
                         </div>
                     </form>
                 </div>
 
-                <div id="borrar-cuenta" class="settings-section panel-borrar">
-                    <h3 class="section-title danger-title">Eliminar Cuenta Permanentemente</h3>
-                    <p class="section-subtitle">Esta acción es irreversible. Se perderán todos tus datos de torneos, estadísticas y equipos.</p>
+                <!-- Borrar cuenta -->
+                <div id="borrar-cuenta" class="seccion-configuracion panel-borrar">
+                    <h3 class="titulo-seccion titulo-peligro">Eliminar Cuenta Permanentemente</h3>
+                    <p class="subtitulo-seccion">Esta acción es irreversible. Se perderán todos tus datos de torneos, estadísticas y equipos.</p>
                     
-                    <form action="#" method="POST" class="settings-form">
-                        <div class="form-group">
-                            <label for="delete-password" class="form-label">Escriba contraseña actual para el borrado de cuenta</label>
-                            <input type="password" id="delete-password" name="delete_password" class="form-control-input" placeholder="••••••••" required>
+                    <form action="#" method="POST" class="formulario-configuracion">
+                        <div class="grupo-formulario">
+                            <label for="contrasena-borrado" class="etiqueta-formulario">Escriba contraseña actual para el borrado de cuenta</label>
+                            <input type="password" id="contrasena-borrado" name="contrasena_borrado" class="control-input-formulario" placeholder="••••••••" required>
                         </div>
 
-                        <div class="form-actions">
-                            <button type="submit" class="btn-danger">Confirmar Eliminación</button>
+                        <div class="acciones-formulario">
+                            <button type="submit" class="btn-peligro">Confirmar Eliminación</button>
                         </div>
                     </form>
                 </div>
@@ -309,7 +311,7 @@
     <footer class="main-footer">
         <div class="footer-content">
             <img src="../img/epsilonSoftware2.png" alt="Logo Epsilon Software" class="footer-logo">
-            
+        
             <div class="footer-right-group">
                 <nav class="footer-links" aria-label="Enlaces de pie de página">
                     <a href="#" class="footer-link">Sobre nosotros</a>
@@ -319,5 +321,6 @@
             </div>
         </div>
     </footer>
+
 </body>
 </html>

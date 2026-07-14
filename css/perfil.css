@@ -1,12 +1,12 @@
 /* ==========================================================================
    1. Configuración del Contenedor Principal (Fondo Blanco de la App)
    ========================================================================= */
-.main-container {
+.contenedor-principal {
     background-color: #ffffff; 
     padding: 40px 20px;
     display: flex;
     flex-direction: column;
-    align-items: center;       /* Centra horizontalmente el contenido de la app */
+    align-items: center; 
     justify-content: flex-start;
     min-height: calc(100vh - 60px);
     box-sizing: border-box;
@@ -15,31 +15,29 @@
 /* ==========================================================================
    2. Estructura y Distribución en Islas (Layout Centrado)
    ========================================================================= */
-.profile-layout {
+.diseno-perfil {
     width: 100%;
-    max-width: 900px;          /* Ancho ideal para pantallas de escritorio */
-    margin: 0 auto;            /* SOLUCIÓN: Centra el bloque entero horizontalmente */
+    max-width: 900px; 
+    margin: 0 auto; 
     display: flex;
     flex-direction: column;
-    gap: 24px;                 /* Separación vertical entre islas */
+    gap: 24px; 
 }
 
-/* Fila para alinear las dos sub-islas inferiores lado a lado */
-.sub-islands-row {
+.fila-sub-islas {
     display: flex;
-    gap: 24px;                 /* Separación horizontal entre ambas sub-islas */
+    gap: 24px; 
     width: 100%;
 }
 
-/* Forzamos a las sub-islas a repartirse el espacio equitativamente */
-.sub-islands-row .profile-card {
+.fila-sub-islas .tarjeta-perfil {
     flex: 1;
 }
 
 /* ==========================================================================
    3. Componente Tarjeta (Profile Card Base)
    ========================================================================= */
-.profile-card {
+.tarjeta-perfil {
     background-color: var(--card-bg, #1a1a1a);
     width: 100%;
     padding: 35px;
@@ -51,15 +49,14 @@
     box-sizing: border-box;
 }
 
-/* Desactivamos restricciones heredadas para la isla principal de arriba */
-.island-main {
+.isla-principal {
     max-width: 100% !important;
 }
 
 /* ==========================================================================
    4. Detalles Internos (Avatar, Textos, Enlaces y Trofeos)
    ========================================================================= */
-.user-profile-info {
+.info-perfil-usuario {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -67,7 +64,7 @@
     margin-bottom: 20px;
 }
 
-.user-avatar-large {
+.avatar-usuario-grande {
     width: 100px;
     height: 100px;
     background-color: #333333;
@@ -79,53 +76,56 @@
     font-size: 45px;
 }
 
-.profile-name { 
+.svg-avatar {
+    fill: currentColor;
+    width: 100%;
+    height: 100%;
+}
+
+.nombre-perfil { 
     font-size: 22px; 
     font-weight: bold; 
     color: var(--white, #ffffff);
     margin: 0;
 }
 
-.profile-email { 
+.correo-perfil { 
     font-size: 14px; 
     color: #aaaaaa; 
     margin: 5px 0 0 0;
 }
 
-/* Secciones internas (Trofeos) */
-.profile-section {
+.seccion-perfil {
     text-align: center;
     border-top: 1px solid #333333;
     padding-top: 20px;
     margin-top: 25px;
 }
 
-.section-title { 
+.titulo-seccion { 
     font-size: 16px; 
     font-weight: bold; 
     color: var(--white, #ffffff); 
     margin-bottom: 12px; 
 }
 
-.trophy-row { 
+.fila-trofeos { 
     font-size: 28px; 
     letter-spacing: 8px;
 }
 
-/* Descripciones de las sub-islas */
-.island-body {
+.cuerpo-isla {
     margin-bottom: 20px;
 }
 
-.island-description {
+.descripcion-isla {
     font-size: 14px;
     color: #aaaaaa;
     line-height: 1.5;
     margin: 0;
 }
 
-/* Enlaces de Acción con animación */
-.card-action-link {
+.enlace-accion-tarjeta {
     display: inline-block;
     font-size: 14px;
     color: var(--white, #ffffff);
@@ -138,27 +138,27 @@
     transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
-.card-action-link:hover {
+.enlace-accion-tarjeta:hover {
     background-color: var(--white, #ffffff);
     color: #111111;
     transform: translateY(-2px);
 }
 
 /* ==========================================================================
-   5. Responsive Móvil (Colapsa a una sola columna en celulares)
+   5. Responsive Móvil
    ========================================================================= */
 @media (max-width: 768px) {
-    .main-container {
+    .contenedor-principal {
         padding: 20px 12px;
     }
-    .profile-layout {
+    .diseno-perfil {
         gap: 16px;
     }
-    .sub-islands-row {
+    .fila-sub-islas {
         flex-direction: column;
         gap: 16px;
     }
-    .profile-card {
+    .tarjeta-perfil {
         padding: 25px 20px;
     }
 }

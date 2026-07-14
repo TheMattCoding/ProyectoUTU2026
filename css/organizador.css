@@ -10,7 +10,7 @@
     min-height: calc(100vh - 140px);
 }
 
-.settings-wrapper {
+.contenedor-organizador {
     width: 100%;
     max-width: 1200px; /* Expandido para aprovechar el escritorio */
     display: flex;
@@ -18,7 +18,7 @@
     gap: 24px;
 }
 
-.settings-title {
+.titulo-organizador {
     font-size: 22px;
     font-weight: 800;
     color: #111111;
@@ -37,18 +37,18 @@
 /* ==========================================================================
    2. Navegación por Radio Hack (Sin JavaScript)
    ========================================================================== */
-.tab-radio-control {
+.control-radio-pestana {
     display: none;
 }
 
-.settings-tabs {
+.pestanas-organizador {
     display: flex;
     flex-direction: column;
     gap: 8px;
     width: 100%;
 }
 
-.tab-btn {
+.btn-pestana {
     background-color: #f5f5f7;
     border: 1px solid #e5e5ea;
     color: #555555;
@@ -61,16 +61,16 @@
     transition: all 0.2s ease;
 }
 
-.tab-btn:hover {
+.btn-pestana:hover {
     background-color: #e5e5ea;
     color: #111111;
 }
 
 /* Estado Activo Dinámico */
-#tab-radio-torneos:checked ~ .settings-wrapper .label-torneos,
-#tab-radio-fixtures:checked ~ .settings-wrapper .label-fixtures,
-#tab-radio-participantes:checked ~ .settings-wrapper .label-participantes,
-#tab-radio-reportes:checked ~ .settings-wrapper .label-reportes {
+#radio-pestana-torneos:checked ~ .contenedor-organizador .label-torneos,
+#radio-pestana-fixtures:checked ~ .contenedor-organizador .label-fixtures,
+#radio-pestana-participantes:checked ~ .contenedor-organizador .label-participantes,
+#radio-pestana-reportes:checked ~ .contenedor-organizador .label-reportes {
     background-color: #111111;
     border-color: #111111;
     color: #ffffff;
@@ -79,7 +79,7 @@
 /* ==========================================================================
    3. Contenedor del Panel Operativo (Isla Negra)
    ========================================================================== */
-.settings-content-card {
+.tarjeta-contenido-organizador {
     background-color: #1a1a1a;
     border-radius: 24px;
     padding: 24px 20px;
@@ -90,27 +90,27 @@
     flex-direction: column;
 }
 
-.settings-section {
+.seccion-organizador {
     display: none;
     flex-direction: column;
 }
 
 /* Despliegue de paneles condicional */
-#tab-radio-torneos:checked ~ .settings-wrapper .panel-torneos,
-#tab-radio-fixtures:checked ~ .settings-wrapper .panel-fixtures,
-#tab-radio-participantes:checked ~ .settings-wrapper .panel-participantes,
-#tab-radio-reportes:checked ~ .settings-wrapper .panel-reportes {
+#radio-pestana-torneos:checked ~ .contenedor-organizador .panel-torneos,
+#radio-pestana-fixtures:checked ~ .contenedor-organizador .panel-fixtures,
+#radio-pestana-participantes:checked ~ .contenedor-organizador .panel-participantes,
+#radio-pestana-reportes:checked ~ .contenedor-organizador .panel-reportes {
     display: flex;
 }
 
-.section-title {
+.titulo-seccion {
     font-size: 19px;
     font-weight: bold;
     color: #ffffff;
     margin-bottom: 4px;
 }
 
-.section-header-inline {
+.encabezado-seccion-enlinea {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -118,7 +118,7 @@
     gap: 12px;
 }
 
-.section-subtitle {
+.subtitulo-seccion {
     font-size: 13px;
     color: #aaaaaa;
     margin-bottom: 24px;
@@ -126,12 +126,12 @@
 }
 
 /* Componentes de Formulario estándar */
-.settings-form { display: flex; flex-direction: column; gap: 16px; }
-.form-group { display: flex; flex-direction: column; gap: 6px; width: 100%; }
-.form-label { font-size: 13px; font-weight: 500; color: #cccccc; }
+.formulario-organizador { display: flex; flex-direction: column; gap: 16px; }
+.grupo-formulario { display: flex; flex-direction: column; gap: 6px; width: 100%; }
+.etiqueta-formulario { font-size: 13px; font-weight: 500; color: #cccccc; }
 
-.form-control-input,
-.form-control-select {
+.control-formulario-entrada,
+.control-formulario-seleccion {
     width: 100%;
     height: 44px;
     background-color: #222222;
@@ -147,11 +147,11 @@
 /* ==========================================================================
    4. Solución al Responsive de Tablas (Mobile Fix)
    ========================================================================== */
-.table-container { 
+.contenedor-tabla { 
     width: 100%; 
 }
 
-.data-table { 
+.tabla-datos { 
     width: 100%; 
     border-collapse: collapse; 
     text-align: left; 
@@ -159,25 +159,25 @@
     color: #cccccc; 
 }
 
-.data-table th { 
+.tabla-datos th { 
     padding: 14px 12px; 
     border-bottom: 2px solid #2c2c2e; 
     color: #ffffff; 
     font-weight: 600; 
 }
 
-.data-table td { 
+.tabla-datos td { 
     padding: 16px 12px; 
     border-bottom: 1px solid #2c2c2e; 
 }
 
 /* Rediseño completo para pantallas medianas y chicas (Móviles) */
 @media (max-width: 768px) {
-    .data-table thead {
+    .tabla-datos thead {
         display: none; /* Ocultamos los encabezados nativos */
     }
     
-    .data-table tr {
+    .tabla-datos tr {
         display: block;
         background-color: #222222;
         border: 1px solid #2c2c2e;
@@ -186,7 +186,7 @@
         padding: 12px;
     }
     
-    .data-table td {
+    .tabla-datos td {
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -195,13 +195,13 @@
         border-bottom: 1px solid #2c2c2e;
     }
     
-    .data-table td:last-child {
+    .tabla-datos td:last-child {
         border-bottom: none;
     }
     
-    /* Inyectamos los títulos usando el atributo HTML data-label */
-    .data-table td::before {
-        content: attr(data-label);
+    /* Inyectamos los títulos usando el atributo HTML data-etiqueta */
+    .tabla-datos td::before {
+        content: attr(data-etiqueta);
         float: left;
         font-weight: bold;
         color: #8e8e93;
@@ -214,64 +214,64 @@
 /* ==========================================================================
    5. Componentes de Cruces y Fixtures
    ========================================================================== */
-.badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; }
-.badge-success { background-color: rgba(48, 209, 88, 0.15); color: #30d158; }
-.badge-warning { background-color: rgba(255, 159, 10, 0.15); color: #ff9f0a; }
+.insignia { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; }
+.insignia-exito { background-color: rgba(48, 209, 88, 0.15); color: #30d158; }
+.insignia-advertencia { background-color: rgba(255, 159, 10, 0.15); color: #ff9f0a; }
 
-.sub-section-heading { font-size: 13px; font-weight: bold; color: #8e8e93; text-transform: uppercase; margin-top: 12px; border-bottom: 1px solid #2c2c2e; padding-bottom: 8px; letter-spacing: 0.5px; }
-.match-row-card { display: flex; align-items: center; justify-content: space-between; background-color: #222222; border: 1px solid #2c2c2e; border-radius: 14px; padding: 14px; gap: 12px; margin-bottom: 10px; }
-.team-name { flex: 1; font-size: 14px; font-weight: 600; color: #ffffff; }
-.text-right { text-align: right; }
-.text-left { text-align: left; }
-.match-score-inputs { display: flex; align-items: center; gap: 8px; }
-.score-input { width: 48px; height: 38px; text-align: center; font-weight: bold; font-size: 16px; padding: 0; }
-.score-divider { color: #636366; font-size: 12px; font-weight: bold; }
+.encabezado-subseccion { font-size: 13px; font-weight: bold; color: #8e8e93; text-transform: uppercase; margin-top: 12px; border-bottom: 1px solid #2c2c2e; padding-bottom: 8px; letter-spacing: 0.5px; }
+.tarjeta-fila-partido { display: flex; align-items: center; justify-content: space-between; background-color: #222222; border: 1px solid #2c2c2e; border-radius: 14px; padding: 14px; gap: 12px; margin-bottom: 10px; }
+.nombre-equipo { flex: 1; font-size: 14px; font-weight: 600; color: #ffffff; }
+.texto-derecha { text-align: right; }
+.texto-izquierda { text-align: left; }
+.entradas-marcador-partido { display: flex; align-items: center; gap: 8px; }
+.entrada-marcador { width: 48px; height: 38px; text-align: center; font-weight: bold; font-size: 16px; padding: 0; }
+.divisor-marcador { color: #636366; font-size: 12px; font-weight: bold; }
 
 /* Switch de Estado */
-.round-status-box { background-color: #2c2c2e; padding: 14px; border-radius: 12px; margin-top: 16px; }
-.switch-container { display: flex; align-items: center; gap: 12px; cursor: pointer; font-size: 13.5px; color: #ffffff; }
-.switch-container input { display: none; }
-.switch-container .slider { width: 36px; height: 20px; background-color: #48484a; border-radius: 10px; position: relative; display: inline-block; flex-shrink: 0; transition: background-color 0.2s; }
-.switch-container .slider::before { content: ""; position: absolute; width: 16px; height: 16px; left: 2px; top: 2px; background-color: #ffffff; border-radius: 50%; transition: transform 0.2s; }
-.switch-container input:checked + .slider { background-color: #30d158; }
-.switch-container input:checked + .slider::before { transform: translateX(16px); }
+.caja-estado-ronda { background-color: #2c2c2e; padding: 14px; border-radius: 12px; margin-top: 16px; }
+.contenedor-interruptor { display: flex; align-items: center; gap: 12px; cursor: pointer; font-size: 13.5px; color: #ffffff; }
+.contenedor-interruptor input { display: none; }
+.contenedor-interruptor .deslizador { width: 36px; height: 20px; background-color: #48484a; border-radius: 10px; position: relative; display: inline-block; flex-shrink: 0; transition: background-color 0.2s; }
+.contenedor-interruptor .deslizador::before { content: ""; position: absolute; width: 16px; height: 16px; left: 2px; top: 2px; background-color: #ffffff; border-radius: 50%; transition: transform 0.2s; }
+.contenedor-interruptor input:checked + .deslizador { background-color: #30d158; }
+.contenedor-interruptor input:checked + .deslizador::before { transform: translateX(16px); }
 
 /* Reportes */
-.report-grid-actions { display: flex; flex-direction: column; gap: 12px; }
-.report-card-download { display: flex; justify-content: space-between; align-items: center; background-color: #222222; padding: 16px; border-radius: 14px; border: 1px solid #2c2c2e; gap: 10px; }
-.report-card-download h5 { font-size: 14px; font-weight: 500; color: #ffffff; margin: 0; }
+.cuadricula-acciones-reporte { display: flex; flex-direction: column; gap: 12px; }
+.tarjeta-descarga-reporte { display: flex; justify-content: space-between; align-items: center; background-color: #222222; padding: 16px; border-radius: 14px; border: 1px solid #2c2c2e; gap: 10px; }
+.tarjeta-descarga-reporte h5 { font-size: 14px; font-weight: 500; color: #ffffff; margin: 0; }
 
 /* Botones */
-.btn-save, .btn-secondary-sm { display: inline-flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; border: none; text-decoration: none; }
-.btn-save { background-color: #ffffff; color: #111111; padding: 12px 24px; border-radius: 20px; font-size: 13.5px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); align-self: flex-start; transition: background-color 0.15s; }
-.btn-save:hover { background-color: #e5e5ea; }
-.btn-secondary-sm { background-color: #2c2c2e; color: #ffffff; border: 1px solid #444444; padding: 8px 14px; border-radius: 10px; font-size: 12px; transition: background-color 0.15s; }
-.btn-secondary-sm:hover { background-color: #3a3a3c; }
-.form-actions { margin-top: 8px; }
+.btn-guardar, .btn-secundario-chico { display: inline-flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; border: none; text-decoration: none; }
+.btn-guardar { background-color: #ffffff; color: #111111; padding: 12px 24px; border-radius: 20px; font-size: 13.5px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); align-self: flex-start; transition: background-color 0.15s; }
+.btn-guardar:hover { background-color: #e5e5ea; }
+.btn-secundario-chico { background-color: #2c2c2e; color: #ffffff; border: 1px solid #444444; padding: 8px 14px; border-radius: 10px; font-size: 12px; transition: background-color 0.15s; }
+.btn-secundario-chico:hover { background-color: #3a3a3c; }
+.acciones-formulario { margin-top: 8px; }
 
 /* Ajuste responsive para filas de partidos en pantallas muy chicas */
 @media (max-width: 480px) {
-    .match-row-card { flex-direction: column; text-align: center; gap: 8px; }
-    .text-right, .text-left { text-align: center; }
-    .match-score-inputs { justify-content: center; width: 100%; }
+    .tarjeta-fila-partido { flex-direction: column; text-align: center; gap: 8px; }
+    .texto-derecha, .texto-izquierda { text-align: center; }
+    .entradas-marcador-partido { justify-content: center; width: 100%; }
 }
 
 /* ==========================================================================
    6. Media Query Unificada para Escritorio (Aprovechamiento Real)
    ========================================================================== */
 @media (min-width: 1024px) {
-    .settings-wrapper { flex-direction: row; align-items: flex-start; gap: 40px; }
-    .settings-tabs { width: 280px; flex-shrink: 0; position: sticky; top: 110px; }
-    .settings-title { font-size: 24px; margin-bottom: 12px; }
-    .tab-btn { padding: 14px 20px; font-size: 14.5px; }
+    .contenedor-organizador { flex-direction: row; align-items: flex-start; gap: 40px; }
+    .pestanas-organizador { width: 280px; flex-shrink: 0; position: sticky; top: 110px; }
+    .titulo-organizador { font-size: 24px; margin-bottom: 12px; }
+    .btn-pestana { padding: 14px 20px; font-size: 14.5px; }
     
-    .settings-content-card { 
+    .tarjeta-contenido-organizador { 
         flex: 1; 
         padding: 40px; 
         border-radius: 28px;
     }
     
-    .section-title { font-size: 22px; }
-    .form-row-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; width: 100%; }
-    .report-grid-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .titulo-seccion { font-size: 22px; }
+    .cuadricula-fila-formulario { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; width: 100%; }
+    .cuadricula-acciones-reporte { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 }

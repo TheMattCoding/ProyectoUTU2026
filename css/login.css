@@ -2,12 +2,12 @@
    ESTILOS REALES REPOSITORIO SGDM
 ========================================= */
 :root {
-    --bg-dark-card: #1c1d21;      /* El color gris oscuro de tus tarjetas */
-    --bg-main-page: #111112;      /* El fondo oscuro de la interfaz completa */
-    --text-light: #ffffff;        /* Blanco para textos e inputs activos */
-    --text-muted: #aaaaaa;        /* Gris claro para placeholders y secundarios */
-    --border-line: #333334;       /* Línea sutil de separación */
-    --font-family: system-ui, -apple-system, sans-serif;
+    --fondo-tarjeta-oscuro: #1c1d21;      /* El color gris oscuro de tus tarjetas */
+    --fondo-pagina-principal: #111112;    /* El fondo oscuro de la interfaz completa */
+    --texto-claro: #ffffff;               /* Blanco para textos e inputs activos */
+    --texto-atenuado: #aaaaaa;            /* Gris claro para placeholders y secundarios */
+    --linea-borde: #333334;               /* Línea sutil de separación */
+    --familia-fuente: system-ui, -apple-system, sans-serif;
 }
 
 * {
@@ -17,8 +17,8 @@
 }
 
 body {
-    font-family: var(--font-family);
-    background-color: var(--bg-main-page); 
+    font-family: var(--familia-fuente);
+    background-color: var(--fondo-pagina-principal); 
     display: flex;
     justify-content: center;
     align-items: center;
@@ -27,91 +27,91 @@ body {
 }
 
 /* Contenedor adaptado al estilo de tus tarjetas de torneos */
-.login-container {
-    background-color: var(--bg-dark-card);
+.contenedor-login {
+    background-color: var(--fondo-tarjeta-oscuro);
     width: 100%;
     max-width: 380px;
     padding: 3rem 2rem;
     border-radius: 16px; /* Radio de curvatura idéntico a tus componentes */
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
     text-align: center;
-    color: var(--text-light);
+    color: var(--texto-claro);
 }
 
 /* --- CONTENEDOR Y PROPORCIONES DEL LOGO --- */
-.logo-container {
+.contenedor-logo {
     margin-bottom: 1.8rem;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.logo-img {
+.imagen-logo {
     width: 70px;         /* Tamaño ideal para que no rompa el diseño */
     height: auto;        /* Mantiene la proporción original de tu logo */
     object-fit: contain;
 }
 
-.greeting {
+.saludo {
     font-size: 1.2rem;
-    color: var(--text-light);
+    color: var(--texto-claro);
     margin-bottom: 2.5rem;
     font-weight: 500;
 }
 
 /* --- FORMULARIO --- */
-.login-form {
+.formulario-login {
     display: flex;
     flex-direction: column;
 }
 
-.input-group {
+.grupo-entrada {
     margin-bottom: 1.8rem;
     text-align: left;
 }
 
 /* Inputs con la línea inferior del boceto */
-.input-group input {
+.grupo-entrada input {
     width: 100%;
     padding: 10px 0;
     border: none;
-    border-bottom: 2px solid var(--border-line);
+    border-bottom: 2px solid var(--linea-borde);
     font-size: 1rem;
-    color: var(--text-light);
+    color: var(--texto-claro);
     background: transparent;
     transition: border-color 0.3s;
 }
 
-.input-group input:focus {
+.grupo-entrada input:focus {
     outline: none;
-    border-bottom-color: var(--text-light);
+    border-bottom-color: var(--texto-claro);
 }
 
-.input-group input::placeholder {
-    color: var(--text-muted);
+.grupo-entrada input::placeholder {
+    color: var(--texto-atenuado);
 }
 
-.forgot-password {
+.contrasena-olvidada {
     text-align: right;
     margin-bottom: 2rem;
 }
 
-.forgot-password a {
-    color: var(--text-muted);
+.contrasena-olvidada a {
+    color: var(--texto-atenuado);
     font-size: 0.85rem;
     text-decoration: none;
     font-weight: bold; /* <-- Esto hace que aparezca en negrita */
     transition: color 0.2s;
 }
 
-.forgot-password a:hover {
-    color: var(--text-light);
+.contrasena-olvidada a:hover {
+    color: var(--texto-claro);
 }
 
 /* --- BOTÓN PRINCIPAL (Estilo "Saber más") --- */
-.btn-primary {
-    background-color: var(--text-light);
-    color: var(--bg-main-page);
+.btn-principal {
+    background-color: var(--texto-claro);
+    color: var(--fondo-pagina-principal);
     border: none;
     padding: 14px;
     border-radius: 25px; /* Bordes totalmente redondeados tipo píldora */
@@ -123,75 +123,75 @@ body {
     letter-spacing: 0.5px;
 }
 
-.btn-primary:hover {
+.btn-principal:hover {
     background-color: #e5e5e5;
 }
 
 /* --- SEPARADORES --- */
-.divider {
+.divisor {
     display: flex;
     align-items: center;
     margin: 1.8rem 0;
-    color: var(--text-muted);
+    color: var(--texto-atenuado);
 }
 
-.divider::before, .divider::after {
+.divisor::before, .divisor::after {
     content: '';
     flex: 1;
-    border-bottom: 1px solid var(--border-line);
+    border-bottom: 1px solid var(--linea-borde);
 }
 
-.divider span {
+.divisor span {
     padding: 0 12px;
     font-size: 0.9rem;
 }
 
-.social-text {
-    color: var(--text-muted);
+.texto-social {
+    color: var(--texto-atenuado);
     font-size: 0.9rem;
     margin-bottom: 1.2rem;
 }
 
 /* --- BOTONES DE REDES (Estilo "Inscribirme") --- */
-.social-buttons {
+.botones-sociales {
     display: flex;
     flex-direction: column;
     gap: 0.9rem;
     margin-bottom: 2.5rem;
 }
 
-.btn-social {
+.btn-red-social {
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 10px;
     background-color: transparent;
-    border: 1px solid var(--text-light); /* Borde blanco fino */
+    border: 1px solid var(--texto-claro); /* Borde blanco fino */
     padding: 11px;
     border-radius: 25px; 
     font-size: 0.9rem;
     font-weight: 600;
-    color: var(--text-light);
+    color: var(--texto-claro);
     cursor: pointer;
     transition: background-color 0.3s;
 }
 
-.btn-social:hover {
+.btn-red-social:hover {
     background-color: rgba(255, 255, 255, 0.1);
 }
 
 /* --- ENLACE REGISTRO --- */
-.register-link {
+.enlace-registro {
     font-size: 0.9rem;
-    color: var(--text-muted);
+    color: var(--texto-atenuado);
 }
 
-.register-link a {
-    color: var(--text-light);
+.enlace-registro a {
+    color: var(--texto-claro);
     font-weight: 600;
     text-decoration: none;
 }
 
-.register-link a:hover {
+.enlace-registro a:hover {
     text-decoration: underline;
 }
