@@ -132,53 +132,67 @@
         </details>
     </nav>
 
-    <main class="main-container">
-        
-        <div class="cabecera-resultados">
-            <h2 class="titulo-resultados">Resultados para: <span class="palabra-clave">"Torneo"</span></h2>
+<main class="main-container">
+    
+    <!-- Encabezado de la búsqueda -->
+    <div class="search-results-header">
+        <h2 class="results-title">Resultados para: <span class="search-keyword">"Torneo"</span></h2>
+    </div>
+
+    <!-- Lista de tarjetas de torneos -->
+    <section class="tournaments-list">
+    
+    <!-- Tarjeta Torneo de Ajedrez -->
+    <article class="tournament-card">
+        <!-- Portada del torneo -->
+        <div class="card-image-wrapper">
+            <img src="../img/torneo-ajedrez.jpg" alt="Torneo de Ajedrez" class="tournament-img">
+            <div class="card-overlay"></div>
+            <h3 class="tournament-title">Torneo de Ajedrez</h3>
         </div>
 
-        <section class="lista-torneos">
-        
-            <article class="tarjeta-torneo">
-                <div class="contenedor-imagen">
-                    <img src="../img/torneo-ajedrez.jpg" alt="Torneo de Ajedrez" class="imagen-torneo">
-                    <div class="superposicion-tarjeta"></div>
-                    <h3 class="titulo-torneo">Torneo de Ajedrez</h3>
-                </div>
-                <div class="info-tarjeta">
-                    <span class="fecha-torneo">26/7</span>
-                    <a href="detalleTorneo.html" class="btn btn-secondary btn-ver-mas">Ver más</a>
-                </div>
-            </article>
+        <!-- Información y botón de acción -->
+        <div class="card-info">
+            <span class="tournament-date">26/7</span>
+            <a href="detalleTorneo.html" class="btn btn-secondary btn-more">Ver más</a>
+        </div>
 
-            <article class="tarjeta-torneo">
-                <div class="contenedor-imagen">
-                    <img src="../img/torneo-futbol.jpg" alt="Torneo de Fútbol" class="imagen-torneo">
-                    <div class="superposicion-tarjeta"></div>
-                    <h3 class="titulo-torneo">Torneo de Fútbol</h3>
-                </div>
-                <div class="info-tarjeta">
-                    <span class="fecha-torneo">3/8</span>
-                    <a href="detalleTorneo.html" class="btn btn-secondary btn-ver-mas">Ver más</a>
-                </div>
-            </article>
+    <!-- Tarjeta Torneo de Fútbol -->
+    <article class="tournament-card">
+        <!-- Portada del torneo -->
+        <div class="card-image-wrapper">
+            <!-- Información y botón de acción -->
+            <img src="../img/torneo-futbol.jpg" alt="Torneo de Fútbol" class="tournament-img">
+            <div class="card-overlay"></div>
+            <h3 class="tournament-title">Torneo de Fútbol</h3>
+        </div>
 
-            <article class="tarjeta-torneo">
-                <div class="contenedor-imagen">
-                    <div class="marcador-imagen"></div>
-                    <h3 class="titulo-torneo">Próximo Torneo</h3>
-                </div>
-                <div class="info-tarjeta">
-                    <span class="fecha-torneo">--/--</span>
-                    <a href="detalleTorneo.html" class="btn btn-secondary btn-ver-mas">Ver más</a>
-                </div>
-            </article>
+        <div class="card-info">
+            <span class="tournament-date">3/8</span>
+            <a href="detalleTorneo.html" class="btn btn-secondary btn-more">Ver más</a>
+        </div>
+    </article>
+
+    <!-- Tarjeta Torneo Pendiente / Sin fecha -->
+    <article class="tournament-card">
+        <!-- Portada con marcador de posición (sin imagen) -->
+        <div class="card-image-wrapper">
+            <div class="img-placeholder"></div>
+            <h3 class="tournament-title">Próximo Torneo</h3>
+        </div>
+
+        <!-- Información y botón de acción -->
+        <div class="card-info">
+            <span class="tournament-date">--/--</span>
+            <a href="detalleTorneo.html" class="btn btn-secondary btn-more">Ver más</a>
+        </div>
+    </article>
 
         </section>
     </main>
 
-    <footer class="main-footer">
+ <!-- Footer -->
+<footer class="main-footer">
         <div class="footer-content">
             <img src="../img/epsilonSoftware2.png" alt="Logo Epsilon Software" class="footer-logo">
         

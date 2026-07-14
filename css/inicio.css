@@ -1,6 +1,5 @@
-/* ==========================================================================
-   1. Reseteo, Variables y Configuración General
-   ========================================================================== */
+/*==============1. Configuración Inicial ======================*/
+
 * {
     margin: 0;
     padding: 0;
@@ -27,9 +26,8 @@ body {
     min-height: 100vh;
 }
 
-/* ==========================================================================
-   2. Navbar (Estructura Flexbox Nativa)
-   ========================================================================== */
+/*==============2. Navbar y Menú hamburguesa ======================*/
+
 .navbar {
     display: flex !important;  
     align-items: center;       
@@ -74,9 +72,8 @@ body {
     border-radius: 2px;
 }
 
-/* ==========================================================================
-   3. Buscador Flexible
-   ========================================================================== */
+/*==============3. Barra de busqueda ======================*/
+
 .search-container {
     display: flex;
     flex: 1;                  
@@ -110,21 +107,19 @@ body {
     user-select: none;
 }
 
-/* ==========================================================================
-   4. Perfil, Notificaciones y Dropdowns
-   ========================================================================== */
+/*==============4. Perfil y Notificaciones ======================*/
+
 .profile-dropdown, .notifications-dropdown {
     position: relative;
     display: inline-block;
 }
 
-/* Margen de separación entre la campana y el perfil */
 .profile-dropdown {
     margin-left: 12px;
 }
 
 .notifications-dropdown {
-    margin-left: auto; /* Empuja las notificaciones hacia la derecha en móviles */
+    margin-left: auto;
 }
 
 .profile-dropdown-button, .notifications-dropdown-button {
@@ -141,7 +136,6 @@ body {
     padding: 0;
 }
 
-/* Elimina la flecha nativa de la etiqueta details en iOS y Safari */
 .profile-dropdown-button::-webkit-details-marker,
 .notifications-dropdown-button::-webkit-details-marker { 
     display: none; 
@@ -164,7 +158,7 @@ body {
     color: #cccccc;
 }
 
-/* Contenedor del icono de la campana */
+/* -Contenedor de la campana- */
 .notifications-icon-wrapper {
     position: relative;
     width: 34px;
@@ -187,7 +181,7 @@ body {
     height: 18px;
 }
 
-/* Punto Rojo de Notificación Activa */
+/* -Punto rojo de notificaciones- */
 .notification-dot {
     position: absolute;
     top: 2px;
@@ -199,7 +193,6 @@ body {
     border: 1.5px solid var(--bg-dark);
 }
 
-/* Tarjetas desplegables base (Estética compartida) */
 .profile-menu-card, .notifications-menu-card {
     position: absolute;
     top: 48px;
@@ -216,9 +209,8 @@ body {
     width: 220px;
 }
 
-/* Tarjeta específica de Notificaciones */
 .notifications-menu-card {
-    right: -45px; /* Desfase calculado para centrarse bien en pantallas pequeñas */
+    right: -45px; 
     width: 280px;
 }
 
@@ -227,7 +219,7 @@ body {
 .profile-menu-divider, .notifications-menu-divider { height: 1px; background-color: #2c2c2e; margin: 6px 0; }
 .profile-menu-links, .notifications-menu-list { display: flex; flex-direction: column; }
 
-/* Lista de notificaciones con scroll acotado */
+
 .notifications-menu-list {
     max-height: 240px;
     overflow-y: auto;
@@ -244,7 +236,6 @@ body {
     font-weight: 500;
 }
 
-/* Ítems de notificación individuales */
 .notification-item {
     display: flex;
     align-items: flex-start;
@@ -262,7 +253,6 @@ body {
     color: var(--white);
 }
 
-/* Estilo para las notificaciones No Leídas (unread) */
 .notification-item.unread {
     background-color: rgba(255, 255, 255, 0.03);
     color: var(--white);
@@ -296,7 +286,7 @@ body {
 .profile-menu-item.logout-item { color: #ff453a; }
 
 
-/*=============5. Menú Lateral ======================*/
+/*==============5. Menú Lateral ======================*/
 
 .menu-checkbox { display: none; }
 
@@ -380,9 +370,8 @@ body {
     justify-content: center;
 }
 
-/* ==========================================================================
-   6. Vista Mobile - Flujo Estándar
-   ========================================================================== */
+/*==============6. Contenedor principal y vista de celular ======================*/
+
 .main-container, .phone-container {
     background-color: var(--white); 
     padding: 24px 16px;
@@ -411,7 +400,7 @@ body {
     text-align: center;
 }
 
-/* Ocultar botones/flechas de carrusel en celulares */
+/* -Ocultar botones del carrusel en celulares- */
 .carousel-btn,
 .carousel-control-prev,
 .carousel-control-next,
@@ -457,7 +446,6 @@ body {
 .btn-secondary { background-color: var(--white); color: #111111; }
 .btn-primary { border: 1.5px solid var(--white); background: transparent; color: var(--white); }
 
-/* CORRECCIÓN: Forzamos a todos los links de las islas a verse como botones integrados */
 .info-card a,
 .card-action-link,
 .view-fixture-link,
@@ -502,9 +490,8 @@ body {
 .welcome-logo { width: 65px; height: auto; margin-bottom: 8px; }
 .welcome-text { font-size: 15px; font-weight: 600; color: #111111; }
 
-/* ==========================================================================
-   7. Footer Horizontal
-   ========================================================================== */
+/*==============7. Footer ======================*/
+
 .main-footer {
     background-color: var(--bg-dark);   
     border-top: 1px solid #222222;
@@ -527,18 +514,17 @@ body {
 .footer-copyright { color: #555555; font-size: 10px; }
 
 
-/* Controla el tamaño del SVG dentro de la lista de opciones */
+
 .profile-menu-card .avatar-svg {
-    width: 16px;           /* Achica el lienzo gigante a un tamaño de emoji estándar */
-    height: 16px;          /* Mantiene la proporción cuadrada */
-    fill: currentColor;    /* IMPORTANTE: Hace que el icono adopte el mismo color del texto (gris/blanco) */
-    margin-right: 8px;     /* Separa el icono del texto "Perfil" para que no quede pegado */
-    vertical-align: middle; /* Centra el icono verticalmente respecto al texto de la derecha */
+    width: 16px;          
+    height: 16px;          
+    fill: currentColor;    
+    margin-right: 8px;     
+    vertical-align: middle; 
 }
 
-/* ==========================================================================
-   8. MEDIA QUERY INTEGRAL: ESCRITORIO (>= 1024px)
-   ========================================================================== */
+/*==============8. Version de Escritorio ======================*/
+
 @media (min-width: 1024px) {
     body {
         display: flex !important;
@@ -565,23 +551,20 @@ body {
         width: 100% !important;
         max-width: 100% !important;
         padding: 0 40px !important;
-        /* CAMBIO: Evita que Flexbox separe los elementos con aire en el medio */
         justify-content: flex-start !important; 
     }
 
-    /* Corrección del flujo horizontal de notificaciones en escritorio */
+    
     .notifications-dropdown {
-        /* CAMBIO: Actúa como imán para empujar campana + perfil juntos a la derecha */
         margin-left: auto !important; 
     }
 
     .profile-dropdown {
-        /* CAMBIO: Mantiene una separación fija y elegante con la campana */
         margin-left: 16px !important;
     }
 
     .notifications-menu-card {
-        right: 0; /* Centrado perfecto con respecto a su botón contenedor */
+        right: 0; 
     }
 
     .main-container, .phone-container {
@@ -614,7 +597,6 @@ body {
         max-width: 650px !important;
     }
 
-    /* En PC SÍ mostramos y alineamos las flechas de navegación del carrusel */
     .carousel-btn {
         display: flex !important;
         position: absolute !important;
