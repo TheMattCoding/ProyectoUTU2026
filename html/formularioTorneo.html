@@ -144,21 +144,24 @@
         </details>
     </nav>
     <main class="main-container">
-        <div class="container">
-            <div class="app-logo-container" style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px; border-bottom: 2px solid var(--white); padding-bottom: 10px;">
+        <div class="isla-formulario-unica">
+
+            <div class="contenedor-logo-formulario" style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px; border-bottom: 2px solid var(--white); padding-bottom: 10px;">
                 <img src="../img/logoapp2.jpeg" alt="Logo" class="app-logo" style="height: 45px; width: auto; border-radius: 50%;">
                 <h2 style="margin: 0; border: none; padding: 0; font-size: 1.4rem;">CREAR NUEVO TORNEO</h2>
             </div>
 
             <form action="#" method="POST">
-                <div class="form-flex-columns">
-                    <div class="col-form">
-                        <div class="form-group">
+
+                <div class="columnas-flex-formulario">
+
+                    <div class="columna-formulario">
+                        <div class="grupo-formulario">
                             <label for="nombre">Nombre del Torneo</label>
                             <input type="text" id="nombre" placeholder="Ej: Torneo Relámpago" required>
                         </div>
 
-                        <div class="form-group">
+                        <div class="grupo-formulario">
                             <label for="disciplina">Disciplina</label>
                             <select id="disciplina" required>
                                 <option value="" disabled selected>Seleccione una opción</option>
@@ -167,8 +170,8 @@
                             </select>
                         </div>
 
-                        <div class="form-row">
-                            <div class="form-group flex-1">
+                        <div class="fila-formulario">
+                            <div class="grupo-formulario columna-expandible">
                                 <label for="formato">Formato de Clasificación</label>
                                 <select id="formato" required>
                                     <option value="" disabled selected>Seleccione el formato</option>
@@ -176,7 +179,7 @@
                                     <option value="liga">Liga (Todos contra todos)</option>
                                 </select>
                             </div>
-                            <div class="form-group flex-1">
+                            <div class="grupo-formulario columna-expandible">
                                 <label for="modalidad">Modalidad</label>
                                 <select id="modalidad" required>
                                     <option value="equipos">Por Equipos</option>
@@ -185,46 +188,47 @@
                             </div>
                         </div>
 
-                        <div class="form-row">
-                            <div class="form-group flex-1">
+                        <div class="fila-formulario">
+                            <div class="grupo-formulario columna-expandible">
                                 <label for="fecha">Fecha de Inicio</label>
                                 <input type="date" id="fecha" required>
                             </div>
-                            <div class="form-group flex-1">
+                            <div class="grupo-formulario columna-expandible">
                                 <label for="hora">Hora de Inicio</label>
                                 <input type="time" id="hora" required>
                             </div>
                         </div>
 
-                        <div class="form-group">
+                        <div class="grupo-formulario">
                             <label for="cantidad">Cantidad de Equipos</label>
                             <input type="number" id="cantidad" placeholder="Ej: 16">
                         </div>
                     </div>
 
-                    <div class="col-form flex-column-right">
-                        <div class="form-group textarea-container">
+                    <div class="columna-formulario columna-derecha-ajustada">
+                        <div class="grupo-formulario contenedor-area-texto">
                             <label for="descripcion">Descripción del Torneo</label>
                             <textarea id="descripcion" placeholder="Escribe las reglas o detalles del torneo..."></textarea>
                         </div>
 
-                        <div class="form-group">
+                        <div class="grupo-formulario">
                             <label>Ubicación del Torneo</label>
-                            <div class="map-container">
+                            <div class="contenedor-mapa">
                                 <iframe src="https://maps.google.com/maps?q=Montevideo&t=&z=13&ie=UTF8&iwloc=&output=embed" width="100%" height="150" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="btn-group">
-                    <button type="button" class="btn btn-cancel">Cancelar</button>
-                    <button type="submit" class="btn btn-submit">Crear Torneo</button>
+                <div class="grupo-botones-formulario">
+                    <button type="button" class="boton-formulario boton-cancelar">Cancelar</button>
+                    <button type="submit" class="boton-formulario boton-enviar">Crear Torneo</button>
                 </div>
             </form>
         </div>
     </main>
 
+    <!-- Pie de pagina -->
     <footer class="main-footer">
         <div class="footer-content">
             <img src="../img/epsilonSoftware2.png" alt="Logo Epsilon Software" class="footer-logo">

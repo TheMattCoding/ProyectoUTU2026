@@ -11,7 +11,7 @@
     box-sizing: border-box;
 }
 
-.calendar-grid-container {
+.contenedor-grilla-calendario {
     width: 100%;
     max-width: 1150px;
     background-color: #1a1a1a;
@@ -25,7 +25,7 @@
 }
 
 /* Cabecera del Calendario (Mes y Navegación) */
-.calendar-header-actions {
+.acciones-cabecera-calendario {
     display: flex;
     width: 100%;
     justify-content: space-between;
@@ -34,20 +34,20 @@
     box-sizing: border-box;
 }
 
-.calendar-current-date {
+.fecha-actual-calendario {
     font-size: 24px;
     font-weight: bold;
     color: #ffffff;
     margin: 0;
 }
 
-.calendar-navigation {
+.navegacion-calendario {
     display: flex;
     align-items: center;
     gap: 8px;
 }
 
-.calendar-nav-btn {
+.btn-nav-calendario {
     background-color: #2b2b2b;
     border: 1px solid #3d3d3d;
     color: #ffffff;
@@ -62,7 +62,7 @@
     transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
-.calendar-nav-btn:hover {
+.btn-nav-calendario:hover {
     background-color: #3d3d3d;
     border-color: #555555;
 }
@@ -72,13 +72,13 @@
    ========================================================================== */
 
 /* Ocultamos los componentes de escritorio en pantallas chicas */
-.calendar-weekdays, 
-.calendar-days-grid {
+.dias-semana-calendario, 
+.grilla-dias-calendario {
     display: none !important;
 }
 
 /* Agenda de Torneos en Celulares */
-.calendar-mobile-agenda {
+.agenda-movil-calendario {
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -87,13 +87,13 @@
     box-sizing: border-box;
 }
 
-.agenda-day-group {
+.grupo-dia-agenda {
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
 
-.agenda-date-header {
+.cabecera-fecha-agenda {
     color: #888888;
     font-size: 14px;
     font-weight: bold;
@@ -102,18 +102,18 @@
     border-bottom: 1px solid #2d2d2d;
 }
 
-.agenda-day-group.is-today-group .agenda-date-header {
+.grupo-dia-agenda.es-grupo-hoy .cabecera-fecha-agenda {
     color: #3399ff;
 }
 
-.agenda-events-list {
+.lista-eventos-agenda {
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
 
 /* Tarjetas de Torneos para Mobile (Blancas / Claras con borde lateral azul) */
-.agenda-event-card {
+.tarjeta-evento-agenda {
     background-color: #ffffff;
     color: #1a1a1a;
     border-radius: 6px;
@@ -125,12 +125,12 @@
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
 
-.agenda-event-title {
+.titulo-evento-agenda {
     font-size: 13px;
     font-weight: 600;
 }
 
-.agenda-event-time {
+.hora-evento-agenda {
     font-size: 11px;
     color: #666666;
     font-weight: normal;
@@ -143,12 +143,12 @@
 @media (min-width: 768px) {
     
     /* Ocultamos la vista de agenda mobile */
-    .calendar-mobile-agenda {
+    .agenda-movil-calendario {
         display: none !important;
     }
 
     /* Activamos los días de la semana */
-    .calendar-weekdays {
+    .dias-semana-calendario {
         display: flex !important;
         background-color: #121212; 
         border-radius: 8px 8px 0 0;
@@ -156,7 +156,7 @@
         border-bottom: none;
     }
 
-    .calendar-weekdays div {
+    .dias-semana-calendario div {
         flex: 0 0 calc(100% / 7);
         text-align: center;
         padding: 12px 0;
@@ -167,7 +167,7 @@
     }
 
     /* Activamos la Grilla (Mediante Flexbox con Flex-Wrap) */
-    .calendar-days-grid {
+    .grilla-dias-calendario {
         display: flex !important;
         flex-wrap: wrap;
         width: 100%;
@@ -178,7 +178,7 @@
     }
 
     /* Estructura Base de cada Celda */
-    .calendar-day-cell {
+    .celda-dia-calendario {
         position: relative;
         flex: 0 0 calc(100% / 7);
         min-height: 110px;
@@ -194,33 +194,33 @@
         transition: background-color 0.2s ease;
     }
 
-    .calendar-days-grid .calendar-day-cell:nth-child(7n) { 
+    .grilla-dias-calendario .celda-dia-calendario:nth-child(7n) { 
         border-right: none; 
     }
 
     /* Cabecera interna de celda (Alinea número y botón +) */
-    .calendar-day-header {
+    .cabecera-dia-calendario {
         display: flex;
         justify-content: space-between;
         align-items: center;
         width: 100%;
     }
 
-    .day-number {
+    .numero-dia {
         font-size: 12px;
         font-weight: 700;
         color: #ffffff;
     }
 
     /* Contenedor y etiquetas de eventos internos */
-    .calendar-events-container {
+    .contenedor-eventos-calendario {
         display: flex;
         flex-direction: column;
         gap: 4px;
         width: 100%;
     }
 
-    .event-tag {
+    .etiqueta-evento {
         display: block;
         background-color: #ffffff; 
         color: #1a1a1a; 
@@ -234,7 +234,7 @@
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
     }
 
-    .event-time {
+    .hora-evento {
         display: inline-block;
         font-size: 9px;
         color: #555555; 
@@ -243,40 +243,40 @@
     }
 
     /* Estado Especial: Días fuera de mes */
-    .calendar-day-cell.outside-month {
+    .celda-dia-calendario.fuera-mes {
         background-color: #141414;
     }
 
-    .calendar-day-cell.outside-month .day-number {
+    .celda-dia-calendario.fuera-mes .numero-dia {
         color: #444444;
     }
 
     /* Estado Especial: Día de Hoy */
-    .calendar-day-cell.is-today {
+    .celda-dia-calendario.es-hoy {
         background-color: #1c2835; 
         border: 1px solid #0066cc;
     }
 
-    .calendar-day-cell.is-today .day-number {
+    .celda-dia-calendario.es-hoy .numero-dia {
         color: #3399ff;
     }
 
     /* --- EFECTOS HOVER (Solo Desktop) --- */
-    .calendar-day-cell:not(.outside-month):hover {
+    .celda-dia-calendario:not(.fuera-mes):hover {
         background-color: #252525;
         cursor: pointer;
     }
 
-    .calendar-day-cell.outside-month:hover {
+    .celda-dia-calendario.fuera-mes:hover {
         background-color: #1c1c1c; 
     }
 
-    .calendar-day-cell.is-today:hover {
+    .celda-dia-calendario.es-hoy:hover {
         background-color: #223244;
     }
 
     /* --- COMPORTAMIENTO DINÁMICO DEL BOTÓN "+" --- */
-    .add-event-btn {
+    .btn-agregar-evento {
         opacity: 0;
         pointer-events: none;
         background-color: #0066cc;
@@ -294,13 +294,13 @@
         transition: opacity 0.2s ease, background-color 0.1s ease, transform 0.1s ease;
     }
 
-    .add-event-btn:hover {
+    .btn-agregar-evento:hover {
         background-color: #0052a3;
         transform: scale(1.1);
     }
 
     /* Mostrar botón al pasar el mouse por la casilla */
-    .calendar-day-cell:hover .add-event-btn {
+    .celda-dia-calendario:hover .btn-agregar-evento {
         opacity: 1;
         pointer-events: auto;
     }

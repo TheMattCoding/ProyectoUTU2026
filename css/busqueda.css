@@ -5,27 +5,27 @@
    ========================================================================== */
 
 /* --- Encabezado de la búsqueda --- */
-.search-results-header {
+.cabecera-resultados {
     width: 100%;
     max-width: 450px;
     margin-bottom: 20px;
     text-align: left;
 }
 
-.results-title {
+.titulo-resultados {
     font-size: 18px;
     font-weight: bold;
     color: var(--bg-dark); /* Texto oscuro sobre el fondo blanco */
     font-family: Arial, sans-serif;
 }
 
-.search-keyword {
+.palabra-clave {
     color: #555555;
     font-style: italic;
 }
 
 /* --- Lista de Tarjetas (Contenedor Móvil) --- */
-.tournaments-list {
+.lista-torneos {
     display: flex;
     flex-direction: column;
     gap: 24px;
@@ -34,7 +34,7 @@
 }
 
 /* --- Tarjeta de Torneo --- */
-.tournament-card {
+.tarjeta-torneo {
     background-color: var(--card-bg); 
     width: 100%;
     border-radius: 24px;
@@ -47,7 +47,7 @@
 }
 
 /* Contenedor de imagen */
-.card-image-wrapper {
+.contenedor-imagen {
     position: absolute;
     top: 0;
     left: 0;
@@ -56,21 +56,21 @@
     z-index: 1;
 }
 
-.tournament-img {
+.imagen-torneo {
     width: 100%;
     height: 100%;
     object-fit: cover; 
     display: block;
 }
 
-.img-placeholder {
+.marcador-imagen {
     width: 100%;
     height: 100%;
     background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(0,0,0,0.1));
 }
 
 /* Capa oscura sobre la imagen para legibilidad */
-.card-overlay {
+.superposicion-tarjeta {
     position: absolute;
     top: 0;
     left: 0;
@@ -81,7 +81,7 @@
 }
 
 /* Textos sobre la imagen */
-.tournament-title {
+.titulo-torneo {
     position: absolute;
     top: 24px;
     left: 24px;
@@ -94,7 +94,7 @@
 }
 
 /* Bloque de Info Inferior Derecho */
-.card-info {
+.info-tarjeta {
     position: absolute;
     bottom: 20px;
     right: 24px;
@@ -105,13 +105,13 @@
     z-index: 3; 
 }
 
-.tournament-date {
+.fecha-torneo {
     color: var(--white);
     font-weight: bold;
     font-size: 14px;
 }
 
-.btn-more {
+.btn-ver-mas {
     box-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
 
@@ -119,10 +119,10 @@
    2. Media Query - Tablet (768px a 1023px)
    ========================================================================== */
 @media (min-width: 768px) and (max-width: 1023px) {
-    .search-results-header, .tournaments-list {
+    .cabecera-resultados, .lista-torneos {
         max-width: 100%;
     }
-    .tournaments-list {
+    .lista-torneos {
         display: grid;
         grid-template-columns: 1fr 1fr; /* 2 columnas en tablet */
         gap: 24px;
@@ -143,23 +143,23 @@
         flex-direction: column !important;
         align-items: flex-start !important; /* Alinea el título "Resultados para..." a la izquierda */
         gap: 32px !important;
-        margin-left: 0 !important; /* Desactivado: El espacio ya lo genera el padding del body */
+        margin-left: 0 !important; /* El espacio ya lo genera el padding del body */
     }
 
     /* El encabezado se estira de manera limpia en PC */
-    .search-results-header {
+    .cabecera-resultados {
         max-width: 1150px !important;
         width: 100% !important;
         margin: 0 auto !important;
         padding: 0 20px !important;
     }
     
-    .results-title {
+    .titulo-resultados {
         font-size: 26px !important; 
     }
 
     /* La lista pasa a tener 3 columnas perfectas y centradas */
-    .tournaments-list {
+    .lista-torneos {
         display: grid !important;
         grid-template-columns: repeat(3, 1fr) !important; /* Tres columnas idénticas */
         gap: 32px !important;
@@ -170,7 +170,7 @@
     }
 
     /* Tarjetas optimizadas para pantallas grandes */
-    .tournament-card {
+    .tarjeta-torneo {
         height: 200px !important; /* Un poco más de altura en PC para lucir las imágenes */
     }
 }

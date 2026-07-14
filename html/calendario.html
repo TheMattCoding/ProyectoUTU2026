@@ -12,12 +12,10 @@
 </head>
 <body>
 
- <!-- Menú lateral -->
     <input type="checkbox" id="menu-toggle" class="menu-checkbox">
 
     <div class="sidebar">
 
-        <!-- Movil cerrar menú -->
         <div class="sidebar-header">
             <span class="sidebar-title">Menú</span>
             <label for="menu-toggle" class="close-sidebar-btn" aria-label="Cerrar menú">X</label>
@@ -32,7 +30,6 @@
             <a href="configuracion.html" class="sidebar-link">Configuración</a>
         </nav>
 
-        <!-- Modo Oscuro-Claro -->
         <div class="sidebar-footer">
             <div class="theme-switch-container">
                 <span class="theme-label">Modo Oscuro</span>
@@ -47,7 +44,6 @@
 
     <label for="menu-toggle" class="sidebar-overlay"></label>
 
-    <!-- Menú hamburgesa -->
     <nav class="navbar" aria-label="Navegación principal">
         <label for="menu-toggle" class="nav-button" aria-label="Abrir menú de navegación">
             <div class="hamburger-box">
@@ -57,7 +53,6 @@
             </div>
         </label>
 
-        <!-- Busqueda de Torneo -->
         <form action="busquedaTorneo.html" method="GET" class="search-form" style="display: flex; flex: 1; max-width: 420px; margin: 0 12px;">
             <div class="search-container" style="margin: 0; width: 100%;">
                 <svg class="search-google-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -67,7 +62,6 @@
             </div>
         </form>
 
-        <!-- Campana de Notificaciones -->
         <details class="notifications-dropdown">
             <summary class="notifications-dropdown-button" aria-haspopup="true" aria-label="Notificaciones">
                 <div class="notifications-icon-wrapper">
@@ -78,7 +72,6 @@
                 </div>
             </summary>
             
-            <!-- Apartado de Notificaciones -->
             <div class="notifications-menu-card">
                 <div class="notifications-menu-header">
                     <span class="notifications-menu-title">Notificaciones</span>
@@ -103,18 +96,15 @@
             </div>
         </details>
 
-        <!-- Apartado de perfil -->
         <details class="profile-dropdown">
             <summary class="profile-dropdown-button" aria-label="Menú de usuario">
                 <div class="user-avatar">
                    <svg class="avatar-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
                        <path d="M320 312C386.3 312 440 258.3 440 192C440 125.7 386.3 72 320 72C253.7 72 200 125.7 200 192C200 258.3 253.7 312 320 312zM290.3 368C191.8 368 112 447.8 112 546.3C112 562.7 125.3 576 141.7 576L498.3 576C514.7 576 528 562.7 528 546.3C528 447.8 448.2 368 349.7 368L290.3 368z" />
                    </svg>
-
                 </div>
             </summary>
             
-            <!-- Menú de perfil -->
             <div class="profile-menu-card">
                 <div class="profile-menu-header">
                     <span class="profile-menu-name">Usuario</span>
@@ -146,366 +136,363 @@
 
 <main class="main-container">
 
-    <div class="calendar-grid-container">
+    <div class="contenedor-grilla-calendario">
         
-        <header class="calendar-header-actions">
-            <h2 class="calendar-current-date">Junio 2026</h2>
-            <div class="calendar-navigation">
-                <button class="calendar-nav-btn" aria-label="Mes anterior">‹</button>
-                <button class="calendar-nav-btn" aria-label="Mes siguiente">›</button>
+        <header class="acciones-cabecera-calendario">
+            <h2 class="fecha-actual-calendario">Junio 2026</h2>
+            <div class="navegacion-calendario">
+                <button class="btn-nav-calendario" aria-label="Mes anterior">‹</button>
+                <button class="btn-nav-calendario" aria-label="Mes siguiente">›</button>
             </div>
         </header>
         
-        <!-- CABECERA DE DÍAS (Se oculta en mobile vía CSS) -->
-        <div class="calendar-weekdays">
+        <div class="dias-semana-calendario">
             <div>Dom</div><div>Lun</div><div>Mar</div><div>Mié</div><div>Jue</div><div>Vie</div><div>Sáb</div>
         </div>
 
-        <!-- VISTA DE ESCRITORIO (FLEXBOX) -->
-        <div class="calendar-days-grid">
+        <div class="grilla-dias-calendario">
             
-            <div class="calendar-day-cell outside-month">
-                <div class="calendar-day-header">
-                    <span class="day-number">31</span>
-                    <button class="add-event-btn" aria-label="Agregar evento">+</button>
+            <div class="celda-dia-calendario fuera-mes">
+                <div class="cabecera-dia-calendario">
+                    <span class="numero-dia">31</span>
+                    <button class="btn-agregar-evento" aria-label="Agregar evento">+</button>
                 </div>
             </div>
             
-            <div class="calendar-day-cell">
-                <div class="calendar-day-header">
-                    <span class="day-number">1</span>
-                    <button class="add-event-btn" aria-label="Agregar evento">+</button>
+            <div class="celda-dia-calendario">
+                <div class="cabecera-dia-calendario">
+                    <span class="numero-dia">1</span>
+                    <button class="btn-agregar-evento" aria-label="Agregar evento">+</button>
                 </div>
             </div>
             
-            <div class="calendar-day-cell">
-                <div class="calendar-day-header">
-                    <span class="day-number">2</span>
-                    <button class="add-event-btn" aria-label="Agregar evento">+</button>
+            <div class="celda-dia-calendario">
+                <div class="cabecera-dia-calendario">
+                    <span class="numero-dia">2</span>
+                    <button class="btn-agregar-evento" aria-label="Agregar evento">+</button>
                 </div>
-                <div class="calendar-events-container">
-                    <span class="event-tag">Torneo de Rugby<span class="event-time">7:00 pm</span></span>
-                </div>
-            </div>
-            
-            <div class="calendar-day-cell">
-                <div class="calendar-day-header">
-                    <span class="day-number">3</span>
-                    <button class="add-event-btn" aria-label="Agregar evento">+</button>
+                <div class="contenedor-eventos-calendario">
+                    <span class="etiqueta-evento">Torneo de Rugby<span class="hora-evento">7:00 pm</span></span>
                 </div>
             </div>
             
-            <div class="calendar-day-cell">
-                <div class="calendar-day-header">
-                    <span class="day-number">4</span>
-                    <button class="add-event-btn" aria-label="Agregar evento">+</button>
+            <div class="celda-dia-calendario">
+                <div class="cabecera-dia-calendario">
+                    <span class="numero-dia">3</span>
+                    <button class="btn-agregar-evento" aria-label="Agregar evento">+</button>
                 </div>
             </div>
             
-            <div class="calendar-day-cell">
-                <div class="calendar-day-header">
-                    <span class="day-number">5</span>
-                    <button class="add-event-btn" aria-label="Agregar evento">+</button>
+            <div class="celda-dia-calendario">
+                <div class="cabecera-dia-calendario">
+                    <span class="numero-dia">4</span>
+                    <button class="btn-agregar-evento" aria-label="Agregar evento">+</button>
                 </div>
             </div>
             
-            <div class="calendar-day-cell">
-                <div class="calendar-day-header">
-                    <span class="day-number">6</span>
-                    <button class="add-event-btn" aria-label="Agregar evento">+</button>
+            <div class="celda-dia-calendario">
+                <div class="cabecera-dia-calendario">
+                    <span class="numero-dia">5</span>
+                    <button class="btn-agregar-evento" aria-label="Agregar evento">+</button>
+                </div>
+            </div>
+            
+            <div class="celda-dia-calendario">
+                <div class="cabecera-dia-calendario">
+                    <span class="numero-dia">6</span>
+                    <button class="btn-agregar-evento" aria-label="Agregar evento">+</button>
                 </div>
             </div>
 
-            <div class="calendar-day-cell">
-                <div class="calendar-day-header">
-                    <span class="day-number">7</span>
-                    <button class="add-event-btn" aria-label="Agregar evento">+</button>
+            <div class="celda-dia-calendario">
+                <div class="cabecera-dia-calendario">
+                    <span class="numero-dia">7</span>
+                    <button class="btn-agregar-evento" aria-label="Agregar evento">+</button>
                 </div>
             </div>
             
-            <div class="calendar-day-cell">
-                <div class="calendar-day-header">
-                    <span class="day-number">8</span>
-                    <button class="add-event-btn" aria-label="Agregar evento">+</button>
+            <div class="celda-dia-calendario">
+                <div class="cabecera-dia-calendario">
+                    <span class="numero-dia">8</span>
+                    <button class="btn-agregar-evento" aria-label="Agregar evento">+</button>
                 </div>
             </div>
             
-            <div class="calendar-day-cell">
-                <div class="calendar-day-header">
-                    <span class="day-number">9</span>
-                    <button class="add-event-btn" aria-label="Agregar evento">+</button>
+            <div class="celda-dia-calendario">
+                <div class="cabecera-dia-calendario">
+                    <span class="numero-dia">9</span>
+                    <button class="btn-agregar-evento" aria-label="Agregar evento">+</button>
                 </div>
-                <div class="calendar-events-container">
-                    <span class="event-tag">Torneo de Handball<span class="event-time">7:00 pm</span></span>
-                </div>
-            </div>
-            
-            <div class="calendar-day-cell">
-                <div class="calendar-day-header">
-                    <span class="day-number">10</span>
-                    <button class="add-event-btn" aria-label="Agregar evento">+</button>
+                <div class="contenedor-eventos-calendario">
+                    <span class="etiqueta-evento">Torneo de Handball<span class="hora-evento">7:00 pm</span></span>
                 </div>
             </div>
             
-            <div class="calendar-day-cell">
-                <div class="calendar-day-header">
-                    <span class="day-number">11</span>
-                    <button class="add-event-btn" aria-label="Agregar evento">+</button>
+            <div class="celda-dia-calendario">
+                <div class="cabecera-dia-calendario">
+                    <span class="numero-dia">10</span>
+                    <button class="btn-agregar-evento" aria-label="Agregar evento">+</button>
                 </div>
             </div>
             
-            <div class="calendar-day-cell">
-                <div class="calendar-day-header">
-                    <span class="day-number">12</span>
-                    <button class="add-event-btn" aria-label="Agregar evento">+</button>
+            <div class="celda-dia-calendario">
+                <div class="cabecera-dia-calendario">
+                    <span class="numero-dia">11</span>
+                    <button class="btn-agregar-evento" aria-label="Agregar evento">+</button>
                 </div>
             </div>
             
-            <div class="calendar-day-cell">
-                <div class="calendar-day-header">
-                    <span class="day-number">13</span>
-                    <button class="add-event-btn" aria-label="Agregar evento">+</button>
+            <div class="celda-dia-calendario">
+                <div class="cabecera-dia-calendario">
+                    <span class="numero-dia">12</span>
+                    <button class="btn-agregar-evento" aria-label="Agregar evento">+</button>
+                </div>
+            </div>
+            
+            <div class="celda-dia-calendario">
+                <div class="cabecera-dia-calendario">
+                    <span class="numero-dia">13</span>
+                    <button class="btn-agregar-evento" aria-label="Agregar evento">+</button>
                 </div>
             </div>
 
-            <div class="calendar-day-cell">
-                <div class="calendar-day-header">
-                    <span class="day-number">14</span>
-                    <button class="add-event-btn" aria-label="Agregar evento">+</button>
+            <div class="celda-dia-calendario">
+                <div class="cabecera-dia-calendario">
+                    <span class="numero-dia">14</span>
+                    <button class="btn-agregar-evento" aria-label="Agregar evento">+</button>
                 </div>
             </div>
             
-            <div class="calendar-day-cell">
-                <div class="calendar-day-header">
-                    <span class="day-number">15</span>
-                    <button class="add-event-btn" aria-label="Agregar evento">+</button>
+            <div class="celda-dia-calendario">
+                <div class="cabecera-dia-calendario">
+                    <span class="numero-dia">15</span>
+                    <button class="btn-agregar-evento" aria-label="Agregar evento">+</button>
                 </div>
             </div>
             
-            <div class="calendar-day-cell">
-                <div class="calendar-day-header">
-                    <span class="day-number">16</span>
-                    <button class="add-event-btn" aria-label="Agregar evento">+</button>
+            <div class="celda-dia-calendario">
+                <div class="cabecera-dia-calendario">
+                    <span class="numero-dia">16</span>
+                    <button class="btn-agregar-evento" aria-label="Agregar evento">+</button>
                 </div>
-                <div class="calendar-events-container">
-                    <span class="event-tag">Torneo de Damas<span class="event-time">7:00 pm</span></span>
-                </div>
-            </div>
-            
-            <div class="calendar-day-cell">
-                <div class="calendar-day-header">
-                    <span class="day-number">17</span>
-                    <button class="add-event-btn" aria-label="Agregar evento">+</button>
-                </div>
-                <div class="calendar-events-container">
-                    <span class="event-tag">Torneo de Baseball<span class="event-time">9:00 am</span></span>
-                    <span class="event-tag">Torneo de Ping-Pong <span class="event-time">3:00 pm</span></span>
+                <div class="contenedor-eventos-calendario">
+                    <span class="etiqueta-evento">Torneo de Damas<span class="hora-evento">7:00 pm</span></span>
                 </div>
             </div>
             
-            <div class="calendar-day-cell">
-                <div class="calendar-day-header">
-                    <span class="day-number">18</span>
-                    <button class="add-event-btn" aria-label="Agregar evento">+</button>
+            <div class="celda-dia-calendario">
+                <div class="cabecera-dia-calendario">
+                    <span class="numero-dia">17</span>
+                    <button class="btn-agregar-evento" aria-label="Agregar evento">+</button>
+                </div>
+                <div class="contenedor-eventos-calendario">
+                    <span class="etiqueta-evento">Torneo de Baseball<span class="hora-evento">9:00 am</span></span>
+                    <span class="etiqueta-evento">Torneo de Ping-Pong <span class="hora-evento">3:00 pm</span></span>
                 </div>
             </div>
             
-            <div class="calendar-day-cell">
-                <div class="calendar-day-header">
-                    <span class="day-number">19</span>
-                    <button class="add-event-btn" aria-label="Agregar evento">+</button>
+            <div class="celda-dia-calendario">
+                <div class="cabecera-dia-calendario">
+                    <span class="numero-dia">18</span>
+                    <button class="btn-agregar-evento" aria-label="Agregar evento">+</button>
                 </div>
             </div>
             
-            <div class="calendar-day-cell">
-                <div class="calendar-day-header">
-                    <span class="day-number">20</span>
-                    <button class="add-event-btn" aria-label="Agregar evento">+</button>
+            <div class="celda-dia-calendario">
+                <div class="cabecera-dia-calendario">
+                    <span class="numero-dia">19</span>
+                    <button class="btn-agregar-evento" aria-label="Agregar evento">+</button>
+                </div>
+            </div>
+            
+            <div class="celda-dia-calendario">
+                <div class="cabecera-dia-calendario">
+                    <span class="numero-dia">20</span>
+                    <button class="btn-agregar-evento" aria-label="Agregar evento">+</button>
                 </div>
             </div>
 
-            <div class="calendar-day-cell">
-                <div class="calendar-day-header">
-                    <span class="day-number">21</span>
-                    <button class="add-event-btn" aria-label="Agregar evento">+</button>
+            <div class="celda-dia-calendario">
+                <div class="cabecera-dia-calendario">
+                    <span class="numero-dia">21</span>
+                    <button class="btn-agregar-evento" aria-label="Agregar evento">+</button>
                 </div>
             </div>
             
-            <div class="calendar-day-cell">
-                <div class="calendar-day-header">
-                    <span class="day-number">22</span>
-                    <button class="add-event-btn" aria-label="Agregar evento">+</button>
+            <div class="celda-dia-calendario">
+                <div class="cabecera-dia-calendario">
+                    <span class="numero-dia">22</span>
+                    <button class="btn-agregar-evento" aria-label="Agregar evento">+</button>
                 </div>
             </div>
             
-            <div class="calendar-day-cell">
-                <div class="calendar-day-header">
-                    <span class="day-number">23</span>
-                    <button class="add-event-btn" aria-label="Agregar evento">+</button>
+            <div class="celda-dia-calendario">
+                <div class="cabecera-dia-calendario">
+                    <span class="numero-dia">23</span>
+                    <button class="btn-agregar-evento" aria-label="Agregar evento">+</button>
                 </div>
-                <div class="calendar-events-container">
-                    <span class="event-tag">Torneo de Ajedrez <span class="event-time">5:00 pm</span></span>
-                </div>
-            </div>
-            
-            <div class="calendar-day-cell">
-                <div class="calendar-day-header">
-                    <span class="day-number">24</span>
-                    <button class="add-event-btn" aria-label="Agregar evento">+</button>
+                <div class="contenedor-eventos-calendario">
+                    <span class="etiqueta-evento">Torneo de Ajedrez <span class="hora-evento">5:00 pm</span></span>
                 </div>
             </div>
             
-            <div class="calendar-day-cell is-today">
-                <div class="calendar-day-header">
-                    <span class="day-number">25</span>
-                    <button class="add-event-btn" aria-label="Agregar evento">+</button>
-                </div>
-                <div class="calendar-events-container">
-                    <span class="event-tag">Torneo de Basketball <span class="event-time">11:00 am</span></span>
+            <div class="celda-dia-calendario">
+                <div class="cabecera-dia-calendario">
+                    <span class="numero-dia">24</span>
+                    <button class="btn-agregar-evento" aria-label="Agregar evento">+</button>
                 </div>
             </div>
             
-            <div class="calendar-day-cell">
-                <div class="calendar-day-header">
-                    <span class="day-number">26</span>
-                    <button class="add-event-btn" aria-label="Agregar evento">+</button>
+            <div class="celda-dia-calendario es-hoy">
+                <div class="cabecera-dia-calendario">
+                    <span class="numero-dia">25</span>
+                    <button class="btn-agregar-evento" aria-label="Agregar evento">+</button>
+                </div>
+                <div class="contenedor-eventos-calendario">
+                    <span class="etiqueta-evento">Torneo de Basketball <span class="hora-evento">11:00 am</span></span>
                 </div>
             </div>
             
-            <div class="calendar-day-cell">
-                <div class="calendar-day-header">
-                    <span class="day-number">27</span>
-                    <button class="add-event-btn" aria-label="Agregar evento">+</button>
+            <div class="celda-dia-calendario">
+                <div class="cabecera-dia-calendario">
+                    <span class="numero-dia">26</span>
+                    <button class="btn-agregar-evento" aria-label="Agregar evento">+</button>
+                </div>
+            </div>
+            
+            <div class="celda-dia-calendario">
+                <div class="cabecera-dia-calendario">
+                    <span class="numero-dia">27</span>
+                    <button class="btn-agregar-evento" aria-label="Agregar evento">+</button>
                 </div>
             </div>
 
-            <div class="calendar-day-cell">
-                <div class="calendar-day-header">
-                    <span class="day-number">28</span>
-                    <button class="add-event-btn" aria-label="Agregar evento">+</button>
+            <div class="celda-dia-calendario">
+                <div class="cabecera-dia-calendario">
+                    <span class="numero-dia">28</span>
+                    <button class="btn-agregar-evento" aria-label="Agregar evento">+</button>
                 </div>
             </div>
             
-            <div class="calendar-day-cell">
-                <div class="calendar-day-header">
-                    <span class="day-number">29</span>
-                    <button class="add-event-btn" aria-label="Agregar evento">+</button>
+            <div class="celda-dia-calendario">
+                <div class="cabecera-dia-calendario">
+                    <span class="numero-dia">29</span>
+                    <button class="btn-agregar-evento" aria-label="Agregar evento">+</button>
                 </div>
             </div>
             
-            <div class="calendar-day-cell">
-                <div class="calendar-day-header">
-                    <span class="day-number">30</span>
-                    <button class="add-event-btn" aria-label="Agregar evento">+</button>
+            <div class="celda-dia-calendario">
+                <div class="cabecera-dia-calendario">
+                    <span class="numero-dia">30</span>
+                    <button class="btn-agregar-evento" aria-label="Agregar evento">+</button>
                 </div>
-                <div class="calendar-events-container">
-                    <span class="event-tag">Torneo de Fútbol <span class="event-time">7:00 pm</span></span>
-                </div>
-            </div>
-            
-            <div class="calendar-day-cell outside-month">
-                <div class="calendar-day-header">
-                    <span class="day-number">1</span>
-                    <button class="add-event-btn" aria-label="Agregar evento">+</button>
+                <div class="contenedor-eventos-calendario">
+                    <span class="etiqueta-evento">Torneo de Fútbol <span class="hora-evento">7:00 pm</span></span>
                 </div>
             </div>
             
-            <div class="calendar-day-cell outside-month">
-                <div class="calendar-day-header">
-                    <span class="day-number">2</span>
-                    <button class="add-event-btn" aria-label="Agregar evento">+</button>
+            <div class="celda-dia-calendario fuera-mes">
+                <div class="cabecera-dia-calendario">
+                    <span class="numero-dia">1</span>
+                    <button class="btn-agregar-evento" aria-label="Agregar evento">+</button>
                 </div>
             </div>
             
-            <div class="calendar-day-cell outside-month">
-                <div class="calendar-day-header">
-                    <span class="day-number">3</span>
-                    <button class="add-event-btn" aria-label="Agregar evento">+</button>
+            <div class="celda-dia-calendario fuera-mes">
+                <div class="cabecera-dia-calendario">
+                    <span class="numero-dia">2</span>
+                    <button class="btn-agregar-evento" aria-label="Agregar evento">+</button>
                 </div>
             </div>
             
-            <div class="calendar-day-cell outside-month">
-                <div class="calendar-day-header">
-                    <span class="day-number">4</span>
-                    <button class="add-event-btn" aria-label="Agregar evento">+</button>
+            <div class="celda-dia-calendario fuera-mes">
+                <div class="cabecera-dia-calendario">
+                    <span class="numero-dia">3</span>
+                    <button class="btn-agregar-evento" aria-label="Agregar evento">+</button>
+                </div>
+            </div>
+            
+            <div class="celda-dia-calendario fuera-mes">
+                <div class="cabecera-dia-calendario">
+                    <span class="numero-dia">4</span>
+                    <button class="btn-agregar-evento" aria-label="Agregar evento">+</button>
                 </div>
             </div>
 
         </div>
 
-        <!-- NUEVA VISTA DE AGENDA PARA MOBILE (Se activa automáticamente) -->
-        <div class="calendar-mobile-agenda">
+        <div class="agenda-movil-calendario">
             
-            <div class="agenda-day-group">
-                <h3 class="agenda-date-header">Martes 2</h3>
-                <div class="agenda-events-list">
-                    <div class="agenda-event-card">
-                        <span class="agenda-event-title">Torneo de Rugby</span>
-                        <span class="agenda-event-time">7:00 pm</span>
+            <div class="grupo-dia-agenda">
+                <h3 class="cabecera-fecha-agenda">Martes 2</h3>
+                <div class="lista-eventos-agenda">
+                    <div class="tarjeta-evento-agenda">
+                        <span class="titulo-evento-agenda">Torneo de Rugby</span>
+                        <span class="hora-evento-agenda">7:00 pm</span>
                     </div>
                 </div>
             </div>
 
-            <div class="agenda-day-group">
-                <h3 class="agenda-date-header">Martes 9</h3>
-                <div class="agenda-events-list">
-                    <div class="agenda-event-card">
-                        <span class="agenda-event-title">Torneo de Handball</span>
-                        <span class="agenda-event-time">7:00 pm</span>
+            <div class="grupo-dia-agenda">
+                <h3 class="cabecera-fecha-agenda">Martes 9</h3>
+                <div class="lista-eventos-agenda">
+                    <div class="tarjeta-evento-agenda">
+                        <span class="titulo-evento-agenda">Torneo de Handball</span>
+                        <span class="hora-evento-agenda">7:00 pm</span>
                     </div>
                 </div>
             </div>
 
-            <div class="agenda-day-group">
-                <h3 class="agenda-date-header">Martes 16</h3>
-                <div class="agenda-events-list">
-                    <div class="agenda-event-card">
-                        <span class="agenda-event-title">Torneo de Damas</span>
-                        <span class="agenda-event-time">7:00 pm</span>
+            <div class="grupo-dia-agenda">
+                <h3 class="cabecera-fecha-agenda">Martes 16</h3>
+                <div class="lista-eventos-agenda">
+                    <div class="tarjeta-evento-agenda">
+                        <span class="titulo-evento-agenda">Torneo de Damas</span>
+                        <span class="hora-evento-agenda">7:00 pm</span>
                     </div>
                 </div>
             </div>
 
-            <div class="agenda-day-group">
-                <h3 class="agenda-date-header">Miércoles 17</h3>
-                <div class="agenda-events-list">
-                    <div class="agenda-event-card">
-                        <span class="agenda-event-title">Torneo de Baseball</span>
-                        <span class="agenda-event-time">9:00 am</span>
+            <div class="grupo-dia-agenda">
+                <h3 class="cabecera-fecha-agenda">Miércoles 17</h3>
+                <div class="lista-eventos-agenda">
+                    <div class="tarjeta-evento-agenda">
+                        <span class="titulo-evento-agenda">Torneo de Baseball</span>
+                        <span class="hora-evento-agenda">9:00 am</span>
                     </div>
-                    <div class="agenda-event-card">
-                        <span class="agenda-event-title">Torneo de Ping-Pong</span>
-                        <span class="agenda-event-time">3:00 pm</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="agenda-day-group">
-                <h3 class="agenda-date-header">Martes 23</h3>
-                <div class="agenda-events-list">
-                    <div class="agenda-event-card">
-                        <span class="agenda-event-title">Torneo de Ajedrez</span>
-                        <span class="agenda-event-time">5:00 pm</span>
+                    <div class="tarjeta-evento-agenda">
+                        <span class="titulo-evento-agenda">Torneo de Ping-Pong</span>
+                        <span class="hora-evento-agenda">3:00 pm</span>
                     </div>
                 </div>
             </div>
 
-            <div class="agenda-day-group is-today-group">
-                <h3 class="agenda-date-header">Jueves 25 (Hoy)</h3>
-                <div class="agenda-events-list">
-                    <div class="agenda-event-card">
-                        <span class="agenda-event-title">Torneo de Basketball</span>
-                        <span class="agenda-event-time">11:00 am</span>
+            <div class="grupo-dia-agenda">
+                <h3 class="cabecera-fecha-agenda">Martes 23</h3>
+                <div class="lista-eventos-agenda">
+                    <div class="tarjeta-evento-agenda">
+                        <span class="titulo-evento-agenda">Torneo de Ajedrez</span>
+                        <span class="hora-evento-agenda">5:00 pm</span>
                     </div>
                 </div>
             </div>
 
-            <div class="agenda-day-group">
-                <h3 class="agenda-date-header">Martes 30</h3>
-                <div class="agenda-events-list">
-                    <div class="agenda-event-card">
-                        <span class="agenda-event-title">Torneo de Fútbol</span>
-                        <span class="agenda-event-time">7:00 pm</span>
+            <div class="grupo-dia-agenda es-grupo-hoy">
+                <h3 class="cabecera-fecha-agenda">Jueves 25 (Hoy)</h3>
+                <div class="lista-eventos-agenda">
+                    <div class="tarjeta-evento-agenda">
+                        <span class="titulo-evento-agenda">Torneo de Basketball</span>
+                        <span class="hora-evento-agenda">11:00 am</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grupo-dia-agenda">
+                <h3 class="cabecera-fecha-agenda">Martes 30</h3>
+                <div class="lista-eventos-agenda">
+                    <div class="tarjeta-evento-agenda">
+                        <span class="titulo-evento-agenda">Torneo de Fútbol</span>
+                        <span class="hora-evento-agenda">7:00 pm</span>
                     </div>
                 </div>
             </div>

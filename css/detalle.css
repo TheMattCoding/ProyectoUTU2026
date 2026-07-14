@@ -4,11 +4,10 @@
 
 body {
     background-color: #ffffff !important;
-    /* Hereda automáticamente el padding-left de la sidebar en escritorio */
 }
 
 /* Forzamos a que el contenedor de la página de detalle se acople perfecto a los bordes */
-.phone-container, .main-container {
+.contenedor-celular, .contenedor-principal {
     background-color: #ffffff !important;
     color: #1a1a1a !important;
     display: flex !important;
@@ -17,7 +16,7 @@ body {
     width: 100% !important;
     max-width: none !important;
     min-height: 100vh;
-    padding: 0 !important; /* 👈 CRUCIAL: Eliminamos el padding aquí para que la navbar toque los bordes */
+    padding: 0 !important; /* Eliminamos el padding aquí para que la navbar toque los bordes */
     margin: 0 !important;
     box-sizing: border-box !important;
 }
@@ -32,13 +31,13 @@ body {
 }
 
 /* Encapsulamos el contenido del torneo para darle el espaciado correcto en celulares */
-.main-content {
+.contenido-principal {
     width: 100% !important;
     max-width: 450px; /* Alineado exactamente al tamaño móvil de la Home */
     display: flex !important;
     flex-direction: column !important;
     gap: 24px !important;
-    padding: 24px 16px !important; /* 👈 El espacio con los bordes se da acá adentro, NO en el contenedor padre */
+    padding: 24px 16px !important; /* El espacio con los bordes se da acá adentro */
     box-sizing: border-box !important;
 }
 
@@ -47,7 +46,7 @@ body {
    ========================================================================== */
 
 /* Tarjeta Principal (Hero con Imagen) */
-.tournament-hero {
+.portada-torneo {
     position: relative;
     width: 100%;
     height: 220px;
@@ -56,13 +55,13 @@ body {
     box-shadow: 0 4px 15px rgba(0,0,0,0.15);
 }
 
-.tournament-hero img {
+.portada-torneo img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-.hero-overlay {
+.superposicion-portada {
     position: absolute;
     inset: 0;
     background: linear-gradient(to top, rgba(0,0,0,0.9) 35%, rgba(0,0,0,0.2));
@@ -73,7 +72,7 @@ body {
     color: white;
 }
 
-.tournament-category {
+.categoria-torneo {
     font-size: 0.85rem;
     color: #bbbbbb;
     text-transform: uppercase;
@@ -82,14 +81,14 @@ body {
     margin-bottom: 4px;
 }
 
-.tournament-name {
+.nombre-torneo {
     font-size: 1.75rem;
     font-weight: 700;
     margin: 0;
 }
 
 /* Sección de Información Rápida (Estilo Tarjeta) */
-.quick-info-section {
+.seccion-info-rapida {
     display: flex;
     flex-direction: column;
     gap: 14px;
@@ -98,56 +97,56 @@ body {
     border-radius: 24px; 
 }
 
-.info-item {
+.elemento-info {
     display: flex;
     align-items: center;
     gap: 12px;
 }
 
-.info-item span {
+.elemento-info span {
     color: #333333 !important;
     font-size: 0.95rem;
     font-weight: 500;
 }
 
-.info-item i {
+.elemento-info i {
     color: #e74c3c; 
     font-size: 1.2rem;
     width: 20px;
     text-align: center;
 }
 
-.info-item i.fa-calendar-alt {
+.elemento-info i.fa-calendar-alt {
     color: #3498db; 
 }
 
 /* Bloques de Texto de Detalles */
-.description-block {
+.bloque-descripcion {
     display: flex;
     flex-direction: column;
 }
 
-.section-title {
+.titulo-seccion {
     color: #1a1a1a !important;
     font-size: 1.15rem;
     font-weight: 700;
     margin-bottom: 8px;
 }
 
-.description-text {
+.texto-descripcion {
     color: #555555 !important;
     font-size: 0.95rem;
     line-height: 1.6;
 }
 
 /* Grilla de Datos Técnicos (Formato y Creador) */
-.tech-info-grid {
+.rejilla-info-tecnica {
     display: flex;
     gap: 16px;
     width: 100%;
 }
 
-.tech-card {
+.tarjeta-tecnica {
     flex: 1; 
     min-width: 120px;
     background-color: #f9f9f9;
@@ -156,7 +155,7 @@ body {
     border-left: 4px solid #2ecc71; 
 }
 
-.tech-card-label {
+.etiqueta-tarjeta-tecnica {
     font-size: 0.8rem;
     color: #777777;
     text-transform: uppercase;
@@ -164,18 +163,18 @@ body {
     font-weight: bold;
 }
 
-.tech-card-value {
+.valor-tarjeta-tecnica {
     font-size: 0.95rem;
     font-weight: 600;
     color: #2c3e50;
 }
 
 /* Barra de Cupos Disponibles */
-.slots-container {
+.contenedor-cupos {
     width: 100%;
 }
 
-.slots-header {
+.encabezado-cupos {
     display: flex;
     justify-content: space-between;
     font-size: 0.95rem;
@@ -184,7 +183,7 @@ body {
     margin-bottom: 8px;
 }
 
-.progress-bar {
+.barra-progreso {
     width: 100%;
     height: 10px;
     background-color: #e0e0e0;
@@ -192,7 +191,7 @@ body {
     overflow: hidden;
 }
 
-.progress-fill {
+.relleno-progreso {
     height: 100%;
     width: 50%; 
     background-color: #2ecc71;
@@ -200,7 +199,7 @@ body {
 }
 
 /* Botón de Inscripción */
-.btn-register {
+.btn-inscribirse {
     width: 100%;
     background-color: #ffffff;
     color: #27ae60;
@@ -216,7 +215,7 @@ body {
     box-shadow: 0 4px 10px rgba(39, 174, 96, 0.1);
 }
 
-.btn-register:hover {
+.btn-inscribirse:hover {
     background-color: #27ae60;
     color: #ffffff;
 }
@@ -226,50 +225,48 @@ body {
    ========================================================================== */
 @media (min-width: 1024px) {
     
-    /* El contenedor maestro en PC se expande y se acopla a la barra de navegación */
-    .phone-container, .main-container {
+    .contenedor-celular, .contenedor-principal {
         width: 100% !important;
         max-width: none !important;
-        padding: 0 !important; /* Mantenemos 0 para que la navbar pegue perfecto */
+        padding: 0 !important;
         background-color: #ffffff !important;
         align-items: center !important;
     }
 
-    /* Modificamos el padding superior de la navbar en PC de acuerdo a tu repositorio */
     .navbar {
         padding: 0 40px !important;
     }
 
     /* La grilla pasa a dos columnas simétricas idénticas a la Home */
-    .main-content {
+    .contenido-principal {
         max-width: 1150px !important;
         width: 100% !important;
         display: grid !important;
         grid-template-columns: 1fr 1fr !important; 
         gap: 32px !important;
-        padding: 40px !important; /* El aire de la página en PC se aplica acá */
+        padding: 40px !important; /* El aire de la página en PC */
     }
 
     /* El Hero se estira en toda la fila superior */
-    .tournament-hero {
+    .portada-torneo {
         grid-column: 1 / -1 !important;
         height: 380px !important;
         border-radius: 24px !important;
     }
 
     /* Bloque izquierdo (Detalles y descripción) */
-    .description-block {
+    .bloque-descripcion {
         display: flex !important;
         flex-direction: column !important;
         gap: 24px !important;
     }
 
-    .tech-info-grid {
+    .rejilla-info-tecnica {
         width: 100% !important;
     }
 
     /* Bloque derecho (Panel gris de acciones e inscripción) */
-    .quick-info-section {
+    .seccion-info-rapida {
         display: flex !important;
         flex-direction: column !important;
         gap: 24px !important;
@@ -277,7 +274,7 @@ body {
         height: min-content !important; 
     }
 
-    .slots-container, .btn-register {
+    .contenedor-cupos, .btn-inscribirse {
         width: 100% !important;
     }
 }
