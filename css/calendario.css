@@ -37,7 +37,7 @@
 .fecha-actual-calendario {
     font-size: 24px;
     font-weight: bold;
-    color: #ffffff;
+    color: var(--gold-bright);
     margin: 0;
 }
 
