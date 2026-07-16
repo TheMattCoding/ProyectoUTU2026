@@ -523,7 +523,7 @@ body {
     vertical-align: middle; 
 }
 
-/*==============8. Version de Escritorio ======================*/
+/*==============8. Version de Escritorio (media query) ======================*/
 
 @media (min-width: 1024px) {
     body {

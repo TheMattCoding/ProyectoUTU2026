@@ -7,13 +7,16 @@
     <link rel="stylesheet" href="../css/inicio.css">
     <link rel="stylesheet" href="../css/busqueda.css">
 
-    <link class="icon" type="image/png" href="../img/logoapp2.jpeg">
+    <link rel="icon" type="image/png" href="../img/logoapp2.jpeg">
 </head>
 <body>
 
+    <!-- 5. Menú lateral -->
     <input type="checkbox" id="menu-toggle" class="menu-checkbox">
 
     <div class="sidebar">
+
+        <!--5. Movil cerrar menú -->
         <div class="sidebar-header">
             <span class="sidebar-title">Menú</span>
             <label for="menu-toggle" class="close-sidebar-btn" aria-label="Cerrar menú">X</label>
@@ -28,20 +31,22 @@
             <a href="configuracion.html" class="sidebar-link">Configuración</a>
         </nav>
 
+        <!--5. Modo Oscuro-Claro -->
         <div class="sidebar-footer">
             <div class="theme-switch-container">
                 <span class="theme-label">Modo Oscuro</span>
-                <button class="theme-toggle-btn" aria-label="Cambiar tema">
+                    <button class="theme-toggle-btn" aria-label="Cambiar tema">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 18px; height: 18px; fill: currentColor; vertical-align: middle;">
                         <path d="M256 0C114.6 0 0 114.6 0 256S114.6 512 256 512c68.8 0 131.3-27.2 177.3-71.4 7.3-7 9.4-17.9 5.3-27.1s-13.7-14.9-23.8-14.1c-4.9 .4-9.8 .6-14.8 .6-101.6 0-184-82.4-184-184 0-72.1 41.5-134.6 102.1-164.8 9.1-4.5 14.3-14.3 13.1-24.4S322.6 8.5 312.7 6.3C294.4 2.2 275.4 0 256 0z"/>
                     </svg>
-                </button>
+                    </button>
             </div>
         </div>
     </div>
 
     <label for="menu-toggle" class="sidebar-overlay"></label>
 
+    <!--2. Navbar y Menú hamburgesa -->
     <nav class="navbar" aria-label="Navegación principal">
         <label for="menu-toggle" class="nav-button" aria-label="Abrir menú de navegación">
             <div class="hamburger-box">
@@ -51,6 +56,7 @@
             </div>
         </label>
 
+        <!--3. Busqueda de Torneo -->
         <form action="busquedaTorneo.html" method="GET" class="search-form" style="display: flex; flex: 1; max-width: 420px; margin: 0 12px;">
             <div class="search-container" style="margin: 0; width: 100%;">
                 <svg class="search-google-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -60,6 +66,7 @@
             </div>
         </form>
 
+        <!--4. Campana de Notificaciones -->
         <details class="notifications-dropdown">
             <summary class="notifications-dropdown-button" aria-haspopup="true" aria-label="Notificaciones">
                 <div class="notifications-icon-wrapper">
@@ -70,6 +77,7 @@
                 </div>
             </summary>
             
+            <!--4. Apartado de Notificaciones -->
             <div class="notifications-menu-card">
                 <div class="notifications-menu-header">
                     <span class="notifications-menu-title">Notificaciones</span>
@@ -94,15 +102,18 @@
             </div>
         </details>
 
+        <!--4. Apartado de perfil -->
         <details class="profile-dropdown">
             <summary class="profile-dropdown-button" aria-label="Menú de usuario">
                 <div class="user-avatar">
-                    <svg class="avatar-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
-                        <path d="M320 312C386.3 312 440 258.3 440 192C440 125.7 386.3 72 320 72C253.7 72 200 125.7 200 192C200 258.3 253.7 312 320 312zM290.3 368C191.8 368 112 447.8 112 546.3C112 562.7 125.3 576 141.7 576L498.3 576C514.7 576 528 562.7 528 546.3C528 447.8 448.2 368 349.7 368L290.3 368z" />
-                    </svg>
+                   <svg class="avatar-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+                       <path d="M320 312C386.3 312 440 258.3 440 192C440 125.7 386.3 72 320 72C253.7 72 200 125.7 200 192C200 258.3 253.7 312 320 312zM290.3 368C191.8 368 112 447.8 112 546.3C112 562.7 125.3 576 141.7 576L498.3 576C514.7 576 528 562.7 528 546.3C528 447.8 448.2 368 349.7 368L290.3 368z" />
+                   </svg>
+
                 </div>
             </summary>
             
+            <!--4. Menú de perfil -->
             <div class="profile-menu-card">
                 <div class="profile-menu-header">
                     <span class="profile-menu-name">Usuario</span>
@@ -131,13 +142,15 @@
             </div>
         </details>
     </nav>
-
+    
+    <!-- 6. Contenedor principal y vista de celular -->
     <main class="main-container">
-        
+       
+        <!--9. Lista de torneos (Encabezado)-->
         <div class="cabecera-resultados">
             <h2 class="titulo-resultados">Resultados para: <span class="palabra-clave">"Torneo"</span></h2>
         </div>
-
+        <!-- 9. Lista de Torneos y Resultados (Lista) -->
         <section class="lista-torneos">
         
             <article class="tarjeta-torneo">
@@ -178,6 +191,7 @@
         </section>
     </main>
 
+     <!--7. Footer -->
     <footer class="main-footer">
         <div class="footer-content">
             <img src="../img/epsilonSoftware2.png" alt="Logo Epsilon Software" class="footer-logo">

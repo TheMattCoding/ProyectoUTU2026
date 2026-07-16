@@ -1,10 +1,8 @@
 @import url("inicio.css");
 
-/* ==========================================================================
-   1. Estilos Base / Mobile First (Resultados de Búsqueda)
-   ========================================================================== */
+/*============== 9. Lista de Torneos y Resultados ======================*/
 
-/* --- Encabezado de la búsqueda --- */
+/* Encabezado de la búsqueda */
 .cabecera-resultados {
     width: 100%;
     max-width: 450px;
@@ -15,7 +13,7 @@
 .titulo-resultados {
     font-size: 18px;
     font-weight: bold;
-    color: var(--bg-dark); /* Texto oscuro sobre el fondo blanco */
+    color: var(--bg-dark);
     font-family: Arial, sans-serif;
 }
 
@@ -24,7 +22,7 @@
     font-style: italic;
 }
 
-/* --- Lista de Tarjetas (Contenedor Móvil) --- */
+/* Lista de Tarjetas (Contenedor Móvil) */
 .lista-torneos {
     display: flex;
     flex-direction: column;
@@ -33,7 +31,7 @@
     max-width: 450px; 
 }
 
-/* --- Tarjeta de Torneo --- */
+/* Tarjeta de Torneo */
 .tarjeta-torneo {
     background-color: var(--card-bg); 
     width: 100%;
@@ -115,25 +113,10 @@
     box-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
 
-/* ==========================================================================
-   2. Media Query - Tablet (768px a 1023px)
-   ========================================================================== */
-@media (min-width: 768px) and (max-width: 1023px) {
-    .cabecera-resultados, .lista-torneos {
-        max-width: 100%;
-    }
-    .lista-torneos {
-        display: grid;
-        grid-template-columns: 1fr 1fr; /* 2 columnas en tablet */
-        gap: 24px;
-    }
-}
+/*============== 10. Version de Escritorio (media query) =====================*/
 
-/* ==========================================================================
-   3. Media Query - Escritorio unificado (A partir de 1024px)
-   ========================================================================== */
 @media (min-width: 1024px) {
-    /* Reseteamos el contenedor heredado de la home para adaptarlo a la grilla de búsqueda */
+    /*Reset del contenedor heredado de inicio.css para adapatarlo a la pagina de busqueda*/
     .main-container {
         width: 100% !important;
         max-width: none !important;
@@ -141,12 +124,11 @@
         background-color: #ffffff !important;
         display: flex !important;
         flex-direction: column !important;
-        align-items: flex-start !important; /* Alinea el título "Resultados para..." a la izquierda */
+        align-items: flex-start !important; 
         gap: 32px !important;
-        margin-left: 0 !important; /* El espacio ya lo genera el padding del body */
+        margin-left: 0 !important; 
     }
 
-    /* El encabezado se estira de manera limpia en PC */
     .cabecera-resultados {
         max-width: 1150px !important;
         width: 100% !important;
@@ -158,10 +140,10 @@
         font-size: 26px !important; 
     }
 
-    /* La lista pasa a tener 3 columnas perfectas y centradas */
+    /*Lista de 3 columnas centradas */
     .lista-torneos {
         display: grid !important;
-        grid-template-columns: repeat(3, 1fr) !important; /* Tres columnas idénticas */
+        grid-template-columns: repeat(3, 1fr) !important; 
         gap: 32px !important;
         width: 100% !important;
         max-width: 1150px !important;
@@ -169,8 +151,8 @@
         padding: 0 20px 40px 20px !important;
     }
 
-    /* Tarjetas optimizadas para pantallas grandes */
+    /*Tarjetas optimizadas para pantallas grandes*/
     .tarjeta-torneo {
-        height: 200px !important; /* Un poco más de altura en PC para lucir las imágenes */
+        height: 200px !important; 
     }
 }

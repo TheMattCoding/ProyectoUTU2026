@@ -12,10 +12,12 @@
 </head>
 <body>
 
+    <!-- 5. Menú lateral -->
     <input type="checkbox" id="menu-toggle" class="menu-checkbox">
 
     <div class="sidebar">
 
+        <!--5. Movil cerrar menú -->
         <div class="sidebar-header">
             <span class="sidebar-title">Menú</span>
             <label for="menu-toggle" class="close-sidebar-btn" aria-label="Cerrar menú">X</label>
@@ -30,6 +32,7 @@
             <a href="configuracion.html" class="sidebar-link">Configuración</a>
         </nav>
 
+        <!--5. Modo Oscuro-Claro -->
         <div class="sidebar-footer">
             <div class="theme-switch-container">
                 <span class="theme-label">Modo Oscuro</span>
@@ -44,6 +47,7 @@
 
     <label for="menu-toggle" class="sidebar-overlay"></label>
 
+    <!--2. Navbar y Menú hamburgesa -->
     <nav class="navbar" aria-label="Navegación principal">
         <label for="menu-toggle" class="nav-button" aria-label="Abrir menú de navegación">
             <div class="hamburger-box">
@@ -53,6 +57,7 @@
             </div>
         </label>
 
+        <!--3. Busqueda de Torneo -->
         <form action="busquedaTorneo.html" method="GET" class="search-form" style="display: flex; flex: 1; max-width: 420px; margin: 0 12px;">
             <div class="search-container" style="margin: 0; width: 100%;">
                 <svg class="search-google-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -62,6 +67,7 @@
             </div>
         </form>
 
+        <!--4. Campana de Notificaciones -->
         <details class="notifications-dropdown">
             <summary class="notifications-dropdown-button" aria-haspopup="true" aria-label="Notificaciones">
                 <div class="notifications-icon-wrapper">
@@ -72,6 +78,7 @@
                 </div>
             </summary>
             
+            <!--4. Apartado de Notificaciones -->
             <div class="notifications-menu-card">
                 <div class="notifications-menu-header">
                     <span class="notifications-menu-title">Notificaciones</span>
@@ -96,15 +103,18 @@
             </div>
         </details>
 
+        <!--4. Apartado de perfil -->
         <details class="profile-dropdown">
             <summary class="profile-dropdown-button" aria-label="Menú de usuario">
                 <div class="user-avatar">
                    <svg class="avatar-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
                        <path d="M320 312C386.3 312 440 258.3 440 192C440 125.7 386.3 72 320 72C253.7 72 200 125.7 200 192C200 258.3 253.7 312 320 312zM290.3 368C191.8 368 112 447.8 112 546.3C112 562.7 125.3 576 141.7 576L498.3 576C514.7 576 528 562.7 528 546.3C528 447.8 448.2 368 349.7 368L290.3 368z" />
                    </svg>
+
                 </div>
             </summary>
             
+            <!--4. Menú de perfil -->
             <div class="profile-menu-card">
                 <div class="profile-menu-header">
                     <span class="profile-menu-name">Usuario</span>
