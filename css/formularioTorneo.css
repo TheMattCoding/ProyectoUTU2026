@@ -1,18 +1,11 @@
-.menu-checkbox { display: none; }
-
 /* ==========================================================================
    1. Configuración de Tipografía y Estructura de Isla
    ========================================================================== */
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-/* Ajustes del contenedor principal sin romper la cascada base de la app */
 .main-container {
-    background-color: #ffffff !important; /* Mantiene el fondo limpio en PC */
+    background-color: #ffffff !important;
 }
 
-/* MODIFICADO: Contenedor oscuro con un sutil degradado y resplandor dorado premium */
+/* Contenedor oscuro con un sutil degradado y resplandor dorado premium */
 .isla-formulario-unica {
     background: linear-gradient(135deg, #151515 0%, #1c1810 100%); 
     padding: 25px 35px;
@@ -24,6 +17,12 @@ body {
     border: 1.5px solid #4a3b17; /* Borde dorado oscuro */
     box-sizing: border-box;
     margin: 10px auto 30px auto;
+}
+
+/* Asegura la perfecta visualización y estilo del título */
+.contenedor-logo-formulario h2 {
+    color: #D4AF37 !important; /* Dorado brillante de alta visibilidad */
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); /* Sombra de texto para destacar */
 }
 
 /* ==========================================================================
@@ -62,7 +61,9 @@ body {
     flex-direction: column;
 }
 
-label {
+/* CORREGIDO: Ahora el estilo sólo se aplica a las etiquetas del formulario, 
+   previniendo que interfiera con las etiquetas funcionales de tu navbar. */
+.grupo-formulario label {
     display: block;
     margin-bottom: 6px;
     font-size: 13.5px;
@@ -105,7 +106,7 @@ label {
     resize: none;
 }
 
-/* MODIFICADO: El enfoque ahora brilla en dorado */
+/* El enfoque ahora brilla en dorado */
 .isla-formulario-unica form input:focus, 
 .isla-formulario-unica form select:focus, 
 .isla-formulario-unica form textarea:focus {
@@ -149,7 +150,7 @@ label {
     transform: scale(0.98); 
 }
 
-/* MODIFICADO: Botón Enviar con fondo dorado brillante de la marca */
+/* Botón Enviar con fondo dorado brillante de la marca */
 .boton-enviar {
     background-color: var(--gold-bright, #D4AF37);
     color: #111111;
@@ -159,7 +160,7 @@ label {
     background-color: var(--gold-dark, #9C8255); 
 }
 
-/* MODIFICADO: Botón Cancelar con borde y letras doradas */
+/* Botón Cancelar con borde y letras doradas */
 .boton-cancelar {
     background-color: transparent;
     border: 1.5px solid var(--gold-bright, #D4AF37);

@@ -86,7 +86,7 @@
     margin: 0;
     font-size: 22px;
     font-weight: bold;
-    color: var(--white);
+    color: var(--gold-bright);
     z-index: 3; 
     font-family: Arial, sans-serif;
 }
