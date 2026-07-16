@@ -285,6 +285,36 @@ body {
 
 .profile-menu-item.logout-item { color: #ff453a; }
 
+/*Checkbox de Notificaciones y apartado de perfil*/
+
+.dropdown-checkbox {
+    display: none;
+}
+
+.profile-menu-card, .notifications-menu-card {
+    display: none;
+}
+
+.dropdown-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: transparent; 
+    z-index: 1000; 
+    display: none;
+}
+
+.dropdown-checkbox:checked ~ .profile-menu-card,
+.dropdown-checkbox:checked ~ .notifications-menu-card {
+    display: block;
+}
+
+.dropdown-checkbox:checked ~ .dropdown-overlay {
+    display: block;
+}
+
 
 /*==============5. Menú Lateral ======================*/
 
