@@ -69,7 +69,7 @@
         <!-- 4. Campana de Notificaciones -->
         <div class="notifications-dropdown">
 
-            <!-- Checkbox oculto-->
+            <!--4. Checkbox oculto-->
             <input type="checkbox" id="noti-toggle" class="dropdown-checkbox">
     
             <label for="noti-toggle" class="notifications-dropdown-button" aria-label="Notificaciones">
@@ -83,7 +83,7 @@
     
             <label for="noti-toggle" class="dropdown-overlay"></label>
     
-            <!-- Apartado de Notificaciones -->
+            <!--4. Apartado de Notificaciones -->
             <div class="notifications-menu-card">
                 <div class="notifications-menu-header">
                     <span class="notifications-menu-title">Notificaciones</span>
@@ -111,7 +111,7 @@
         <!-- 4. Apartado de perfil -->
         <div class="profile-dropdown">
     
-            <!--Checkbox-->
+            <!--4. Checkbox de perfil-->
             <input type="checkbox" id="profile-toggle" class="dropdown-checkbox">
     
             <label for="profile-toggle" class="profile-dropdown-button" aria-label="Menú de usuario">
@@ -124,7 +124,7 @@
     
             <label for="profile-toggle" class="dropdown-overlay"></label>
     
-            <!-- Menú de perfil -->
+            <!--4. Menú de perfil -->
             <div class="profile-menu-card">
                 <div class="profile-menu-header">
                     <span class="profile-menu-name">Usuario</span>
@@ -154,6 +154,7 @@
 
     <main class="contenedor-principal">
         
+        <!--12. Control de pestañas-->
         <input type="radio" name="grupo-pestanas-config" id="radio-pestana-perfil" checked class="control-radio-pestana">
         <input type="radio" name="grupo-pestanas-config" id="radio-pestana-seguridad" class="control-radio-pestana">
         <input type="radio" name="grupo-pestanas-config" id="radio-pestana-notificaciones" class="control-radio-pestana">
@@ -171,9 +172,10 @@
                 <label for="radio-pestana-borrar" class="btn-pestana btn-pestana-peligro etiqueta-borrar">Borrar cuenta</label>
             </aside>
 
+            <!--13. Panel de Configuración -->              
             <section class="tarjeta-contenido-config">
                 
-                <!-- Editar perfil -->              
+                <!--13. Editar perfil -->              
                 <div id="perfil" class="seccion-configuracion panel-perfil">
                     <h3 class="titulo-seccion">Información del Perfil</h3>
                     <p class="subtitulo-seccion">Personaliza tu identidad dentro de la plataforma de torneos.</p>
@@ -209,7 +211,8 @@
                         </div>
                     </form>
                 </div>
-                <!-- Cuenta y Seguridad -->
+                
+                <!--13. Cuenta y Seguridad -->
                 <div id="seguridad" class="seccion-configuracion panel-seguridad">
                     <h3 class="titulo-seccion">Seguridad de la Cuenta</h3>
                     <p class="subtitulo-seccion">Gestiona tus credenciales de acceso de forma segura.</p>
@@ -237,11 +240,12 @@
                     </form>
                 </div>
 
-                <!-- Notificaciones -->
+                <!--13. Notificaciones -->
                 <div id="notificaciones" class="seccion-configuracion panel-notificaciones">
                     <h3 class="titulo-seccion">Preferencias de Alertas</h3>
                     <p class="subtitulo-seccion">Elige qué eventos del torneo querés recibir en la campana de notificaciones.</p>
                     
+                    <!--14. Formulario de Configuración -->
                     <form action="#" method="POST" class="formulario-configuracion">
                         <div class="grupo-checkbox">
                             <label class="contenedor-interruptor">
@@ -276,7 +280,7 @@
                     </form>
                 </div>
                 
-                <!-- Preferencias -->
+                <!--13. Preferencias -->
                 <div id="preferencias" class="seccion-configuracion panel-preferencias">
                     <h3 class="titulo-seccion">Preferencias de la Aplicación</h3>
                     <p class="subtitulo-seccion">Configura el comportamiento visual de tu cuenta.</p>
@@ -296,7 +300,7 @@
                     </form>
                 </div>
 
-                <!-- Borrar cuenta -->
+                <!--13. Borrar cuenta -->
                 <div id="borrar-cuenta" class="seccion-configuracion panel-borrar">
                     <h3 class="titulo-seccion titulo-peligro">Eliminar Cuenta Permanentemente</h3>
                     <p class="subtitulo-seccion">Esta acción es irreversible. Se perderán todos tus datos de torneos, estadísticas y equipos.</p>
@@ -317,7 +321,7 @@
         </div>
     </main>
 
-     <!-- Footer -->
+     <!--7. Footer -->
     <footer class="main-footer">
         <div class="footer-content">
             <img src="../img/epsilonSoftware2.png" alt="Logo Epsilon Software" class="footer-logo">

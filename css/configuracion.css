@@ -1,6 +1,5 @@
-/* ==========================================================================
-   1. Variables, Resets y Wrapper General (Mobile First)
-   ========================================================================== */
+/*==============11. Contenedor Principal =====================*/
+
 .contenedor-principal {
     background-color: #ffffff;
     padding: 40px 20px;
@@ -13,7 +12,7 @@
 
 .envoltura-configuracion {
     width: 100%;
-    max-width: 450px; /* Consistencia exacta con el resto de las islas */
+    max-width: 450px;
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -28,11 +27,10 @@
     letter-spacing: 0.5px;
 }
 
-/* ==========================================================================
-   2. Sistema de Pestañas (CSS Puro - Sin JavaScript)
-   ========================================================================== */
+/*==============12. Control de pestañas ======================*/
+
 .control-radio-pestana {
-    display: none; /* Oculta los inputs de radio controladores de la pantalla */
+    display: none;
 }
 
 .pestanas-configuracion {
@@ -60,7 +58,7 @@
     color: #111111;
 }
 
-/* Botón destructivo integrado en la lista de pestañas */
+/*Botón de eliminación de usuario*/
 .btn-pestana.btn-pestana-peligro {
     background-color: #ff453a;
     border: 1px solid #ff453a;
@@ -74,7 +72,7 @@
     border-color: #ff3b30;
 }
 
-/* LÓGICA DE INTERCAMBIO ACTIVO: Estilo dinámico de la pestaña activa */
+/*Muestra la pestaña activa*/
 #radio-pestana-perfil:checked ~ .envoltura-configuracion .etiqueta-perfil,
 #radio-pestana-seguridad:checked ~ .envoltura-configuracion .etiqueta-seguridad,
 #radio-pestana-notificaciones:checked ~ .envoltura-configuracion .etiqueta-notificaciones,
@@ -90,9 +88,8 @@
     color: #ffffff;
 }
 
-/* ==========================================================================
-   3. Tarjeta Contenedora de Formularios (Isla Negra) y Paneles
-   ========================================================================== */
+/*==============13. Panel de Configuración ======================*/
+
 .tarjeta-contenido-config {
     background-color: var(--tarjeta-bg, #1a1a1a);
     border-radius: 24px;
@@ -105,11 +102,11 @@
 }
 
 .seccion-configuracion {
-    display: none; /* Por defecto ocultamos todas las secciones */
+    display: none;
     flex-direction: column;
 }
 
-/* LÓGICA DE VISUALIZACIÓN: Muestra el panel correspondiente según el radio activo */
+/*Muestra el panel correspondiente*/
 #radio-pestana-perfil:checked ~ .envoltura-configuracion .panel-perfil,
 #radio-pestana-seguridad:checked ~ .envoltura-configuracion .panel-seguridad,
 #radio-pestana-notificaciones:checked ~ .envoltura-configuracion .panel-notificaciones,
@@ -132,9 +129,7 @@
     line-height: 1.4;
 }
 
-/* ==========================================================================
-   4. Componentes de Formulario (Inputs, Selects, Switches - COMPLETADO)
-   ========================================================================== */
+/*==============14. Formulario de Configuración ======================*/
    
 .formulario-configuracion {
     display: flex;
@@ -274,9 +269,9 @@
     transform: translateX(16px);
     background-color: #111111;
 }
-/* ==========================================================================
-   5. Botonería y Acciones
-   ========================================================================== */
+
+/*==============15. Botones del apartado de configuración ======================*/
+
 .btn-guardar,
 .btn-peligro,
 .btn-secundario-sm {
@@ -334,12 +329,11 @@
     width: 100%;
 }
 
-/* ==========================================================================
-   6. MEDIA QUERY UNIFICADA: ESCRITORIO
-   ========================================================================== */
+/*============== 16. Version de Escritorio (media query) =====================*/
+
 @media (min-width: 1024px) {
     .envoltura-configuracion {
-        max-width: 1150px; /* Alineación perfecta con el resto del dashboard */
+        max-width: 1150px; 
         flex-direction: row;
         align-items: flex-start;
         gap: 32px;
@@ -349,7 +343,7 @@
         width: 260px;
         flex-shrink: 0;
         position: sticky;
-        top: 100px; /* Se queda fija al hacer scroll por debajo de la navbar */
+        top: 100px; 
     }
 
     .titulo-configuracion {
@@ -368,7 +362,7 @@
         border-radius: 20px;
     }
    
-    /* Acciones en paralelo para separar botones en el extremo */
+   
     .acciones-formulario {
         flex-direction: row;
         justify-content: space-between;
