@@ -170,3 +170,35 @@
 .boton-cancelar:hover {
     background-color: rgba(212, 175, 55, 0.08);
 }
+/* ==========================================================================
+   5. Estilos para el Botón de Subir Imagen
+   ========================================================================== */
+.input-archivo-oculto {
+    display: none !important; /* Ocultamos el input feo por defecto */
+}
+
+.boton-subir-archivo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #2d2d2d;
+    border: 1.5px dashed #4a3b17; /* Borde discontinuo en dorado oscuro */
+    color: #aaaaaa;
+    padding: 10px 15px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color 0.3s ease, color 0.3s ease, background-color 0.3s ease;
+    text-align: center;
+}
+
+.boton-subir-archivo:hover {
+    border-color: var(--gold-bright, #D4AF37);
+    color: var(--gold-bright, #D4AF37);
+    background-color: rgba(212, 175, 55, 0.04);
+}
+
+.boton-subir-archivo:active {
+    transform: scale(0.98);
+}
