@@ -12,15 +12,16 @@ body {
     background-color: #ffffff !important; /* Mantiene el fondo limpio en PC */
 }
 
-/* LA ISLA: Contenedor oscuro centrado y responsivo */
+/* MODIFICADO: Contenedor oscuro con un sutil degradado y resplandor dorado premium */
 .isla-formulario-unica {
-    background-color: var(--card-bg, #1a1a1a);
+    background: linear-gradient(135deg, #151515 0%, #1c1810 100%); 
     padding: 25px 35px;
     border-radius: 24px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+    /* Sombras más profundas con un toque de glow dorado */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 0 0 20px rgba(212, 175, 55, 0.08); 
     width: 100%;
     max-width: 1050px; 
-    border: 1px solid #333333;
+    border: 1.5px solid #4a3b17; /* Borde dorado oscuro */
     box-sizing: border-box;
     margin: 10px auto 30px auto;
 }
@@ -84,7 +85,7 @@ label {
     border-radius: 10px;
     font-size: 14.5px;
     outline: none;
-    transition: border-color 0.3s ease;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .isla-formulario-unica form input[type="text"],
@@ -104,10 +105,12 @@ label {
     resize: none;
 }
 
+/* MODIFICADO: El enfoque ahora brilla en dorado */
 .isla-formulario-unica form input:focus, 
 .isla-formulario-unica form select:focus, 
 .isla-formulario-unica form textarea:focus {
-    border-color: var(--white, #ffffff);
+    border-color: var(--gold-bright, #D4AF37);
+    box-shadow: 0 0 8px rgba(212, 175, 55, 0.2);
 }
 
 .fila-formulario {
@@ -139,53 +142,30 @@ label {
     font-weight: bold;
     cursor: pointer;
     text-transform: uppercase;
-    transition: background-color 0.3s ease, transform 0.1s ease;
+    transition: background-color 0.3s ease, transform 0.1s ease, border-color 0.3s ease;
 }
 
 .boton-formulario:active { 
     transform: scale(0.98); 
 }
 
+/* MODIFICADO: Botón Enviar con fondo dorado brillante de la marca */
 .boton-enviar {
-    background-color: var(--white, #ffffff);
+    background-color: var(--gold-bright, #D4AF37);
     color: #111111;
 }
 
 .boton-enviar:hover { 
-    background-color: #e0e0e0; 
+    background-color: var(--gold-dark, #9C8255); 
 }
 
+/* MODIFICADO: Botón Cancelar con borde y letras doradas */
 .boton-cancelar {
     background-color: transparent;
-    border: 1.5px solid var(--white, #ffffff);
-    color: var(--white, #ffffff);
+    border: 1.5px solid var(--gold-bright, #D4AF37);
+    color: var(--gold-bright, #D4AF37);
 }
 
 .boton-cancelar:hover {
-    background-color: rgba(255, 255, 255, 0.05);
-}
-
-/* ==========================================================================
-   5. Responsivo Móvil (Colapsa de dos columnas a una sola en celulares)
-   ========================================================================== */
-@media (max-width: 1024px) {
-    .isla-formulario-unica { 
-        padding: 20px 18px; 
-        border-radius: 20px; 
-    }
-    .columnas-flex-formulario { 
-        flex-direction: column; 
-        gap: 0; 
-    }
-    .fila-formulario { 
-        flex-direction: column; 
-        gap: 0; 
-    }
-    textarea { 
-        min-height: 120px; 
-    }
-    .grupo-botones-formulario { 
-        flex-direction: column-reverse; 
-        gap: 10px; 
-    }
+    background-color: rgba(212, 175, 55, 0.08);
 }
