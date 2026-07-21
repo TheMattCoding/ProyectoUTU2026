@@ -39,6 +39,7 @@
     display: flex;
     flex-direction: column;
     flex: 1;
+    min-width: 0; /* Evita que los hijos flex desborden en webkit */
 }
 
 /* Forzamos a la descripción a estirarse uniformemente */
@@ -122,6 +123,7 @@
 
 .columna-expandible { 
     flex: 1; 
+    min-width: 0;
 }
 
 /* ==========================================================================
@@ -170,11 +172,12 @@
 .boton-cancelar:hover {
     background-color: rgba(212, 175, 55, 0.08);
 }
+
 /* ==========================================================================
    5. Estilos para el Botón de Subir Imagen
    ========================================================================== */
 .input-archivo-oculto {
-    display: none !important; /* Ocultamos el input feo por defecto */
+    display: none !important;
 }
 
 .boton-subir-archivo {
@@ -182,7 +185,7 @@
     align-items: center;
     justify-content: center;
     background-color: #2d2d2d;
-    border: 1.5px dashed #4a3b17; /* Borde discontinuo en dorado oscuro */
+    border: 1.5px dashed #4a3b17; 
     color: #aaaaaa;
     padding: 10px 15px;
     border-radius: 10px;
@@ -201,4 +204,30 @@
 
 .boton-subir-archivo:active {
     transform: scale(0.98);
+}
+
+/* ==========================================================================
+   6. Adaptabilidad Mobile (¡NUEVO!)
+   ========================================================================== */
+@media (max-width: 768px) {
+    .isla-formulario-unica {
+        padding: 20px 15px; /* Reducimos el padding interno para ganar espacio */
+        margin: 10px;       /* Margen externo pequeño para que no toque los bordes del celular */
+        width: calc(100% - 20px);
+    }
+
+    .columnas-flex-formulario {
+        flex-direction: column; /* Pasamos de filas a columnas una abajo de la otra */
+        gap: 15px;             /* Reducimos la separación */
+    }
+
+    .fila-formulario {
+        flex-direction: column; /* Si "Fecha" y "Hora" estaban al lado, ahora van en cascada */
+        gap: 12px;
+    }
+
+    .grupo-botones-formulario {
+        flex-direction: column-reverse; /* El botón de cancelar queda abajo del de enviar */
+        gap: 10px;
+    }
 }
