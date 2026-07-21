@@ -1,8 +1,8 @@
 /* ==========================================================================
-   1. Configuración del Contenedor Principal (Fondo Blanco de la App)
+   1. Configuración del Contenedor Principal (Fondo Oscuro de la App)
    ========================================================================= */
 .contenedor-principal {
-    background-color: #ffffff; 
+    background-color: var(--bg-main); 
     padding: 40px 20px;
     display: flex;
     flex-direction: column;
@@ -38,14 +38,14 @@
    3. Componente Tarjeta (Profile Card Base)
    ========================================================================= */
 .tarjeta-perfil {
-    background-color: var(--card-bg, #1a1a1a);
+    background-color: var(--search-bg, #222222);
     width: 100%;
     padding: 35px;
     border-radius: 24px;
     text-align: center;
     color: var(--white, #ffffff);
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
-    border: 1px solid #333333;
+    border: 1px solid var(--search-border, #444444);
     box-sizing: border-box;
 }
 
@@ -67,13 +67,15 @@
 .avatar-usuario-grande {
     width: 100px;
     height: 100px;
-    background-color: #333333;
-    border: 2px solid var(--white, #ffffff);
+    background-color: var(--bg-dark, #151515);
+    border: 2px solid var(--bg-main);
+    color: var(--bg-main);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 45px;
+    box-shadow: 0 0 15px rgb(255, 255, 255);
 }
 
 .svg-avatar {
@@ -85,19 +87,19 @@
 .nombre-perfil { 
     font-size: 22px; 
     font-weight: bold; 
-    color: var(--white, #ffffff);
+    color: var(--bg-main);
     margin: 0;
 }
 
 .correo-perfil { 
     font-size: 14px; 
-    color: #aaaaaa; 
+    color: var(--gold-muted, #A89880); 
     margin: 5px 0 0 0;
 }
 
 .seccion-perfil {
     text-align: center;
-    border-top: 1px solid #333333;
+    border-top: 1px solid var(--search-border, #444444);
     padding-top: 20px;
     margin-top: 25px;
 }
@@ -105,13 +107,26 @@
 .titulo-seccion { 
     font-size: 16px; 
     font-weight: bold; 
-    color: var(--white, #ffffff); 
+    color: var(--gold-bright, #D4AF37); 
     margin-bottom: 12px; 
 }
 
 .fila-trofeos { 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
     font-size: 28px; 
-    letter-spacing: 8px;
+}
+
+.fila-trofeos svg {
+    fill: var(--gold-bright, #D4AF37) !important;
+    transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.fila-trofeos svg:hover {
+    transform: scale(1.15);
+    filter: drop-shadow(0 0 8px var(--gold-bright, #D4AF37));
 }
 
 .cuerpo-isla {
@@ -120,7 +135,7 @@
 
 .descripcion-isla {
     font-size: 14px;
-    color: #aaaaaa;
+    color: var(--gold-muted, #A89880);
     line-height: 1.5;
     margin: 0;
 }
@@ -128,20 +143,21 @@
 .enlace-accion-tarjeta {
     display: inline-block;
     font-size: 14px;
-    color: var(--white, #ffffff);
+    color: var(--gold-bright, #D4AF37);
     font-weight: 600;
     text-decoration: none;
-    padding: 10px 20px;
-    border: 1px solid #444444;
+    padding: 10px 22px;
+    border: 1px solid var(--gold-bright, #D4AF37);
     border-radius: 50px;
-    background-color: #2d2d2d;
-    transition: background-color 0.2s ease, transform 0.2s ease;
+    background-color: transparent;
+    transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .enlace-accion-tarjeta:hover {
-    background-color: var(--white, #ffffff);
-    color: #111111;
+    background-color: var(--gold-bright, #D4AF37);
+    color: var(--bg-dark, #151515);
     transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
 }
 
 /* ==========================================================================
@@ -151,13 +167,17 @@
     .contenedor-principal {
         padding: 20px 12px;
     }
+
     .diseno-perfil {
         gap: 16px;
     }
+
     .fila-sub-islas {
         flex-direction: column;
         gap: 16px;
+        width: 100%;
     }
+
     .tarjeta-perfil {
         padding: 25px 20px;
     }
