@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SGDM - Plataforma de Torneos</title>
-    <link rel="stylesheet" href="../css/inicio.css">
-    <link rel="stylesheet" href="../css/busqueda.css">
-
+    <title>SGDM - Panel Organizador</title>
     <link rel="icon" type="image/png" href="../img/logoapp2.jpeg">
+    <link rel="stylesheet" href="../css/inicio.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
 </head>
 <body>
 
@@ -23,12 +22,12 @@
         </div>
         
         <nav class="sidebar-nav">
-            <a href="inicio.html" class="sidebar-link">Inicio</a>
-            <a href="calendario.html" class="sidebar-link">Calendario de torneos</a>
-            <a href="formularioTorneo.html" class="sidebar-link">Crea tu torneo</a>
-            <a href="organizador.html" class="sidebar-link">Panel Organizador</a>
-            <a href="dashboard.html" class="sidebar-link">Panel Administrador</a>
-            <a href="configuracion.html" class="sidebar-link">Configuración</a>
+            <a href="inicio.php" class="sidebar-link">Inicio</a>
+            <a href="calendario.php" class="sidebar-link">Calendario de torneos</a>
+            <a href="formularioTorneo.php" class="sidebar-link">Crea tu torneo</a>
+            <a href="organizador.php" class="sidebar-link">Panel Organizador</a>
+            <a href="dashboard.php" class="sidebar-link active">Panel Administrador</a>
+            <a href="configuracion.php" class="sidebar-link">Configuración</a>
         </nav>
 
         <!--5. Modo Oscuro-Claro -->
@@ -57,7 +56,7 @@
         </label>
 
         <!--3. Busqueda de Torneo -->
-        <form action="busquedaTorneo.html" method="GET" class="search-form" style="display: flex; flex: 1; max-width: 420px; margin: 0 12px;">
+        <form action="busquedaTorneo.php" method="GET" class="search-form" style="display: flex; flex: 1; max-width: 420px; margin: 0 12px;">
             <div class="search-container" style="margin: 0; width: 100%;">
                 <svg class="search-google-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                     <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" fill="#777777"/>
@@ -69,7 +68,7 @@
         <!-- 4. Campana de Notificaciones -->
         <div class="notifications-dropdown">
 
-            <!--4. Checkbox oculto-->
+            <!-- Checkbox oculto-->
             <input type="checkbox" id="noti-toggle" class="dropdown-checkbox">
     
             <label for="noti-toggle" class="notifications-dropdown-button" aria-label="Notificaciones">
@@ -83,7 +82,7 @@
     
             <label for="noti-toggle" class="dropdown-overlay"></label>
     
-            <!--4. Apartado de Notificaciones -->
+            <!-- Apartado de Notificaciones -->
             <div class="notifications-menu-card">
                 <div class="notifications-menu-header">
                     <span class="notifications-menu-title">Notificaciones</span>
@@ -111,7 +110,7 @@
         <!-- 4. Apartado de perfil -->
         <div class="profile-dropdown">
     
-            <!--4. Checkbox de perfil-->
+            <!--Checkbox-->
             <input type="checkbox" id="profile-toggle" class="dropdown-checkbox">
     
             <label for="profile-toggle" class="profile-dropdown-button" aria-label="Menú de usuario">
@@ -124,19 +123,19 @@
     
             <label for="profile-toggle" class="dropdown-overlay"></label>
     
-            <!--4. Menú de perfil -->
+            <!-- Menú de perfil -->
             <div class="profile-menu-card">
                 <div class="profile-menu-header">
                     <span class="profile-menu-name">Usuario</span>
                 </div>
                 <div class="profile-menu-divider"></div>
                 <nav class="profile-menu-links">
-                    <a href="login.html" class="profile-menu-item">
+                    <a href="login.php" class="profile-menu-item">
                         <svg class="avatar-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                             <path d="M352 96l64 0c17.7 0 32 14.3 32 32l0 256c0 17.7-14.3 32-32 32l-64 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l64 0c53 0 96-43 96-96l0-256c0-53-43-96-96-96l-64 0c-17.7 0-32 14.3-32 32s14.3 32 32 32zm-9.4 182.6c12.5-12.5 12.5-32.8 0-45.3l-128-128c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L242.7 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l210.7 0-73.4 73.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l128-128z"/>
                         </svg> Iniciar sesión
                     </a>
-                    <a href="perfil.html" class="profile-menu-item">
+                    <a href="perfil.php" class="profile-menu-item">
                         <svg class="avatar-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
                             <path d="M320 312C386.3 312 440 258.3 440 192C440 125.7 386.3 72 320 72C253.7 72 200 125.7 200 192C200 258.3 253.7 312 320 312zM290.3 368C191.8 368 112 447.8 112 546.3C112 562.7 125.3 576 141.7 576L498.3 576C514.7 576 528 562.7 528 546.3C528 447.8 448.2 368 349.7 368L290.3 368z" />
                         </svg> Perfil
@@ -151,56 +150,90 @@
             </div>
         </div>
     </nav>
-    
-    <!-- 6. Contenedor principal y vista de celular -->
+
     <main class="main-container">
-       
-        <!--9. Lista de torneos (Encabezado)-->
-        <div class="cabecera-resultados">
-            <h2 class="titulo-resultados">Resultados para: <span class="palabra-clave">"Torneo"</span></h2>
-        </div>
-        <!-- 9. Lista de Torneos y Resultados (Lista) -->
-        <section class="lista-torneos">
         
-            <article class="tarjeta-torneo">
-                <div class="contenedor-imagen">
-                    <img src="../img/torneo-ajedrez.jpg" alt="Torneo de Ajedrez" class="imagen-torneo">
-                    <div class="superposicion-tarjeta"></div>
-                    <h3 class="titulo-torneo">Torneo de Ajedrez</h3>
-                </div>
-                <div class="info-tarjeta">
-                    <span class="fecha-torneo">26/7</span>
-                    <a href="detalleTorneo.html" class="btn btn-secondary btn-ver-mas">Ver más</a>
-                </div>
-            </article>
+        <header class="cabecera-panel">
+            <h2>Panel de Control Organizador</h2>
+            <p class="estado-sistema">● Servidor Activo</p>
+        </header>
 
-            <article class="tarjeta-torneo">
-                <div class="contenedor-imagen">
-                    <img src="../img/torneo-futbol.jpg" alt="Torneo de Fútbol" class="imagen-torneo">
-                    <div class="superposicion-tarjeta"></div>
-                    <h3 class="titulo-torneo">Torneo de Fútbol</h3>
+        <article class="isla-organizador-unica">
+            
+            <section class="seccion-kpis">
+                <div class="tarjeta-kpi">
+                    <h3>Torneos Creados</h3>
+                    <p class="valor-kpi">12</p>
                 </div>
-                <div class="info-tarjeta">
-                    <span class="fecha-torneo">3/8</span>
-                    <a href="detalleTorneo.html" class="btn btn-secondary btn-ver-mas">Ver más</a>
+                <div class="tarjeta-kpi">
+                    <h3>Equipos Inscritos</h3>
+                    <p class="valor-kpi texto-exito">148</p>
                 </div>
-            </article>
+                <div class="tarjeta-kpi">
+                    <h3>Partidos Pendientes</h3>
+                    <p class="valor-kpi texto-peligro">7</p>
+                </div>
+            </section>
 
-            <article class="tarjeta-torneo">
-                <div class="contenedor-imagen">
-                    <div class="marcador-imagen"></div>
-                    <h3 class="titulo-torneo">Próximo Torneo</h3>
-                </div>
-                <div class="info-tarjeta">
-                    <span class="fecha-torneo">--/--</span>
-                    <a href="detalleTorneo.html" class="btn btn-secondary btn-ver-mas">Ver más</a>
-                </div>
-            </article>
+            <hr class="divisor-isla">
 
-        </section>
+            <section class="seccion-intermedia">
+                <div class="bloque-grafico">
+                    <div class="grafico-marcador">
+                        <span class="texto-marcador">Visualización de Estadísticas Mensuales</span>
+                    </div>
+                </div>
+                
+                <div class="bloque-consola">
+                    <div class="consola-terminal">
+                        <div class="linea-log">[11:42:10] Registro de nuevo equipo: 'Malvín FC'</div>
+                        <div class="linea-log">[11:30:15] Partido ID #432 finalizado con éxito.</div>
+                        <div class="linea-log linea-advertencia">[10:15:00] Alerta: Reporte de conducta en cancha 2.</div>
+                        <div class="linea-log linea-error">[09:00:22] Error: Intento de registro duplicado omitido.</div>
+                    </div>
+                </div>
+            </section>
+
+            <hr class="divisor-isla">
+
+            <section class="seccion-tabla">
+                <div class="contenedor-tabla-adaptable">
+                    <table class="tabla-panel">
+                        <thead>
+                            <tr>
+                                <th>Torneo</th>
+                                <th>Fecha</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <section class="seccion-lista-torneos">
+    
+                        <div class="tarjeta-torneo-registro">
+                            <div class="detalles-torneo">
+                                <h4>Copa de Invierno 2026</h4>
+                                <span class="fecha-torneo">07 Jul 2026</span>
+                            </div>
+                                <span class="etiqueta-estado-exito">En curso</span>
+                        </div>
+
+                        <div class="tarjeta-torneo-registro">
+                            <div class="detalles-torneo">
+                                <h4>Torneo Relámpago Nocturno</h4>
+                                <span class="fecha-torneo">05 Jul 2026</span>
+                            </div>
+                                <span class="etiqueta-estado-finalizado">Finalizado</span>
+                        </div>
+
+                        </section>
+                    </table>
+                </div>
+            </section>
+
+        </article>
+
     </main>
 
-     <!--7. Footer -->
+    <!--7. Footer -->
     <footer class="main-footer">
         <div class="footer-content">
             <img src="../img/epsilonSoftware2.png" alt="Logo Epsilon Software" class="footer-logo">
@@ -214,5 +247,6 @@
             </div>
         </div>
     </footer>
+
 </body>
 </html>

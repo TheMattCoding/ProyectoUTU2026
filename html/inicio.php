@@ -23,12 +23,12 @@
         </div>
         
         <nav class="sidebar-nav">
-            <a href="inicio.html" class="sidebar-link active">Inicio</a>
-            <a href="calendario.html" class="sidebar-link">Calendario de torneos</a>
-            <a href="formularioTorneo.html" class="sidebar-link">Crea tu torneo</a>
-            <a href="organizador.html" class="sidebar-link">Panel Organizador</a>
-            <a href="dashboard.html" class="sidebar-link">Panel Administrador</a>
-            <a href="configuracion.html" class="sidebar-link">Configuración</a>
+            <a href="inicio.php" class="sidebar-link active">Inicio</a>
+            <a href="calendario.php" class="sidebar-link">Calendario de torneos</a>
+            <a href="formularioTorneo.php" class="sidebar-link">Crea tu torneo</a>
+            <a href="organizador.php" class="sidebar-link">Panel Organizador</a>
+            <a href="dashboard.php" class="sidebar-link">Panel Administrador</a>
+            <a href="configuracion.php" class="sidebar-link">Configuración</a>
         </nav>
 
         <!--5. Modo Oscuro-Claro -->
@@ -57,7 +57,7 @@
         </label>
 
         <!--3. Busqueda de Torneo -->
-        <form action="busquedaTorneo.html" method="GET" class="search-form" style="display: flex; flex: 1; max-width: 420px; margin: 0 12px;">
+        <form action="busquedaTorneo.php" method="GET" class="search-form" style="display: flex; flex: 1; max-width: 420px; margin: 0 12px;">
             <div class="search-container" style="margin: 0; width: 100%;">
                 <svg class="search-google-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                     <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" fill="#777777"/>
@@ -136,7 +136,7 @@
                             <path d="M352 96l64 0c17.7 0 32 14.3 32 32l0 256c0 17.7-14.3 32-32 32l-64 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l64 0c53 0 96-43 96-96l0-256c0-53-43-96-96-96l-64 0c-17.7 0-32 14.3-32 32s14.3 32 32 32zm-9.4 182.6c12.5-12.5 12.5-32.8 0-45.3l-128-128c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L242.7 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l210.7 0-73.4 73.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l128-128z"/>
                         </svg> Iniciar sesión
                     </a>
-                    <a href="perfil.html" class="profile-menu-item">
+                    <a href="perfil.php" class="profile-menu-item">
                         <svg class="avatar-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
                             <path d="M320 312C386.3 312 440 258.3 440 192C440 125.7 386.3 72 320 72C253.7 72 200 125.7 200 192C200 258.3 253.7 312 320 312zM290.3 368C191.8 368 112 447.8 112 546.3C112 562.7 125.3 576 141.7 576L498.3 576C514.7 576 528 562.7 528 546.3C528 447.8 448.2 368 349.7 368L290.3 368z" />
                         </svg> Perfil

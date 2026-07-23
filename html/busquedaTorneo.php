@@ -4,32 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SGDM - Plataforma de Torneos</title>
-    
-    <link rel="icon" type="image/png" href="../img/logoapp2.jpeg">
-    
     <link rel="stylesheet" href="../css/inicio.css">
-    <link rel="stylesheet" href="../css/formularioTorneo.css">
+    <link rel="stylesheet" href="../css/busqueda.css">
+
+    <link rel="icon" type="image/png" href="../img/logoapp2.jpeg">
 </head>
 <body>
 
+    <!-- 5. Menú lateral -->
     <input type="checkbox" id="menu-toggle" class="menu-checkbox">
 
     <div class="sidebar">
 
+        <!--5. Movil cerrar menú -->
         <div class="sidebar-header">
             <span class="sidebar-title">Menú</span>
             <label for="menu-toggle" class="close-sidebar-btn" aria-label="Cerrar menú">X</label>
         </div>
         
         <nav class="sidebar-nav">
-            <a href="inicio.html" class="sidebar-link">Inicio</a>
-            <a href="calendario.html" class="sidebar-link">Calendario de torneos</a>
-            <a href="formularioTorneo.html" class="sidebar-link active">Crea tu torneo</a>
-            <a href="organizador.html" class="sidebar-link">Panel Organizador</a>
-            <a href="dashboard.html" class="sidebar-link">Panel Administrador</a>
-            <a href="configuracion.html" class="sidebar-link">Configuración</a>
+            <a href="inicio.php" class="sidebar-link">Inicio</a>
+            <a href="calendario.php" class="sidebar-link">Calendario de torneos</a>
+            <a href="formularioTorneo.php" class="sidebar-link">Crea tu torneo</a>
+            <a href="organizador.php" class="sidebar-link">Panel Organizador</a>
+            <a href="dashboard.php" class="sidebar-link">Panel Administrador</a>
+            <a href="configuracion.php" class="sidebar-link">Configuración</a>
         </nav>
 
+        <!--5. Modo Oscuro-Claro -->
         <div class="sidebar-footer">
             <div class="theme-switch-container">
                 <span class="theme-label">Modo Oscuro</span>
@@ -44,6 +46,7 @@
 
     <label for="menu-toggle" class="sidebar-overlay"></label>
 
+    <!--2. Navbar y Menú hamburgesa -->
     <nav class="navbar" aria-label="Navegación principal">
         <label for="menu-toggle" class="nav-button" aria-label="Abrir menú de navegación">
             <div class="hamburger-box">
@@ -53,16 +56,20 @@
             </div>
         </label>
 
-        <form action="busquedaTorneo.html" method="GET" class="search-form" style="display: flex; flex: 1; max-width: 420px; margin: 0 12px;">
+        <!--3. Busqueda de Torneo -->
+        <form action="busquedaTorneo.php" method="GET" class="search-form" style="display: flex; flex: 1; max-width: 420px; margin: 0 12px;">
             <div class="search-container" style="margin: 0; width: 100%;">
                 <svg class="search-google-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                     <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" fill="#777777"/>
-                </svg> <input type="text" class="search-input" placeholder="Buscar un torneo" aria-label="Buscar torneos" name="query">
+                </svg>
+                <input type="text" class="search-input" placeholder="Buscar un torneo" aria-label="Buscar torneos" name="query">
             </div>
         </form>
 
+        <!-- 4. Campana de Notificaciones -->
         <div class="notifications-dropdown">
 
+            <!--4. Checkbox oculto-->
             <input type="checkbox" id="noti-toggle" class="dropdown-checkbox">
     
             <label for="noti-toggle" class="notifications-dropdown-button" aria-label="Notificaciones">
@@ -76,6 +83,7 @@
     
             <label for="noti-toggle" class="dropdown-overlay"></label>
     
+            <!--4. Apartado de Notificaciones -->
             <div class="notifications-menu-card">
                 <div class="notifications-menu-header">
                     <span class="notifications-menu-title">Notificaciones</span>
@@ -100,8 +108,10 @@
             </div>
         </div>
 
+        <!-- 4. Apartado de perfil -->
         <div class="profile-dropdown">
     
+            <!--4. Checkbox de perfil-->
             <input type="checkbox" id="profile-toggle" class="dropdown-checkbox">
     
             <label for="profile-toggle" class="profile-dropdown-button" aria-label="Menú de usuario">
@@ -114,6 +124,7 @@
     
             <label for="profile-toggle" class="dropdown-overlay"></label>
     
+            <!--4. Menú de perfil -->
             <div class="profile-menu-card">
                 <div class="profile-menu-header">
                     <span class="profile-menu-name">Usuario</span>
@@ -125,7 +136,7 @@
                             <path d="M352 96l64 0c17.7 0 32 14.3 32 32l0 256c0 17.7-14.3 32-32 32l-64 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l64 0c53 0 96-43 96-96l0-256c0-53-43-96-96-96l-64 0c-17.7 0-32 14.3-32 32s14.3 32 32 32zm-9.4 182.6c12.5-12.5 12.5-32.8 0-45.3l-128-128c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L242.7 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l210.7 0-73.4 73.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l128-128z"/>
                         </svg> Iniciar sesión
                     </a>
-                    <a href="perfil.html" class="profile-menu-item">
+                    <a href="perfil.php" class="profile-menu-item">
                         <svg class="avatar-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
                             <path d="M320 312C386.3 312 440 258.3 440 192C440 125.7 386.3 72 320 72C253.7 72 200 125.7 200 192C200 258.3 253.7 312 320 312zM290.3 368C191.8 368 112 447.8 112 546.3C112 562.7 125.3 576 141.7 576L498.3 576C514.7 576 528 562.7 528 546.3C528 447.8 448.2 368 349.7 368L290.3 368z" />
                         </svg> Perfil
@@ -133,113 +144,64 @@
                     <div class="profile-menu-divider"></div>
                     <a href="#" class="profile-menu-item logout-item">
                         <svg class="avatar-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                            <path d="M377.9 105.9L468.1 196c11.1 11.1 11.1 29.1 0 40.2l-90.1 90.1c-11.5 11.5-30.1 11.5-41.6 0s-11.5-30.1 0-41.6l39.3-39.3L160 245.4c-16.3 0-29.4-13.2-29.4-29.4s13.2-29.4 29.4-29.4l215.7 0-39.3-39.3c-11.5-11.5-11.5-30.1 0-41.6s30.1-11.5 41.6 0zM120 96c0-13.3-10.7-24-24-24C43 72 0 115 0 168L0 344c0 53 43 96 96 96c13.3 0 24-10.7 24-24s-10.7-24-24-24c-26.5 0-48-21.5-48-48l0-176c0-26.5 21.5-48 48-48c13.3 0 24-10.7 24-24z"/>
+                            <path d="M377.9 105.9L468.1 196c11.1 11.1 11.1 29.1 0 40.2l-90.1 90.1c-11.5 11.5-30.1 11.5-41.6 0s-11.5-30.1 0-41.6l39.3-39.3L160 245.4c-16.3 0-29.4-13.2-29.4-29.4s13.2-29.4 29.4-29.4l215.7 0-39.3-39.3c-11.5-11.5-11.5-30.１ 0-4１．６s30．１-１１．５ ４１．６ ０zM１２０ ９６c０-１３．３-１０．７-２４-２４-２４C４３ ７２ ０ １１５ ０ １６８L０ ３４４c０ ５３ ４３ ９６ ９６ ９６c１３．３ ０ ２４-１０．７ ２４-２４s-１０．７-２４-２４-２４c-２６．５ ０-４８-２１．５-４８-４８l０-１７６c０-２６．５ ２１．５-４８ ４８-４８c１３．３ ０ ２４-１０．７ ２４-２４z"/>
                         </svg> Cierre de sesión
                     </a>
                 </nav>
             </div>
         </div>
     </nav>
-
+    
+    <!-- 6. Contenedor principal y vista de celular -->
     <main class="main-container">
-        <div class="isla-formulario-unica">
-
-            <div class="contenedor-logo-formulario" style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px; border-bottom: 2px solid #4a3b17; padding-bottom: 10px;">
-                <img src="../img/logoapp2.jpeg" alt="Logo" class="app-logo" style="height: 45px; width: auto; border-radius: 50%;">
-                <h2 style="margin: 0; border: none; padding: 0; font-size: 1.4rem; color: #D4AF37; font-weight: bold; letter-spacing: 0.5px;">CREAR NUEVO TORNEO</h2>
-            </div>
-
-            <form action="#" method="POST">
-
-                <div class="columnas-flex-formulario">
-
-                    <div class="columna-formulario">
-                        <div class="grupo-formulario">
-                            <label for="nombre">Nombre del Torneo</label>
-                            <input type="text" id="nombre" placeholder="Ej: Torneo Relámpago" required>
-                        </div>
-
-                        <div class="grupo-formulario">
-                            <label for="disciplina">Disciplina</label>
-                            <select id="disciplina" required>
-                                <option value="" disabled selected>Seleccione una opción</option>
-                                <option value="futbol">Fútbol</option>
-                                <option value="basquet">Básquetbol</option>
-                            </select>
-                        </div>
-
-                        <div class="fila-formulario">
-                            <div class="grupo-formulario columna-expandible">
-                                <label for="formato">Formato de Clasificación</label>
-                                <select id="formato" required>
-                                    <option value="" disabled selected>Seleccione el formato</option>
-                                    <option value="eliminatoria">Eliminación directa</option>
-                                    <option value="liga">Liga (Todos contra todos)</option>
-                                </select>
-                            </div>
-                            <div class="grupo-formulario columna-expandible">
-                                <label for="modalidad">Modalidad</label>
-                                <select id="modalidad" required>
-                                    <option value="equipos">Por Equipos</option>
-                                    <option value="individual">Individual</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="fila-formulario">
-                            <div class="grupo-formulario columna-expandible">
-                                <label for="fecha">Fecha de Inicio</label>
-                                <input type="date" id="fecha" required>
-                            </div>
-                            <div class="grupo-formulario columna-expandible">
-                                <label for="hora">Hora de Inicio</label>
-                                <input type="time" id="hora" required>
-                            </div>
-                        </div>
-
-                        <div class="grupo-formulario">
-                            <label for="cantidad">Cantidad de Equipos</label>
-                            <input type="number" id="cantidad" placeholder="Ej: 16">
-                        </div>
-                    </div>
-
-                    <div class="columna-formulario columna-derecha-ajustada">
-                        <div class="grupo-formulario contenedor-area-texto">
-                            <label for="descripcion">Descripción del Torneo</label>
-                            <textarea id="descripcion" placeholder="Escribe las reglas o detalles del torneo..."></textarea>
-                        </div>
-                        
-                        <div class="grupo-formulario">
-                            <label for="portada-torneo">Portada del Torneo</label>
-                            <div class="contenedor-subir-imagen">
-                                <input type="file" id="portada-torneo" accept="image/*" class="input-archivo-oculto">
-                                <label href="#" for="portada-torneo" class="boton-subir-archivo">
-                                <svg class="icono-subir" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 18px; height: 18px; fill: currentColor; margin-right: 8px; vertical-align: middle;">
-                                    <path d="M288 109.3L288 352c0 17.7-14.3 32-32 32s-32-14.3-32-32l0-242.7-51.3 51.3c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3l105.4-105.4c12.5-12.5 32.8-12.5 45.3 0l105.4 105.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L288 109.3zM64 352l128 0c0 35.3 28.7 64 64 64s64-28.7 64-64l128 0c35.3 0 64 28.7 64 64l0 32c0 35.3-28.7 64-64 64L64 512c-35.3 0-64-28.7-64-64l0-32c0-35.3 28.7-64 64-64zm312 80a24 24 0 1 0 0-48 24 24 0 1 0 0 48z"/>
-                                </svg>
-                                Seleccionar Imagen
-                            </label>
-                            </div>
-                        </div>
-                        
-                        <div class="grupo-formulario">
-                            <label>Ubicación del Torneo</label>
-                            <div class="contenedor-mapa">
-                                <iframe src="https://maps.google.com/maps?q=Montevideo&t=&z=13&ie=UTF8&iwloc=&output=embed" width="100%" height="150" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="grupo-botones-formulario">
-                    <button type="button" class="boton-formulario boton-cancelar">Cancelar</button>
-                    <button type="submit" class="boton-formulario boton-enviar">Crear Torneo</button>
-                </div>
-            </form>
+       
+        <!--9. Lista de torneos (Encabezado)-->
+        <div class="cabecera-resultados">
+            <h2 class="titulo-resultados">Resultados para: <span class="palabra-clave">"Torneo"</span></h2>
         </div>
+        <!-- 9. Lista de Torneos y Resultados (Lista) -->
+        <section class="lista-torneos">
+        
+            <article class="tarjeta-torneo">
+                <div class="contenedor-imagen">
+                    <img src="../img/torneo-ajedrez.jpg" alt="Torneo de Ajedrez" class="imagen-torneo">
+                    <div class="superposicion-tarjeta"></div>
+                    <h3 class="titulo-torneo">Torneo de Ajedrez</h3>
+                </div>
+                <div class="info-tarjeta">
+                    <span class="fecha-torneo">26/7</span>
+                    <a href="detalleTorneo.php" class="btn btn-secondary btn-ver-mas">Ver más</a>
+                </div>
+            </article>
+
+            <article class="tarjeta-torneo">
+                <div class="contenedor-imagen">
+                    <img src="../img/torneo-futbol.jpg" alt="Torneo de Fútbol" class="imagen-torneo">
+                    <div class="superposicion-tarjeta"></div>
+                    <h3 class="titulo-torneo">Torneo de Fútbol</h3>
+                </div>
+                <div class="info-tarjeta">
+                    <span class="fecha-torneo">3/8</span>
+                    <a href="detalleTorneo.php" class="btn btn-secondary btn-ver-mas">Ver más</a>
+                </div>
+            </article>
+
+            <article class="tarjeta-torneo">
+                <div class="contenedor-imagen">
+                    <div class="marcador-imagen"></div>
+                    <h3 class="titulo-torneo">Próximo Torneo</h3>
+                </div>
+                <div class="info-tarjeta">
+                    <span class="fecha-torneo">--/--</span>
+                    <a href="detalleTorneo.php" class="btn btn-secondary btn-ver-mas">Ver más</a>
+                </div>
+            </article>
+
+        </section>
     </main>
 
-     <footer class="main-footer">
+     <!--7. Footer -->
+    <footer class="main-footer">
         <div class="footer-content">
             <img src="../img/epsilonSoftware2.png" alt="Logo Epsilon Software" class="footer-logo">
         
@@ -248,10 +210,9 @@
                     <a href="#" class="footer-link">Sobre nosotros</a>
                     <a href="#" class="footer-link">Ayuda</a>
                 </nav>
-                <p class="footer-copyright">© 2026 Epsilon Software. Todos los derechos reservados.</p>
+                <p class="footer-copyright">&copy; 2026 Epsilon Software. Todos los derechos reservados.</p>
             </div>
         </div>
     </footer>
-
 </body>
 </html>
