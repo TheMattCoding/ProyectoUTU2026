@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SGDM - Plataforma de Torneos</title>
+    <title>SGDM - Panel de Organizador</title>
     
     <link rel="icon" type="image/png" href="../img/logoapp2.jpeg">
-    
     <link rel="stylesheet" href="../css/inicio.css">
+    <link rel="stylesheet" href="../css/organizador.css">
 </head>
 <body>
 
@@ -23,10 +23,10 @@
         </div>
         
         <nav class="sidebar-nav">
-            <a href="inicio.php" class="sidebar-link active">Inicio</a>
+            <a href="inicio.php" class="sidebar-link">Inicio</a>
             <a href="calendario.php" class="sidebar-link">Calendario de torneos</a>
             <a href="formularioTorneo.php" class="sidebar-link">Crea tu torneo</a>
-            <a href="organizador.php" class="sidebar-link">Panel Organizador</a>
+            <a href="organizador.php" class="sidebar-link active">Panel Organizador</a>
             <a href="dashboard.php" class="sidebar-link">Panel Administrador</a>
             <a href="configuracion.php" class="sidebar-link">Configuración</a>
         </nav>
@@ -69,7 +69,7 @@
         <!-- 4. Campana de Notificaciones -->
         <div class="notifications-dropdown">
 
-            <!--4. Checkbox oculto-->
+            <!-- 4.Checkbox oculto-->
             <input type="checkbox" id="noti-toggle" class="dropdown-checkbox">
     
             <label for="noti-toggle" class="notifications-dropdown-button" aria-label="Notificaciones">
@@ -131,7 +131,7 @@
                 </div>
                 <div class="profile-menu-divider"></div>
                 <nav class="profile-menu-links">
-                    <a href="login.html" class="profile-menu-item">
+                    <a href="login.php" class="profile-menu-item">
                         <svg class="avatar-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                             <path d="M352 96l64 0c17.7 0 32 14.3 32 32l0 256c0 17.7-14.3 32-32 32l-64 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l64 0c53 0 96-43 96-96l0-256c0-53-43-96-96-96l-64 0c-17.7 0-32 14.3-32 32s14.3 32 32 32zm-9.4 182.6c12.5-12.5 12.5-32.8 0-45.3l-128-128c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L242.7 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l210.7 0-73.4 73.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l128-128z"/>
                         </svg> Iniciar sesión
@@ -151,64 +151,162 @@
             </div>
         </div>
     </nav>
-    
-    <!-- 6. Contenedor principal y vista de celular -->
+
     <main class="main-container">
-    
-        <!--6. Isla Principal de Inscripciones y Información -->
-        <section class="news-carousel-card" aria-labelledby="banner-title">
-            <div class="carousel-inner">
-                <button class="carousel-btn prev-btn" aria-label="Noticia anterior">&#10094;</button>
+        
+        <input type="radio" name="grupo-pestanas-organizador" id="radio-pestana-torneos" checked class="control-radio-pestana">
+        <input type="radio" name="grupo-pestanas-organizador" id="radio-pestana-fixtures" class="control-radio-pestana">
+        <input type="radio" name="grupo-pestanas-organizador" id="radio-pestana-participantes" class="control-radio-pestana">
+        <input type="radio" name="grupo-pestanas-organizador" id="radio-pestana-reportes" class="control-radio-pestana">
+
+        <div class="contenedor-organizador">
+            
+            <aside class="pestanas-organizador">
+                <h2 class="titulo-organizador">Panel Organizador</h2>
+                <label for="radio-pestana-torneos" class="btn-pestana label-torneos">Torneos Asignados</label>
+                <label for="radio-pestana-fixtures" class="btn-pestana label-fixtures">Cargar Resultados</label>
+                <label for="radio-pestana-participantes" class="btn-pestana label-participantes">Inscribir Participantes</label>
+                <label for="radio-pestana-reportes" class="btn-pestana label-reportes">Reportes del Torneo</label>
+            </aside>
+
+            <section class="tarjeta-contenido-organizador">
                 
-                <div class="banner-content">
-                    <h1 id="banner-title" class="banner-heading">Súmate al próximo torneo de la comunidad</h1>
-                    <p class="banner-description">Inscripciones abiertas. Miles de jugadores ya están listos para competir.</p>
-                    <div class="banner-actions">
-                        <a href="#" class="btn btn-secondary">Saber más</a>
-                        <a href="#" class="btn btn-primary">Inscribirme</a>
+                <div class="seccion-organizador panel-torneos">
+                    <div class="encabezado-seccion-enlinea">
+                        <h3 class="titulo-seccion">Tus Competencias</h3>
+                        <a href="formularioTorneo.php" class="btn-guardar">+ Nuevo Torneo</a>
+                    </div>
+                    <p class="subtitulo-seccion">Lista de torneos bajo tu estricta supervisión y desarrollo.</p>
+                    
+                    <div class="contenedor-tabla">
+                        <table class="tabla-datos">
+                            <thead>
+                                <tr>
+                                    <th>Nombre del Torneo</th>
+                                    <th>Disciplina</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td data-etiqueta="Torneo"><strong>Copa de Invierno 2026</strong></td>
+                                    <td data-etiqueta="Disciplina">Fútbol 5</td>
+                                    <td data-etiqueta="Estado"><span class="insignia insignia-exito">En curso</span></td>
+                                </tr>
+                                <tr>
+                                    <td data-etiqueta="Torneo"><strong>Liga Universitaria UTU</strong></td>
+                                    <td data-etiqueta="Disciplina">Básquetbol</td>
+                                    <td data-etiqueta="Estado"><span class="insignia insignia-advertencia">Inscripciones</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
 
-                <!--6. Carrusel -->
-                <button class="carousel-btn next-btn" aria-label="Siguiente noticia">&#10095;</button>
+                <div class="seccion-organizador panel-fixtures">
+                    <h3 class="titulo-seccion">Gestión de Fixtures y Rondas</h3>
+                    <p class="subtitulo-seccion">Controla el estado de las llaves y digita las puntuaciones oficiales.</p>
+                    
+                    <div class="cuadricula-fila-formulario">
+                        <div class="grupo-formulario">
+                            <label class="etiqueta-formulario">Seleccionar Torneo</label>
+                            <select class="control-formulario-seleccion">
+                                <option>Copa de Invierno 2026</option>
+                                <option>Liga Universitaria UTU</option>
+                            </select>
+                        </div>
+                        <div class="grupo-formulario">
+                            <label class="etiqueta-formulario">Fase / Jornada Actual</label>
+                            <select class="control-formulario-seleccion">
+                                <option>Fecha 3 - Serie A</option>
+                                <option>Fecha 2 - Serie A</option>
+                                <option>Fecha 1 - Serie A</option>
+                            </select>
+                        </div>
+                    </div>
 
-                <div class="carousel-dots" aria-hidden="true">
-                    <span class="dot active"></span>
-                    <span class="dot"></span>
-                    <span class="dot"></span>
+                    <div class="grupo-checkbox caja-estado-ronda">
+                        <label class="contenedor-interruptor">
+                            <input type="checkbox" id="interruptor-estado-ronda" checked>
+                            <span class="deslizador"></span>
+                            <span class="etiqueta-interruptor"><strong>Ronda 1 Publicada</strong> (Visible para la comunidad)</span>
+                        </label>
+                    </div>
+
+                    <h4 class="encabezado-subseccion">Enfrentamientos de la Fecha</h4>
+                    <form action="#" method="POST" class="formulario-organizador">
+                        <div class="tarjeta-fila-partido">
+                            <span class="nombre-equipo texto-derecha">Equipo Alpha</span>
+                            <div class="entradas-marcador-partido">
+                                <input type="number" class="control-formulario-entrada entrada-marcador" value="2" min="0">
+                                <span class="divisor-marcador">vs</span>
+                                <input type="number" class="control-formulario-entrada entrada-marcador" value="1" min="0">
+                            </div>
+                            <span class="nombre-equipo texto-izquierda">Equipo Beta</span>
+                        </div>
+
+                        <div class="tarjeta-fila-partido">
+                            <span class="nombre-equipo texto-derecha">Equipo Gamma</span>
+                            <div class="entradas-marcador-partido">
+                                <input type="number" class="control-formulario-entrada entrada-marcador" placeholder="-" min="0">
+                                <span class="divisor-marcador">vs</span>
+                                <input type="number" class="control-formulario-entrada entrada-marcador" placeholder="-" min="0">
+                            </div>
+                            <span class="nombre-equipo texto-izquierda">Equipo Delta</span>
+                        </div>
+
+                        <div class="acciones-formulario">
+                            <button type="submit" class="btn-guardar">Guardar marcadores</button>
+                        </div>
+                    </form>
                 </div>
-            </div>
-        </section>
 
-        <!--6. Mensaje de Bienvenida -->
-        <section class="welcome-container" aria-label="Bienvenida">
-            <img src="../img/logoapp.png" alt="Logo SGDM" class="welcome-logo">
-            <h2 class="welcome-text">Bienvenido a SGDM</h2>
-        </section>
+                <div class="seccion-organizador panel-participantes">
+                    <h3 class="titulo-seccion">Inscripción Manual de Equipos</h3>
+                    <p class="subtitulo-seccion">Agrega participantes directamente al torneo sin pasar por la pasarela pública.</p>
+                    
+                    <form action="#" method="POST" class="formulario-organizador">
+                        <div class="cuadricula-fila-formulario">
+                            <div class="grupo-formulario">
+                                <label for="torneo-destino" class="etiqueta-formulario">Asignar al Torneo</label>
+                                <select id="torneo-destino" class="control-formulario-seleccion">
+                                    <option>Copa de Invierno 2026</option>
+                                    <option>Liga Universitaria UTU</option>
+                                </select>
+                            </div>
+                            <div class="grupo-formulario">
+                                <label for="nombre-participante" class="etiqueta-formulario">Nombre del Competidor / Equipo</label>
+                                <input type="text" id="nombre-participante" class="control-formulario-entrada" placeholder="Ej: UTU FC o Juan Pérez">
+                            </div>
+                        </div>
 
-        <!--6. Isla de Ingreso al Calendario -->
-        <div class="cards-row-wrapper">
-            <section class="info-card" aria-labelledby="calendar-title">
-                <div class="card-header-row">
-                    <h2 id="calendar-title" class="card-main-title">Calendario de torneos</h2>
+                        <div class="acciones-formulario">
+                            <button type="submit" class="btn-guardar">Confirmar Registro</button>
+                        </div>
+                    </form>
                 </div>
-                <p class="card-short-desc">Entérate de las fechas, formatos y horarios de las próximas competencias oficiales y de la comunidad.</p>
-                <a href="#" class="card-action-link">Ver fixture completo →</a>
-            </section>
 
-            <!--6. Isla de Organización de Torneos -->
-            <section class="info-card" aria-labelledby="organize-title">
-                <div class="card-header-row">
-                    <h2 id="organize-title" class="card-main-title">Organiza tu torneo</h2>
+                <div class="seccion-organizador panel-reportes">
+                    <h3 class="titulo-seccion">Métricas y Reportes Operativos</h3>
+                    <p class="subtitulo-seccion">Exporta las planillas de juego o analiza los datos de rendimiento de la competencia.</p>
+                    
+                    <div class="cuadricula-acciones-reporte">
+                        <div class="tarjeta-descarga-reporte">
+                            <h5>Lista de Buena Fe (Inscritos)</h5>
+                            <button type="button" class="btn-secundario-chico">Descargar PDF</button>
+                        </div>
+                        <div class="tarjeta-descarga-reporte">
+                            <h5>Tabla de Goleadores / MVP</h5>
+                            <button type="button" class="btn-secundario-chico">Exportar Excel</button>
+                        </div>
+                    </div>
                 </div>
-                <p class="card-short-desc">Crea tu propia competencia, define las reglas, gestiona los equipos inscritos y comparte el fixture con tus amigos.</p>
-                <a href="formularioTorneo.html" class="card-action-link">Comenzar a crear →</a>
+
             </section>
         </div>
-
     </main>
 
-    <!--7. Footer -->
+     <!--7. Footer -->
     <footer class="main-footer">
         <div class="footer-content">
             <img src="../img/epsilonSoftware2.png" alt="Logo Epsilon Software" class="footer-logo">
@@ -216,12 +314,11 @@
             <div class="footer-right-group">
                 <nav class="footer-links" aria-label="Enlaces de pie de página">
                     <a href="#" class="footer-link">Sobre nosotros</a>
-                    <a href="#" class="footer-link">Ayuda</a>
+                    <a href="#" class="footer-link">Help</a>
                 </nav>
                 <p class="footer-copyright">&copy; 2026 Epsilon Software. Todos los derechos reservados.</p>
             </div>
         </div>
     </footer>
-
 </body>
 </html>
