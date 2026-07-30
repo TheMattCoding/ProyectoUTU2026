@@ -1,3 +1,7 @@
+<?php
+require_once 'logica/auth.php';
+requerirRol('administrador'); 
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -130,7 +134,7 @@
                 </div>
                 <div class="profile-menu-divider"></div>
                 <nav class="profile-menu-links">
-                    <a href="login.php" class="profile-menu-item">
+                    <a href="logica/login.php" class="profile-menu-item">
                         <svg class="avatar-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                             <path d="M352 96l64 0c17.7 0 32 14.3 32 32l0 256c0 17.7-14.3 32-32 32l-64 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l64 0c53 0 96-43 96-96l0-256c0-53-43-96-96-96l-64 0c-17.7 0-32 14.3-32 32s14.3 32 32 32zm-9.4 182.6c12.5-12.5 12.5-32.8 0-45.3l-128-128c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L242.7 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l210.7 0-73.4 73.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l128-128z"/>
                         </svg> Iniciar sesión
@@ -141,7 +145,7 @@
                         </svg> Perfil
                     </a>
                     <div class="profile-menu-divider"></div>
-                    <a href="#" class="profile-menu-item logout-item">
+                    <a href="logica/logout.php" class="profile-menu-item logout-item">
                         <svg class="avatar-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                             <path d="M377.9 105.9L468.1 196c11.1 11.1 11.1 29.1 0 40.2l-90.1 90.1c-11.5 11.5-30.1 11.5-41.6 0s-11.5-30.1 0-41.6l39.3-39.3L160 245.4c-16.3 0-29.4-13.2-29.4-29.4s13.2-29.4 29.4-29.4l215.7 0-39.3-39.3c-11.5-11.5-11.5-30.１ 0-4１．６s30．１-１１．５ ４１．６ ０zM１２０ ９６c０-１３．３-１０．７-２４-２４-２４C４３ ７２ ０ １１５ ０ １６８L０ ３４４c０ ５３ ４３ ９６ ９６ ９６c１３．３ ０ ２４-１０．７ ２４-２４s-１０．７-２４-２４-２４c-２６．５ ０-４８-２１．５-４８-４８l０-１７６c０-２６．５ ２１．５-４８ ４８-４８c１３．３ ０ ２４-１０．７ ２４-２４z"/>
                         </svg> Cierre de sesión

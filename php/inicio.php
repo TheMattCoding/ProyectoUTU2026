@@ -1,3 +1,7 @@
+<?php
+require_once 'logica/auth.php';
+$rolActual = $_SESSION['rol'] ?? 'visitante';
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -23,12 +27,25 @@
         </div>
         
         <nav class="sidebar-nav">
+            <!-- Visible para todos (incluyendo visitantes) -->
             <a href="inicio.php" class="sidebar-link active">Inicio</a>
             <a href="calendario.php" class="sidebar-link">Calendario de torneos</a>
-            <a href="formularioTorneo.php" class="sidebar-link">Crea tu torneo</a>
-            <a href="organizador.php" class="sidebar-link">Panel Organizador</a>
-            <a href="dashboard.php" class="sidebar-link">Panel Administrador</a>
-            <a href="configuracion.php" class="sidebar-link">Configuración</a>
+
+            <!-- Solo Organizadores y Administradores -->
+            <?php if (in_array($rolActual, ['organizador', 'administrador'])): ?>
+                <a href="formularioTorneo.php" class="sidebar-link">Crea tu torneo</a>
+                <a href="organizador.php" class="sidebar-link">Panel Organizador</a>
+            <?php endif; ?>
+
+            <!-- Solo Administradores -->
+            <?php if ($rolActual === 'administrador'): ?>
+                <a href="dashboard.php" class="sidebar-link">Panel Administrador</a>
+            <?php endif; ?>
+
+            <!-- Solo Usuarios Registrados (no visitantes) -->
+            <?php if ($rolActual !== 'visitante'): ?>
+                <a href="configuracion.php" class="sidebar-link">Configuración</a>
+            <?php endif; ?>
         </nav>
 
         <!--5. Modo Oscuro-Claro -->
@@ -131,7 +148,7 @@
                 </div>
                 <div class="profile-menu-divider"></div>
                 <nav class="profile-menu-links">
-                    <a href="login.php" class="profile-menu-item">
+                    <a href="logica/login.php" class="profile-menu-item">
                         <svg class="avatar-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                             <path d="M352 96l64 0c17.7 0 32 14.3 32 32l0 256c0 17.7-14.3 32-32 32l-64 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l64 0c53 0 96-43 96-96l0-256c0-53-43-96-96-96l-64 0c-17.7 0-32 14.3-32 32s14.3 32 32 32zm-9.4 182.6c12.5-12.5 12.5-32.8 0-45.3l-128-128c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L242.7 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l210.7 0-73.4 73.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l128-128z"/>
                         </svg> Iniciar sesión
@@ -142,7 +159,7 @@
                         </svg> Perfil
                     </a>
                     <div class="profile-menu-divider"></div>
-                    <a href="#" class="profile-menu-item logout-item">
+                    <a href="logica/logout.php" class="profile-menu-item logout-item">
                         <svg class="avatar-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                             <path d="M377.9 105.9L468.1 196c11.1 11.1 11.1 29.1 0 40.2l-90.1 90.1c-11.5 11.5-30.1 11.5-41.6 0s-11.5-30.1 0-41.6l39.3-39.3L160 245.4c-16.3 0-29.4-13.2-29.4-29.4s13.2-29.4 29.4-29.4l215.7 0-39.3-39.3c-11.5-11.5-11.5-30.１ 0-4１．６s30．１-１１．５ ４１．６ ０zM１２０ ９６c０-１３．３-１０．７-２４-２４-２４C４３ ７２ ０ １１５ ０ １６８L０ ３４４c０ ５３ ４３ ９６ ９６ ９６c１３．３ ０ ２４-１０．７ ２４-２４s-１０．７-２４-２４-２４c-２６．５ ０-４８-２１．５-４８-４８l０-１７６c０-２６．５ ２１．５-４８ ４８-４８c１３．３ ０ ２４-１０．７ ２４-２４z"/>
                         </svg> Cierre de sesión
@@ -193,7 +210,7 @@
                     <h2 id="calendar-title" class="card-main-title">Calendario de torneos</h2>
                 </div>
                 <p class="card-short-desc">Entérate de las fechas, formatos y horarios de las próximas competencias oficiales y de la comunidad.</p>
-                <a href="#" class="card-action-link">Ver fixture completo →</a>
+                <a href="calendario.php" class="card-action-link">Ver fixture completo →</a>
             </section>
 
             <!--6. Isla de Organización de Torneos -->
@@ -202,7 +219,7 @@
                     <h2 id="organize-title" class="card-main-title">Organiza tu torneo</h2>
                 </div>
                 <p class="card-short-desc">Crea tu propia competencia, define las reglas, gestiona los equipos inscritos y comparte el fixture con tus amigos.</p>
-                <a href="formularioTorneo.html" class="card-action-link">Comenzar a crear →</a>
+                <a href="formularioTorneo.php" class="card-action-link">Comenzar a crear →</a>
             </section>
         </div>
 
