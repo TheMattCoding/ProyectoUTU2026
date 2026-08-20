@@ -191,11 +191,7 @@ $usuarioActual = $_SESSION['usuario'] ?? 'Visitante';
 
                         <div class="grupo-formulario">
                             <label for="disciplina">Disciplina</label>
-                            <select id="disciplina" required>
-                                <option value="" disabled selected>Seleccione una opción</option>
-                                <option value="futbol">Fútbol</option>
-                                <option value="basquet">Básquetbol</option>
-                            </select>
+                            <input type="text" id="disciplina" placeholder="Ej: Ajedrez" required>
                         </div>
 
                         <div class="fila-formulario">
