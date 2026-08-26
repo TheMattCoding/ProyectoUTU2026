@@ -1,0 +1,797 @@
+﻿Carpeta de Tutoría Proyecto UTU-LAB
+
+
+
+Solicitante: I. T. S - Instituto Tecnológico Superior Arias Balparda.
+Nombre Fantasía, de la nueva empresa: Epsilon Software.
+Grupo: 3° MS.
+Turno: Matutino.
+Unidad Curricular: Tutoria de Proyecto UTU-LAB.
+Nombres de los integrantes del grupo: Sophia Brum, Mateo Comini, Santiago Crespo, Thiago Iglesias.
+Fecha de entrega: 27/7/2026
+
+
+
+
+
+
+
+
+Instituto Tecnologíco Superior Arias Balparda.
+Blvr. José Batlle y Ordoñez 3570 esq. Gral. Flores - Montevideo.
+0. Índice
+0. Índice        2
+1. Objetivos y Alcance del documento.        4
+Objetivo        4
+Alcance        4
+2. Vocabulario de Términos Técnicos        5
+2.1 Término, Definición y Contexto Operativo        5
+2.2 Simbología, Acrónimos y Abreviaturas        6
+2.2.1 Acrónimos Metodológicos y de Gestión        6
+2.2.2 Acrónimos de Formatos y Tecnologías Web        8
+3. Temas para la primera entrega        8
+4. Introducción        8
+5. Tutoría de Proyecto UTULAB        9
+5.1 Definición de nombre y logo de grupo de proyecto (con justificación)        9
+5.2 Definición de logo de la aplicación        11
+5.3 Formularios de acta de reunión        12
+5.4 Actas de reunión formal interna        14
+19/5/2026        15
+26/5/2026        17
+2/6/2026        19
+9/6/2026        20
+16/6/2026        22
+14/7/2026        26
+5.5 Fundamentación de las elecciones de diseño del sistema        28
+5.5.1 Pagina de Inicio.        28
+5.5.2 Busqueda de torneos        31
+5.5.3 Detalle de torneo        33
+5.5.4 Perfil        35
+5.5.5 Calendario de torneos        37
+5.5.6 Crea tu torneo        39
+5.5.7 Panel Organizador        40
+5.5.8 Panel Administrador        46
+5.5.9 Configuracion        48
+5.5.10 Inicio de sesión        57
+6. Fundamentos de pensamiento basado en S.C.A.M.P.E.R        59
+7. Bibliografía        62
+
+
+________________
+1. Objetivos y Alcance del documento.
+
+
+Objetivo
+Establecer y documentar las bases organizativas, la identidad corporativa y la fundamentación de diseño del Sistema de Gestión Deportiva Modular (SGDM) desarrollado por Epsilon Software. Este documento busca consolidar el seguimiento metodológico del equipo a través de actas de reunión, fundamentar la interfaz de usuario (UI/UX) bajo un enfoque intuitivo y responsivo, y aplicar dinámicas de innovación para garantizar un desarrollo alineado con los estándares académicos y profesionales requeridos .
+Alcance
+El alcance de esta carpeta comprende los siguientes aspectos:
+Identidad de Marca y Aplicación: Definición y justificación del nombre de la empresa (Epsilon Software), selección tipográfica (ETNA), paleta de colores corporativa y del sistema, y diseño del isotipo en forma de trofeo.
+Gestión Interna y Metodología de Trabajo: Registro cronológico de reuniones internas mediante formularios y actas formales, definición de reglas de convivencia del grupo (incluyendo régimen de asistencia, tiempos de entrega y sistema de sanciones/strikes) y asignación de tareas bajo el ciclo de vida incremental.
+Fundamentación de Diseño UI/UX: Justificación técnica y visual de las maquetaciones bajo el enfoque Mobile First y de escritorio para las pantallas del sistema:
+Página de Inicio (carrusel, menú lateral interactivo y barra de navegación).
+Búsqueda y Detalle de Torneos.
+Perfil de Usuario (trofeos, torneos activos e historial).
+Calendario de Torneos.
+Módulo "Crea tu torneo".
+Panel Organizador (gestión de torneos asignados, carga de resultados, inscripción manual y reportes).
+Panel Administrador (métricas globales, logs/auditorías y estadísticas de rendimiento).
+Configuración (edición de perfil, seguridad de cuenta, notificaciones, preferencias de tema y eliminación de cuenta).
+Inicio de Sesión.
+Innovación e Ingeniería del Pensamiento: Aplicación estructurada de la técnica S.C.A.M.P.E.R. (Sustituir, Combinar, Adaptar, Modificar, Proponer otro uso, Eliminar y Reorganizar) para la mejora del código, diseño y funcionalidades del SGDM.
+
+
+
+
+
+
+
+
+2. Vocabulario de Términos Técnicos
+A continuación, se presentan los términos técnicos utilizados en la carpeta de Tutoría de Proyecto UTU-LAB para el proyecto SGDM y Epsilon Software.
+________________
+
+
+2.1 Término, Definición y Contexto Operativo
+________________
+
+
+Acta de Reunión: Documento formal donde se registra la asistencia, temario, decisiones acordadas y tareas asignadas durante los encuentros internos del equipo de proyecto.
+Ciclo de Vida Incremental: Metodología de desarrollo de software donde el proyecto se construye y entrega por partes funcionales sucesivas hasta completar el SGDM.
+Isotipo: Representación gráfica de una marca compuesta únicamente por un símbolo visual o figura icónica (en el SGDM, la figura geométrica de un trofeo).
+Menú Hamburguesa: Elemento de diseño de interfaz accesible en la versión móvil que despliega el menú lateral principal optimizando el espacio en pantalla.
+Modo Oscuro / Claro: Preferencia de interfaz que permite alternar el contraste de color del sistema entre un esquema oscuro (Matt Black) o claro para confort visual.
+S.C.A.M.P.E.R.: Técnica de creatividad basada en siete acciones (Sustituir, Combinar, Adaptar, Modificar, Proponer otro uso, Eliminar y Reorganizar) utilizada para innovar en el SGDM.
+Sistema de Strikes / Sanciones: Mecanismo interno del grupo que aplica penalizaciones proporcionales sobre el valor del proyecto ante faltas no justificadas.
+Tipografía Sans-Serif: Familia tipográfica (como ETNA) seleccionada por su alta legibilidad en pantallas y estética moderna en logotipos corporativos.
+2.2 Simbología, Acrónimos y Abreviaturas
+A continuación se clasifican los acrónimos metodológicos, nomenclaturas de colores hexadecimales y símbolos tipográficos empleados en el documento. 
+2.2.1 Acrónimos Metodológicos y de Gestión
+APA: American Psychological Association (Normas de formato académico).
+ESRE: Especificación de Requisitos del Sistema y Software.
+ITS: Instituto Tecnológico Superior Arias Balparda.
+SCAMPER:Substitute, Combine, Adapt, Modify, Put to another use, Eliminate, Reverse (Metodología de innovación).
+SGDM: Sistema de Gestión Deportiva Modular.
+UTU: Universidad del Trabajo del Uruguay. 
+Epsilon: Quinta letra del alfabeto griego utilizada en minúscula para el isotipo de la empresa.
+#151515 (Matt Black): Código hexadecimal para el color negro mate utilizado en el fondo de las vistas para brindar elegancia y contraste.
+#3AAFB9 (Turquesa / Cian): Código hexadecimal representativo de creatividad y tecnologías avanzadas dentro de la interfaz.
+#D4AF37 (Metallic Gold): Código hexadecimal asignado al dorado metálico para resaltar elementos triunfales (trofeos, botones e hitos).
+#FFFFFF (Blanco Puro): Código hexadecimal para los trazados del logo de la app e impresiones en negativo de la tipografía.
+________________
+2.2.2 Acrónimos de Formatos y Tecnologías Web
+CSS: Cascading Style Sheets (Hojas de estilo en cascada).
+HTML:HyperText Markup Language (Lenguaje de marcado de hipertexto).
+SVG: Scalable Vector Graphics (Gráficos vectoriales escalables utilizados en sustitución de los emojis estándar).
+URL: Uniform Resource Locator (Localizador uniforme de recursos).
+3. Temas para la primera entrega
+* Definición de nombre y logo de grupo de proyecto (con justificación)
+* Definición de logo de la aplicación
+* Fundamentos de pensamiento basado en S.C.A.M.P.E.R
+* Formularios de acta de reunión
+* Actas de reunión formal interna (mínimo 6)
+* Fundamentación de las elecciones de diseño del sistema 
+4. Introducción
+Documento que representa al seguimiento y realización de tareas y reuniones documentadas y principalmente el camino que tomamos en la materia Tutoría de Proyecto UTU-LAB la cual tiene la función de apoyar el resto de asignaturas y respaldar las dudas de los alumnos a lo largo del año con el fin de que cumplamos con los estándares y la revisión de docentes en cada plazo establecido y captar el conocimiento y en el ciclo de vida que nos encontramos para realizar el proyecto de fin de año. 
+________________
+5. Tutoría de Proyecto UTULAB
+
+
+5.1 Definición de nombre y logo de grupo de proyecto (con justificación)
+Epsilon Software
+Justificación: Epsilon es el punto de partida; es la página en blanco donde se crea la lógica ya que desde la informática y computación este representa una cadena vacía donde su contenido en principio es ausente de letras, símbolos o espacio.
+Representa nuestra capacidad de construir soluciones complejas, fuertes o robustas desde la base más principal y esencial del código esto cobra más sentido cuando lo vemos desde un punto matemático epsilon es un número que siempre es positivo y muy pequeño que tiende cero, es tan insignificante que parece no importar, pero es crucial porque su finalidad es descubrir qué tan cerca estás de un número sin haber llegado a él y al en nuestro proyecto, crear distintas modificaciones aunque varíe su tamaño(pequeña, mediana o grande) o su impacto, nos ayuda a damos cuenta que tan cerca estamos de nuestra misión como grupo.
+En la lengua (Etimología) el término viene del griego é psilón, que significa “e simple” o “e breve” por eso en nuestra equipo buscamos simplificar, automatizar y facilitar distintas tareas o acciones y digitalizar con la creación de un sistema automatizado como SGDM (Sistema de Gestión Deportiva Modular).
+El significado espiritual define como intentamos llevarnos como equipo ya que este significa el conocimiento que se consigue con la cercanía, buscamos el diálogo abierto y que todos tengamos un lugar para tener sentido de pertenencia y para mejorar o innovar nuestro sistema con una idea única o particular. 
+  
+
+Un logotipo que comienza con el símbolo de Epsilon la cual es la quinta letra del alfabeto griego y en el logo es la que predomina, en minúscula ε, seguido de una línea que cobra sentido con el significado etimológico de “e simple”.
+Luego podemos hablar de la paleta de colores que de forma degradada en tonos azules, celestes y un blanco de fondo puede generar distintos sentimientos y emociones como la confianza y seguridad en tonos azules más oscuros como un negro azulado (00171F) y azul marino profundo (003459) ya que en estos colores se encuentra un equilibrio dando seriedad y formalidad. Además el azul es un color que principalmente establece y ofrece calma con un enfoque que puede ayudar a reducir el estrés y esta combinación impulsa a un estado de ánimo ordenado y racional perfecto para un equipo que está enfocado en la lógica o información compleja.
+Al seguir con colores como el azul océano (007EA7) y el turquesa o azul cian (3AAFB9) buscamos ser dinámicos y creativos en parte por la tecnología avanzada que queremos representar con el sistema automatizado SGDM. Por último le dimos un fondo limpio con un blanco (FFFFFF) el cual aclara nuestro logotipo y da una sensación de espacio y transparencia.
+________________
+
+
+También podemos dar lugar a la tipografía ETNA de clasificación Sans-Serif la cual es recomendada para Logotipos y textos grandes por ser llamativa visualmente, ser bastante legible y le da un toque moderno con curvas redondeadas mejorando su significado a lo tecnológico y actual.
+En conclusión con la combinación de nuestro nombre y logotipo de la empresa Epsilon software buscamos ofrecer una seguridad tecnológica cuando hablamos de nuestro sistema SGDM, que el usuario se sienta en una página web confiable y seria tanto en información como en lógica.
+
+
+Formato: SVG
+  
+  
+  
+  
+  
+
+
+
+5.2 Definición de logo de la aplicación   
+Concepto General
+El logotipo de la aplicación es la representación visual de su misión principal: la gestión integral, ordenada y profesional de torneos y competencias. Su diseño nace de la combinación de la competitividad deportiva y la estructura corporativa.
+Para reflejar esto, seleccionamos el diseño de un trofeo, símbolo universal del triunfo, el esfuerzo y la excelencia. La propuesta visual utiliza líneas limpias y geométricas que transmiten modernidad, solidez y un enfoque tecnológico.
+Paleta de Colores y Aplicación Visual
+El diseño del logotipo se basa en una paleta monocromática de alto contraste:
+Blanco Puro: Utilizado para las líneas del trofeo, transmite orden, simplicidad y claridad en la gestión de los datos.
+Negro de Fondo: Aporta profesionalismo y un entorno tecnológico moderno, ideal para resaltar los elementos de la competencia sin generar cansancio visual.
+Nota: El diseño lineal permite que el logotipo sea fácilmente adaptable a versiones en negativo o a la incorporación de un color corporativo secundario en el futuro sin perder su identidad ni su fuerza visual.
+Formato: SVG
+  
+  
+  
+  
+  
+  
+
+5.3 Formularios de acta de reunión
+Con el objetivo de registrar cada reunión del proyecto de forma ordenada y mantener un seguimiento de las decisiones tomadas, el equipo diseñó un formulario de acta que se utiliza en todas las reuniones. Este documento permite dejar constancia de la información más relevante de cada encuentro, facilitando el control de tareas, la planificación y el seguimiento del avance del proyecto.
+El formulario incluye los siguientes apartados:
+* Fecha y hora de la reunión.
+* Lugar de reunión (presencial o virtual).
+* Lista de asistencia.
+* Temario.
+* Desarrollo de la reunión y decisiones tomadas.
+* Tareas asignadas para la siguiente reunión.
+* Espacio para las firmas de los integrantes.
+
+
+________________
+5.4 Actas de reunión formal interna
+3MS Matutino - Epsilon Software
+  
+________________
+
+19/5/2026
+Fecha y Hora:
+Martes 19 de Mayo. 12:27 PM - 13:20 PM
+Lugar de Reunión:
+Físico: Bv. Jose Batlle y Ordoñez 3570, Montevideo, Uruguay. ITS “Arias Balparda”
+Lista de Asistencia:
+Sophia Brum (LLUVIA DE IDEAS)
+Mateo Comini (REPRESENTANTE & LLUVIA DE IDEAS)
+Santiago Crespo (LLUVIA DE IDEAS)
+Thiago Iglesias (DOCUMENTADOR & LLUVIA DE IDEAS)
+Temario:
+Actualmente se está llevando a cabo la organización y definición de aspectos importantes para el desarrollo del proyecto, buscando establecer una base clara para el trabajo en equipo y el funcionamiento general del mismo. No asignamos tareas para la siguiente reunión.
+Reglas:
+* 1° regla: Todo integrante deberá asistir a un 75% de las reuniones de proyecto durante cada período de entrega.
+* 2° regla: Cada integrante tendrá un máximo de 2 días fuera de fecha para entregar sus tareas. Solo si tiene un 50% de sus tareas hechas.
+* 3° regla: Las decisiones sobre el proyecto serán tomadas durante las reuniones. Los integrantes que no asistan a dichas reuniones pierden el derecho al voto o reclamo de lo decidido ese día.
+* 4° regla: Toda falta a las reuniones debe ser justificada por causas realmente importantes. (Aún pierde el derecho marcado en la regla 3).
+* 5° regla: Todo integrante (en un principio) abonará el 25% del proyecto. En caso de surgir complicaciones con el pago deberá avisar con anticipación (mín. 2 semanas).
+* 6° regla: Se llevará a cabo un sistema de sanciones y advertencias que consiste en 1 strike en un principio y luego una sanción.
+La sanción consiste en descontarle a los demás integrantes 1% del valor del proyecto y se le sumará 3% al integrante que fue sancionado.
+Cada miembro tiene una advertencia por período que no se acumulan.
+* 7° regla: Los integrantes deben utilizar el grupo de proyecto solo para su propósito y no subir contenido ajeno al mismo para no perjudicar el espacio de trabajo.
+Firmas:   
+      ________________
+
+
+26/5/2026
+Fecha y Hora:
+Martes 26 de Mayo. 12:32 PM - 13:16 PM
+Lugar de Reunión:
+Físico: Bv. Jose Batlle y Ordoñez 3570, Montevideo, Uruguay. ITS “Arias Balparda”
+Lista de Asistencia:
+Sophia Brum (SUB-COORDINADORA)
+Mateo Comini (REPRESENTANTE)
+Santiago Crespo (DESARROLLADOR)
+Thiago Iglesias (DOCUMENTADOR)
+Temario:
+Decidimos crear 3 reglas más ya que son 10 las mínimas y nos queríamos sacar esa tarea de encima.
+Decidimos usar el Ciclo de Vida “Incremental”.
+Estamos viendo los requisitos que puso cada materia para la 1er entrega y preguntándonos por donde empezar.
+Anotamos todas las tareas para la primer entrega.
+Decidimos que el logo de la App sea un Isotipo
+Decidimos que Sophia sea la Sub-Coordinadora
+Reglas:
+   * Regla 8°: Ningún integrante debe compartir la contraseña del proyecto a individuos ajenos a la conformación de grupo. Para asegurar la integridad del mismo.
+   * Regla 9°: Ningún código se integra a la rama principal sin antes pasar por una revisión por parte de todo el grupo.
+   * Regla 10°: El código entregado deberá seguir las buenas prácticas acordadas (nombres claros de variables, estructura limpia) y llevar comentarios breves en las lógicas complejas para que cualquiera pueda entenderlo y mantenerlo.
+________________
+
+
+Tareas para la próx. Reunión:
+Thiago: 
+   1. Crear trello (UTULAB)
+   2. Formularios de Actas de Reunión (UTULAB)
+   3. Actas Formal Interna (UTULAB)
+Sophia:
+   1. Estudio Cliente - Servidor (ASO)
+   2. Análisis de Usuario de Sistema (ASO)
+Santiago:
+   1. Logo de la App (UTULAB)
+   2. ¿Cómo está organizado el equipo? (ING de Software)
+   3. Roles dentro del Equipo (ING de Software)
+
+
+Mateo:
+   1. Maquetado del Sitio Mobile First (FULL STACK)
+Firmas:   
+  
+  
+  
+
+
+
+________________
+
+
+2/6/2026
+Fecha y Hora:
+Martes 2 de Junio. 14:01 PM - 14:46
+Lugar de Reunión:
+Virtual: Discord
+Lista de Asistencia:
+Sophia Brum (SUB-COORDINADORA)
+Mateo Comini (REPRESENTANTE)
+Santiago Crespo (DESARROLLADOR)
+Thiago Iglesias (DOCUMENTADOR)
+Temario:
+Estamos charlando sobre los requisitos del sistema, el diseño de la página web, estamos desarrollando en responsive para que funcione tanto para celular como para escritorio.
+Tareas para la próx. Reunión:
+Todos:
+   1. Crear un diagrama con todos los requerimientos del sistema.
+Firmas:   
+  
+  
+  
+
+
+
+________________
+
+
+9/6/2026
+Fecha y Hora:
+Martes 2 de Junio. 12:28 - 13:10
+Lugar de Reunión:
+Físico: ITS “Arias Balparda”
+Lista de Asistencia:
+Sophia Brum (SUB-COORDINADORA)
+Mateo Comini (REPRESENTANTE)
+Santiago Crespo (DESARROLLADOR)
+Thiago Iglesias (DOCUMENTADOR)
+Temario:
+Hoy vamos a hablar sobre el maquetado para la primer entrega de programación y sobre la documentación. Asignamos tareas para la siguiente reunión.
+Tareas para la próx. Reunión:
+Thiago y Sophia
+   1. GRANT
+Thiago:
+   1. Roles y Conformación de Equipos
+   2. Diseñar página de Inicio de Sesión
+   3. Integrar firmas
+Santiago:
+   1. Diseñar el formulario de creación de torneo
+Sophi:
+   1. Diseñar el perfil
+   2. Estudio de cliente servidor
+   3. Subir al repositorio
+Mateo:
+   1. Diseñar página de detalles de torneo
+   2. Agregar apartado de notificaciones
+
+
+________________
+
+
+Firmas: 
+  
+
+  
+  
+  
+
+
+
+________________
+
+
+16/6/2026
+Fecha y Hora:
+Martes 16 de Junio. 12:34 - 13:46
+Lugar de Reunión:
+Físico: ITS “Arias Balparda”
+Lista de Asistencia:
+Sophia Brum (SUB-COORDINADORA)
+Mateo Comini (REPRESENTANTE)
+Santiago Crespo (DESARROLLADOR)
+Thiago Iglesias (DOCUMENTADOR)
+Temario:
+Hoy vamos a hablar sobre el repositorio de GITHUB
+Subir lo realizado a documento.
+Requisitos de ciberseguridad (comenzamos 17/6)
+
+
+Tareas para la próx. Reunión:
+Thiago: -Subir login al repositorio.
+          -Completar lo de Ingeniería de Software.
+Sophia:-Terminar y subir el estudio de cliente-servidor al documento.
+         -Perfil organizador y común.
+Santiago:-Arreglar el apartado de crear torneo.
+            -Configuración.
+Mateo: -Calendario y vista administrador.
+Todos: Ciberseguridad manual SSH.
+        Configurar el Gantt Cloud (jueves).
+  
+  
+
+Firmas:    
+
+
+23/6/2026
+Fecha y Hora:
+Martes 23 de Junio. 11:58 - 13:01
+Lugar de Reunión:
+Físico: ITS “Arias Balparda”
+Lista de Asistencia:
+Sophia Brum (SUB-COORDINADORA)
+Mateo Comini (REPRESENTANTE)
+Santiago Crespo (DESARROLLADOR)
+Thiago Iglesias (DOCUMENTADOR)
+Temario:
+Estamos hablando sobre el calendario del maquetado, la vista del organizador y del administrador.
+Tareas para la próx. Reunión:
+Juntos: 
+   1. Mateo y Sophia - Formulario de Relevamiento de datos
+   2. Thiago y Santiago - Documento ESRE 
+   3. Santiago y Mateo - Terminar el maquetado en su totalidad.
+Separados:
+   1. Santiago - Maquetado Configuración, vista de administrador, definición logo de la aplicación
+   2. Mateo - Maquetado Calendario, vista de organizador, navbar, fundamentación de selecciones de diseño del sistema
+   3. Thiago - Coordinar entrevista URUNDAY (5 de Julio en adelante), ordenar documento “Carpeta de Proyecto”, fundamentar ciclo de vida (NORMAS APA)
+Todos:
+   1. Formulario SSH
+   2. Roles dentro del equipo
+Firmas:        
+7/7/2026
+Fecha y Hora:
+Martes 7 de Julio. 12:30 - 13:02
+Lugar de Reunión:
+Físico: ITS “Arias Balparda”
+Lista de Asistencia:
+Sophia Brum (SUB-COORDINADORA)
+Mateo Comini (REPRESENTANTE)
+Santiago Crespo (DESARROLLADOR)
+Thiago Iglesias (DOCUMENTADOR)
+Temario:
+Temas faltantes para la 1er entrega
+Tareas para la próx. Reunión:
+SOPHIA:
+Identificación roles y perfiles de usuario de la aplicación con sus responsabilidades y nivel de acceso (Tabla de datos)
+Controles de Acceso y roles de usuario
+MATEO Y SANTIAGO:
+Implementar el SCRIPT en el servidor (ASO)
+Maquetado (Colores y comentarios)
+Fundamentación de elecciones del diseño del sistema
+THIAGO:
+Fundamentación de pensamiento basado en SCAMPER
+Definición de políticas de contraseñas
+Políticas y medidas de seguridad
+SANTIAGO:
+Posibles vulnerabilidades en infraestructuras (Servidor, base de datos, red interna)
+MATEO:
+Identificación de amenazas especificas para su sistema
+Firmas:
+  
+  
+  
+  
+
+________________
+
+
+14/7/2026
+Fecha y Hora:
+Martes 14 de Julio. 10:00 - 11:27
+Lugar de Reunión:
+Físico: ITS “Arias Balparda”
+Lista de Asistencia:
+Sophia Brum (SUB-COORDINADORA)
+Mateo Comini (REPRESENTANTE)
+Santiago Crespo (DESARROLLADOR)
+Thiago Iglesias (DOCUMENTADOR)
+Temario:
+Asignación de tareas pendientes
+Tareas para la próx. Reunión:
+SOPHIA:
+Documento ESRE
+SOPHIA Y THIAGO:
+Fundamentación para Filosofía
+THIAGO:
+Mejorar fundamentación de Organización del equipo (Mantei Y Constantine)
+SANTIAGO:
+Definir los roles dentro del equipo
+MATEO:
+S.C.A.M.P.E.R
+Firmas:  
+  
+  
+  
+
+21/7/2026
+Fecha y Hora:
+Martes 21 de Julio. 10:32 - 11:27
+Lugar de Reunión:
+Físico: ITS “Arias Balparda”
+Lista de Asistencia:
+Sophia Brum (SUB-COORDINADORA)
+Mateo Comini (REPRESENTANTE)
+Santiago Crespo (DESARROLLADOR)
+Thiago Iglesias (DOCUMENTADOR)
+Temario:
+Finalización de primer entrega
+Tareas para la próx. Reunión:
+TODOS:
+Subir el proyecto al servidor
+Preparación para las defensas
+SOPHIA:
+Armar pendrives (documento por matéria)
+
+
+
+
+
+
+Firmas:  
+  
+  
+  
+
+
+
+5.5 Fundamentación de las elecciones de diseño del sistema
+5.5.1 Pagina de Inicio.
+Optamos por un diseño el cual sea agradable a la vista, intuitivo y fácil de navegar. Utilizamos un color Dorado Metálico (Metallic Gold #D4AF37) para los detalles. La razón del mismo fue encontrar un color que represente, no solo energía o movimiento, si no el objetivo principal de un torneo, la victoria. El color dorado está relacionado con los trofeos y medallas, el primer puesto al que uno aspira en una competición. La idea es dar una sensación de “gloria” con estos colores. Además, el uso del color negro mate (Matt Black #151515 ) da una sensación de poder y elegancia que contrasta muy bien con el blanco utilizado en el fondo.
+Vista de Escritorio
+   
+
+
+Vista de Celulares
+
+
+  
+  
+  
+
+
+
+Al ingresar a la página (ya sea desde una computadora o celular) el usuario se encontrará con un carrusel de noticias (el cual el organizador estará encargado de subir las mismas), un mensaje de bienvenida con el logo de la aplicación, dos islas con las opciones “Calendario de torneos” y en caso de ser organizador la opción de “Crear un torneo”. 
+La página cuenta con un menú lateral con el cual el usuario puede acceder de forma rápida a las distintas partes de nuestra aplicación: Inicio, Calendario de torneos, Crea tu torneo, Panel Organizador, Panel Administrador y Configuración. Además cuenta con la opción de cambiar a un modo oscuro/claro en la parte inferior del mismo. El usuario debe tener todo al alcance de la mano sin submenús que ralentice la experiencia. Este menú lateral cuenta con la función de ser desplegable en la versión de celulares mediante un menú hamburguesa y se mantiene en todas las páginas para que sea consistente.
+Vista de Escritorio  
+
+
+  
+
+
+
+________________
+
+
+Vista de Celulares
+
+
+  
+  
+
+
+
+En la parte superior de la página tenemos una barra de navegación la cual le brinda al usuario la opción de buscar torneos mediante palabras clave, el apartado de notificaciones y el apartado de perfil los cuales se muestran mediante un menú desplegable al hacer click. 
+
+
+5.5.2 Busqueda de torneos
+Vista de Escritorio
+  
+
+Vista de Celulares
+  
+  
+
+Cuando el usuario escribe en la barra de búsqueda ciertas palabras clave, será redireccionado a la página de búsqueda de torneos. En ella se mostrará en pantalla islas en las cuales cada una contendrá una imagen (esta será previamente elegida por el organizador de torneos en el apartado “Crear un torneo”), la opción “Ver más” la cual al hacer click enviará al usuario a la página “Detalle de torneo”, y el nombre del Torneo.
+5.5.3 Detalle de torneo
+Vista de Escritorio
+  
+
+
+
+Vista de Celulares
+  
+  
+
+
+
+Cuando el usuario hace click en la opción “Ver más”, será redireccionado a la página de Detalle de torneo. En ella podrá visualizar la ubicación donde será llevado a cabo dicho torneo, el día y hora, una descripción del torneo, el formato del torneo, el creador del mismo, los cupos disponibles y un botón para inscribirse. Además de la foto que fue elegida previamente por el organizador de torneos. 
+
+
+________________
+5.5.4 Perfil
+Vista de Escritorio
+  
+
+Vista de Celulares
+  
+  
+
+Para el apartado de Perfil mantuvimos la misma estructura basada en “islas”  tarjetas. En ella se muestra información clave del usuario como su nombre, correo y sus trofeos. Estos trofeos serán adquiridos al ganar torneos. Se pensó a futuro implementar la opción de que cada torneo tenga un trofeo el cual será seleccionado por el Organizador. EL usuario al ganar dicho torneo podrá elegir hasta tres trofeos para ser exhibidos en su perfil.
+Además, el usuario tendrá acceso a sus torneos activos y a su historial de participaciones anteriores. Incluyendo resultados, tablas de posiciones y estadísticas de los torneos en los que participó.
+
+
+________________
+5.5.5 Calendario de torneos
+Vista de Escritorio
+  
+
+  
+
+________________
+
+
+Vista de Celulares
+  
+  
+
+
+
+Otra de las opciones del menú lateral es el ”Calendario de torneos”. Esta opción estará disponible tanto para usuarios (públicos y registrados), como para el organizador. La diferencia es que el organizador tiene la opción de añadir eventos en el calendario los cuales serán visibles para todos los usuarios. Cuenta con la opción de cambiar de mes para visualizar torneos en los meses subsecuentes.
+
+
+________________
+5.5.6 Crea tu torneo
+Vista de Escritorio
+  
+
+Vista de Celulares
+  
+  
+  
+
+Una de las funciones específicas del organizador de torneos es la de crear dichos torneos. Por ende, nos centramos en diseñar una página para la creación de torneos que contenga todas las opciones necesarias para poder crear distintos tipos de torneos con sus modalidades y disciplinas desde una sola página. En esta encontraremos las opciones de: Asignarle un nombre, la disciplina, el formato de clasificación (eliminación directa, todos contra todos, etc), modalidad (por equipos o individual), fecha y hora de inicio, descripción del torneo, cargar una imagen para que aparezca como portada y la ubicación de donde se llevará cabo.
+
+
+5.5.7 Panel Organizador
+Vista de Escritorio
+  
+
+  
+  
+
+  
+
+Vista de Celulares
+  
+  
+
+  
+  
+  
+
+  
+  
+
+  
+  
+
+Este apartado sólo será accesible para el Organizador de torneos. En el mismo se puede apreciar distintas pestañas en las cuales se dividen las distintas funciones que el organizador llevará a cabo.
+La primera de estas es la pestaña de “Torneos Asignados”. En este se podrá ver un listado de los torneos activos y su estado actual. Además de contar con un botón para crear un torneo el cual lo redireccionará a la pestaña “Crea tu torneo”.
+La segunda pestaña, “Cargar Resultados”, como dice el nombre, está centrada en la carga de datos de los puntajes. El Organizador selecciona el torneo que quiere gestionar. Cuenta con una función que permite cambiar el tipo de visibilidad del torneo (pública/privada).
+La tercera pestaña gira en torno a la carga de participantes de forma manual. En “Inscribir Participantes” el Organizador elige el torneo al cual quiere añadir un participante o equipo. Una vez ingresado el nombre al guardar los cambios ya queda registrado. 
+Por último tenemos la pestaña de “Reportes del Torneo”, en esta el Organizador puede descargar la lista de participantes o exportar un excel con los participantes destacados.
+
+
+________________
+5.5.8 Panel Administrador
+Vista de Escritorio
+  
+  
+
+________________
+
+
+Vista de Celulares
+  
+  
+  
+
+Esta pestaña solo será visible para el Administrador del sistema. En ella se puede visualizar toda la información del sistema. Ya sea la cantidad de torneos creados, cuántos equipos están inscritos, los partidos que aún faltan por jugarse en el mes actual. También cuenta con un apartado de auditorías o logs que registra todos los eventos del sistema; Un listado de todos los torneos con la información correspondiente y por último apartado que muestra una gráfica con estadísticas del rendimiento del sistema.
+________________
+5.5.9 Configuracion
+Vista de Escritorio
+  
+
+  
+
+  
+
+  
+  
+
+________________
+
+
+Vista de Celulares
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+En el apartado de Configuración el usuario podrá efectuar cambios relacionados con su cuenta. 
+En la primera pestaña, “Editar Perfil”, el usuario tiene la opción de cambiar su nombre de usuario, su correo o añadir/editar una biografía.
+En la segunda pestaña, “Cuenta y seguridad”, el usuario podrá actualizar su contraseña. Solo debe ingresar su contraseña actual seguido de su nueva contraseña y una confirmación de la misma.
+En la tercera pestaña, “Notificaciones”, aparecen las opciones para habilitar/deshabilitar las distintas alertas del sistema según las preferencias del usuario.
+En la cuarta pestaña, “Preferencias”, tenemos la opción de configurar el tema principal de la aplicación. En caso de que el usuario prefiera modo oscuro por defecto
+Por último, la quinta pestaña es la de “Borrar cuenta”. Destacada por su color rojo indicando peligro. En caso de que el usuario así lo desee, tiene la opción de eliminar su cuenta en su totalidad ingresando su contraseña actual y confirmando al hacer click en el botón “Confirmar Eliminación”.
+
+
+________________
+5.5.10 Inicio de sesión
+Vista de Escritorio
+  
+
+________________
+
+
+Vista de Celulares
+  
+  
+
+Por último y no menos importante tenemos la página de Inicio de sesión. La cual le brinda al usuario distintos métodos para ingresar al sistema o la opción de registrarse. Se optó por no usar los colores dorados, dando la impresión de calma antes de lo que sería la página principal y su notación más enérgica y ambiciosa.
+
+
+________________
+6. Fundamentos de pensamiento basado en S.C.A.M.P.E.R 
+Scamper es una técnica o herramienta de creatividad e innovación que ayuda a mejorar un producto o proyecto e implementar ideas nuevas. Cada sigla tiene un significado del paso a paso de cómo realizar esta técnica.
+Sustituir: Qué componente, materiales, pasos o personas se pueden cambiar por otros.
+Combinar: Qué funciones o ideas se pueden unir para simplificar o mejorar algo.
+Adaptar: Herramientas o elementos que se pueden unir o incorporar.
+Modificar: Que se pueden combinar para mejorar.
+Proponer otro uso: Para que ideas o proyectos se puede utilizar lo que creamos.
+Eliminar: Elemento, parte o proceso es innecesario.
+Reorganizar: Qué pasa si se combina el orden de los pasos del proceso.
+Sustituir:
+Nosotros sustituimos el uso de emojis a SVG, nos parecía más óptimo, fácil de usar y modificar el diseño para adaptarlo al sistema.
+Creamos los roles definidos de un integrante por materia pero entendimos que siempre hay una persona que aporta la parte mayoritaria, sin embargo todos aportamos parte de cada uno como tiempo, creatividad y esfuerzo en tareas tanto complejas como sencillas y en partes fundamentales de distintas áreas.
+Combinar:
+Combinamos el uso de variables en el diseño (CSS) para lograr que todo el software tenga mismos colores, posiciones y diseño, en HTML se utiliza la misma estructura en header, navbar, footer y body cambiando solo el contenido principal del mismo (main) logrando que toda la página quede estructuradamente igual.
+Adaptar: 
+Podemos adaptar condiciones médicas a la administración de torneos para evitar confusiones y conflictos entre los participantes u organizadores, ya sea condición física, mental o no tener el certificado médico al día.
+
+
+Adaptamos el sistema basándonos en aplicaciones y plataformas deportivas, adaptamos los colores y formas del sistema en base a ello.
+Modificar:
+Modificamos la paleta de colores utilizada en el sistema teniendo en cuenta que era plano los colores eran blanco y negro sin embargo optamos por un dorado metálico, dorado opaco, blanco y negro mate, para darle un aspecto más competitivo y elegante.
+
+
+Proponer otro uso:
+Es capaz de utilizar la base de datos para poder administrar los datos de los usuarios para usarlos en otras áreas como en instituciones educativas como por ejemplo las asistencias de los alumnos, intereses académicos o extracurriculares.
+Eliminar:
+En el software eliminamos tanto ideas como funciones en el código. Una de ellas fue la opción de configuración en el apartado de perfil de la barra de navegación. Esto para evitar funciones repetidas y redundancia en el código. La idea eliminada fue de tener la capacidad de crear una comunidad para hablar e inscribirse a torneos o poder crear uno entre ellos.
+Reorganizar:
+Utilizamos el uso de comentarios para poder reorganizarse a la hora de estudio del mismo
+Comenzamos con un orden de código que a la larga nos dimos cuenta que no nos ayudaba a ubicar las funcionalidades. Lo cual también genera muchas confusiones para entender el código, entonces decidimos organizar e implementar el uso de numeración para más comodidad y prolijidad, además el uso de comentarios enumerados para hallar más fácil las funcionalidades de cada documento HTML y sus distintos diseños en el CSS.
+________________
+8. Análisis FODA del proyecto a realizar
+
+
+Introducción
+Esta herramienta es una planificación estratégica de la situación actual de nuestro proyecto logrando diferenciar factores internos (fortalezas y debilidades) de los externos(oportunidades y amenazas).
+
+
+Interno: +Fortalezas: Son recursos que la empresa tiene y actividades que realizan bien.
+        Por ejemplo: La empresa SWEET SRL se dedica a la elaboración de bombones.
+        -Debilidades: Son las actividades que la empresa no realiza bien y los recursos que faltan.
+        Por ejemplo: Los dueños están pensando a pesar de la buena marcha de la empresa en que el personal tiene que capacitarse en ciertos aspectos para poder competir en el mercado.
+
+
+Externo: +Oportunidades: Son los factores externos positivos.
+        Por ejemplo: La materia prima la compra a proveedores cercanos.
+        -Amenazas: son los factores externos negativos.
+        Por ejemplo: una empresa externa superó la suya en el mercado.
+
+
+Fortalezas:
+Epsilon Software se dedica a simplificar, automatizar y facilitar distintas tareas o acciones y digitalizar con la creación de un sistema automatizado como SGDM (Sistema de Gestión Deportiva Modular).
+Reuniones semanales en las que se toman decisiones importantes y preparamos las tareas de la semana.
+Simplificar la labor de gestionar torneos diarios minimizando el tiempo y exceso de esfuerzo en tareas administrativas.
+Código bien ordenado con comentarios que nombran la funcionalidad para mejor entendimiento.
+Conocimiento en el diseño web que nos permite ofrecer colores que se adapten a nuestra empresa y plataforma web, logrando causar emociones y sentimientos que buscamos para los usuarios como la confianza, seguridad y profesionalismo.
+Epsilon software tiene un pensamiento basado en scamper que nos permite mejorar la creatividad e innovación de nuevas funcionalidades e ideas.
+Constante dedicación y preocupación en que se realice una revisión por docentes para  tener opiniones o consejos para mejorarlas y dar a las tareas como “realizadas con éxito”.
+La constante muestra de tareas hacia los docentes en caso de errores o cosas a mejorar para dar por finalizada la tarea antes de la fecha de entrega asignada.
+
+
+
+
+Debilidades:
+Al ser la primera simulación de una aplicación web real no tenemos la experiencia previa para realizar por sí solos y en un tiempo más reducido una aplicación con todos los elementos necesarios.
+Poca experiencia para la creación de documentos formales y revisión de cambio de formato.
+Falta de estrategias o plan b en caso de errores, detalles faltantes o problemas a corto plazo que nos dejan con trabajo extra a último momento.
+Al vivir en zonas bastante apartadas de otras no tenemos la posibilidad de realizar reuniones internas en lugares más privados y eficientes para la creatividad y el pensamiento crítico que requiere crear una aplicación web.
+
+
+Oportunidades:
+Validación de incrementos de la aplicación en fechas de entrega específicas asegurando que la creación de SGDM se está realizando con éxito. 
+La capacidad de crear aplicaciones web la adquirimos en los días de semana con asignaturas específicas del curso Tecnologías de la Información.
+Realización de entrevistas a coordinadores y docentes relacionados con el ámbito deportivo para garantizar el uso de la aplicación SGDM.
+Encuesta + prototipo que permite recopilar datos de una mínima experiencia de nuestra plataforma web donde los usuarios pueden opinar abiertamente.
+Distintos centros educativos o deportivos con múltiples modalidades deportivas las cuales necesitan una buena gestión de torneos y participantes donde se le puede dar una buena utilidad al SGDM.
+Aplicaciones educativas o deportivas que sirven de modelo para la creación del maquetado de la aplicación y asegurar su utilidad e intuitividad de los usuarios.
+
+
+Amenazas:
+La creación de otros sistemas similares o con funciones más avanzadas que traigan competencias.
+Organizaciones o instituciones que tengan o implementen distintas maneras de organizar torneos.
+Problemas de seguridad como amenazas o ataques de inyección, entre otros ataques que puedan dejar al sistema vulnerable o peor, perdida de datos sensibles.
+Preferencias de usuario o institución deportiva donde prefieran las plantillas o otras administraciones manuales.
+Nuevas modalidades, cambios en las reglas o enfrentamientos que obliguen al sistema a adaptarse e implementar dichos cambios antes de quedarse obsoleto.
+Incremento de los costos de recursos y mantenimiento que pueden llevar a un sistema obsoleto
+________________
+
+
+7. Bibliografía
