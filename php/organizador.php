@@ -35,8 +35,8 @@ $usuarioActual = $_SESSION['usuario'] ?? 'Visitante';
 
             <!-- Solo Organizadores y Administradores -->
             <?php if (in_array($rolActual, ['organizador', 'administrador'])): ?>
-                <a href="formularioTorneo.php" class="sidebar-link active">Crea tu torneo</a>
-                <a href="organizador.php" class="sidebar-link">Panel Organizador</a>
+                <a href="formularioTorneo.php" class="sidebar-link">Crea tu torneo</a>
+                <a href="organizador.php" class="sidebar-link active">Panel Organizador</a>
             <?php endif; ?>
 
             <!-- Solo Administradores -->

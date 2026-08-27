@@ -14,7 +14,7 @@ if (!isset($_SESSION['rol'])) {
  */
 function requerirLogin() {
     if (!isset($_SESSION['usuario'])) {
-        header('Location: login.php');
+        header('Location: logica/login.php');
         exit();
     }
 }
