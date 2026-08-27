@@ -1,8 +1,76 @@
 <?php
 require_once 'logica/auth.php';
 requerirRol(['organizador', 'administrador']);
+require_once 'db.php'; // Incluye la conexión a la base de datos
+
 $rolActual = $_SESSION['rol'] ?? 'visitante';
 $usuarioActual = $_SESSION['usuario'] ?? 'Visitante';
+$idUsuarioActual = $_SESSION['id_usuario'] ?? 1; // ID del usuario autenticado (o 1 por defecto)
+
+$mensaje = '';
+$tipoMensaje = '';
+
+// Procesar el formulario cuando se envía mediante POST
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $nombre = trim($_POST['nombre_torneo'] ?? '');
+    $disciplina = trim($_POST['disciplina'] ?? '');
+    $formato = $_POST['formato'] ?? '';
+    $modalidad = $_POST['modalidad'] ?? '';
+    $fecha = $_POST['fecha_inicio'] ?? '';
+    $hora = $_POST['hora_inicio'] ?? '';
+    $cantidad = !empty($_POST['max_participantes']) ? (int)$_POST['max_participantes'] : NULL;
+    $descripcion = trim($_POST['descripcion'] ?? '');
+
+    if (!empty($nombre) && !empty($fecha) && !empty($disciplina)) {
+        try {
+            $pdo->beginTransaction();
+
+            // 1. Verificar o insertar el módulo de competencia (disciplina)
+            $stmtMod = $pdo->prepare("SELECT id_modulo FROM MODULOS_COMPETENCIA WHERE nombre_modulo = ?");
+            $stmtMod->execute([$disciplina]);
+            $modulo = $stmtMod->fetch();
+
+            if ($modulo) {
+                $idModulo = $modulo['id_modulo'];
+            } else {
+                $stmtInsMod = $pdo->prepare("INSERT INTO MODULOS_COMPETENCIA (nombre_modulo, descripcion) VALUES (?, ?)");
+                $stmtInsMod->execute([$disciplina, "Módulo de $disciplina"]);
+                $idModulo = $pdo->lastInsertId();
+            }
+
+            // 2. Insertar en la tabla TORNEOS
+            $sqlTorneo = "INSERT INTO TORNEOS (nombre_torneo, descripcion, id_modulo, id_organizador, lugar, fecha_inicio, estado, privacidad) 
+                          VALUES (?, ?, ?, ?, ?, ?, 'pendiente', 'publico')";
+            $stmtTorneo = $pdo->prepare($sqlTorneo);
+            $stmtTorneo->execute([
+                $nombre,
+                $descripcion,
+                $idModulo,
+                $idUsuarioActual,
+                'Montevideo',
+                $fecha
+            ]);
+            $idTorneo = $pdo->lastInsertId();
+
+            // 3. Insertar la configuración del torneo
+            $sqlConfig = "INSERT INTO CONFIGURACION_TORNEO (id_torneo, max_participantes) VALUES (?, ?)";
+            $stmtConfig = $pdo->prepare($sqlConfig);
+            $stmtConfig->execute([$idTorneo, $cantidad]);
+
+            $pdo->commit();
+
+            $mensaje = "¡El torneo '$nombre' se ha creado correctamente en la base de datos!";
+            $tipoMensaje = "exito";
+        } catch (PDOException $e) {
+            $pdo->rollBack();
+            $mensaje = "Error en la base de datos: " . $e->getMessage();
+            $tipoMensaje = "error";
+        }
+    } else {
+        $mensaje = "Por favor completa todos los campos requeridos.";
+        $tipoMensaje = "error";
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -21,51 +89,43 @@ $usuarioActual = $_SESSION['usuario'] ?? 'Visitante';
     <input type="checkbox" id="menu-toggle" class="menu-checkbox">
 
     <div class="sidebar">
-
-        <!--5. Movil cerrar menú -->
         <div class="sidebar-header">
             <span class="sidebar-title">Menú</span>
             <label for="menu-toggle" class="close-sidebar-btn" aria-label="Cerrar menú">X</label>
         </div>
         
         <nav class="sidebar-nav">
-            <!-- Visible para todos -->
             <a href="inicio.php" class="sidebar-link">Inicio</a>
             <a href="calendario.php" class="sidebar-link">Calendario de torneos</a>
 
-            <!-- Solo Organizadores y Administradores -->
             <?php if (in_array($rolActual, ['organizador', 'administrador'])): ?>
                 <a href="formularioTorneo.php" class="sidebar-link active">Crea tu torneo</a>
                 <a href="organizador.php" class="sidebar-link">Panel Organizador</a>
             <?php endif; ?>
 
-            <!-- Solo Administradores -->
             <?php if ($rolActual === 'administrador'): ?>
                 <a href="dashboard.php" class="sidebar-link">Panel Administrador</a>
             <?php endif; ?>
 
-            <!-- Usuarios registrados (No visitantes) -->
             <?php if ($rolActual !== 'visitante'): ?>
                 <a href="configuracion.php" class="sidebar-link">Configuración</a>
             <?php endif; ?>
         </nav>
 
-        <!--5. Modo Oscuro-Claro -->
         <div class="sidebar-footer">
             <div class="theme-switch-container">
                 <span class="theme-label">Modo Oscuro</span>
-                    <button class="theme-toggle-btn" aria-label="Cambiar tema">
+                <button class="theme-toggle-btn" aria-label="Cambiar tema">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 18px; height: 18px; fill: currentColor; vertical-align: middle;">
                         <path d="M256 0C114.6 0 0 114.6 0 256S114.6 512 256 512c68.8 0 131.3-27.2 177.3-71.4 7.3-7 9.4-17.9 5.3-27.1s-13.7-14.9-23.8-14.1c-4.9 .4-9.8 .6-14.8 .6-101.6 0-184-82.4-184-184 0-72.1 41.5-134.6 102.1-164.8 9.1-4.5 14.3-14.3 13.1-24.4S322.6 8.5 312.7 6.3C294.4 2.2 275.4 0 256 0z"/>
                     </svg>
-                    </button>
+                </button>
             </div>
         </div>
     </div>
 
     <label for="menu-toggle" class="sidebar-overlay"></label>
 
-    <!--2. Navbar y Menú hamburgesa -->
     <nav class="navbar" aria-label="Navegación principal">
         <label for="menu-toggle" class="nav-button" aria-label="Abrir menú de navegación">
             <div class="hamburger-box">
@@ -75,7 +135,6 @@ $usuarioActual = $_SESSION['usuario'] ?? 'Visitante';
             </div>
         </label>
 
-        <!--3. Busqueda de Torneo -->
         <form action="busquedaTorneo.php" method="GET" class="search-form" style="display: flex; flex: 1; max-width: 420px; margin: 0 12px;">
             <div class="search-container" style="margin: 0; width: 100%;">
                 <svg class="search-google-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -85,12 +144,8 @@ $usuarioActual = $_SESSION['usuario'] ?? 'Visitante';
             </div>
         </form>
 
-        <!-- 4. Campana de Notificaciones -->
         <div class="notifications-dropdown">
-
-            <!-- 4.Checkbox oculto-->
             <input type="checkbox" id="noti-toggle" class="dropdown-checkbox">
-    
             <label for="noti-toggle" class="notifications-dropdown-button" aria-label="Notificaciones">
                 <div class="notifications-icon-wrapper">
                     <svg class="bell-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -99,10 +154,7 @@ $usuarioActual = $_SESSION['usuario'] ?? 'Visitante';
                     <span class="notification-dot"></span>
                 </div>
             </label>
-    
             <label for="noti-toggle" class="dropdown-overlay"></label>
-    
-            <!--4. Apartado de Notificaciones -->
             <div class="notifications-menu-card">
                 <div class="notifications-menu-header">
                     <span class="notifications-menu-title">Notificaciones</span>
@@ -112,27 +164,16 @@ $usuarioActual = $_SESSION['usuario'] ?? 'Visitante';
                     <a href="#" class="notification-item unread">
                         <div class="noti-indicator"></div>
                         <div class="noti-content">
-                            <p class="noti-text">Tu inscripción para la <strong>Copa de Invierno</strong> ha sido confirmada exitosamente.</p>
+                            <p class="noti-text">Tu inscripción ha sido confirmada.</p>
                             <span class="noti-time">Hace 10 min</span>
-                        </div>
-                    </a>
-                    <a href="#" class="notification-item">
-                        <div class="noti-indicator"></div>
-                        <div class="noti-content">
-                            <p class="noti-text">El fixture del <strong>Torneo Relámpago</strong> ya se encuentra disponible.</p>
-                            <span class="noti-time">Hace 2 horas</span>
                         </div>
                     </a>
                 </div>
             </div>
         </div>
 
-        <!-- 4. Apartado de perfil -->
         <div class="profile-dropdown">
-    
-            <!--4. Checkbox de perfil-->
             <input type="checkbox" id="profile-toggle" class="dropdown-checkbox">
-    
             <label for="profile-toggle" class="profile-dropdown-button" aria-label="Menú de usuario">
                 <div class="user-avatar">
                     <svg class="avatar-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
@@ -140,32 +181,15 @@ $usuarioActual = $_SESSION['usuario'] ?? 'Visitante';
                     </svg>
                 </div>
             </label>
-    
             <label for="profile-toggle" class="dropdown-overlay"></label>
-    
-            <!--4. Menú de perfil -->
             <div class="profile-menu-card">
                 <div class="profile-menu-header">
-                    <span class="profile-menu-name">Usuario</span>
+                    <span class="profile-menu-name"><?= htmlspecialchars($usuarioActual) ?></span>
                 </div>
                 <div class="profile-menu-divider"></div>
                 <nav class="profile-menu-links">
-                    <a href="logica/login.php" class="profile-menu-item">
-                        <svg class="avatar-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                            <path d="M352 96l64 0c17.7 0 32 14.3 32 32l0 256c0 17.7-14.3 32-32 32l-64 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l64 0c53 0 96-43 96-96l0-256c0-53-43-96-96-96l-64 0c-17.7 0-32 14.3-32 32s14.3 32 32 32zm-9.4 182.6c12.5-12.5 12.5-32.8 0-45.3l-128-128c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L242.7 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l210.7 0-73.4 73.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l128-128z"/>
-                        </svg> Iniciar sesión
-                    </a>
-                    <a href="perfil.php" class="profile-menu-item">
-                        <svg class="avatar-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
-                            <path d="M320 312C386.3 312 440 258.3 440 192C440 125.7 386.3 72 320 72C253.7 72 200 125.7 200 192C200 258.3 253.7 312 320 312zM290.3 368C191.8 368 112 447.8 112 546.3C112 562.7 125.3 576 141.7 576L498.3 576C514.7 576 528 562.7 528 546.3C528 447.8 448.2 368 349.7 368L290.3 368z" />
-                        </svg> Perfil
-                    </a>
-                    <div class="profile-menu-divider"></div>
-                    <a href="logica/logout.php" class="profile-menu-item logout-item">
-                        <svg class="avatar-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                            <path d="M377.9 105.9L468.1 196c11.1 11.1 11.1 29.1 0 40.2l-90.1 90.1c-11.5 11.5-30.1 11.5-41.6 0s-11.5-30.1 0-41.6l39.3-39.3L160 245.4c-16.3 0-29.4-13.2-29.4-29.4s13.2-29.4 29.4-29.4l215.7 0-39.3-39.3c-11.5-11.5-11.5-30.１ 0-4１．６s30．１-１１．５ ４１．６ ０zM１２０ ９６c０-１３．３-１０．７-２４-２４-２４C４３ ７２ ０ １１５ ０ １６８L０ ３４４c０ ５３ ４３ ９６ ９６ ９６c１３．３ ０ ２４-１０．７ ２４-２４s-１０．７-２４-２４-２４c-２６．５ ０-４８-２１．５-４８-４８l０-１７６c０-２６．５ ２１．５-４８ ４８-４８c１３．３ ０ ２４-１０．７ ２４-２４z"/>
-                        </svg> Cierre de sesión
-                    </a>
+                    <a href="perfil.php" class="profile-menu-item">Perfil</a>
+                    <a href="logica/logout.php" class="profile-menu-item logout-item">Cierre de sesión</a>
                 </nav>
             </div>
         </div>
@@ -179,29 +203,33 @@ $usuarioActual = $_SESSION['usuario'] ?? 'Visitante';
                 <h2 style="margin: 0; border: none; padding: 0; font-size: 1.4rem; color: #D4AF37; font-weight: bold; letter-spacing: 0.5px;">CREAR NUEVO TORNEO</h2>
             </div>
 
-            <form action="#" method="POST">
+            <!-- Cartel de alerta si hay un mensaje -->
+            <?php if (!empty($mensaje)): ?>
+                <div style="padding: 12px 16px; margin-bottom: 20px; border-radius: 6px; font-weight: bold; color: #fff; background-color: <?= $tipoMensaje === 'exito' ? '#28a745' : '#dc3545' ?>;">
+                    <?= htmlspecialchars($mensaje) ?>
+                </div>
+            <?php endif; ?>
+
+            <!-- Formulario con atributos name y action corregidos -->
+            <form action="formularioTorneo.php" method="POST">
 
                 <div class="columnas-flex-formulario">
 
                     <div class="columna-formulario">
                         <div class="grupo-formulario">
                             <label for="nombre">Nombre del Torneo</label>
-                            <input type="text" id="nombre" placeholder="Ej: Torneo Relámpago" required>
+                            <input type="text" id="nombre" name="nombre_torneo" placeholder="Ej: Torneo Relámpago" required>
                         </div>
 
                         <div class="grupo-formulario">
                             <label for="disciplina">Disciplina</label>
-                            <select id="disciplina" required>
-                                <option value="" disabled selected>Seleccione una opción</option>
-                                <option value="futbol">Fútbol</option>
-                                <option value="basquet">Básquetbol</option>
-                            </select>
+                            <input type="text" id="disciplina" name="disciplina" placeholder="Ej: Ajedrez" required>
                         </div>
 
                         <div class="fila-formulario">
                             <div class="grupo-formulario columna-expandible">
                                 <label for="formato">Formato de Clasificación</label>
-                                <select id="formato" required>
+                                <select id="formato" name="formato" required>
                                     <option value="" disabled selected>Seleccione el formato</option>
                                     <option value="eliminatoria">Eliminación directa</option>
                                     <option value="liga">Liga (Todos contra todos)</option>
@@ -209,7 +237,7 @@ $usuarioActual = $_SESSION['usuario'] ?? 'Visitante';
                             </div>
                             <div class="grupo-formulario columna-expandible">
                                 <label for="modalidad">Modalidad</label>
-                                <select id="modalidad" required>
+                                <select id="modalidad" name="modalidad" required>
                                     <option value="equipos">Por Equipos</option>
                                     <option value="individual">Individual</option>
                                 </select>
@@ -219,36 +247,36 @@ $usuarioActual = $_SESSION['usuario'] ?? 'Visitante';
                         <div class="fila-formulario">
                             <div class="grupo-formulario columna-expandible">
                                 <label for="fecha">Fecha de Inicio</label>
-                                <input type="date" id="fecha" required>
+                                <input type="date" id="fecha" name="fecha_inicio" required>
                             </div>
                             <div class="grupo-formulario columna-expandible">
                                 <label for="hora">Hora de Inicio</label>
-                                <input type="time" id="hora" required>
+                                <input type="time" id="hora" name="hora_inicio" required>
                             </div>
                         </div>
 
                         <div class="grupo-formulario">
                             <label for="cantidad">Cantidad de Equipos</label>
-                            <input type="number" id="cantidad" placeholder="Ej: 16">
+                            <input type="number" id="cantidad" name="max_participantes" placeholder="Ej: 16">
                         </div>
                     </div>
 
                     <div class="columna-formulario columna-derecha-ajustada">
                         <div class="grupo-formulario contenedor-area-texto">
                             <label for="descripcion">Descripción del Torneo</label>
-                            <textarea id="descripcion" placeholder="Escribe las reglas o detalles del torneo..."></textarea>
+                            <textarea id="descripcion" name="descripcion" placeholder="Escribe las reglas o detalles del torneo..."></textarea>
                         </div>
                         
                         <div class="grupo-formulario">
                             <label for="portada-torneo">Portada del Torneo</label>
                             <div class="contenedor-subir-imagen">
-                                <input type="file" id="portada-torneo" accept="image/*" class="input-archivo-oculto">
-                                <label href="#" for="portada-torneo" class="boton-subir-archivo">
-                                <svg class="icono-subir" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 18px; height: 18px; fill: currentColor; margin-right: 8px; vertical-align: middle;">
-                                    <path d="M288 109.3L288 352c0 17.7-14.3 32-32 32s-32-14.3-32-32l0-242.7-51.3 51.3c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3l105.4-105.4c12.5-12.5 32.8-12.5 45.3 0l105.4 105.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L288 109.3zM64 352l128 0c0 35.3 28.7 64 64 64s64-28.7 64-64l128 0c35.3 0 64 28.7 64 64l0 32c0 35.3-28.7 64-64 64L64 512c-35.3 0-64-28.7-64-64l0-32c0-35.3 28.7-64 64-64zm312 80a24 24 0 1 0 0-48 24 24 0 1 0 0 48z"/>
-                                </svg>
-                                Seleccionar Imagen
-                            </label>
+                                <input type="file" id="portada-torneo" name="portada" accept="image/*" class="input-archivo-oculto">
+                                <label for="portada-torneo" class="boton-subir-archivo">
+                                    <svg class="icono-subir" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 18px; height: 18px; fill: currentColor; margin-right: 8px; vertical-align: middle;">
+                                        <path d="M288 109.3L288 352c0 17.7-14.3 32-32 32s-32-14.3-32-32l0-242.7-51.3 51.3c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3l105.4-105.4c12.5-12.5 32.8-12.5 45.3 0l105.4 105.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L288 109.3zM64 352l128 0c0 35.3 28.7 64 64 64s64-28.7 64-64l128 0c35.3 0 64 28.7 64 64l0 32c0 35.3-28.7 64-64 64L64 512c-35.3 0-64-28.7-64-64l0-32c0-35.3 28.7-64 64-64zm312 80a24 24 0 1 0 0-48 24 24 0 1 0 0 48z"/>
+                                    </svg>
+                                    Seleccionar Imagen
+                                </label>
                             </div>
                         </div>
                         
@@ -262,18 +290,16 @@ $usuarioActual = $_SESSION['usuario'] ?? 'Visitante';
                 </div>
 
                 <div class="grupo-botones-formulario">
-                    <button type="button" class="boton-formulario boton-cancelar">Cancelar</button>
+                    <button type="button" class="boton-formulario boton-cancelar" onclick="window.location.href='inicio.php'">Cancelar</button>
                     <button type="submit" class="boton-formulario boton-enviar">Crear Torneo</button>
                 </div>
             </form>
         </div>
     </main>
 
-     <!--7. Footer -->
-     <footer class="main-footer">
+    <footer class="main-footer">
         <div class="footer-content">
             <img src="../img/epsilonSoftware2.png" alt="Logo Epsilon Software" class="footer-logo">
-        
             <div class="footer-right-group">
                 <nav class="footer-links" aria-label="Enlaces de pie de página">
                     <a href="#" class="footer-link">Sobre nosotros</a>

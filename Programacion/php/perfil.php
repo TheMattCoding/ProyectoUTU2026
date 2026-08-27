@@ -3,7 +3,7 @@ require_once 'logica/auth.php';
 requerirLogin();
 $rolActual = $_SESSION['rol'] ?? 'visitante';
 $usuarioActual = $_SESSION['usuario'] ?? 'Usuario';
-$query = trim($_GET['query'] ?? '');
+$correoActual = $_SESSION['correo'] ?? '';
 ?>
 <!DOCTYPE html>
 <html lang="es">
