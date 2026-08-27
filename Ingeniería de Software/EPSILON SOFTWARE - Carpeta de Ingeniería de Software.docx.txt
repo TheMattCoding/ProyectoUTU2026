@@ -1,0 +1,293 @@
+﻿Carpeta de Ingeniería de Software
+
+
+
+
+
+Solicitante: I. T. S - Instituto Tecnológico Superior Arias Balparda.
+Nombre Fantasía, de la nueva empresa: Epsilon Software.
+Grupo: 3° MS.
+Turno: Matutino.
+Unidad Curricular: Ingeniería de Software.
+Nombres de los integrantes del grupo: Sophia Brum, Mateo Comini, Santiago Crespo, Thiago Iglesias.
+Fecha de entrega: 27/7/2026
+
+
+Instituto Tecnologíco Superior Arias Balparda.
+Blvr. José Batlle y Ordoñez 3570 esq. Gral. Flores - Montevideo.
+________________
+0. Índice
+0. Índice        2
+1.Objetivos y Alcance del documento        3
+Objetivo        3
+Alcance        3
+2. Vocabulario de Términos Técnicos        4
+2.2 Término, Definición y Contexto Operativo        4
+2.3 Simbología, Acrónimos y Abreviaturas        6
+2.3.1 Acrónimos de Ingeniería de Software        6
+2.3.2 Abreviaturas de Tecnologías y Lenguajes        6
+2.3.3 Abreviaturas y Símbolos de Reglas del Grupo        7
+3. Temas de la primer entrega        7
+4. Introducción        7
+5. Ingeniería de Software        8
+5.1 Organización del equipo (Mantei y Constantine)        8
+5.2 Roles dentro del equipo        9
+5.3 Reglas del grupo (Código de convivencia)        10
+5.4 Ciclo de vida del proyecto        12
+5.5 Diagrama de Gantt        13
+5.6 Justificación de técnicas de relevamiento de datos        14
+5.7 Modelo de formulario/s empleado/s para relevar datos.        16
+5.8 Resultados crudos de las técnicas de relevamiento utilizadas        18
+5.9 Identificación de roles y perfiles de usuario de la aplicación con sus responsabilidades y nivel de acceso (tabla de datos)        23
+6. Bibliografía:        24
+7. Anexos:        25
+________________
+
+
+1.Objetivos y Alcance del documento
+Objetivo
+Establecer y documentar la metodología de trabajo, la planificación del proyecto, el relevamiento de requisitos y la especificación formal del Sistema de Gestión Deportiva Modular (SGDM) desarrollado por Epsilon Software. Este documento busca estructurar la organización interna del equipo, fundamentar el ciclo de vida incremental adoptado, validar las necesidades operativas de los usuarios mediante técnicas de relevamiento cualitativas y cuantitativas, y formalizar los requisitos bajo el estándar IEEE 29148 / IEEE 830.
+
+
+Alcance
+El alcance de esta carpeta comprende los siguientes aspectos:
+Vocabulario de Términos Técnicos: Definición de acrónimos de Ingeniería de Software (ESRE/ERS, IEEE 29148, Scope, SGDM), abreviaturas de tecnologías de desarrollo (HTML, CSS, JS, PHP, MySQL, Git) y simbología asociada al régimen evaluativo y sancionatorio interno.
+Organización del Equipo y Normativa Interna:
+  - Justificación de los modelos organizacionales Descentralizado Democrático (Mantei) y Organización Abierta (Constantine).
+  - Asignación formal de roles y responsabilidades principales (Programación Full Stack, Ciberseguridad, Base de Datos, Tutoría UTULAB, Ingeniería de Software y Administración de Sistemas Operativos).
+  - Código de convivencia del grupo (reglas de asistencia, tiempos de entrega, pérdida de derecho a voto, aportes económicos, revisiones de código en Git y sistema de advertencias/strikes).
+Planificación y Gestión del Proyecto:
+  - Fundamentación del ciclo de vida del software mediante el Modelo Incremental estructurado según los hitos académicos.
+  - Planificación temporal y seguimiento de tareas a través del Diagrama de Gantt.
+Ingeniería de Requisitos y Relevamiento de Datos:
+  - Justificación metodológica del enfoque mixto de relevamiento (entrevistas a docentes/coordinadores deportivos y encuestas con prototipo navegable).
+  - Presentación de modelos de formularios y transcripción cruda de los resultados obtenidos en campo.
+  - Matriz de identificación de roles de usuario de la aplicación con sus respectivos niveles de acceso y responsabilidades.
+Especificación de Requisitos de Software (ESRE/ERS): Documentación formal e integral de los requisitos del sistema elaborada en Anexo bajo el estándar internacional IEEE 830 / ISO/IEC/IEEE 29148.
+________________
+2. Vocabulario de Términos Técnicos
+
+
+A continuación, se presentan los términos técnicos utilizados en la carpeta de Ingeniería de Software sobre el proyecto del Sistema de Gestión Deportiva Modular (SGDM), estructurados formalmente en caso de confusiones realizar su interpretación correcta.
+
+
+2.1 Término, Definición y Contexto Operativo
+Arquitectura Cliente-Servidor: Modelo de diseño de software en el que las tareas y almacenamiento se centralizan en un servidor (AlmaLinux), requiriendo una conexión activa de red.
+Auditoría Interna (Logs): Procedimiento de ciberseguridad que registra de manera cronológica e inalterable las operaciones realizadas por los usuarios.
+Código de Convivencia: Conjunto de reglas internas de Epsilon Software que regulan la asistencia, los plazos de entrega, las votaciones, la integración de código y las sanciones. 
+Descentralizada Democrática: Modelo de organización de equipos propuesto por Mantei, caracterizado por la toma de decisiones por consenso y una comunicación horizontal. 
+Fixtures: Calendario programado de partidos, enfrentamientos y fechas informativas para los participantes de un torneo deportivo.
+Hashing Criptográfico: Algoritmo de seguridad que transforma datos sensibles (como contraseñas) en códigos únicos e irreversibles antes de ser almacenados en la base de datos.
+________________
+2.2 Simbología, Acrónimos y Abreviaturas 
+A continuación se categorizan los acrónimos, siglas y símbolos.
+2.2.1 Acrónimos de Ingeniería de Software
+ESRE / ERS: Especificación de Requisitos de Software / Especificación de Requisitos de Sistema.
+IEEE 29148: Estándar internacional emitido por el Institute of Electrical and Electronics Engineers para procesos de ingeniería de requisitos (IEEE, 2018). 
+Scope: Alcance delimitado del software (establece explícitamente los módulos incluidos y excluidos).
+SGDM: Sistema de Gestión Deportiva Modular.
+ANEP: Administración Nacional de Educación Pública.
+ASO: Asignatura Administración de Sistemas Operativos.
+I.T.S.: Instituto Tecnológico Superior "Arias Balparda".
+UTU: Universidad del Trabajo del Uruguay.
+UTU-LAB: Espacio institucional de tutoría y seguimiento de proyectos tecnológicos.
+2.2.2 Abreviaturas de Tecnologías y Lenguajes
+CSS: Cascading Style Sheets (Hojas de estilo en cascada).
+Git: Sistema distribuido para el control de versiones.
+HTML:HyperText Markup Language (Lenguaje de marcado de hipertexto).
+JS / JavaScript: Lenguaje de programación para lógica e interactividad web.
+JSON: JavaScript Object Notation (Formato ligero de intercambio de datos).
+MySQL: Sistema de gestión de bases de datos relacionales.
+PHP: Hypertext Preprocessor (Lenguaje de programación del lado del servidor).
+2.3.3 Abreviaturas y Símbolos de Reglas del Grupo
+% de avance / asistencia: Porcentaje evaluativo de tareas (50%) o presencia (75%) requerida para justificaciones.
+% sanción: Descuento del 1% a la cuota del grupo y penalización del +3% en el aporte monetario al integrante sancionado.
+Strike (x1): Sistema de advertencia formal acumulable previo a la sanción económica y administrativa.
+________________
+3. Temas de la primer entrega
+* Documentación de inicio y planificación del proyecto
+* Cómo está organizado su equipo, según Mantei y Constantine, justificada
+* Reglas del grupo (mínimo 7)
+* Ciclo de vida de su proyecto con fundamentación.
+* Roles dentro del equipo.
+* Diagrama de Gantt hasta la primer entrega
+* Justificación de técnica/s de relevamiento de datos elegida /s.
+* Modelo de formulario/s empleado/s para relevar datos.
+* Resultados crudos de las técnicas de relevamiento utilizadas.
+* Documento ESRE (IEEE 29148) con los apartados mínimos: Propósito, Alcance, Definiciones, acrónimos y abreviaciones y Limitaciones
+* Identificación de roles y perfiles de usuario de la aplicación con sus responsabilidades y nivel de acceso (tabla de datos) 
+4. Introducción
+Este documento es un seguimiento de la materia de Ingeniería de Software la cual organiza y estructura de la creación, el diseño y testing del sistema SGDM por parte todos los integrantes del equipo Epsilon Software para tener todas las tareas realizadas y reuniones documentadas con el fin de que cumpla con los estándares y la revisión de docentes en cada plazo establecido y captar el conocimiento y en el ciclo de vida que nos encontramos para realizar el proyecto de fin de año.
+5. Ingeniería de Software
+
+
+5.1 Organización del equipo (Mantei y Constantine)
+Elegimos una organización Descentralizada Democrática (Mantei) y una Organización Abierta (Constantine).
+Fundamentación:
+La elección de estos modelos de organización se justifica porque el desarrollo del Sistema de Gestión Deportiva Modular (SGDM) requiere una comunicación constante entre los integrantes del equipo y una participación activa en la toma de decisiones. Durante el desarrollo del proyecto, las decisiones relacionadas con el diseño, la implementación y las correcciones se toman de forma conjunta mediante el consenso del grupo, favoreciendo el intercambio de ideas y la resolución colaborativa de los problemas.
+Elegimos la organización Descentralizada Democrática, propuesta por Mantei, porque este modelo plantea que el equipo trabaja y decide en conjunto, sin depender de un líder central, promoviendo la comunicación horizontal y la participación de todos los integrantes.  Asimismo, seleccionamos la Organización Abierta, definida por Constantine, ya que se caracteriza por un equipo que discute, trabaja y toma decisiones de manera colaborativa, priorizando el trabajo conjunto y las decisiones compartidas. 
+En nuestro proyecto, aunque cada integrante posee un rol principal para organizar el trabajo y evitar superposiciones de tareas, existe flexibilidad para colaborar en otras áreas cuando es necesario. Además, las pruebas del sistema se realizan de forma cruzada entre los miembros del equipo, permitiendo detectar errores, compartir conocimientos y garantizar un desarrollo más ordenado y de mayor calidad. Esta forma de organización favorece la coordinación, el cumplimiento de los objetivos del proyecto y el aprovechamiento de las capacidades de todos los integrantes.
+________________
+5.2 Roles dentro del equipo
+Aunque cada integrante tiene un rol principal para organizar el trabajo, en la práctica todos colaboramos en las distintas tareas del proyecto. Nos apoyamos entre nosotros, compartimos ideas y participamos en las decisiones importantes, por lo que los roles sirven como una guía y no como una división estricta del trabajo.
+Mateo Comini – Programación Full Stack y Ciberseguridad:
+Tiene asignada como área principal la Programación Full Stack y Ciberseguridad, siendo el responsable del desarrollo de la aplicación y de los aspectos relacionados con la seguridad del sistema. Además, desempeña el rol de Representante del equipo, coordinando las actividades generales del proyecto, organizando el trabajo junto al resto de los integrantes y realizando el seguimiento de las tareas para asegurar que los objetivos de cada entrega se cumplan en tiempo y forma. 
+Santiago Crespo – Base de Datos y Tutoría del proyecto:
+Santiago tiene asignada como área principal la Base de Datos del sistema, siendo el encargado de participar en su diseño, organización e integración durante las siguientes etapas del proyecto. Asimismo, cumple un rol en Tutoría de Proyecto UTULAB, colaborando en la planificación de actividades, el seguimiento de las tareas acordadas y la organización del trabajo durante las distintas etapas del desarrollo. Como el resto del equipo, también participa en tareas de documentación, diseño y análisis cuando el proyecto lo requiere. 
+Thiago Iglesias – Ingeniería de Software y Documentación Técnica:
+Thiago tiene como principal área de responsabilidad Ingeniería de Software y la documentación técnica del proyecto. Entre sus tareas se encuentran la planificación del desarrollo, la definición y aplicación de las metodologías de trabajo adoptadas por el equipo, la organización de la documentación correspondiente a cada entrega y la fundamentación de las decisiones tomadas durante el proyecto. También participa en la coordinación de tareas, el análisis de requisitos y otras actividades necesarias para el correcto avance del proyecto. 
+
+
+Sophia – Administración de Sistemas Operativos: 
+Tiene asignada como área principal la Administración de Sistemas Operativos, participando en las actividades correspondientes a esta asignatura y en los aspectos relacionados con la infraestructura del sistema. Además, desempeña el rol de Sub-Coordinadora del proyecto, colaborando en la organización del equipo, el seguimiento de las tareas asignadas y verificando que cada integrante realice sus actividades y las entregue en tiempo y forma. También brinda apoyo en la planificación de las reuniones y en el cumplimiento de los objetivos establecidos para cada entrega. 
+5.3 Reglas del grupo (Código de convivencia)
+1° regla: Todo integrante deberá asistir a un 75% de las reuniones de proyecto durante cada período de entrega.
+2° regla: Cada integrante tendrá un máximo de 2 días fuera de fecha para entregar sus tareas. Solo si tiene un 50% de sus tareas hechas.
+3° regla: Las decisiones sobre el proyecto serán tomadas durante las reuniones. Los integrantes que no asistan a dichas reuniones pierden el derecho al voto o reclamo de lo decidido ese día.
+4° regla: Toda falta a las reuniones debe ser justificada por causas realmente importantes. (Aún pierde el derecho marcado en la regla 3).
+5° regla: Todo integrante (en un principio) abonará el 25% del proyecto. En caso de surgir complicaciones con el pago deberá avisar con anticipación (mín. 2 semanas).
+6° regla: Se llevará a cabo un sistema de sanciones y advertencias que consiste en 1 strike en un principio y luego una sanción.
+La sanción consiste en descontarle a los demás integrantes 1% del valor del proyecto y se le sumará 3% al integrante que fue sancionado.
+Cada miembro tiene una advertencia por período que no se acumulan.
+7° regla: Los integrantes deben utilizar el grupo de proyecto solo para su propósito y no subir contenido ajeno al mismo para no perjudicar el espacio de trabajo.
+Regla 8°: Ningún integrante debe compartir la contraseña del proyecto a individuos ajenos a la conformación de grupo. Para asegurar la integridad del mismo.
+Regla 9°: Ningún código se integra a la rama principal sin antes pasar por una revisión por parte de todo el grupo.
+Regla 10°: El código entregado deberá seguir las buenas prácticas acordadas (nombres claros de variables, estructura limpia) y llevar comentarios breves en las lógicas complejas para que cualquiera pueda entenderlo y mantenerlo.
+
+
+________________
+
+
+5.4 Ciclo de vida del proyecto 
+Elegimos el Modelo Incremental, estructurando el desarrollo en base a las tres entregas obligatorias del proyecto de la UTU.
+Fundamentación:
+La elección de este modelo se justifica porque el proyecto se desarrolla mediante entregas parciales establecidas por la institución y porque el equipo organiza el trabajo en reuniones semanales, en las que se planifican, desarrollan, prueban y entregan funcionalidades de manera progresiva. Estas características hacen conveniente dividir el desarrollo en incrementos funcionales.
+Elegimos el Modelo Incremental teniendo en cuenta lo planteado por Pressman (2010), quien sostiene que este modelo consiste en desarrollar el software mediante una serie de incrementos, donde cada uno incorpora nuevas funcionalidades hasta completar el producto final. Por esta razón, consideramos que es el modelo más adecuado para nuestro proyecto.
+En nuestro caso, cada entrega obligatoria representa un incremento del sistema, en el que se incorporan nuevas funcionalidades sin necesidad de esperar a finalizar todo el desarrollo. De esta manera, el modelo incremental se adapta a la planificación académica de la UTU y permite controlar el avance del proyecto de forma ordenada, continua y progresiva.
+
+
+________________
+5.5 Diagrama de Gantt 
+Para poder analizar desarrollar el software y entregar el proyecto en las fechas de entrega, necesitamos planificar, organizar y definir los hitos y tareas a realizar, los cuales se representarán en el diagrama GANTT.
+  
+
+________________
+  5.6 Justificación de técnicas de relevamiento de datos 
+Para el correcto desarrollo de nuestro sistema se adoptó un enfoque mixto en las técnicas de relevamiento de información. Nuestro objetivo fue el de tener una mayor noción de cómo se gestionan torneos en el día a día. Para ello utilizamos entrevistas y encuestas en distintos centros deportivos.
+La entrevista fue dirigida a organizadores de torneos de la institución del área de deportes. La misma se llevó a cabo con el objetivo obtener información detallada y profundizar qué aspectos debería tener nuestro sistema. Además de ser una técnica más flexible la cual nos permitió indagar y sacarnos cualquier duda que podamos llegar a tener. Empleamos preguntas claves que apuntaban a un mayor entendimiento del área de gestión de torneos para lograr dimensionar la arquitectura de la base de datos y la flexibilidad que debe tener el sistema para poder manejar la gran variedad de disciplinas solicitadas en la consigna del proyecto.
+Además indagamos qué problemas pudieron haber tenido a la hora de cargar datos y cómo lo solucionaron. De esta forma saber de antemano qué problemas podríamos llegar a enfrentar a la hora de cargar los datos en el sistema y tener una estructura más sólida.
+Por último necesitábamos saber de qué forma se le comunicaba a los usuarios actualizaciones de los torneos. Ya sea en formato físico como carteleras, o por medio de redes sociales. Permitiéndonos ver lo ineficiente que era el sistema manual. Con esto en mente, nos dimos cuenta que centralizar y automatizar todo el proceso es la opción más viable.
+Para obtener información de varias personas al mismo y más centrada en nuestra aplicación utilizamos una encuesta mediante un formulario de Google y la presentación de un prototipo del sistema. Con el objetivo de recibir retroalimentación por parte de un posible usuario final. Necesitábamos saber si estaría cómodo utilizando nuestra aplicación para gestionar torneos o si la interfaz le pareció intuitiva.
+________________
+Es importante ver en esta etapa de desarrollo qué cambios podríamos llegar a realizar, lo viable que es nuestro software para cumplir con las tareas de gestión de torneos en un área más profesional y para tener un conjunto de respuestas más concretas sobre distintos métodos que se utilizan actualmente para la creación y gestión de torneos. Esto nos ayuda a poder planificar a futuro de manera más eficiente que puntos claves debemos tener en cuenta para el desarrollo del sistema.
+La combinación de ambas técnicas garantiza que el sistema no se diseñará bajo suposiciones. La entrevista definió el qué y el cómo debe funcionar el motor interno del software (reglas, validaciones y automatización), mientras que la encuesta validó el diseño y la aceptación por parte del usuario final, asegurando un producto alineado a las necesidades reales de organizaciones deportivas.
+
+
+5.7 Modelo de formulario/s empleado/s para relevar datos.
+Preguntas de la Entrevista
+1)¿Se realizan torneos en la organización?  ¿Cómo los crean y cómo los gestionan?
+2) ¿Qué variedad de modalidades organizan acá (fútbol, básquetbol, ajedrez, e-sports, etc.) y qué tan diferente es la forma de administrarlas entre sí?
+3) Cuando planifican un torneo, ¿cómo deciden qué formato usar (todos contra todos, llaves de eliminación, o sistema suizo)?
+A dónde apuntar: Averigüar si alguna vez combinan formatos (ejemplo: una fase de grupos que pasa a eliminación directa). 
+4) ¿Qué problemas o errores han tenido antes con la carga de datos y cómo lo resolvieron?
+(ej. un resultado mal anotado, un jugador que no debía jugar) 
+5) ¿Cómo hacen los jugadores, delegados o el público en general para enterarse de los fixtures, las tablas de posiciones y las sanciones? 
+¿Qué es lo que más le cuesta encontrar a la gente en esos medios?
+6) Una vez que termina una fecha o un partido, ¿cuánto tiempo les lleva procesar todo hasta que queda la tabla de posiciones oficial a la vista de todos?
+A dónde apuntar: Identificar si el cálculo de la tabla lo hacen a mano o con un Excel complejo; ahí es donde la automatización de su sistema va a brillar.
+
+
+Encuesta: En base al prototipo mostrado.
+¿La interfaz le pareció intuitiva? (SI/No/Opcion de agregar algún comentario)
+¿Utilizará nuestra app para gestionar un torneo? (Si/No)
+¿Hay alguna función carente en la app que le gustaría ver implementada?(casilla para que el usuario complete)
+¿Considera que la aplicación ayudará a gestionar torneos de forma más eficiente? Si/No
+¿Actualmente qué método utiliza para crear y gestionar un torneo? (Formato papel/ Documento excel o similar/ Otra aplicacion de gestion de torneos)
+¿Qué tan seguido se organiza un torneo en esta institución? (cada semana/mes/ +6 meses/ anual)
+
+
+________________
+5.8 Resultados crudos de las técnicas de relevamiento utilizadas 
+Entrevista:
+Epsilon Software: ¿Se realizan torneos en la organización? ¿Cómo los crean y cómo los gestionan?
+Profesor 1: Bueno, en lo interno, o sea, para nosotros como profes de esta UTU, organizamos algunas actividades internas, pero también están los juegos deportivos que ahí sí se participa en voleibol, básquetbol, en fútbol y el formato muchas veces es por eliminación, por etapas.
+Profesor 2: Los juegos deportivos son los juegos deportivos nacionales en los que participan todas las instituciones públicas y privadas de todo el país. En las distintas disciplinas deportivas.
+Epsilon Software: ¿Qué problemas o errores han tenido antes con la carga de datos? o sea, en el momento de crear las tablas con quien ganó con los resultados.
+Profesor 1: En lo estratégico no deberían haber problemas porque eso se planifica. El problema podría surgir si los cuadros no se presentaran y quedaran grupos impares cuando el resto de los grupos son pares.
+Profesor 2: Y a veces el problema que surge no siempre es que para cargar los datos, los chiquilines, muchas veces nos traen los documentos y bueno, etcétera, etcétera, hay que hacer todo un proceso.
+Epsilon Software: ¿Cómo resuelven eso?
+Profesor 2: Y eso lo resolvemos, tienen que traer documentos para participar y tienen que ser originales, ya sea la identidad, ficha médica deportiva o carnet de salud. No se acepta fotocopia ni foto. Se recepciona eso.
+Profesor 1: Sí, en lo deportivo, lo que hay que ver es si quedaran un grupo con 8, por ejemplo, y otro con siete resolver cómo se va a llegar a la siguiente etapa con la misma cantidad de equipos. Y eso normalmente se hace eligiendo al mejor tercero, por ejemplo, entre lo que hay y después se suman los otros dos y se hacen la iluminación.
+Epsilon Software: ¿Cómo hacen los jugadores delegados o público en general para entregarse en el torneos o los fixtures, tabla de posiciones, por ejemplo, redes sociales o un grupo de WhatsApp o alguna cartelera física.
+Profesor 2:  Sobre todo los juegos partidos nacionales, ¿cómo es? lo gestiona la Secretaría Nacional del Deporte en conjunto con la NE Y ahí, bueno, se brinda la información a toda la institución públicas o privadas, y también se comparten en redes sociales, en las páginas de la instituciones y después se va discriminando por categoría y por ramas también masculino y femeninas.
+Profesor 1: Los docentes nos enteramos, básicamente porque los coordinadores, o sea, hay cargos superiores al nuestro, nos informa de las fechas y si queremos participar o no de esa actividad.
+Profesor 2: Y hay categorías, primera categoría, segunda categoría, tercera categoría, todo con su correspondientes edades y fecha de nacimiento.
+Epsilon Software: Una vez termine la fecha o un partido, ¿ cuánto tiempo le queda a procesar todo? O sea, hasta que la tabla de posición oficial esté a la vista de todos.
+Profesor 1: No sé, depende de la cantidad de gente que participó, porque el vuelo será la etapa final van a ser menos los cuadros y se fue haciendo en paralelo quizás todo en la etapa anterior, sacando quiénes fueron los ganadores y demás y después muchas veces en algunos casos se ponen en programas de Excel, para ver cuáles son los los cuadros que están.
+Epsilon Software: Claro, bueno, identificar el cálculo de tabla si lo hacen a mano o en un Excel complicado y complejo porque ahí es donde nuestro sistema entra porque es la manera de automatizar ese tipo de tareas.
+Profesor 1: El tema que hoy por hoy con la inteligencia artificial es bastante más fácil porque le tiras la información de inteligencia artificial y le pedis que te de formatos y lo organice.
+Profesor 2: y se participa por departamento, por zonas y luego a nivel país, las finales nacionales. Y ahí sale un campeón que va al sudamericano, pero siempre en primera categoría. Las demás categorías aún no están avaladas para ir a sudamericano.
+Epsilon Software: Muchísimas gracias,
+Profesor 1: No, por favor, por nada.
+Profesor 2: Muchas gracias.
+2da entrevista
+Entrevistador: ¿Se realizan torneos en la organización... bueno, en la institución?
+
+
+Coordinador: Sí, se realizan torneos, dos veces al año organizamos torneos.
+
+
+Entrevistador: ¿Cómo los crean y cómo los gestionan?
+
+
+Coordinador: En realidad lo que hacemos es vemos la cantidad de chiquilines que hay. En función de eso sabemos cuántos equipos tenemos que hacer, dependiendo de la actividad. Este... y generalmente intentamos que sean... eh... que cada grupo esté integrado por gurises de todos los niveles, o sea, que en el grupo no sé, si el equipo 1 tenga gurises de primero A, de segundo A, de tercero A, para que estén repartidos.
+
+
+Entrevistador: Okay. ¿Qué variedad de modalidades organizan acá? ¿Y qué tan diferente es la forma de administrar entre sí, ya sea fútbol, básquet, ajedrez...?
+
+
+Coordinador: Por lo general hacemos eh... combinación de deportes, no hacemos de uno solo. Este... y lo que hacemos son eh... cruces para que todos crucen... eh... jueguen entre todos. O sea, que todos los equipos jueguen entre todos.
+
+
+Entrevistador: ¿Cuándo planifican un torneo y cómo deciden qué formato usar?
+Coordinador: Y en realidad vemos el cronograma del año, vemos si hay algún paseo, alguna actividad de eso o alguna... vacaciones, y en función de eso es cuando planificamos la actividad. Generalmente antes de las vacaciones hacemos algún campeonato.
+
+
+Entrevistador: Okay. ¿Qué problemas o errores han tenido antes con la carga de datos y cómo lo resolvieron?
+
+
+Coordinador: En realidad eh... problemas no hemos tenido, siempre se puede ser más prolijo en la organización, pero generalmente trabajamos con... con un Word. Este... a veces nos pasa que por la... cuando faltan chiquilines, los grupos quedan un poco desfasados en cantidades, pero no hemos tenido grandes problemas por suerte.
+
+
+Entrevistador: ¿Cómo hacen los jugadores, delegados o el público en general para enterarse de los fixtures, las tablas de posiciones y las sanciones?
+
+
+Coordinador: Generalmente lo publicamos en la aplicación antes de que vengan, y si no, cuando llegan, generalmente hacemos una... una cartulina grande donde dice lo... los equipos y las rotaciones.
+
+
+Entrevistador: Okay, última pregunta. Una vez que terminan una fecha o un partido, ¿cuánto tiempo les lleva procesar todo hasta que queda la tabla de posiciones oficial a la vista de todos?
+
+
+Coordinador: Y, por lo menos uno una hora, dos horas nos lleva, sí.
+
+
+Entrevistador: Dale, muchas gracias. 
+Coordinador: ¿Bien? Sí. Así que quedó.
+Encuesta    
+
+
+________________
+5.9 Identificación de roles y perfiles de usuario de la aplicación con sus responsabilidades y nivel de acceso (tabla de datos)
+  
+________________
+
+6. Bibliografía:
+Estándar IEEE 830. (s. f.). Material didáctico del curso de Ingeniería de Software. Dirección General de Educación Técnico Profesional – UTU.
+Estándar IEEE 29148 (2011). (s. f.). Material didáctico del curso de Ingeniería de Software. Dirección General de Educación Técnico Profesional – UTU.
+Pressman, R. S. (2010). Ingeniería del software: Un enfoque práctico (7.ª ed.). McGraw-Hill.
+Sommerville, I. (2011). Ingeniería de software (9.ª ed.). Pearson Educación.
+________________
+7. Anexos:
+Anexo A Especificación de Requisitos de Software (ESRE / ERS)
+Documento ESRE
+El presente anexo contiene la Especificación de Requisitos de Software elaborada para la aplicación SGDM por el equipo de desarrollo de Epsilon Software, siguiendo las directrices del estándar IEEE 830 / ISO/IEC/IEEE 29148.

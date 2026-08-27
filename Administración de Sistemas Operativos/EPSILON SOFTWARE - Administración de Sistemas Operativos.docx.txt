@@ -1,0 +1,376 @@
+﻿Carpeta de Administración de Sistemas Operativos
+
+
+
+
+
+Solicitante: I. T. S - Instituto Tecnológico Superior Arias Balparda.
+Nombre Fantasía, de la nueva empresa: Epsilon Software.
+Grupo: 3° MS.
+Turno: Matutino.
+Unidad Curricular: Administración de Sistemas Operativos.
+Nombres de los integrantes del grupo: Sophia Brum, Mateo Comini, Santiago Crespo, Thiago Iglesias.
+Fecha de entrega: 27/7/2026
+
+
+Instituto Tecnologíco Superior Arias Balparda.
+Blvr. José Batlle y Ordoñez 3570 esq. Gral. Flores - Montevideo.
+0. Índice
+0. Índice        2
+1.Objetivos y Alcance del documento        3
+Objetivo        3
+Alcance        3
+2. Vocabulario de Términos Técnicos        4
+2.1 Término, Definición y Contexto Operativo        4
+2.2 Símbolos, Acrónimos y Abreviaturas        5
+2.3.1 Archivos de Configuración del Sistema Operativo        5
+2.3.2 Comandos de Consola y Parámetros del Script        5
+2.3.3 Acrónimos Tecnológicos y de Sistemas Operativos        6
+3. Temas para la primera entrega        6
+4. Introducción        6
+5. Administración de Sistemas Operativos        7
+5.1 Análisis de Usuario de Sistema:        7
+5.2 Estudio Modelo cliente-servidor:        9
+5.3 Script de gestión de usuarios del sistema        13
+5.3.1 Introducción        13
+5.3.2 Funcionamiento del script        14
+6. Bibliografía        21
+7. Anexos        22
+________________
+1.Objetivos y Alcance del documento
+Objetivo
+Establecer y documentar las bases técnicas de infraestructura, la administración de sistemas operativos y la gestión centralizada de usuarios para el Sistema de Gestión Deportiva Modular (SGDM) desarrollado por Epsilon Software. Este documento busca consolidar el análisis del modelo cliente-servidor, fundamentar la selección de los entornos operativos cliente y servidor, y documentar la automatización de la administración de cuentas de usuario mediante scripting en Bash bajo los estándares académicos requeridos para la unidad curricular de Administración de Sistemas Operativos.
+
+
+Alcance
+El alcance de esta carpeta comprende los siguientes aspectos:
+Vocabulario de Términos Técnicos: Definición y contextualización operativa de términos de administración, comandos de consola (useradd, usermod, userdel, cut, grep), archivos de configuración (/etc/passwd, /etc/group) y acrónimos clave del entorno de sistemas operativos.
+Análisis de Usuarios del Sistema: Clasificación y delimitación de los niveles de acceso, permisos y responsabilidades dentro del sistema (Administrador General, Organizador de Torneo, Participante y Usuario Público).
+Estudio del Modelo Cliente-Servidor:
+  - Descomposición funcional de la arquitectura web entre cliente (interfaz interactiva, ejecución de JavaScript, independencia del SO) y servidor (servicios en segundo plano, atención pasiva de peticiones/requests).
+  - Evaluación comparativa y compatibilidad de Sistemas Operativos Clientes (Microsoft Windows 11, Ubuntu Desktop y Android OS).
+  - Justificación técnica para la selección de AlmaLinux OS 9.10 con soporte LTS (Long Term Support) como sistema operativo servidor de producción.
+Scripting y Automatización de Gestión de Usuarios: Documentación detallada del funcionamiento del script interactivo menuADM.sh en Bash, cubriendo la lógica de control mediante bucle while, menú interactivo en terminal y procedimientos para alta, baja, modificación (login, grupo principal, clave y directorio Home con migración de datos) y búsqueda de usuarios locales.
+2. Vocabulario de Términos Técnicos
+A continuación, se presentan los términos técnicos utilizados en la carpeta de Administración de Sistemas Operativos para el proyecto SGDM.
+________________
+
+
+2.1 Término, Definición y Contexto Operativo
+________________
+
+
+Administrador General: Nivel más alto de usuario en el SGDM con control total para gestionar la estructura, seguridad, módulos y registros de auditoría del sistema.
+Bucle while: Estructura de control implementado en el script de gestión (menuADM.sh) para mantener activo el menú interactivo en consola hasta que se seleccione la opción de salida.
+Directorio Home (/home): Ubicación en el sistema de archivos de Linux reservada para almacenar los archivos personales y configuraciones del usuario.
+Filtro cut: Comando de consola utilizado para delimitar y extraer columnas específicas de archivos de texto, como los nombres de usuario en /etc/passwd.
+Filtro grep: Comando de búsqueda que filtra y retorna líneas específicas de un archivo de texto basadas en un término clave, como la búsqueda de usuarios existentes.
+GID (Group Identifier): Identificador numérico único asignado por el sistema operativo a cada grupo local definido en /etc/group.
+Organizador de Torneo: Rol con nivel medio de acceso encargado de la administración de eventos deportivos, inscripción de participantes, llaves y carga de resultados.
+Participante: Usuario autenticado con permisos limitados que interactúa con la aplicación para verificar calendarios, resultados, clasificaciones y editar sus datos de perfil.
+
+
+Usuario Público: Nivel de acceso básico y no autenticado que solo permite consultar información pública del torneo (posiciones, fixtures y perfiles) sin modificar datos.
+Petición (Request): Solicitud enviada desde la interfaz cliente hacia el servidor web para requerir datos o ejecutar procesos.
+RHEL (Red Hat Enterprise Linux): Distribución comercial de Linux enfocada en entornos corporativos, con la cual AlmaLinux mantiene compatibilidad total a nivel binario.
+Soporte LTS (Long Term Support): Modelo de mantenimiento de software que garantiza actualizaciones de seguridad y estabilidad extendidas durante varios años (hasta 10 años en AlmaLinux).
+UID (User Identifier): Número entero único que el núcleo de Linux asigna a cada cuenta de usuario para controlar sus permisos y propiedad de archivos.
+
+
+2.2 Símbolos, Acrónimos y Abreviaturas
+A continuación se clasifican las siglas, comandos de consola y archivos del sistema utilizados en la gestión de infraestructura y scripting.
+2.3.1 Archivos de Configuración del Sistema Operativo
+/etc/group: Archivo del sistema que contiene la definición y miembros de los grupos locales de usuarios en AlmaLinux.
+/etc/passwd: Archivo que registra los nombres de cuenta, UID, GID, directorio de inicio y consola por defecto de las cuentas locales.
+2.3.2 Comandos de Consola y Parámetros del Script 
+bash menuADM.sh: Orden para ejecutar la interfaz interactiva en modo texto desarrollada para la administración centralizada de usuarios.
+passwd: Comando del sistema operativo utilizado para establecer o modificar las contraseñas de las cuentas de usuario.
+userdel -r: Comando de eliminación de usuarios que incluye el parámetro -r para remover también de forma segura el directorio personal (Home).
+usermod (-l, -g, -d -m): Herramienta de modificación de cuentas empleada para renombrar (-l), cambiar grupo principal (-g) o trasladar el directorio Home (-d -m).
+2.3.3 Acrónimos Tecnológicos y de Sistemas Operativos
+Android OS: Sistema operativo de código abierto para dispositivos móviles basado en el núcleo Linux.
+GID: Group Identifier (Identificador numérico de grupo).
+LTS: Long Term Support (Soporte a largo plazo).
+RHEL:Red Hat Enterprise Linux.
+SO: Sistema Operativo.
+UID: User Identifier (Identificador numérico de usuario).
+3. Temas para la primera entrega 
+* Estudio de sistemas operativos cliente y servidor.
+* Análisis de usuarios de sistema.
+* Script de gestión de usuarios del sistema implementado en el servidor. 
+4. Introducción
+Este documento de la asignatura ASO nos permite documentar el proceso de configurar, mantener, asegurar la gestión de usuarios, control de datos y seguridad del sistema realizado por el equipo de Epsilon software para realizar todas las tareas con el fin de que cumpla con los estándares y la revisión de docentes en cada plazo establecido y captar el conocimiento y en el ciclo de vida que nos encontramos para realizar el proyecto de fin de año.
+________________
+5. Administración de Sistemas Operativos
+
+
+5.1 Análisis de Usuario de Sistema:
+Administrador general
+El nivel más alto de usuario. Tiene control completo del sistema y dentro de la aplicación puede gestionar todo. Su principal función es mantener la estructura y seguridad del sistema.
+Sus funciones serán: 
+* Iniciar sesión.
+* Crear, configurar usuarios administrativos.
+* Crear y configurar torneos.
+* Habilitar o deshabilitar módulos.
+* Gestionar participantes y equipos.
+* Registrar y modificar resultados.
+* Acceder a reportes de torneos.
+* Consultar registros de auditoría.
+* Administrar configuraciones generales del sistema.
+
+
+Organizador de torneo
+Tiene un nivel medio de usuario. Encargado de gestionar los torneos, o sea, tiene una accesibilidad limitada a ellos. Sus principales funciones son ingresar datos del torneo y contenido a la página web. el organizador podrá: 
+* Iniciar sesión.
+* Configurar torneos asignados.
+* Inscribir participantes.
+* Generar rondas o llaves.
+* Cargar resultados.
+* Corregir resultados si cuenta con autorización.
+* Publicar o cerrar rondas.
+* Consultar reportes del torneo.
+
+
+Participante
+Tiene un nivel medio-bajo final autenticado ya que interactúa con la  aplicación pero con ciertos límites y modifica datos personales. No podrá modificar resultados, crear torneos ni modificar configuraciones de competencia.
+El participante podrá: 
+* Iniciar sesión.
+* Visualizar en qué torneos está asignado.
+* Ver calendario de enfrentamientos.
+* Consultar resultados.
+* Consultar posición o clasificación.
+* Editar datos básicos de su perfil. 
+
+
+Usuario público
+El nivel más básico de usuario. No podrá realizar acciones que modifiquen información del sistema, solo podrá visualizar torneos e información sobre ellos.
+El usuario público podrá: 
+* Ver torneos públicos. 
+* Ver calendarios de distintos torneos.
+* Ver resultados finales o de rondas. 
+* Consultar tablas de posiciones. 
+* Acceder a perfiles públicos de equipos o participantes.
+
+
+________________
+
+
+
+
+5.2 Estudio Modelo cliente-servidor:
+1. Introducción
+Nuestro estudio de cliente servidor se basa en la infraestructura de los sistemas operativos y el modelo cliente-servidor para nuestra aplicación SGDM que se dedica a la creación, organización y seguimiento de torneos deportivos. Al tratarse de una página web el sistema se divide de forma descentralizada porque se realiza por partes.
+
+
+Por un lado, el cliente es un programa bajo la interfaz manejada por un usuario que realiza peticiones de forma interactiva y la cual corre de manera local en el dispositivo del usuario. Estas peticiones son temporales debido a que su vida se limita a las necesidades de interacción del usuario y es dinámica porque la página cambia, reacciona y se transforma en tiempo real dependiendo lo que cliquee el usuario.
+ 
+Por otro lado tenemos el servidor que es un programa de aplicaciones que generalmente corre en segundo plano en una computadora con recursos compartidos entre varios procesos del mismo tipo, esto lo acompaña el hecho de que no es interactivo. Además de que comienza a correr cuando el sistema se inicia, espera de forma pasiva un pedido de conexión(request) y busca resolver cómo satisfacerlo.
+
+
+2. Sistema Operativo Cliente y Requisitos del Entorno
+
+
+Nuestra página web SGDM es independiente de nuestro SO Cliente. Esto es así porque nuestra plataforma necesita ejecutarse desde un navegador web lo que nos permite su uso y la facilidad de acceder en distintos sistemas operativos como Windows, Linux, macOS, etc.
+
+
+Aunque hay un rol fundamental que tiene que cumplir el navegador que esté utilizando el usuario, esa viene a ser la habilidad de leer y ejecutar código JavaScript. ¿Por qué esto es fundamental? Porque nuestra página es interactiva y eso lo logramos gracias al código Javascript, entonces se vuelve un requisito fundamental para su uso ya que si el usuario deshabilita esta sección ciertas funciones interactivas como la bandeja de notificaciones o la validación de formularios de torneos no podían ejecutarse.
+
+
+3. Análisis de Alternativas del Cliente
+
+
+Hacemos un análisis de SO que permitirá el acceso del cliente a nuestra plataforma.
+
+
+Microsoft Windows 11: Es conocida en distintos espacios físicos como hogares, empresas hasta instituciones educativas eso es positivo porque cubre cualquier rol que cumpla el usuario como un organizador o un espectador, a eso lo acompaña el hecho de que cumple con una interfaz gráfica intuitiva, o sea que se vuelve fácil su uso. Tiene un alto soporte para navegadores modernos y buena compatibilidad con aplicaciones y dispositivos periféricos. Una de sus desventajas es que contiene una licencia comercial, limitando su uso dependiendo la decisión de obtener o no dicha licencia.
+
+
+Ubuntu Desktop: Una distribución de Linux muy conocida por su muy intuitiva interfaz gráfica permitiendo que cualquier usuario nuevo o final pueda utilizarlo sin problemas. Además que cuenta con una menor exposición a virus y se mantiene en actualizaciones constantes lo que evita errores o fallos críticos en aplicaciones lo que causan pérdida de datos, además no se queda atrás en la compatibilidad de aplicaciones por dichas actualizaciones.
+
+
+Android OS: El sistema operativo Android es un sistema de código abierto basado en el núcleo de Linux, además de dominar las plataformas móviles es común verlo en dispositivos portátiles, televisores, automóviles, etc. Puede ejecutar o cambiar más de una aplicación a la vez lo que logra mayor productividad en caso de realizar multitareas, aparte cuenta con un asistente de Google  integrado al cual se le puede hacer preguntas deportivas, configurar recordatorios de partidos, entre otras cosas.
+
+
+4. Análisis para el SO servidor
+
+
+Para el desarrollo e implementación del SGDM utilizaremos Alma Linux OS 9.10 para sistema operativo servidor. La elección de esta distribución se basa en que está orientada a servidores y principalmente utilizado en servidores web, su gran compatibilidad con RHEL nos dice que aplicaciones o funciones que corran en RHEL van a poder ser utilizadas en Alma Linux sin problemas.
+
+
+Tiene soporte a largo plazo (LTS) con una durabilidad de hasta 10 años distinto de otras distros, lo que ofrece estabilidad y tranquilidad para soportar cargas de trabajo críticas ya que su vitalidad es fundamental para nuestra organización. No menos importante tiene un acceso que es totalmente gratuito, o sea, que no hay suscripciones o restricciones de uso y de código abierto a nivel empresarial y además que ofrece una plataforma robusta lo que significa que está hecha para una operación ininterrumpida.
+
+
+5. Conclusión 
+Finalizando el análisis de los Sistemas Operativos cliente-servidor, llegamos a la conclusión que nuestras elecciones encajan perfectamente con los roles y necesidades de nuestra plataforma SGDM. Viendo desde el lado del cliente, el sistema es totalmente independiente, lo que ayuda a que cualquier rol que cumpla el usuario, con tal de tener acceso a un navegador web, podrá utilizar nuestra app web. Esto permite que un organizador pueda realizar su trabajo desde cualquier lado en cualquier momento, que un participante pueda inscribirse a partidos, y que los usuarios públicos puedan ver torneos donde quieran.
+
+
+Por el lado del servidor, creemos que la versión de Alma Linux LTS nos ayuda a mantener una página web estable y duradera, evitando caídas de servidor o ataques inesperados que busquen robo de datos, como otras cosas. 
+
+
+________________
+5.3 Script de gestión de usuarios del sistema
+ 5.3.1 Introducción
+
+
+Para facilitar la gestión de usuarios en nuestro proyecto desarrollamos un script el cual permite al administrador del sistema realizar tareas de administración de cuentas y grupos de forma centralizada, ágil y segura garantizando que la creación, modificación y baja de usuarios sigan las pautas estructurales de nuestro SGDM (Sistema de Gestión Deportiva Modular) y las políticas de seguridad planteadas en este proyecto.  
+
+
+  
+  
+
+5.3.2 Funcionamiento del script
+1. Vista General del Menú Principal
+Al ejecutar el comando bash menuADM.sh en la terminal de nuestro servidor, se presenta una interfaz interactiva en modo texto. El script utiliza un bucle while que mantiene el menú activo hasta que el administrador decida cerrarlo de manera explícita (seleccionando la opción 7).
+  
+
+2. Detalle de las Funciones del Script
+A continuación, se documenta el comportamiento y los comandos del sistema operativo que ejecuta cada una de las opciones del menú interactivo.
+-Opcion 1: Ver Usuario.
+Esta función limpia la pantalla y lee el archivo /etc/passwd (el cual contiene la configuración de las cuentas de usuario locales). Utiliza el filtro cut con el separador “ : ” para extraer únicamente la primera columna, mostrando de forma limpia y ordenada solo los nombres de usuario (login) existentes en el servidor.
+  
+
+Listado de usuarios del sistema donde se aprecian cuentas del sistema y cuentas personales (ej: "matt").
+
+
+-Opción 2: Ver Grupo.
+Al igual que en la opción anterior, esta función accede al archivo del sistema /etc/group. Aplica el comando cut para aislar y listar únicamente los nombres de los grupos locales definidos en AlmaLinux.
+  
+
+Salida en pantalla de los grupos configurados en el sistema operativo.
+
+
+-Opción 3: Buscar un usuario por nombre
+Solicita al administrador el ingreso de un nombre de usuario (login). El script realiza una búsqueda mediante grep dentro de /etc/passwd y retorna la línea completa de registro si el usuario existe. Esto permite verificar rápidamente el UID (Id del Usuario), GID (Id de Grupo), nombre completo, directorio Home y la Shell por defecto de un usuario específico.
+  
+
+Búsqueda exitosa del usuario "matt", exponiendo sus propiedades en el sistema.
+
+
+-Opción 4: Agregar usuarios
+Permite crear una nueva cuenta local de manera asistida. El script solicita un nombre de usuario (login) y el nombre completo del nuevo integrante. Automáticamente crea su directorio de inicio (-m) y asocia el nombre completo como comentario (-c). Luego, solicita al administrador a definir una contraseña segura inicial para el nuevo usuario de forma interactiva.
+  
+
+Creación y asignación de contraseña del nuevo usuario "pepe".
+
+
+-Opción 5: Borrar usuario
+Solicita el nombre del usuario que se desea borrar. Al ejecutar userdel con el parámetro -r, el script asegura la eliminación total del usuario en el sistema, incluyendo de manera segura su directorio de inicio (Home).
+  
+
+Eliminación exitosa de "pepe" del sistema operativo.
+
+
+-Opción 6: Modificar usuario
+Ofrece un submenú interactivo para realizar modificaciones puntuales sobre un usuario específico:  
+1. Nombre de usuario: Permite renombrar el identificador de acceso de la cuenta (usermod -l).  
+2. Grupo: Modifica el grupo principal del usuario en el sistema (usermod -g).  
+3. Contraseña: Ejecuta passwd para modificar la clave.  
+4. Directorio Home: Cambia la ruta del directorio personal y traslada de forma segura el contenido actual a la nueva ubicación (usermod -d -m).
+          
+Submenú de edición donde el administrador selecciona qué campo del usuario modificar.
+
+
+
+
+  
+
+Verificación del cambio mediante la Opción 1, donde se visualiza el nuevo usuario renombrado (ej: "pepe2").
+
+
+-Opción 7: Salir
+Rompe el bucle interactivo de manera limpia y devuelve el control de la terminal al administrador del sistema operativo.
+
+
+
+
+5.4 Políticas de respaldo
+5.4.1 Objetivo
+Realizar copias de seguridad de la información y archivos necesarios para el funcionamiento del Sistema de Gestión Deportiva Modular (SGDM), con el objetivo de evitar la pérdida de datos y poder recuperar el sistema en caso de una falla o error.
+5.4.2 Información a respaldar
+El respaldo incluirá:
+* La base de datos MariaDB utilizada por el SGDM.
+* Los archivos y directorios de la aplicación web.
+* La información necesaria para poder restaurar el funcionamiento del sistema.
+La base de datos será exportada mediante mysqldump, mientras que los archivos de la aplicación serán empaquetados mediante tar. Ambos respaldos serán reunidos en un único archivo comprimido con formato .tar.gz.
+5.4.3 Ejecución de los respaldos
+Los respaldos serán realizados mediante un script desarrollado en Bash. El proceso podrá ejecutarse de forma automatizada utilizando cron, evitando que el administrador tenga que realizar manualmente todas las tareas de respaldo.
+El script genera un nombre para cada copia utilizando la fecha y hora de ejecución, permitiendo diferenciar los distintos respaldos realizados.
+5.4.4 Ubicación y conservación
+Los archivos de respaldo serán almacenados en el directorio:
+/var/respaldos/sgdm
+El sistema conservará únicamente los cuatro respaldos más recientes. Cuando se genere una quinta copia, el script identificará y eliminará automáticamente la más antigua. De esta forma se evita acumular una cantidad innecesaria de archivos en el servidor.
+5.4.5 Recuperación de la información
+En caso de pérdida de información o una falla del sistema, se utilizará uno de los respaldos almacenados para recuperar la base de datos y los archivos de la aplicación.
+La copia de seguridad contiene tanto la base de datos como los archivos de la aplicación, lo que permite restaurar los elementos principales necesarios para que el SGDM vuelva a funcionar. El respaldo más reciente será el utilizado como primera opción para la recuperación.
+5.4.6 Verificación de los respaldos
+Después de ejecutar el script, se podrá comprobar la existencia de los archivos generados dentro del directorio /var/respaldos/sgdm mediante el comando ls -lh. Esto permite verificar que los respaldos fueron creados correctamente y consultar su fecha y tamaño.
+
+
+
+
+5.5 Script de respaldo
+5.5.1 Introducción
+Para garantizar el cumplimiento de las políticas de respaldo definidas para el proyecto, desarrollamos un script automatizado en Bash que se encarga de resguardar tanto la base de datos MariaDB como los archivos de la aplicación del SGDM (Sistema de Gestión Deportiva Modular). Este proceso previene la pérdida de datos y permite restaurar el sistema ante fallas, asegurando la continuidad del servicio y respetando la regla de conservación de los últimos cuatro respaldos.
+
+
+5.5.2 Funcionamiento del script
+1. Configuración de variables y entorno
+En esta primera sección se declara el intérprete Bash y se define la variable PATH explícita, necesaria para que la herramienta cron localice correctamente las utilidades del sistema durante la ejecución automatizada. Asimismo, se configuran las rutas de origen y destino, los parámetros de conexión a MariaDB (mysqldump), el cual es una herramienta de línea de comandos en sistemas MySQL y MariaDB que sirve para realizar copias de seguridad de bases de datos.
+Además de la fecha para dar un nombre único al archivo y el comando trap, que garantiza la limpieza de la carpeta temporal si el proceso se interrumpe por algún error.
+  
+
+
+
+2. Respaldo de Base de Datos, Archivos y Empaquetado
+El script realiza la exportación de la base de datos MariaDB utilizando mysqldump. Posteriormente, empaqueta el directorio web del sistema con el comando tar -czf (-c Crea un nuevo archivo de respaldo, -z Comprime el archivo, -f Especifica el nombre y la ruta del archivo comprimido destino), el mismo se utiliza en Linux para unir múltiples archivos y carpetas en un solo archivo (con extensión .tar). 
+Si ambas tareas resultan exitosas, procede a comprimir todo en un archivo final con extensión .tar.gz en la ruta de almacenamiento permanente y remueve la carpeta temporal utilizada durante el proceso.
+  
+
+
+
+3. Política de conservación de respaldos (Últimos 4 respaldos)
+Para dar cumplimiento a la política de conservación, el script evalúa el número de respaldos comprimidos existentes en la carpeta destino. Si la cantidad es mayor a cuatro, identifica y elimina automáticamente la copia más antigua (tail -n +5), asegurando que solo se conserven los cuatro respaldos más recientes en el servidor.
+  
+
+
+
+4. Ejecución del respaldo desde terminal
+Al ejecutar el script mediante el comando sudo /usr/local/bin/respaldoSGDM.sh, la consola muestra en tiempo real las confirmaciones del respaldo de la base de datos, el empaquetado de los archivos del sistema y la creación exitosa del archivo final con su fecha y hora.
+  
+
+
+
+5. Verificación de archivos creados
+Al listar el directorio /var/respaldos/sgdm con el comando ls -lh, se comprueba la creación de los archivos comprimidos correspondientes a las ejecuciones realizadas, almacenados con sus permisos y fechas asociadas de manera organizada.
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+________________
+6. Bibliografía
+* Silberschatz, A., Galvin, P. B., & Gagne, G. (2018). Operating System Concepts (10.ª ed.). Wiley.
+* Tanenbaum, A. S., & Bos, H. (2015). Modern Operating Systems (4.ª ed.). Pearson.
+* Administración de usuarios. (s. f.). Material didáctico del curso de Sistemas Operativos. Dirección General de Educación Técnico Profesional – UTU.
+* Estudio de Sistemas Operativos. (s. f.). Material didáctico del curso de Sistemas Operativos. Dirección General de Educación Técnico Profesional – UTU.
+* Gestión de usuarios. (s. f.). Material didáctico del curso de Sistemas Operativos. Dirección General de Educación Técnico Profesional – UTU.
+* Manual de usuario del servidor Proxmox v1.5.1. (s. f.). Material didáctico del curso de Sistemas Operativos. Dirección General de Educación Técnico Profesional – UTU.
+* Protocolos de autenticación. (s. f.). Material didáctico del curso de Sistemas Operativos. Dirección General de Educación Técnico Profesional – UTU.
+* Servidor OpenSSH en Linux. (s. f.). Material didáctico del curso de Sistemas Operativos. Dirección General de Educación Técnico Profesional – UTU.
+* Servicios. (s. f.). Material didáctico del curso de Sistemas Operativos. Dirección General de Educación Técnico Profesional – UTU.
+* Tareas del administrador. (s. f.). Material didáctico del curso de Sistemas Operativos. Dirección General de Educación Técnico Profesional – UTU.
+* Virtualización vs. contenedores. (s. f.). Material didáctico del curso de Sistemas Operativos. Dirección General de Educación Técnico Profesional – UTU.
+* Cliente-Servidor y P2P. (s. f.). Material didáctico del curso de Sistemas Operativos. Dirección General de Educación Técnico Profesional – UTU.
+________________
+
+
+7. Anexos

@@ -1,0 +1,273 @@
+﻿Carpeta de Ciberseguridad
+
+
+
+
+
+Solicitante: I. T. S - Instituto Tecnológico Superior Arias Balparda.
+Nombre Fantasía, de la nueva empresa: Epsilon Software.
+Grupo: 3° MS.
+Turno: Matutino.
+Unidad Curricular: Ciberseguridad.
+Nombres de los integrantes del grupo: Sophia Brum, Mateo Comini, Santiago Crespo, Thiago Iglesias.
+Fecha de entrega: 27/7/2026
+
+
+Instituto Tecnologíco Superior Arias Balparda.
+Blvr. José Batlle y Ordoñez 3570 esq. Gral. Flores - Montevideo.
+0. Índice
+0. Índice        2
+1. Objetivos y Alcance del documento        3
+Objetivo        3
+Alcance        3
+2. Vocabulario de Términos Técnicos        4
+2.1 Término, Definición y Contexto Operativo        4
+2.2 Simbología, Acrónimos y Abreviaturas        5
+2.3.1 Acrónimos de Amenazas y Seguridad Web        6
+2.3.2 Símbolos y Configuraciones de Red e Infraestructura        6
+2.3.3 Acrónimos de Protocolos y Tecnologías Criptográficas        6
+3. Temas para la primera        6
+4. Introducción        7
+5. Ciberseguridad        8
+5.1 Identificación de Amenazas Específicas        8
+5.2 Posibles Vulnerabilidades en Infraestructura        10
+5.3 Controles de Acceso y Roles de Usuario        12
+5.4 Definición de políticas de contraseñas        14
+5.5 Políticas y medidas de seguridad        16
+6. Bibliografía        17
+7. Anexos        17
+________________
+1. Objetivos y Alcance del documento
+Objetivo
+Establecer y documentar el modelo de amenazas, las políticas de seguridad de la información, el análisis de vulnerabilidades en infraestructura y la matriz de controles de acceso para el Sistema de Gestión Deportiva Modular (SGDM) desarrollado por Epsilon Software. Este documento busca consolidar los mecanismos defensivos para preservar los pilares fundamental de la seguridad informática (Confidencialidad, Integridad y Disponibilidad), fundamentar las medidas de protección contra ataques comunes y definir los estándares de hardening y gestión de identidades requeridos para la unidad curricular de Ciberseguridad.
+
+
+Alcance
+El alcance de esta carpeta comprende los siguientes aspectos:
+Vocabulario de Términos Técnicos: Definición y contextualización operativa de conceptos de seguridad (Fuerza Bruta, Autenticación, Bind-address, CSRF, XSS, DoS, Escalado de Privilegios, Ingeniería Social, Inyección SQL, Mínimo Privilegio, Logs/Registro de Auditoría) y clasificación de acrónimos, protocolos criptográficos e identificadores de red (OWASP, SQLi, 0.0.0.0, Puerto 5500, Root, HTTP, HTTPS, RAM, URL).
+Identificación y Matriz de Amenazas Específicas:
+  - Análisis detallado de los vectores de ataque aplicables al SGDM (Robo de credenciales, Escalado de privilegios, Inyección SQL, Denegación de Servicio, Cross-Site Scripting e Ingeniería Social).
+  - Evaluación de impacto operacional y ejemplos de explotación concretos sobre las funcionalidades de la aplicación.
+Análisis de Vulnerabilidades en Infraestructura:
+  - Evaluación de riesgos a nivel de Servidor y Contenedores (exposición de puertos como el 5500, escucha global en 0.0.0.0, ejecuciones como usuario root en Docker y configuraciones por defecto).
+  - Identificación de fallas en Base de Datos MySQL (credenciales débiles, falta de cifrado en tránsito y parámetros permisivos de bind-address).
+  - Diagnóstico de debilidades en Red Interna (tránsito en texto plano bajo HTTP y falta de segmentación o firewalling).
+Controles de Acceso y Matriz de Roles: Delimitación estricta de permisos de lectura, creación, modificación y administración entre los diferentes perfiles del sistema (Administrador General, Organizador de Torneos, Participante y Usuario Público) aplicados a la gestión de usuarios, torneos, resultados, reportes, tablas y perfiles.
+Políticas de Contraseñas y Medidas Globales de Seguridad:
+  - Definición de requisitos de complejidad de claves (longitud mínima de 8 caracteres, combinación de caracteres, almacenamiento mediante hash seguro, mecanismos de bloqueo ante fuerza bruta y recuperación por correo).
+  - Especificación de controles de seguridad de la aplicación (validación de entradas frontend/backend, cifrado HTTPS en producción, registros de auditoría, respaldos de base de datos, regla de mínimo privilegio y mitigación del OWASP Top 10).
+2. Vocabulario de Términos Técnicos
+A continuación, se presentan los términos técnicos utilizados en la carpeta de Ciberseguridad para el proyecto SGDM.
+________________
+
+
+2.1 Término, Definición y Contexto Operativo
+________________
+
+
+Ataque de Fuerza: Método automatizado de ensayo y error utilizado por un atacante para adivinar credenciales de acceso legítimas mediante múltiples intentos continuos.
+Bruta Autenticación: Proceso de verificación de la identidad de un usuario en el SGDM mediante la validación de sus credenciales (usuario y contraseña).
+Bind-address: Parámetro de configuración del servicio MySQL que determina las direcciones IP de red desde las cuales se aceptan conexiones entrantes a la base de datos.
+Cross-Site Request Forgery (CSRF): Vulnerabilidad web en la que un atacante engaña a un usuario autenticado para que ejecute acciones no deseadas en la aplicación.
+Cross-Site Scripting (XSS): Ataque de inyección de código donde un script dañino escrito en JavaScript se almacena en la aplicación para ser ejecutado en el navegador de otros usuarios.
+Denegación de Servicio (DoS): Ataque diseñado para agotar los recursos de hardware (CPU/RAM) del servidor saturando con peticiones falsas hasta comprometer la disponibilidad del sistema.
+Escalado de Privilegios: Acción en la que un usuario autenticado con permisos limitados explota fallas en endpoints o URLs para ejecutar funciones asignadas a roles superiores.
+Ingeniería Social: Técnica de manipulación psicológica utilizada por atacantes para engañar a los usuarios con el fin de obtener credenciales e información confidencial.
+
+
+Inyección SQL (SQLi): Vulnerabilidad que permite a un atacante inyectar comandos de base de datos dentro de campos de entrada para eludir autenticaciones o manipular la base de datos.
+Mínimo Privilegio: Principio de seguridad que establece darle a cada rol dentro del SGDM únicamente los permisos estrictamente necesarios para cumplir sus funciones.
+Registro de Auditoría (Logs): Mecanismo que almacena cronológicamente las acciones realizadas por administradores y organizadores en el sistema.
+2.2 Simbología, Acrónimos y Abreviaturas
+A continuación se clasifican los acrónimos técnicos, siglas de normativas de seguridad e identificadores de red presentes en el documento.
+2.3.1 Acrónimos de Amenazas y Seguridad Web
+
+
+CSRF: Cross-Site Request Forgery (Falsificación de petición en sitio cruzado).
+DoS: Denial of Service (Denegación de servicio).
+OWASP:Open Web Application Security Project (Proyecto abierto de seguridad en aplicaciones web).
+SQLi: SQL Injection (Inyección de lenguaje de consulta estructurado).
+XSS: Cross-Site Scripting (Comandos de scripts en sitios cruzados).
+2.3.2 Símbolos y Configuraciones de Red e Infraestructura
+0.0.0.0: Dirección IP especial que representa todas las interfaces de red locales disponibles (escucha global en desarrollo).
+Puerto 5500: Puerto de red local utilizado habitualmente por herramientas de desarrollo y maquetado de código.
+Root: Nombre de la cuenta de superusuario con privilegios máximos en el entorno del contenedor Docker y sistemas Linux.
+2.3.3 Acrónimos de Protocolos y Tecnologías Criptográficas
+HTTP: Hypertext Transfer Protocol (Protocolo de transferencia de hipertexto en texto plano).
+HTTPS: Hypertext Transfer Protocol Secure (Protocolo seguro de transferencia de 5 hipertexto cifrado).
+RAM:Random Access Memory (Memoria de acceso aleatorio).
+SQL: Structured Query Language (Lenguaje de consulta estructurado).
+URL: Uniform Resource Locator (Localizador uniforme de recursos).
+3. Temas para la primera
+* Primera entrega
+* Identificación de amenazas específicas para su sistema
+* Posibles vulnerabilidades en infraestructura (servidor, base de datos, red interna)
+* Controles de acceso y roles de usuarios
+* Definición de políticas de contraseñas
+* Políticas y medidas de seguridad 
+4. Introducción
+Este documento tiene el trabajo de documentar todos las áreas estudiadas en la materia ciberseguridad como las vulnerabilidades, amenazas, los accesos y niveles de los mismos con el objetivo de crear un sistema seguro y fiable para su consumo ya que este es una base fundamental en la época que vivimos y con el fin de que cumpla con los estándares y la revisión de docentes en cada plazo establecido y captar el conocimiento y en el ciclo de vida que nos encontramos para realizar el proyecto de fin de año.
+________________
+5. Ciberseguridad
+
+
+5.1 Identificación de Amenazas Específicas 
+
+
+  Amenaza
+	¿Que significa?
+	Ejemplo en SGDM
+	Impacto
+	Robo de credenciales
+	Un atacante obtiene las credenciales (usuario y contraseña) de cuentas legítimas en la base de datos SQL Server.
+	Un atacante realiza un ataque de fuerza bruta hacia el Administrador para tener control total del sistema.
+	Se pierde la confidencialidad e integridad del sistema. Acceso total a la configuración del sistema, posibilidad de modificar o borrar la base de datos y comprometer las cuentas de otros usuarios.
+	Escalado de privilegios.
+	Un usuario autenticado con pocos permisos intenta realizar acciones por encima de sus privilegios en el sistema.
+	Un Participante o Usuario Público manipula los parámetros de la URL o peticiones HTTP de la web para acceder directamente al endpoint de "Cargar resultados" o "Modificar torneos".
+	Pérdida de integridad del sistema. Se alteran de forma no autorizada resultados, cronogramas de torneos y el orden en el que se tienen que enfrentar los equipos.
+	Inyección SQL
+	El atacante aprovecha vulnerabilidades en los formularios para inyectar código de base de datos directamente hacia SQL Server.
+	Un atacante introduce código malicioso en el buscador de torneos o en el perfil de participante, logrando saltarse la autenticación o borrar tablas enteras.
+	Exposición masiva de datos personales de los participantes o eliminación de la base de datos.
+	Denegación de Servicio (DoS)
+	El servidor es saturado con peticiones falsas las cuales ralentizan o terminan por derribar el servidor al agotar sus recursos como el CPU o la RAM del mismo.
+	Un atacante envía miles de bots al mismo tiempo para que realicen consultas en el sistema, por ejemplo consultas simultáneas al calendario de torneos.
+	Pérdida de disponibilidad en el sistema. El servidor web deja de responder; los organizadores no pueden subir resultados y los participantes no logran ver el estado del torneo al que están inscriptos.
+	Cross-site scripting (XSS)
+	Un atacante inyecta scripts maliciosos utilizando JavaScript en campos de texto que luego terminan siendo ejecutados por otros usuarios.
+	Un usuario edita su perfil de participante guardando un script dañino en su nombre. Cuando el Organizador revisa la lista de participantes el script se ejecuta en su navegador.
+	Robo de las cookies de sesión del organizador, permitiendo al atacante robar su cuenta sin conocer su contraseña.
+	Ingenieria Social
+	Usuarios del sistema son engañados o vulnerados por no seguir las políticas de seguridad y preservación de datos.
+	Un atacante se hace pasar por uno de los desarrolladores del sistema para engañar a un usuario, por ejemplo a un organizador, solicitando sus credenciales por correo con la excusa de realizar mantenimiento en la aplicación.
+	Acceso no autorizado al perfil del usuario. Si esto sucede en los roles más importantes del sistema puede llevar a la pérdida total de datos.
+	
+
+
+
+
+
+5.2 Posibles Vulnerabilidades en Infraestructura
+Posibles Vulnerabilidades en el Servidor (Web / Aplicación / Docker)
+Exposición de puertos en la red: Al utilizar herramientas de maquetado en el puerto 5500, si el sistema está configurado para escuchar de forma global (0.0.0.0), cualquier usuario de la red local podría acceder al maquetado en desarrollo sin ninguna restricción.
+Configuraciones por defecto y exposición de información: Dejar las configuraciones por defecto puede revelar rutas absolutas del servidor, versiones de software o estructuras de código ante un fallo, facilitando el diseño de un ataque dirigido.
+Malas prácticas en la configuración de contenedores Docker: Ejecutar los procesos principales dentro del contenedor utilizando el usuario root por defecto.
+Posibles Vulnerabilidades en la Base de Datos (MySQL)
+Credenciales débiles o por defecto en entornos de desarrollo: El uso de combinaciones predecibles (como usuario root sin contraseña, o contraseñas como 1234 o root) durante las primeras fases del proyecto que puedan llegar a las etapas de despliegue.
+Falta de cifrado en tránsito para conexiones de datos: Si la aplicación PHP y el gestor MySQL se comunican a través de la red interna sin forzar el uso de protocolos criptográficos, las consultas SQL y los datos sensibles (como credenciales de los usuarios) podrían ser interceptados por un atacante con acceso a la red.
+Configuración de escucha permisiva (Bind-address): Configurar el archivo de MySQL para que reciba peticiones desde cualquier dirección IP en lugar de restringirlo estrictamente a localhost o a la red interna exclusiva del contenedor de Docker, dejando la base de datos expuesta a escaneos internos de la red.
+Posibles Vulnerabilidades en la Red Interna
+Tránsito de datos en texto plano (Ausencia de HTTPS): Al utilizar el protocolo HTTP convencional, toda la información de inicio de sesión de los Administradores, Organizadores y Participantes viaja en texto plano a través de los nodos de la red local. Esto expone el sistema a ataques o interceptación de tráfico.
+Falta de segmentación de red y Firewalling: Si el servidor que aloja la aplicación web comparte el mismo segmento de red local que los usuarios comunes o dispositivos Wi-Fi públicos de la institución, un equipo en esa misma red podría realizar un escaneo de puertos o ataques de DoS directo contra el servidor sin un firewall que lo bloquee.
+
+
+________________
+5.3 Controles de Acceso y Roles de Usuario
+Gestionar Usuarios
+* El Administrador General podrá gestionar usuarios.
+* El Organizador de Torneos no podrá gestionar usuarios pero podrá verlos
+* El Participante no podrá gestionar usuarios.
+* El Usuario Público no podrá gestionar usuarios.
+Gestionar Torneos
+* El Administrador General podrá gestionar torneos y modificarlos.
+* El Organizador de Torneos podrá gestionar torneos y modificarlos.
+* El Participante no podrá gestionar ni tampoco modificar torneos pero sí podrá ver torneos.
+* El Usuario Público no podrá gestionar ni tampoco modificar torneos pero sí podrá ver torneos.
+Administración del Sistema
+* El Administrador General podrá administrar  y gestionar el sistema.
+* El Organizador de Torneos no podrá administrar, gestionar ni tampoco ver el sistema.
+* El Participante no podrá administrar, gestionar ni tampoco ver el sistema.
+* El Usuario Público no podrá administrar, gestionar ni tampoco ver el sistema.
+Registrar y Modificar Resultados
+* El Administrador General podrá registrar y modificar resultados.
+* El Organizador de Torneos podrá registrar y modificar resultados.
+* El Participante no podrá registrar y modificar resultados pero podrá verlos.
+* El Usuario Público no podrá registrar y modificar resultados pero podrá verlos.
+Crear y Modificar Torneos
+* El Administrador General podrá crear y modificar torneos.
+* El Organizador de Torneos no podrá crear pero podrá modificar torneos.
+* El Participante no podrá crear y modificar torneos pero sí podrá verlos.
+* El Usuario Público no podrá crear y modificar torneos pero sí podrá verlos.
+Crear y Modificar Reportes y Tablas del Torneo
+* El Administrador General podrá crear y modificar reportes y tablas del torneo.
+* El Organizador de Torneos podrá crear y modificar reportes y tablas del torneo.
+* El Participante no podrá crear ni modificar reportes al igual que las tablas del torneo pero sí podrá verlos.
+* El Usuario Público no podrá crear, modificar reportes al igual que las tablas del torneo pero sí podrá verlos.
+Iniciar sesión
+* El Administrador General podrá iniciar sesión.
+* El Organizador de Torneos podrá iniciar sesión.
+* El Participante podrá iniciar sesión.
+* El Usuario Público no podrá iniciar sesión pero si ver el contenido público y torneos de la página.
+Consultar Calendarios o Resultados
+* El Administrador general podrá crear, modificar y consultar calendarios y resultados.
+* El Organizador de Torneos podrá crear, modificar y consultar calendarios y resultados.
+* El Participante no podrá crear ni modificar pero sí podrá consultar y ver calendarios y resultados.
+* El Usuario Público no podrá crear ni modificar pero sí podrá consultar y ver calendarios y resultados.
+
+
+Acceder a Perfiles Públicos
+* El Administrador General podrá acceder y modificar a perfiles públicos.
+* El Organizador de Torneos podrá acceder y modificar a perfiles públicos.
+* El Participante no podrá modificar pero sí acceder a perfiles públicos.
+* El Usuario Público no podrá modificar pero sí acceder a perfiles públicos.
+Consultar Tablas y Llaves
+* El Administrador General podrá modificar y consultar tablas y llaves.
+* El Organizador de Torneos podrá modificar y consultar tablas y llaves.
+* El Participante no podrá modificar pero sí consultar tablas y llaves.
+* El Usuario Público no podrá modificar pero sí consultar tablas y llaves.
+
+
+5.4 Definición de políticas de contraseñas
+Con el objetivo de proteger las cuentas de los usuarios y reducir el riesgo de accesos no autorizados, el Sistema de Gestión Deportiva Modular (SGDM) implementará una política de contraseñas basada en buenas prácticas de seguridad informática. Estas políticas estarán orientadas a proteger la información del sistema y garantizar que cada usuario sea responsable del acceso a su cuenta.
+Las políticas definidas son las siguientes:
+* La contraseña deberá tener una longitud mínima de 8 caracteres.
+* Deberá contener al menos una letra mayúscula, una letra minúscula, un número y un carácter especial.
+* No se permitirá utilizar contraseñas comunes o fáciles de adivinar, como "12345678", "password" o el nombre del usuario.
+* Cada usuario será responsable de mantener la confidencialidad de su contraseña y no compartirla con terceros.
+* Las contraseñas serán almacenadas utilizando funciones de hash seguras, evitando guardar las claves en texto plano dentro de la base de datos.
+* En caso de detectar varios intentos fallidos de inicio de sesión, la cuenta podrá bloquearse temporalmente para disminuir el riesgo de ataques por fuerza bruta.
+* El sistema ofrecerá un mecanismo seguro para la recuperación de contraseñas mediante correo electrónico.
+* La implementación de estas políticas busca proteger la información de administradores, organizadores y participantes, reduciendo la posibilidad de accesos indebidos al sistema.
+* Políticas y medidas de seguridad
+* Debido a que el SGDM administrará información sobre usuarios, torneos, equipos y resultados, resulta necesario establecer medidas de seguridad que garanticen la confidencialidad, integridad y disponibilidad de los datos.
+* Para ello se implementarán las siguientes políticas:
+* Cada usuario tendrá permisos según su rol dentro del sistema, evitando que pueda acceder a funciones que no le correspondan.
+* Todas las entradas de datos serán validadas tanto en el frontend como en el backend para prevenir errores y posibles ataques.
+* Las contraseñas serán almacenadas mediante algoritmos de hash seguros.
+* Se utilizarán conexiones cifradas mediante HTTPS cuando el sistema sea desplegado en producción.
+* El sistema registrará acciones importantes realizadas por los administradores y organizadores mediante un registro de auditoría, permitiendo conocer quién realizó cada modificación.
+* Se realizarán respaldos periódicos de la base de datos para minimizar la pérdida de información ante fallos del servidor.
+* El servidor contará con un firewall correctamente configurado y se mantendrá actualizado con los últimos parches de seguridad.
+* Se aplicará el principio de mínimo privilegio, otorgando únicamente los permisos necesarios para que cada usuario pueda realizar sus tareas.
+* Se protegerá la aplicación frente a vulnerabilidades comunes contempladas en OWASP Top 10, como inyección SQL, Cross Site Scripting (XSS), Cross Site Request Forgery (CSRF) y control inadecuado de accesos.
+Mediante la aplicación de estas políticas se busca disminuir los riesgos de seguridad y garantizar un funcionamiento confiable del SGDM, protegiendo tanto la información almacenada como la experiencia de los usuarios.
+________________
+5.5 Políticas y medidas de seguridad
+Debido a que el SGDM administrará información sobre usuarios, torneos, equipos y resultados, resulta necesario establecer medidas de seguridad que garanticen la confidencialidad, integridad y disponibilidad de los datos.
+Para ello se implementarán las siguientes políticas:
+* Cada usuario tendrá permisos según su rol dentro del sistema, evitando que pueda acceder a funciones que no le correspondan.
+* Todas las entradas de datos serán validadas tanto en el frontend como en el backend para prevenir errores y posibles ataques.
+* Las contraseñas serán almacenadas mediante algoritmos de hash seguros.
+* Se utilizarán conexiones cifradas mediante HTTPS cuando el sistema sea desplegado en producción.
+* El sistema registrará acciones importantes realizadas por los administradores y organizadores mediante un registro de auditoría, permitiendo conocer quién realizó cada modificación.
+* Se realizarán respaldos periódicos de la base de datos para minimizar la pérdida de información ante fallos del servidor.
+* El servidor contará con un firewall correctamente configurado y se mantendrá actualizado con los últimos parches de seguridad.
+* Se aplicará el principio de mínimo privilegio, otorgando únicamente los permisos necesarios para que cada usuario pueda realizar sus tareas.
+* Se protegerá la aplicación frente a vulnerabilidades comunes contempladas en OWASP Top 10, como inyección SQL, Cross Site Scripting (XSS), Cross Site Request Forgery (CSRF) y control inadecuado de accesos.
+* Mediante la aplicación de estas políticas se busca disminuir los riesgos de seguridad y garantizar un funcionamiento confiable del SGDM, protegiendo tanto la información almacenada como la experiencia de los usuarios.
+
+
+
+
+
+
+________________
+
+
+6. Bibliografía
+Instalación de máquina virtual Fedora. (s. f.). Material didáctico del curso de Ciberseguridad. Dirección General de Educación Técnico Profesional – UTU.
+Protocolos de autenticación. (s. f.). Material didáctico del curso de Ciberseguridad. Dirección General de Educación Técnico Profesional – UTU.
+Servidor OpenSSH en Linux. (s. f.). Material didáctico del curso de Ciberseguridad. Dirección General de Educación Técnico Profesional – UTU.
+Tanenbaum, A. S. (2015). Sistemas operativos modernos (4.ª ed.). Pearson Education.
+7. Anexos
