@@ -1,0 +1,386 @@
+:root {
+    --fondo-tarjeta-oscuro: #1c1d21;      
+    --fondo-pagina-principal: #111112;    
+    --texto-claro: #ffffff;               
+    --texto-atenuado: #aaaaaa;            
+    --linea-borde: #333334;               
+    --familia-fuente: system-ui, -apple-system, sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--familia-fuente);
+    background-color: var(--fondo-pagina-principal);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+
+/*==============1. CONTENEDOR PRINCIPAL ======================*/
+
+.pagina-registro {
+    width: 100%;
+    min-height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 20px;
+
+    background-color: var(--fondo-pagina-principal);
+}
+
+
+/*==============2. TARJETA DE REGISTRO ======================*/
+
+.tarjeta-registro {
+    background-color: var(--fondo-tarjeta-oscuro);
+
+    width: 100%;
+    max-width: 380px;
+
+    padding: 3rem 2rem;
+
+    border-radius: 16px;
+
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+
+    text-align: center;
+
+    color: var(--texto-claro);
+}
+
+
+/*==============3. CONTENEDOR Y PROPORCIONES DEL LOGO ======================*/
+
+.contenedor-logo-registro {
+    margin-bottom: 1.8rem;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+}
+
+.logo-registro {
+    width: 70px;
+
+    height: auto;
+
+    object-fit: contain;
+}
+
+
+/*==============4. ENCABEZADO ======================*/
+
+.encabezado-registro {
+    text-align: center;
+
+    margin-bottom: 2.5rem;
+}
+
+.encabezado-registro h1 {
+    font-size: 1.2rem;
+
+    color: var(--texto-claro);
+
+    margin-bottom: 8px;
+
+    font-weight: 500;
+}
+
+.encabezado-registro p {
+    font-size: 0.9rem;
+
+    color: var(--texto-atenuado);
+
+    line-height: 1.5;
+}
+
+
+/*==============5. MENSAJE DE ERROR ======================*/
+
+.mensaje-registro {
+    width: 100%;
+
+    padding: 10px 0;
+
+    margin-bottom: 1.8rem;
+
+    font-size: 0.85rem;
+
+    text-align: center;
+
+    color: #e6a0a0;
+
+    background-color: transparent;
+
+    border: none;
+
+    border-bottom: 1px solid rgba(180, 40, 40, 0.5);
+
+    line-height: 1.4;
+}
+
+.mensaje-registro.error {
+    background-color: transparent;
+
+    border: none;
+
+    border-bottom: 1px solid rgba(180, 40, 40, 0.5);
+
+    color: #e6a0a0;
+}
+
+
+/*==============6. FORMULARIO DE REGISTRO ======================*/
+
+.formulario-registro {
+    display: flex;
+
+    flex-direction: column;
+
+    width: 100%;
+}
+
+
+/*==============7. GRUPOS DEL FORMULARIO ======================*/
+
+.grupo-formulario {
+    margin-bottom: 1.8rem;
+
+    text-align: left;
+
+    width: 100%;
+
+    display: flex;
+
+    flex-direction: column;
+}
+
+
+/*==============8. ETIQUETAS ======================*/
+
+.grupo-formulario label {
+    color: var(--texto-atenuado);
+
+    font-size: 0.85rem;
+
+    font-weight: 500;
+
+    margin-bottom: 6px;
+}
+
+
+/*==============9. INPUTS ======================*/
+
+.grupo-formulario input {
+    width: 100%;
+
+    padding: 10px 0;
+
+    border: none;
+
+    border-bottom: 2px solid var(--linea-borde);
+
+    border-radius: 0;
+
+    font-size: 1rem;
+
+    color: var(--texto-claro);
+
+    background: transparent;
+
+    font-family: var(--familia-fuente);
+
+    outline: none;
+
+    transition: border-color 0.3s;
+}
+
+
+/*==============10. INPUTS AL SELECCIONAR ======================*/
+
+.grupo-formulario input:focus {
+    outline: none;
+
+    border-bottom-color: var(--texto-claro);
+
+    box-shadow: none;
+}
+
+.grupo-formulario input::placeholder {
+    color: var(--texto-atenuado);
+}
+
+
+/*==============11. ROL DEL USUARIO ======================*/
+
+.formulario-registro input[type="hidden"] {
+    display: none;
+}
+
+
+/*==============12. BOTÓN PRINCIPAL DE REGISTRO ======================*/
+
+.boton-registro {
+    width: 100%;
+
+    background-color: var(--texto-claro);
+
+    color: var(--fondo-pagina-principal);
+
+    border: none;
+
+    padding: 14px;
+
+    border-radius: 25px;
+
+    margin-top: 5px;
+
+    font-family: var(--familia-fuente);
+
+    font-size: 0.95rem;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: background-color 0.3s;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.5px;
+}
+
+.boton-registro:hover {
+    background-color: #e5e5e5;
+}
+
+.boton-registro:active {
+    transform: none;
+}
+
+
+/*==============13. ENLACE PARA INICIAR SESIÓN ======================*/
+
+.enlace-inicio-sesion {
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    flex-wrap: wrap;
+
+    gap: 5px;
+
+    margin-top: 24px;
+
+    color: var(--texto-atenuado);
+
+    font-size: 0.9rem;
+}
+
+.enlace-inicio-sesion a {
+    color: var(--texto-claro);
+
+    font-weight: 600;
+
+    text-decoration: none;
+
+    transition: color 0.2s;
+}
+
+.enlace-inicio-sesion a:hover {
+    text-decoration: underline;
+
+    color: var(--texto-claro);
+}
+
+
+/*==============14. VOLVER AL INICIO ======================*/
+
+.contenedor-volver {
+    display: flex;
+
+    justify-content: center;
+
+    margin-top: 20px;
+}
+
+.contenedor-volver a {
+    color: var(--texto-atenuado);
+
+    text-decoration: none;
+
+    font-size: 0.85rem;
+
+    transition: color 0.2s;
+}
+
+.contenedor-volver a:hover {
+    color: var(--texto-claro);
+}
+
+
+/*==============15. VERSIÓN MÓVIL ======================*/
+
+@media (max-width: 480px) {
+
+    .pagina-registro {
+        padding: 18px 12px;
+    }
+
+    .tarjeta-registro {
+        padding: 30px 22px;
+
+        border-radius: 16px;
+    }
+
+    .logo-registro {
+        width: 65px;
+    }
+
+    .encabezado-registro h1 {
+        font-size: 1.2rem;
+    }
+
+    .encabezado-registro p {
+        font-size: 0.8rem;
+    }
+
+    .grupo-formulario input {
+        padding: 10px 0;
+    }
+}
+
+
+/*==============16. VERSIÓN DE ESCRITORIO ======================*/
+
+@media (min-width: 1024px) {
+
+    .tarjeta-registro {
+        max-width: 380px;
+
+        padding: 3rem 2rem;
+    }
+
+    .logo-registro {
+        width: 70px;
+    }
+
+    .encabezado-registro h1 {
+        font-size: 1.2rem;
+    }
+}
