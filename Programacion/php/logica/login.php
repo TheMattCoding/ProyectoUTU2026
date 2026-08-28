@@ -1,7 +1,7 @@
 <?php
 session_start();
+require_once '../db.php';
 
-// Si ya tiene sesión iniciada (no es visitante), redirigir
 if (isset($_SESSION['usuario'])) {
     header('Location: ../inicio.php');
     exit();
@@ -10,25 +10,40 @@ if (isset($_SESSION['usuario'])) {
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $correo = $_POST['correo'] ?? '';
-    $contrasena = $_POST['contrasena'] ?? '';
+    $correo     = trim($_POST['correo'] ?? '');
+    $contrasena = trim($_POST['contrasena'] ?? '');
 
-    // --- BASE DE DATOS FICTICIA DE PRUEBA ---
-    $usuarios_db = [
-        'admin@gmail.com' => ['pass' => '123456', 'rol' => 'administrador'],
-        'orga@gmail.com'  => ['pass' => '123456', 'rol' => 'organizador'],
-        'user@gmail.com'  => ['pass' => '123456', 'rol' => 'usuario']
-    ];
+    if (!empty($correo) && !empty($contrasena)) {
+        try {
+            // Consulta relacionando la tabla USUARIOS con ROLES
+            $sql = "SELECT u.*, r.nombre_rol AS nombre_rol 
+                    FROM USUARIOS u
+                    LEFT JOIN ROLES r ON u.id_rol = r.id_rol
+                    WHERE u.email = :correo LIMIT 1";
 
-    if (isset($usuarios_db[$correo]) && $usuarios_db[$correo]['pass'] === $contrasena) {
-        // Guardar correo y rol en la sesión
-        $_SESSION['usuario'] = $correo;
-        $_SESSION['rol']     = $usuarios_db[$correo]['rol'];
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([':correo' => $correo]);
+            $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        header('Location: ../inicio.php'); 
-        exit();
+            // Verifica la contraseña (soporta texto plano o hash seguro)
+            if ($usuario && ($contrasena === $usuario['password_hash'] || password_verify($contrasena, $usuario['password_hash']))) {
+                
+                $_SESSION['id_usuario'] = $usuario['id_usuario'];
+                $_SESSION['usuario']    = $usuario['username'];
+                $_SESSION['correo']     = $usuario['email'];
+                // Guarda el nombre del rol (o 'usuario' si no se encuentra relación)
+                $_SESSION['rol']        = $usuario['nombre_rol'] ?? 'usuario';
+
+                header('Location: ../inicio.php'); 
+                exit();
+            } else {
+                $error = 'Correo o contraseña incorrectos.';
+            }
+        } catch (PDOException $e) {
+            $error = 'Error al verificar credenciales en la base de datos.';
+        }
     } else {
-        $error = 'Correo o contraseña incorrectos.';
+        $error = 'Por favor completa todos los campos.';
     }
 }
 ?>
@@ -51,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <h1 class="saludo">¡Hola! Que gusto verte de nuevo</h1>
 
         <?php if (!empty($error)): ?>
-            <p style="color: #ff4d4d; text-align: center; margin-bottom: 15px; font-weight: bold;"><?php echo $error; ?></p>
+            <p style="color: #ff4d4d; text-align: center; margin-bottom: 15px; font-weight: bold;"><?php echo htmlspecialchars($error); ?></p>
         <?php endif; ?>
 
         <form class="formulario-login" action="" method="POST">

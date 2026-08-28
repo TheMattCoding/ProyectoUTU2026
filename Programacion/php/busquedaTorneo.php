@@ -3,31 +3,30 @@ require_once 'logica/auth.php';
 require_once 'db.php';
 
 $rolActual = $_SESSION['rol'] ?? 'visitante';
+$busqueda  = trim($_GET['query'] ?? '');
 
-// Capturar término enviado por la URL (GET)
-$busqueda = isset($_GET['query']) ? trim($_GET['query']) : '';
-$torneos = [];
+// Comodines % para la búsqueda parcial por coincidencia de letras/palabras
+$paramBusqueda = '%' . $busqueda . '%';
 
-if (!empty($busqueda)) {
-    // Buscar coincidencia en el nombre del torneo o nombre del módulo/disciplina
-    $sql = "SELECT t.id_torneo, t.nombre_torneo, t.fecha_inicio, m.nombre_modulo AS disciplina
-            FROM TORNEOS t
-            LEFT JOIN MODULOS_COMPETENCIA m ON t.id_modulo = m.id_modulo
-            WHERE t.nombre_torneo LIKE :busqueda OR m.nombre_modulo LIKE :busqueda
-            ORDER BY t.fecha_inicio DESC";
-            
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute([':busqueda' => '%' . $busqueda . '%']);
-    $torneos = $stmt->fetchAll();
-} else {
-    // Si la búsqueda está vacía, mostramos los últimos torneos creados
-    $sql = "SELECT t.id_torneo, t.nombre_torneo, t.fecha_inicio, m.nombre_modulo AS disciplina
-            FROM TORNEOS t
-            LEFT JOIN MODULOS_COMPETENCIA m ON t.id_modulo = m.id_modulo
-            ORDER BY t.fecha_inicio DESC LIMIT 12";
-    $stmt = $pdo->query($sql);
-    $torneos = $stmt->fetchAll();
-}
+// Asignamos marcadores de posición independientes (:q1, :q2) para evitar el error HY093
+$sql = "SELECT t.*, 
+               m.nombre_modulo AS disciplina,
+               c.max_participantes,
+               (SELECT COUNT(*) FROM INSCRIPCIONES_TORNEO i WHERE i.id_torneo = t.id_torneo) AS total_inscritos
+        FROM TORNEOS t
+        LEFT JOIN MODULOS_COMPETENCIA m ON t.id_modulo = m.id_modulo
+        LEFT JOIN CONFIGURACION_TORNEO c ON t.id_torneo = c.id_torneo
+        WHERE t.nombre_torneo LIKE :q1 
+           OR m.nombre_modulo LIKE :q2
+        ORDER BY t.id_torneo DESC";
+
+$stmt = $pdo->prepare($sql);
+$stmt->execute([
+    ':q1' => $paramBusqueda,
+    ':q2' => $paramBusqueda
+]);
+
+$torneos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -55,11 +54,11 @@ if (!empty($busqueda)) {
             <a href="calendario.php" class="sidebar-link">Calendario de torneos</a>
 
             <?php if (in_array($rolActual, ['organizador', 'administrador'])): ?>
-                <a href="formularioTorneo.php" class="sidebar-link">Crea tu torneo</a>
                 <a href="organizador.php" class="sidebar-link">Panel Organizador</a>
             <?php endif; ?>
 
             <?php if ($rolActual === 'administrador'): ?>
+                <a href="formularioTorneo.php" class="sidebar-link">Crea tu torneo</a>
                 <a href="dashboard.php" class="sidebar-link">Panel Administrador</a>
             <?php endif; ?>
 
