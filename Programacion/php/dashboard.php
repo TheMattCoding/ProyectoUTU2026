@@ -28,8 +28,8 @@ requerirRol('administrador');
         <nav class="sidebar-nav">
             <a href="inicio.php" class="sidebar-link">Inicio</a>
             <a href="calendario.php" class="sidebar-link">Calendario de torneos</a>
-            <a href="formularioTorneo.php" class="sidebar-link">Crea tu torneo</a>
             <a href="organizador.php" class="sidebar-link">Panel Organizador</a>
+            <a href="formularioTorneo.php" class="sidebar-link">Crea tu torneo</a>
             <a href="dashboard.php" class="sidebar-link active">Panel Administrador</a>
             <a href="configuracion.php" class="sidebar-link">Configuración</a>
         </nav>
@@ -158,7 +158,7 @@ requerirRol('administrador');
     <main class="main-container">
         
         <header class="cabecera-panel">
-            <h2>Panel de Control Organizador</h2>
+            <h2>Panel de Control Administrador</h2>
             <p class="estado-sistema">● Servidor Activo</p>
         </header>
 

@@ -139,3 +139,8 @@ CREATE TABLE AUDITORIA (
     fecha_hora DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (id_usuario) REFERENCES USUARIOS(id_usuario) ON DELETE RESTRICT ON UPDATE CASCADE
 );
+INSERT INTO USUARIOS (username, email, password_hash, id_rol) 
+VALUES 
+    ('administrador', 'admin@gmail.com', '123456', 1),
+    ('organizador', 'orga@gmail.com', '123456', 2),
+    ('usuario', 'user@gmail.com', '123456', 3);

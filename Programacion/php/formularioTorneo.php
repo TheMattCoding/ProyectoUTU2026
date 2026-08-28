@@ -99,11 +99,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <a href="calendario.php" class="sidebar-link">Calendario de torneos</a>
 
             <?php if (in_array($rolActual, ['organizador', 'administrador'])): ?>
-                <a href="formularioTorneo.php" class="sidebar-link active">Crea tu torneo</a>
                 <a href="organizador.php" class="sidebar-link">Panel Organizador</a>
             <?php endif; ?>
 
             <?php if ($rolActual === 'administrador'): ?>
+                <a href="formularioTorneo.php" class="sidebar-link active">Crea tu torneo</a>
                 <a href="dashboard.php" class="sidebar-link">Panel Administrador</a>
             <?php endif; ?>
 

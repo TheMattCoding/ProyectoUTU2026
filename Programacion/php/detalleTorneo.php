@@ -5,6 +5,7 @@ require_once 'db.php';
 $rolActual = $_SESSION['rol'] ?? 'visitante';
 
 $idTorneo = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+$idUsuarioActual = $_SESSION['id_usuario'] ?? null;
 
 if (!$idTorneo) {
     header('Location: busquedaTorneo.php');
@@ -46,6 +47,17 @@ $nombreCreador = !empty($torneo['id_creador']) ? 'Organizador #' . $torneo['id_c
 $fechaFormateada = !empty($torneo['fecha_inicio']) 
     ? date('d/m/Y - h:i A', strtotime($torneo['fecha_inicio'])) 
     : 'Por confirmar';
+    $yaInscrito = false;
+
+$yaInscrito = false;
+if ($idUsuarioActual && $idTorneo) {
+    $stmtCheck = $pdo->prepare("SELECT COUNT(*) FROM INSCRIPCIONES_TORNEO WHERE id_torneo = :id_torneo AND id_participante = :id_usuario");
+    $stmtCheck->execute([
+        ':id_torneo'  => $idTorneo,
+        ':id_usuario' => $idUsuarioActual
+    ]);
+    $yaInscrito = $stmtCheck->fetchColumn() > 0;
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -77,11 +89,11 @@ $fechaFormateada = !empty($torneo['fecha_inicio'])
             <a href="calendario.php" class="sidebar-link">Calendario de torneos</a>
 
             <?php if (in_array($rolActual, ['organizador', 'administrador'])): ?>
-                <a href="formularioTorneo.php" class="sidebar-link">Crea tu torneo</a>
                 <a href="organizador.php" class="sidebar-link">Panel Organizador</a>
             <?php endif; ?>
 
             <?php if ($rolActual === 'administrador'): ?>
+                <a href="formularioTorneo.php" class="sidebar-link">Crea tu torneo</a>
                 <a href="dashboard.php" class="sidebar-link">Panel Administrador</a>
             <?php endif; ?>
 
@@ -226,11 +238,51 @@ $fechaFormateada = !empty($torneo['fecha_inicio'])
             </div>
             </section>
 
-        <?php if ($rolActual !== 'visitante'): ?>
-            <button class="btn-inscribirse">Inscribirse Ahora</button>
-        <?php else: ?>
-            <a href="logica/login.php" class="btn-inscribirse" style="display: block; text-align: center; text-decoration: none;">Inicia sesión para inscribirte</a>
-        <?php endif; ?>
+        <!-- Botón dinámico -->
+    <?php if ($yaInscrito): ?>
+        <button type="button" id="btn-inscrito" class="btn-principal btn-deshabilitado" disabled>
+            ✓ YA ESTÁS PARTICIPANDO
+        </button>
+    <?php else: ?>
+        <button type="button" id="btn-abrir-modal" class="btn-principal">
+            INSCRIBIRSE AHORA
+        </button>
+    <?php endif; ?>
+
+<!-- Ventana Flotante Modal -->
+    <div id="modal-inscripcion" class="modal-overlay">
+        <div class="modal-contenido">
+            <button type="button" id="btn-cerrar-modal" class="modal-cerrar">&times;</button>
+            <h3>Inscripción al Torneo</h3>
+            <p style="margin-bottom: 15px; color: #ccc;">Ingresa los datos para confirmar tu participación.</p>
+        
+            <form action="logica/inscribir.php" method="POST">
+                <input type="hidden" name="id_torneo" value="<?php echo $idTorneo; ?>">
+            
+                <div class="grupo-entrada" style="margin-bottom: 15px;">
+                    <label for="nombre_equipo" style="display:block; margin-bottom: 5px;">Nombre del Equipo / Participante:</label>
+                    <input type="text" id="nombre_equipo" name="nombre_equipo" required placeholder="Ej: Epsilon FC / Tu Nombre" class="control-formulario-entrada" style="width: 100%; padding: 10px; border-radius: 6px;">
+                </div>
+
+                <button type="submit" class="btn-principal">
+                    CONFIRMAR INSCRIPCIÓN
+                </button>
+            </form>
+        </div>
+    </div>
+
+<!-- Cargar el script JavaScript -->
+<script src="../js/modalInscripcion.js"></script>
+
+<?php if (isset($_GET['estado']) && $_GET['estado'] === 'inscrito'): ?>
+    <div style="background-color: #1b4332; color: #2ec4b6; border: 1px solid #2ec4b6; padding: 12px; border-radius: 8px; margin-bottom: 20px; text-align: center;">
+        ✓ ¡Te has inscrito exitosamente al torneo!
+    </div>
+<?php elseif (isset($_GET['estado']) && $_GET['estado'] === 'error'): ?>
+    <div style="background-color: #4a151b; color: #ff6b6b; border: 1px solid #ff6b6b; padding: 12px; border-radius: 8px; margin-bottom: 20px; text-align: center;">
+        ✕ Ocurrió un error al procesar tu inscripción. Inténtalo nuevamente.
+    </div>
+<?php endif; ?>
 
     </main>
 
