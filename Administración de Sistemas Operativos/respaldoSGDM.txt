@@ -1,0 +1,78 @@
+#!/bin/bash
+
+
+#CONFIGURACION PARA COMANDOS CON CRON
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+
+#CONFIGURACIÓN DE RUTAS
+DIRECTORIO_RESPALDO="/var/respaldos/sgdm"
+DIRECTORIO_APP="/opt/lampp/htdocs/sgdm"
+MYSQLDUMP_PATH="/opt/lampp/bin/mysqldump"
+
+FECHA=$(date +"%Y%m%d_%H%M%S")
+NOMBRE_RESPALDO="sgdm_respaldo_${FECHA}"
+CARPETA_DESTINO="${DIRECTORIO_RESPALDO}/${NOMBRE_RESPALDO}"
+
+#ELIMINAR CARPETAS TEMPORALES
+trap 'rm -rf "${CARPETA_DESTINO}"' EXIT
+
+#BASE DE DATOS
+USUARIO_BD="root"
+CLAVE_BD=""
+NOMBRE_BD="sgdm_db"
+HOST_BD="127.0.0.1"
+
+#CREACION DE CARPETA
+mkdir -p "${CARPETA_DESTINO}"
+
+echo "[$(date +'%Y-%m-%d %H:%M:%S')] Iniciando respaldo del SGDM..."
+
+
+#1. RESPALDO BASE DE DATOS
+if [ -z "${CLAVE_BD}" ]; then
+    "${MYSQLDUMP_PATH}" -h "${HOST_BD}" -u "${USUARIO_BD}" "${NOMBRE_BD}" > "${CARPETA_DESTINO}/base_de_datos.sql" 2>/dev/null
+else
+    "${MYSQLDUMP_PATH}" -h "${HOST_BD}" -u "${USUARIO_BD}" -p"${CLAVE_BD}" "${NOMBRE_BD}" > "${CARPETA_DESTINO}/base_de_datos.sql" 2>/dev/null
+fi
+
+if [ $? -eq 0 ]; then
+    echo "[OK] Respaldo exitoso de la BDD."
+else
+    echo "[ERROR] Falló el respaldo de la BDD."
+    exit 1
+fi
+
+
+#2. RESPALDO DE ARCHIVOS
+tar -czf "${CARPETA_DESTINO}/archivos_app.tar.gz" -C "${DIRECTORIO_APP}" .
+
+if [ $? -eq 0 ]; then
+    echo "[OK] Archivos respaldados con exito."
+else
+    echo "[ERROR] Falló el respaldo de archivos."
+    exit 1
+fi
+
+
+#3. COMPRIMIR EL RESPALDO
+cd "${DIRECTORIO_RESPALDO}" || exit
+tar -czf "${NOMBRE_RESPALDO}.tar.gz" "${NOMBRE_RESPALDO}"
+rm -rf "${CARPETA_DESTINO}"
+
+echo "[OK] Archivo creado: ${DIRECTORIO_RESPALDO}/${NOMBRE_RESPALDO}.tar.gz"
+
+
+#4. MANTENER LOS ULTIMOS 4 RESPALDOS
+cd "${DIRECTORIO_RESPALDO}" || exit
+CANTIDAD_RESPALDOS=$(ls -1t sgdm_respaldo_*.tar.gz 2>/dev/null | wc -l)
+
+if [ "${CANTIDAD_RESPALDOS}" -gt 4 ]; then
+    echo "[INFO] Se encontraron ${CANTIDAD_RESPALDOS} respaldos. Conservando los 4 más recientes..."
+    ls -1t sgdm_respaldo_*.tar.gz | tail -n +5 | while read -r RESPALDO_VIEJO; do
+        rm -f "${RESPALDO_VIEJO}"
+        echo "[BORRADO] Respaldo eliminado: ${RESPALDO_VIEJO}"
+    done
+fi
+
+echo "[FIN] Proceso completado exitosamente."
