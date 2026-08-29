@@ -98,7 +98,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
 
         <div class="enlace-registro">
-            ¿No tienes una cuenta? <a href="#">Registrar</a>
+            ¿No tienes una cuenta? 
+            <a href="registro.php">Registrar</a>
         </div>
     </div>
 </body>
