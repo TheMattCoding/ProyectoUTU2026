@@ -64,6 +64,7 @@ CREATE TABLE TORNEOS (
     id_organizador INT NOT NULL,
     lugar VARCHAR(100),
     fecha_inicio DATE,
+    hora_inicio TIME,
     fecha_fin DATE,
     estado VARCHAR(20) DEFAULT 'pendiente',
     privacidad VARCHAR(20) DEFAULT 'publico',
@@ -79,6 +80,7 @@ CREATE TABLE CONFIGURACION_TORNEO (
     puntos_empate INT DEFAULT 1,
     puntos_derrota INT DEFAULT 0,
     max_participantes INT,
+    formato VARCHAR(100) NOT NULL,
     FOREIGN KEY (id_torneo) REFERENCES TORNEOS(id_torneo) ON DELETE CASCADE ON UPDATE CASCADE
 );
 

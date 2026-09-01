@@ -33,7 +33,7 @@ $torneos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SGDM - Plataforma de Torneos</title>
+    <title>SGDM - Resultados de Búsqueda</title>
     <link rel="stylesheet" href="../css/inicio.css">
     <link rel="stylesheet" href="../css/busqueda.css">
     <link rel="icon" type="image/png" href="../img/logoapp2.jpeg">
@@ -63,6 +63,7 @@ $torneos = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <?php endif; ?>
 
             <?php if ($rolActual !== 'visitante'): ?>
+                <a href="equipo.php" class="sidebar-link">Equipos</a>
                 <a href="configuracion.php" class="sidebar-link">Configuración</a>
             <?php endif; ?>
         </nav>
