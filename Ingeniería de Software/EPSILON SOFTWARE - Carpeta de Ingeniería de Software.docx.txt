@@ -122,24 +122,32 @@ Este documento es un seguimiento de la materia de Ingeniería de Software la cua
 
 
 5.1 Organización del equipo (Mantei y Constantine)
-Elegimos una organización Descentralizada Democrática (Mantei) y una Organización Abierta (Constantine).
-Fundamentación:
-La elección de estos modelos de organización se justifica porque el desarrollo del Sistema de Gestión Deportiva Modular (SGDM) requiere una comunicación constante entre los integrantes del equipo y una participación activa en la toma de decisiones. Durante el desarrollo del proyecto, las decisiones relacionadas con el diseño, la implementación y las correcciones se toman de forma conjunta mediante el consenso del grupo, favoreciendo el intercambio de ideas y la resolución colaborativa de los problemas.
-Elegimos la organización Descentralizada Democrática, propuesta por Mantei, porque este modelo plantea que el equipo trabaja y decide en conjunto, sin depender de un líder central, promoviendo la comunicación horizontal y la participación de todos los integrantes.  Asimismo, seleccionamos la Organización Abierta, definida por Constantine, ya que se caracteriza por un equipo que discute, trabaja y toma decisiones de manera colaborativa, priorizando el trabajo conjunto y las decisiones compartidas. 
-En nuestro proyecto, aunque cada integrante posee un rol principal para organizar el trabajo y evitar superposiciones de tareas, existe flexibilidad para colaborar en otras áreas cuando es necesario. Además, las pruebas del sistema se realizan de forma cruzada entre los miembros del equipo, permitiendo detectar errores, compartir conocimientos y garantizar un desarrollo más ordenado y de mayor calidad. Esta forma de organización favorece la coordinación, el cumplimiento de los objetivos del proyecto y el aprovechamiento de las capacidades de todos los integrantes.
+Fundamentación
+Elegimos una organización Descentralizada Controlada, según Mantei, y una Organización Abierta, según Constantine.
+La elección de estos modelos se debe a la forma en que nuestro equipo organiza y desarrolla el proyecto. Contamos con un coordinador, Mateo Comini, y una subcoordinadora, Sophia Brum, quienes se encargan de organizar y coordinar el trabajo del equipo. Sin embargo, las decisiones importantes relacionadas con el proyecto se discuten entre todos los integrantes.
+Consideramos que nuestra organización es Descentralizada Controlada porque, si bien existen personas encargadas de la coordinación y organización del equipo, los demás integrantes también participan activamente en el desarrollo del proyecto y en la toma de decisiones. Esto permite mantener una estructura y una mejor organización del trabajo sin que todas las decisiones dependan únicamente de una sola persona.
+Por otra parte, elegimos la Organización Abierta de Constantine porque existe una comunicación constante entre los integrantes del equipo y se busca trabajar de forma colaborativa. Cada integrante tiene tareas y responsabilidades principales, pero puede colaborar con los demás cuando es necesario.
+Esta forma de organización nos permite mantener una buena comunicación, distribuir mejor las tareas y trabajar en conjunto para cumplir con los objetivos del proyecto.
 ________________
 5.2 Roles dentro del equipo
-Aunque cada integrante tiene un rol principal para organizar el trabajo, en la práctica todos colaboramos en las distintas tareas del proyecto. Nos apoyamos entre nosotros, compartimos ideas y participamos en las decisiones importantes, por lo que los roles sirven como una guía y no como una división estricta del trabajo.
-Mateo Comini – Programación Full Stack y Ciberseguridad:
-Tiene asignada como área principal la Programación Full Stack y Ciberseguridad, siendo el responsable del desarrollo de la aplicación y de los aspectos relacionados con la seguridad del sistema. Además, desempeña el rol de Representante del equipo, coordinando las actividades generales del proyecto, organizando el trabajo junto al resto de los integrantes y realizando el seguimiento de las tareas para asegurar que los objetivos de cada entrega se cumplan en tiempo y forma. 
-Santiago Crespo – Base de Datos y Tutoría del proyecto:
-Santiago tiene asignada como área principal la Base de Datos del sistema, siendo el encargado de participar en su diseño, organización e integración durante las siguientes etapas del proyecto. Asimismo, cumple un rol en Tutoría de Proyecto UTULAB, colaborando en la planificación de actividades, el seguimiento de las tareas acordadas y la organización del trabajo durante las distintas etapas del desarrollo. Como el resto del equipo, también participa en tareas de documentación, diseño y análisis cuando el proyecto lo requiere. 
-Thiago Iglesias – Ingeniería de Software y Documentación Técnica:
-Thiago tiene como principal área de responsabilidad Ingeniería de Software y la documentación técnica del proyecto. Entre sus tareas se encuentran la planificación del desarrollo, la definición y aplicación de las metodologías de trabajo adoptadas por el equipo, la organización de la documentación correspondiente a cada entrega y la fundamentación de las decisiones tomadas durante el proyecto. También participa en la coordinación de tareas, el análisis de requisitos y otras actividades necesarias para el correcto avance del proyecto. 
+Aunque cada integrante tiene un rol principal dentro del equipo, todos colaboramos en las diferentes tareas del proyecto. Nos apoyamos entre nosotros, compartimos ideas y participamos en las decisiones importantes, por lo que los roles sirven principalmente para organizar el trabajo y distribuir las responsabilidades.
+Mateo Comini – Programador y Coordinador:
+Mateo tiene el rol de Programador, participando en el desarrollo e implementación del sistema. Además, cumple el rol de Coordinador del equipo, siendo responsable de organizar las actividades generales, realizar el seguimiento de las tareas y coordinar el trabajo junto con los demás integrantes para cumplir con los objetivos de cada entrega.
+Thiago Iglesias – Analista y Documentador:
+Thiago cumple el rol de Analista, participando principalmente en el análisis de los requisitos y necesidades del sistema, la planificación del proyecto y la elaboración de la documentación necesaria. También participa activamente en las demás tareas relacionadas con el desarrollo del proyecto, colaborando con el equipo y aportando en las distintas etapas.
+Sophia Brum – Diseñadora y Subcoordinadora:
+Sophia cumple el rol de Diseñadora, participando en los aspectos relacionados con el diseño del sistema. Además, desempeña el rol de Subcoordinadora, apoyando a Mateo en la organización del equipo, el seguimiento de las tareas y el cumplimiento de los objetivos establecidos para cada entrega.
+Santiago Crespo – Programador:
+Santiago cumple el rol de Programador, participando en el desarrollo e implementación de las diferentes partes del sistema. También colabora con el resto del equipo en las tareas que sean necesarias durante las distintas etapas del proyecto.
+Áreas de responsabilidad
+Además de los roles definidos dentro del equipo, cada integrante tiene áreas de responsabilidad relacionadas con las diferentes asignaturas del proyecto:
+* Mateo Comini: Programación Full Stack y Ciberseguridad.
+* Thiago Iglesias: Ingeniería de Software y Documentación Técnica.
+* Sophia Brum: Administración de Sistemas Operativos y Diagramas.
+* Santiago Crespo: Base de Datos y Tutoría del Proyecto UTULAB.
+Esta organización permite distribuir y organizar mejor el trabajo, manteniendo al mismo tiempo la colaboración entre todos los integrantes del equipo.
 
 
-Sophia – Administración de Sistemas Operativos: 
-Tiene asignada como área principal la Administración de Sistemas Operativos, participando en las actividades correspondientes a esta asignatura y en los aspectos relacionados con la infraestructura del sistema. Además, desempeña el rol de Sub-Coordinadora del proyecto, colaborando en la organización del equipo, el seguimiento de las tareas asignadas y verificando que cada integrante realice sus actividades y las entregue en tiempo y forma. También brinda apoyo en la planificación de las reuniones y en el cumplimiento de los objetivos establecidos para cada entrega. 
 5.3 Reglas del grupo (Código de convivencia)
 1° regla: Todo integrante deberá asistir a un 75% de las reuniones de proyecto durante cada período de entrega.
 2° regla: Cada integrante tendrá un máximo de 2 días fuera de fecha para entregar sus tareas. Solo si tiene un 50% de sus tareas hechas.
@@ -161,7 +169,7 @@ ________________
 5.4 Ciclo de vida del proyecto 
 Elegimos el Modelo Incremental, estructurando el desarrollo en base a las tres entregas obligatorias del proyecto de la UTU.
 Fundamentación:
-La elección de este modelo se justifica porque el proyecto se desarrolla mediante entregas parciales establecidas por la institución y porque el equipo organiza el trabajo en reuniones semanales, en las que se planifican, desarrollan, prueban y entregan funcionalidades de manera progresiva. Estas características hacen conveniente dividir el desarrollo en incrementos funcionales.
+La elección de este modelo se justifica porque el proyecto se desarrolla mediante entregas parciales establecidas por la institución. Esta característica hace conveniente dividir el desarrollo en incrementos funcionales.
 Elegimos el Modelo Incremental teniendo en cuenta lo planteado por Pressman (2010), quien sostiene que este modelo consiste en desarrollar el software mediante una serie de incrementos, donde cada uno incorpora nuevas funcionalidades hasta completar el producto final. Por esta razón, consideramos que es el modelo más adecuado para nuestro proyecto.
 En nuestro caso, cada entrega obligatoria representa un incremento del sistema, en el que se incorporan nuevas funcionalidades sin necesidad de esperar a finalizar todo el desarrollo. De esta manera, el modelo incremental se adapta a la planificación académica de la UTU y permite controlar el avance del proyecto de forma ordenada, continua y progresiva.
 
@@ -282,6 +290,1328 @@ ________________
 5.9 Identificación de roles y perfiles de usuario de la aplicación con sus responsabilidades y nivel de acceso (tabla de datos)
   
 ________________
+
+PLANILLAS DE CASOS DE USO
+SGDM – Sistema de Gestión Deportiva Modular
+
+
+RF-UNA-01
+Caso de uso: RF-UNA-01
+	Registrar una nueva cuenta
+	Actores:
+	Usuario público
+	Propósito
+	Registrar una nueva cuenta para poder utilizar las funcionalidades disponibles para usuarios registrados.
+	Resumen
+	El usuario público ingresa los datos personales requeridos, su correo electrónico o con credenciales de plataformas. El sistema recibe y registra la información para crear la cuenta.
+	Precondiciones
+	El usuario no debe tener una cuenta registrada previamente con los datos utilizados.
+	Postcondiciones
+	La nueva cuenta queda registrada en el sistema.
+	Dependencias
+	No presenta.
+	Curso Base
+	Actor
+	Sistema
+	1. Ingresa datos personales requeridos.
+	
+
+	2. Ingresa correo eléctronico
+	
+
+	3. Ingresa una contraseña nueva
+	
+
+	
+
+	4. Validar los datos ingresados.
+	
+
+	5. Registra la nueva cuenta.
+	
+
+	6. Confirma que la cuenta fue registrada.
+	Curso Alternativo
+	Situación
+	Sistema
+	Alternativa 1: Datos erróneos o límites de plataforma.
+	Informa al usuario que los datos no son válidos o que no se puede completar el registro.
+	________________
+RF-UNA-02
+Caso de uso: RF-UNA-02
+	Ingresar como visitante
+	Actores
+	Usuario público
+	Propósito
+	Acceder a la información pública de la plataforma sin registrarse.
+	Resumen
+	El usuario selecciona la opción para ingresar como visitante y el sistema le permite consultar únicamente la información pública disponible.
+	Precondiciones
+	El usuario no debe estar autenticado como usuario registrado.
+	Postcondiciones
+	El usuario puede acceder a la información pública sin registrarse.
+	Dependencias
+	No presenta.
+	Curso Base
+	Actor
+	Sistema
+	1. Selecciona la opción “Ingresar como visitante”.
+	
+
+	
+
+	2. Habilita el acceso a la información pública.
+	Curso Alternativo
+	Situación
+	Sistema
+	Alternativa 1: Iniciar sesión.
+	Validar los datos ingresados y registrar la cuenta nueva.
+	________________
+
+
+RF-GEN-01
+Caso de uso: RF-GEN-01
+	Iniciar sesión
+	Actores
+	Todos los usuarios
+	Propósito
+	Iniciar sesión en la plataforma utilizando correo electrónico y contraseña o credenciales de plataformas.
+	Resumen
+	El usuario ingresa sus credenciales. El sistema las válida y, si son correctas, permite el acceso.
+	Precondiciones
+	El usuario debe contar con una cuenta registrada.
+	Postcondiciones
+	La sesión queda iniciada y el usuario accede a las funcionalidades correspondientes a su rol.
+	Dependencias
+	La validación de usuarios.
+	Curso Base
+	Actor
+	Sistema
+	1. Ingresa correo electrónico y contraseña o credenciales de plataformas.
+	
+
+	
+
+	2. Valida las credenciales del usuario.
+	
+
+	3. Si son correctas, inicia la sesión y habilita el acceso correspondiente.
+	Curso Alternativo
+	Situación
+	Sistema
+	Alternativa 1: Correo o contraseña incorrecta o credencial no encontrada.
+	Informa que las credenciales son incorrectas y solicita nuevamente los datos.
+	________________
+
+
+RF-GEN-02
+Caso de uso: RF-GEN-02
+	Consultar información pública
+	Actores
+	Todos los usuarios
+	Propósito
+	Consultar la información pública disponible en la plataforma.
+	Resumen
+	El usuario accede a la información pública, que comprende calendario de torneos, resultados, tabla de posiciones y perfiles públicos.
+	Precondiciones
+	El usuario debe encontrarse dentro de la plataforma debido a que la información pública no requiere una cuenta registrada.
+	Postcondiciones
+	La información pública seleccionada queda visible para el usuario.
+	Dependencias
+	No presenta 
+	Curso Base
+	Actor
+	Sistema
+	1. Selecciona la información pública que desea consultar.
+	
+
+	
+
+	2. Muestra la información pública correspondiente.
+	Curso Alternativo
+	Situación
+	Sistema
+	Alternativa 1: Sin conexión a internet.
+	Informar al usuario de la falta de conexión para acceder a la plataforma
+	________________
+
+
+RF-GEN-03
+Caso de uso: RF-GEN-03
+	Buscar torneos
+	Actores
+	Todos los usuarios
+	Propósito
+	Encontrar torneos aplicando filtros para distintas modalidades deportivas.
+	Resumen
+	El usuario accede a la búsqueda de torneos, selecciona los filtros disponibles y el sistema muestra los torneos que coinciden.
+	Precondiciones
+	Debe existir información de torneos disponible para consultar.
+	Postcondiciones
+	Se muestra el listado de torneos que coinciden con los filtros seleccionados.
+	Dependencias
+	No presenta.
+	Curso Base
+	Actor
+	Sistema
+	1. Selecciona la búsqueda de torneos y aplica un filtro por modalidad deportiva.
+	
+
+	
+
+	2. Procesa el filtro.
+	
+
+	3. Muestra los torneos correspondientes.
+	Curso Alternativo
+	Situación
+	Sistema
+	Alternativa 1: No se ha encontrado un torneo con esas características.
+	Mostrar el mensaje de “No encontrado” y esperar a que el usuario ingrese nuevamente un torneo.
+	________________
+
+
+RF-GEN-04
+Caso de uso: RF-GEN-04
+	Consultar información detallada de un torneo
+	Actores
+	Todos los usuarios
+	Propósito
+	Consultar los datos y el reglamento específico de un torneo deportivo.
+	Resumen
+	El usuario selecciona los detalles de un torneo y el sistema muestra modalidad, nombre, lugar, fecha y hora, formato, creador, descripción, reglamento y cupos disponibles.
+	Precondiciones
+	Debe existir un torneo disponible para consultar.
+	Postcondiciones
+	La información detallada del torneo queda visible.
+	Dependencias
+	Torneo existente.
+	Curso Base
+	Actor
+	Sistema
+	1. Buscar un torneo.
+	
+
+	2. Seleccionar los detalles del torneo
+	
+
+	
+
+	3. Muestra la información detallada y el reglamento del torneo.
+	Curso Alternativo
+	Situación
+	Sistema
+	No se presenta.
+	
+
+	________________
+
+
+RF-GEN-05
+Caso de uso: RF-GEN-05
+	Alternar interfaz entre modo oscuro y claro
+	Actores
+	Todos los usuarios
+	Propósito
+	Cambiar la apariencia de la interfaz entre modo oscuro y modo claro.
+	Resumen
+	El usuario accede a las preferencias o a la parte inferior del menú y selecciona el modo de apariencia deseado.
+	Precondiciones
+	No presenta.
+	Postcondiciones
+	La interfaz queda configurada en el modo seleccionado.
+	Dependencias
+	No presenta.
+	Curso Base
+	Actor
+	Sistema
+	1. Selecciona modo oscuro o modo claro en preferencias o en la parte inferior del menú.
+	
+
+	
+
+	2. Cambia la apariencia de la interfaz.
+	Curso Alternativo
+	Situación
+	Sistema
+	No se presenta
+	
+
+	________________
+
+
+RF-GEN-06
+Caso de uso: RF-GEN-06
+	Consultar “Sobre nosotros” y solicitar ayuda en la sección “Ayuda”.
+	Actores
+	Todos los usuarios
+	Propósito
+	Acceder a la información de la sección “Sobre nosotros” y solicitar ayuda desde la sección “Ayuda”.
+	Resumen
+	El usuario selecciona una de las secciones y el sistema muestra la información correspondiente.
+	Precondiciones
+	Las secciones deben estar disponibles en la plataforma.
+	Postcondiciones
+	La información solicitada queda visible para el usuario.
+	Dependencias
+	No presenta.
+	Curso Base
+	Actor
+	Sistema
+	1. Selecciona “Sobre nosotros” o “Ayuda”.
+	
+
+	
+
+	2. Muestra la sección seleccionada.
+	Curso Alternativo
+	Situación
+	Sistema
+	No se presenta
+	
+
+	________________
+
+
+RF-GEN-07
+Caso de uso: RF-GEN-07
+	Consultar Términos y Condiciones
+	Actores
+	Todos los usuarios
+	Propósito
+	Consultar los Términos y Condiciones sobre el uso de la plataforma.
+	Resumen
+	El usuario accede a la sección de Términos y Condiciones y el sistema muestra su contenido.
+	Precondiciones
+	La sección de Términos y Condiciones debe estar disponible.
+	Postcondiciones
+	Los Términos y Condiciones quedan visibles.
+	Dependencias
+	No presenta.
+	Curso Base
+	Actor
+	Sistema
+	1. Selecciona la sección de Términos y Condiciones.
+	
+
+	
+
+	2. Muestra los Términos y Condiciones.
+	Curso Alternativo
+	Situación
+	Sistema
+	No se presenta
+	
+
+	________________
+
+
+RF-GEN-08
+Caso de uso: RF-GEN-08
+	Generar y compartir un enlace de torneo
+	Actores
+	Todos los usuarios
+	Propósito
+	Compartir el enlace correspondiente a un torneo mediante redes sociales o copia de enlace.
+	Resumen
+	El usuario selecciona un torneo y solicita generar o compartir su enlace.
+	Precondiciones
+	Debe existir un torneo al cual se pueda acceder.
+	Postcondiciones
+	El enlace del torneo queda disponible para copiar o compartir.
+	Dependencias
+	No presenta.
+	Curso Base
+	Actor
+	Sistema
+	1. Selecciona la opción para generar y compartir el enlace.
+	
+
+	
+
+	2. Genera el enlace del torneo para compartirlo o copiarlo.
+	3: Compartir en redes sociales o copiar enlace proporcionado.
+	
+
+	Curso Alternativo
+	Situación
+	Sistema
+	Alternativa 1: No se pudo generar el enlace
+	Informar que hubo un error y que lo vuelva a intentar nuevamente en otro momento.
+	________________
+
+
+RF-UA-01
+Caso de uso: RF-UA-01
+	Acceder y administrar el panel de Configuración
+	Actores
+	Usuario autenticado
+	Propósito
+	Administrar las opciones de configuración de perfil, cuenta y seguridad, notificaciones, preferencias y eliminación de cuenta.
+	Resumen
+	El usuario autenticado accede al panel de configuración y selecciona el apartado que desea configurar.
+	Precondiciones
+	El usuario debe estar autenticado.
+	Postcondiciones
+	La configuración seleccionada queda gestionada según la opción elegida.
+	Dependencias
+	Haber iniciado sesión.
+	Curso Base
+	Actor
+	Sistema
+	1. Accede al panel de Configuración.
+	
+
+	
+
+	2. Muestra las opciones de configuración.
+	3. Selecciona la opción que desea administrar.
+	
+
+	
+
+	4. Permite realizar la configuración que corresponde.
+	Curso Alternativo
+	Situación
+	Sistema
+	No se presenta
+	
+
+	________________
+
+
+RF-UA-02
+Caso de uso: RF-UA-02
+	Cambiar contraseña
+	Actores
+	Usuario autenticado
+	Propósito
+	Cambiar la contraseña de la cuenta indicando la contraseña actual y la nueva.
+	Resumen
+	El usuario ingresa su contraseña actual y luego la nueva contraseña. El sistema verifica los datos y permite realizar el cambio.
+	Precondiciones
+	El usuario debe estar autenticado y conocer su contraseña actual.
+	Postcondiciones
+	La contraseña de la cuenta queda modificada.
+	Dependencias
+	Cuenta existente.
+	Curso Base
+	Actor
+	Sistema
+	1. Ingresa la contraseña actual.
+	
+
+	2. Ingresa la nueva contraseña.
+	
+
+	
+
+	2. Valida al usuario y la contraseña actual.
+	
+
+	3. Si la validación es correcta, registra la nueva contraseña.
+	
+
+	4. Confirma el cambio.
+	Curso Alternativo
+	Situación
+	Sistema
+	Alternativa 1: Contraseña actual incorrecta.
+	Informa que la contraseña actual es incorrecta y no realiza el cambio hasta ingresar la correcta.
+	________________
+
+
+Planilla de caso de uso – RF-UA-03
+Caso de uso: RF-UA-03
+	Recuperar acceso a su cuenta mediante correo electrónico o credenciales de plataformas
+	Actores
+	Usuario autenticado
+	Propósito
+	Recuperar el acceso a la cuenta mediante correo electrónico o credenciales de plataforma cuando se olvida la contraseña.
+	Resumen
+	El usuario solicita recuperar el acceso mediante su correo electrónico y el sistema procesa la recuperación.
+	Precondiciones
+	El usuario debe contar con una cuenta asociada a un correo electrónico o una credencial de una plataforma.
+	Postcondiciones
+	El usuario recibe la recuperación que corresponde y puede recuperar el acceso.
+	Dependencias
+	Una cuenta existente vinculada a un correo eléctronico. 
+	Curso Base
+	Actor
+	Sistema
+	1. Solicita recuperar el acceso e indica su correo electrónico.
+	
+
+	
+
+	2. Valida la información correspondiente y procesa la recuperación.
+	
+
+	3. Ofrece el procedimiento para recuperar el acceso.
+	Curso Alternativo
+	Situación
+	Sistema
+	Alternativa 1: No se encuentra el correo o la credencial de la plataforma.
+	Informar que no se pudo proceder a recuperación de la cuenta.
+	________________
+
+
+RF-UA-04
+Caso de uso: RF-UA-04
+	Visualizar historial de notificaciones
+	Actores
+	Usuario autenticado
+	Propósito
+	Consultar el historial de notificaciones recibidas.
+	Resumen
+	El usuario accede al apartado de historial y el sistema muestra las notificaciones recibidas.
+	Precondiciones
+	El usuario debe estar autenticado.
+	Postcondiciones
+	El historial de notificaciones queda visible.
+	Dependencias
+	Incluye la validación de usuarios indicada en el diagrama.
+	Curso Base
+	Actor
+	Sistema
+	1. Accede al historial de notificaciones.
+	
+
+	
+
+	2. Muestra las notificaciones recibidas.
+	Curso Alternativo
+	Situación
+	Sistema
+	Alternativa 1: No hay notificaciones 
+	Mostrar un mensaje donde informa que no se recibieron notificaciones
+	________________
+
+
+RF-UP-01
+Caso de uso: RF-UP-01
+	Inscribirse a torneos deportivos
+	Actores
+	Participante
+	Propósito
+	Inscribirse a un torneo deportivo proporcionando los datos personales requeridos.
+	Resumen
+	El participante selecciona un torneo e ingresa nombre completo, cédula, edad, teléfono, dirección y Gmail para solicitar la inscripción.
+	Precondiciones
+	El participante debe estar autenticado con el rol de participante y cumplir con todos datos personales requeridos
+	Postcondiciones
+	La solicitud de inscripción queda registrada y en espera de ser aceptada..
+	Dependencias
+	Los cupos deben estar habilitados
+	Curso Base
+	Actor
+	Sistema
+	1. Selecciona un torneo y proporciona los datos requeridos.
+	
+
+	
+
+	2. Valida los datos y la disponibilidad del torneo.
+	
+
+	3. Registra la inscripción.
+	Curso Alternativo
+	Situación
+	Sistema
+	Alternativa 1: Cupos llenos.
+	Informa que no hay cupos disponibles y no registra la inscripción.
+	Alternativa 2: Dato incorrecto, no encontrado o no cumple con el requisito.
+	Informa el problema y solicita corregir los datos.
+	________________
+
+
+RF-UP-02
+Caso de uso: RF-UP-02
+	Historial de torneos jugados
+	Actores
+	Participante
+	Propósito
+	Visualizar el historial de torneos jugados y sus datos.
+	Resumen
+	El participante accede a su historial y el sistema muestra nombre, fecha y hora inicial, ubicación, disciplina, formato, modalidad, resultados y premios obtenidos.
+	Precondiciones
+	Tener el rol de participante y haber finalizado un torneo
+	Postcondiciones
+	El historial queda visible.
+	Dependencias
+	Finalización de un torneo
+	Curso Base
+	Actor
+	Sistema
+	1. Accede al historial de torneos.
+	
+
+	
+
+	2. Muestra los torneos jugados y sus datos correspondientes.
+	Curso Alternativo
+	Situación
+	Sistema
+	Alternativa 1: No hay torneos jugados
+	Informar la falta de torneos
+	________________
+
+
+RF-UP-03
+Caso de uso: RF-UP-03
+	Sección de torneos activos
+	Actores
+	Participante
+	Propósito
+	Consultar los torneos activos en los que el participante se encuentra inscrito.
+	Resumen
+	El participante accede a la sección de torneos activos y el sistema muestra los datos de los torneos en los que está inscrito indicando nombre, fecha y hora inicial, ubicación, disciplina, formato, número de integrantes, creador y una descripción.
+	Precondiciones
+	Acceder al rol de participante e ingresar a uno o más torneos.
+	Postcondiciones
+	Los torneos activos quedan visibles.
+	Dependencias
+	Estar inscripto a uno o más torneos.
+	Curso Base
+	Actor
+	Sistema
+	1. Accede a la sección de torneos activos.
+	
+
+	
+
+	2. Muestra los torneos activos en los que está inscrito y sus datos.
+	Curso Alternativo
+	Situación
+	Sistema
+	Alternativa 1: No hay torneos jugados
+	Informar la falta de torneos activos
+	________________
+
+
+RF-UP-04
+Caso de uso: RF-UP-04
+	Ingresar imagen personalizada como portada del torneo deportivo
+	Actores
+	Participante
+	Propósito
+	Ingresar una imagen personalizada como portada del torneo deportivo.
+	Resumen
+	El participante selecciona o sube una imagen para utilizarla como portada del torneo.
+	Precondiciones
+	El participante debe estar autenticado y disponer de un torneo al que pueda asociar la portada.
+	Postcondiciones
+	La imagen queda ingresada como portada del torneo.
+	Dependencias
+	La imagen debe estar compuesta por un formato o tamaño no permitido”.
+	Curso Base
+	Actor
+	Sistema
+	1. Selecciona una imagen para la portada.
+	
+
+	
+
+	2. Verifica la imagen y la registra como portada.
+	Curso Alternativo
+	Situación
+	Sistema
+	Alternativa 1: Formato o tamaño no permitido.
+	Informa que la imagen no cumple con los requisitos y solicita otra imagen.
+	________________
+
+
+RF-UP-05
+Caso de uso: RF-UP-0:5
+	Personalizar notificaciones
+	Actores
+	Participante
+	Propósito
+	Elegir la personalización de las notificaciones recibidas.
+	Resumen
+	El participante accede al apartado de notificaciones y selecciona si desea recibir avisos sobre torneos disponibles e inscripciones confirmadas.
+	Precondiciones
+	El participante debe estar autenticado.
+	Postcondiciones
+	Las preferencias de notificaciones quedan configuradas.
+	Dependencias
+	No presenta.
+	Curso Base
+	Actor
+	Sistema
+	1. Accede a la personalización de notificaciones.
+	
+
+	2. Selecciona las notificaciones que desea recibir.
+	
+
+	
+
+	3. Guarda la configuración seleccionada.
+	Curso Alternativo
+	Situación
+	Sistema
+	No se presenta
+	
+
+	________________
+
+
+RF-UP-06
+Caso de uso: RF-UP-06
+	Personalizar perfil
+	Actores
+	Participante
+	Propósito
+	Personalizar determinados datos del perfil, incluyendo Gmail, nombre de usuario y hasta tres medallas de su colección.
+	Resumen
+	El participante accede a su perfil y modifica los datos permitidos.
+	Precondiciones
+	El participante debe estar autenticado.
+	Postcondiciones
+	Los datos seleccionados del perfil quedan actualizados.
+	Dependencias
+	Cumplir con cada requisito dependiendo el dato a modificar.
+	Curso Base
+	Actor
+	Sistema
+	1. Accede a la personalización del perfil.
+	
+
+	2. Modifica los datos permitidos.
+	
+
+	
+
+	3. Valida la información y actualiza el perfil.
+	Curso Alternativo
+	Situación
+	Sistema
+	Alternativa 1: Dato incorrecto, no encontrado o no cumple con el requisito.
+	Informa el problema y solicita corregir la información.
+	Alternativa 2: Formato o tamaño no permitido.
+	Informa el problema y solicita una imagen permitida.
+	________________
+
+
+RF-UP-07
+Caso de uso: RF-UP-07
+	Modificar estado de inscripción
+	Actores
+	Participante
+	Propósito
+	Modificar una inscripción pendiente al estado de inscripción cancelada.
+	Resumen
+	El participante selecciona una inscripción pendiente y solicita cancelarla.
+	Precondiciones
+	El participante debe estar autenticado y la inscripción debe encontrarse en estado pendiente.
+	Postcondiciones
+	La inscripción queda en estado cancelada.
+	Dependencias
+	La inscripción debe estar en estado pendiente.
+	Curso Base
+	Actor
+	Sistema
+	1. Selecciona una inscripción pendiente.
+	
+
+	2. Solicita cancelar la inscripción.
+	
+
+	
+
+	3. Modifica el estado de la inscripción a cancelada.
+	Curso Alternativo
+	Situación
+	Sistema
+	Alternativa 1: La inscripción ya fue aceptada
+	Informar que el estado de la inscripción no permite su cancelación
+	________________
+
+
+RF-UP-08
+Caso de uso: RF-UP-08
+	Consultar estado de inscripción
+	Actores
+	Participante
+	Propósito
+	Consultar si las inscripciones se encuentran pendientes, aceptadas o canceladas.
+	Resumen
+	El participante accede a sus inscripciones y el sistema muestra el estado de cada una.
+	Precondiciones
+	El participante debe estar autenticado.
+	Postcondiciones
+	El estado de las inscripciones queda visible.
+	Dependencias
+	
+
+	Curso Base
+	Actor
+	Sistema
+	1. Accede a sus inscripciones.
+	
+
+	
+
+	2. Muestra el estado de cada inscripción.
+	Curso Alternativo
+	Situación
+	Sistema
+	Alternativa 1: El torneo fue cancelado.
+	Informa la situación correspondiente en el estado de la inscripción.
+	________________
+
+
+RF-AG-01
+Caso de uso: RF-AG-01
+	Crear torneos deportivos
+	Actores
+	Administrador general
+	Propósito
+	Crear un torneo deportivo indicando todos los datos requerido.
+	Resumen
+	El administrador general completa nombre, disciplina, formato, modalidad, fecha, hora, cantidad de participantes, descripción, imagen de portada y dirección.
+	Precondiciones
+	El administrador general debe estar autenticado con el rol correspondiente.
+	Postcondiciones
+	El torneo queda creado con los datos ingresados.
+	Dependencias
+	No presenta.
+	Curso Base
+	Actor
+	Sistema
+	1. Ingresa los datos requeridos del torneo.
+	
+
+	
+
+	2. Registra la información y crea el torneo.
+	Curso Alternativo
+	Situación
+	Sistema
+	No se presenta.
+	
+
+	________________
+
+
+RF-AG-02
+Caso de uso: RF-AG-02
+	Asignar torneos deportivos a los organizadores
+	Actores
+	Administrador general
+	Propósito
+	Asignar un torneo deportivo a un organizador.
+	Resumen
+	El administrador selecciona un torneo y un organizador y realiza la asignación.
+	Precondiciones
+	El administrador general debe estar autenticado y debe existir un torneo y un organizador disponibles.
+	Postcondiciones
+	El torneo queda asignado al organizador seleccionado.
+	Dependencias
+	No presenta.
+	Curso Base
+	Actor
+	Sistema
+	1. Selecciona el torneo y el organizador.
+	
+
+	
+
+	2. Registra la asignación del torneo al organizador.
+	Curso Alternativo
+	Situación
+	Sistema
+	No se presenta
+	
+
+	________________
+
+
+RF-AG-03
+Caso de uso: RF-AG-03
+	Visualizar y gestionar torneos creados, participantes, partidos pendientes, auditoría, listado y estadísticas
+	Actores
+	Administrador general
+	Propósito
+	Consultar y gestionar la información administrativa
+	Resumen
+	El administrador accede a la gestión y puede consultar torneos creados, participantes, partidos pendientes, auditoría, listado de torneos y estadísticas del rendimiento del sistema.
+	Precondiciones
+	El administrador general debe estar autenticado.
+	Postcondiciones
+	La información administrativa seleccionada queda visible y gestionable según corresponda.
+	Dependencias
+	No presenta
+	Curso Base
+	Actor
+	Sistema
+	1. Accede a la gestión administrativa.
+	
+
+	
+
+	2. Muestra las opciones de gestión y consulta disponibles.
+	3. Selecciona la información que desea consultar o gestionar.
+	
+
+	
+
+	4. Muestra o permite gestionar la información seleccionada.
+	Curso Alternativo
+	Situación
+	Sistema
+	No se presenta
+	
+
+	________________
+
+
+RF-AG-04
+Caso de uso: RF-AG-04
+	Suspender o bloquear cuentas de usuarios
+	Actores
+	Administrador general
+	Propósito
+	Suspender o bloquear cuentas por incumplimiento de los Términos y Condiciones.
+	Resumen
+	El administrador identifica una cuenta y realiza la acción de suspensión o bloqueo cuando existe un incumplimiento.
+	Precondiciones
+	El administrador general debe estar autenticado y debe reconocer un incumplimiento de los Términos y Condiciones.
+	Postcondiciones
+	La cuenta queda suspendida o bloqueada.
+	Dependencias
+	Incumplimiento de Términos y Condiciones”.
+	Curso Base
+	Actor
+	Sistema
+	1. Selecciona la cuenta que incumple los Términos y Condiciones.
+	
+
+	
+
+	2. Registra la suspensión o bloqueo de la cuenta.
+	Curso Alternativo
+	Situación
+	Sistema
+	No se presenta
+	
+
+	________________
+
+
+RF-AG-05
+Caso de uso: RF-AG-05
+	Gestionar disciplinas deportivas
+	Actores
+	Administrador general
+	Propósito
+	Crear, editar o desactivar las disciplinas deportivas disponibles.
+	Resumen
+	El administrador accede a la gestión de disciplinas y selecciona la funcionalidad que desea realizar.
+	Precondiciones
+	El administrador general debe estar autenticado.
+	Postcondiciones
+	La disciplina queda creada, editada o desactivada según la operación realizada.
+	Dependencias
+	No presenta
+	Curso Base
+	Actor
+	Sistema
+	1. Selecciona la gestión de disciplinas.
+	
+
+	2. Elige crear, editar o desactivar.
+	
+
+	
+
+	3. Realiza la operación seleccionada.
+	Curso Alternativo
+	Situación
+	Sistema
+	 No se presenta
+	
+
+	________________
+
+
+RF-AG-06
+Caso de uso: RF-AG-06
+	Restablecer contraseña de un usuario
+	Actores
+	Administrador general
+	Propósito
+	Restablecer la contraseña de un usuario cuando sea necesario.
+	Resumen
+	El administrador selecciona una cuenta y solicita el restablecimiento de su contraseña.
+	Precondiciones
+	El administrador general debe estar autenticado y debe existir una razón para restablecer la cuenta del usuario.
+	Postcondiciones
+	La contraseña del usuario queda restablecida.
+	Dependencias
+	No presenta.
+	Curso Base
+	Actor
+	Sistema
+	1. Selecciona el usuario y solicita restablecer su contraseña.
+	
+
+	
+
+	2. Procesa el restablecimiento y confirma la operación.
+	Curso Alternativo
+	Situación
+	Sistema
+	No se presenta
+	
+
+	________________
+
+
+RF-AG-07
+Caso de uso: RF-AG-07
+	Visualizar registros de auditoría
+	Actores
+	Administrador general
+	Propósito
+	Consultar los registros de auditoría con las acciones realizadas por organizadores y administradores.
+	Resumen
+	El administrador accede al apartado de auditoría y consulta los registros disponibles.
+	Precondiciones
+	El administrador general debe estar autenticado.
+	Postcondiciones
+	Los registros de auditoría quedan visibles.
+	Dependencias
+	No presenta
+	Curso Base
+	Actor
+	Sistema
+	1. Accede al apartado de auditoría.
+	
+
+	
+
+	2. Muestra los registros de acciones realizados.
+	Curso Alternativo
+	Situación
+	Sistema
+	No se presena
+	
+
+	________________
+
+
+RF-AG-08
+Caso de uso: RF-AG-08
+	Visualizar estadísticas generales sobre la utilización del sistema
+	Actores
+	Administrador general
+	Propósito
+	Consultar estadísticas generales sobre la utilización y rendimiento del sistema.
+	Resumen
+	El administrador accede al apartado de estadísticas y el sistema muestra la información disponible.
+	Precondiciones
+	El administrador general debe estar autenticado.
+	Postcondiciones
+	Las estadísticas generales quedan visibles.
+	Dependencias
+	No presenta
+	Curso Base
+	Actor
+	Sistema
+	1. Accede a las estadísticas.
+	
+
+	
+
+	2. Muestra las estadísticas generales del sistema.
+	Curso Alternativo
+	Situación
+	Sistema
+	No se presenta
+	
+
+	________________
+
+
+RF-OT-01
+Caso de uso: RF-OT-01
+	Acceder al panel de control
+	Actores
+	Organizador de torneos
+	Propósito
+	Acceder a un panel de control con las tareas y responsabilidades del organizador.
+	Resumen
+	El organizador accede al panel y visualiza torneos asignados, carga de resultados, inscripción a participantes y reportes de torneos.
+	Precondiciones
+	El usuario debe tener el rol de organizador
+	Postcondiciones
+	El panel de control queda disponible con las tareas y responsabilidades del organizador.
+	Dependencias
+	No presenta
+	Curso Base
+	Actor
+	Sistema
+	1. Accede al panel de control.
+	
+
+	
+
+	2. Muestra las tareas y responsabilidades disponibles.
+	Curso Alternativo
+	Situación
+	Sistema
+	No se presenta
+	
+
+	________________
+
+
+RF-OT-02
+Caso de uso: RF-OT-02
+	Gestionar únicamente los torneos asignados
+	Actores
+	Organizador de torneos
+	Propósito
+	Gestionar únicamente los torneos deportivos que fueron asignados por el administrador.
+	Resumen
+	El organizador accede a sus torneos y realiza las acciones de gestión permitidas y únicamente en sus torneos asignados. 
+	Precondiciones
+	El organizador debe estar autenticado y tener torneos asignados por un administrador.
+	Postcondiciones
+	El organizador puede gestionar los torneos que le fueron asignados.
+	Dependencias
+	Tener asignado uno o más torneos.
+	Curso Base
+	Actor
+	Sistema
+	1. Accede a la gestión de torneos.
+	
+
+	
+
+	2. Seleccionar y mostrar los torneos asignados a ese organizador.
+	3. Selecciona un torneo asignado.
+	
+
+	
+
+	4. Permite realizar las acciones de gestión correspondientes.
+	Curso Alternativo
+	Situación
+	Sistema
+	No se presenta
+	
+
+	________________
+
+
+RF-OT-03
+Caso de uso: R-OT-03
+	Cargar los datos necesarios para crear un torneo
+	Actores
+	Organizador de torneos
+	Propósito
+	Cargar los datos necesarios para la creación de un torneo.
+	Resumen
+	El organizador ingresa nombre, descripción, disciplina, formato, modalidad, fecha, hora, cantidad de participantes, imagen de portada y ubicación.
+	Precondiciones
+	El organizador debe estar autenticado y contar con la posibilidad de crear/comenzar un torneo.
+	Postcondiciones
+	Los datos necesarios para crear el torneo quedan cargados.
+	Dependencias
+	No presenta
+	Curso Base
+	Actor
+	Sistema
+	1. Ingresa los datos solicitados para un torneo.
+	
+
+	
+
+	2. Recibe y registra los datos cargados.
+	Curso Alternativo
+	Situación
+	Sistema
+	Alternativa 1: Dato incorrecto o no cumple con el requisito.
+	Informa el problema y solicita corregir la información.
+	Alternativa 2: Formato o tamaño no permitido.
+	Informa el problema y solicita una imagen permitida.
+	________________
+
+
+RF-OT-04
+Caso de uso: RF-OT-04
+	Cargar portada de torneo
+	Actores
+	Organizador de torneos
+	Propósito
+	Cargar una imagen que será utilizada como portada del torneo.
+	Resumen
+	El organizador selecciona una imagen durante la creación del torneo.
+	Precondiciones
+	El organizador debe estar autenticado y estar cargando un torneo.
+	Postcondiciones
+	La imagen queda cargada como portada del torneo.
+	Dependencias
+	El diagrama contempla “Formato o tamaño no permitido” como situación alternativa para la carga de imágenes.
+	Curso Base
+	Actor
+	Sistema
+	1. Selecciona una imagen para la portada.
+	
+
+	
+
+	2. Verifica y carga la imagen como portada.
+	Curso Alternativo
+	Situación
+	Sistema
+	Alternativa 1: Formato o tamaño no permitido.
+	Informa que la imagen no cumple con los requisitos y solicita otra imagen.
+	________________
+
+
+RF-OT-05
+Caso de uso: RF-OT-05
+	Modificar o reprogramar horarios y fechas de torneos
+	Actores
+	Organizador de torneos
+	Propósito
+	Modificar o reprogramar horarios y fechas de los torneos y notificar automáticamente a los participantes.
+	Resumen
+	El organizador selecciona un torneo asignado y modifica su fecha u horario.
+	Precondiciones
+	El organizador debe estar autenticado y el torneo debe estar asignado a él.
+	Postcondiciones
+	La fecha y horario queda actualizado y los participantes son notificados.
+	Dependencias
+	Cambio de horario por ciertas circunstancias.
+	Curso Base
+	Actor
+	Sistema
+	1. Selecciona el torneo asignado y modifica fecha u hora.
+	
+
+	
+
+	2. Actualiza la fecha u hora del torneo.
+	
+
+	3. Notifica a los participantes.
+	Curso Alternativo
+	Situación
+	Sistema
+	No se presenta.
+	
+
+	________________
+
+
+RF-OT-06
+Caso de uso: RF-OT-06
+	Registrar y actualizar resultados de partidos asignados
+	Actores
+	Organizador de torneos
+	Propósito
+	Registrar y actualizar los resultados de los partidos asignados al organizador.
+	Resumen
+	El organizador selecciona un partido asignado e ingresa o modifica su resultado.
+	Precondiciones
+	El organizador debe estar autenticado y el partido debe estar asignado a su gestión.
+	Postcondiciones
+	El resultado del partido queda registrado o actualizado.
+	Dependencias
+	
+
+	Curso Base
+	Actor
+	Sistema
+	1. Selecciona un partido asignado.
+	
+
+	2. Ingresa o actualiza el resultado.
+	
+
+	
+
+	3. Registra o actualiza el resultado.
+	Curso Alternativo
+	Situación
+	Sistema
+	No se presenta
+	
+
+	________________
+
+
+RF-OT-07
+Caso de uso: RF-OT-07
+	Generar tablas de posiciones y llaves del torneo
+	Actores
+	Organizador de torneos
+	Propósito
+	Calcular y generar automáticamente las tablas de posiciones y llaves según el formato seleccionado.
+	Resumen
+	El organizador tiene los datos necesarios para generar las posiciones y llaves.
+	Precondiciones
+	El organizador debe estar autenticado y el torneo debe tener un formato seleccionado.
+	Postcondiciones
+	Las tablas de posiciones y llaves quedan generadas según el formato del torneo.
+	Dependencias
+	No presenta.
+	Curso Base
+	Actor
+	Sistema
+	1. Selecciona la opción de generar posiciones y llaves.
+	
+
+	
+
+	2. Calcula las posiciones y genera las llaves según el formato del torneo.
+	Curso Alternativo
+	Situación
+	Sistema
+	No se presenta
+	
+
+	________________
+
+
+RF-OT-08
+Caso de uso: RF-OT-08
+	Publicar anuncios o comunicados
+	Actores
+	Organizador de torneos
+	Propósito
+	Publicar anuncios o comunicados dirigidos a los participantes del torneo o usuario no autenticado.
+	Resumen
+	El organizador redacta un anuncio o comunicado y lo publica para los participantes.
+	Precondiciones
+	El organizador debe estar autenticado y tener un torneo asignado.
+	Postcondiciones
+	El anuncio o comunicado queda publicado para todos los usuarios.
+	Dependencias
+	No presenta
+	Curso Base
+	Actor
+	Sistema
+	1. Redacta y publica el anuncio o comunicado.
+	
+
+	
+
+	2. Registra y muestra el comunicado dirigido a los usuarios en general.
+	Curso Alternativo
+	Situación
+	Sistema
+	No se presenta
+	
+
+	
+
+
 
 6. Bibliografía:
 Estándar IEEE 830. (s. f.). Material didáctico del curso de Ingeniería de Software. Dirección General de Educación Técnico Profesional – UTU.
