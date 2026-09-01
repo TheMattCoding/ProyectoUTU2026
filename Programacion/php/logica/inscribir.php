@@ -2,57 +2,53 @@
 session_start();
 require_once '../db.php';
 
-if (!isset($_SESSION['id_usuario'])) {
-    die("Error: No hay sesión activa de usuario.");
+// Validar que exista la sesión de usuario y se envíe por POST
+if (!isset($_SESSION['id_usuario']) || $_SERVER['REQUEST_METHOD'] !== 'POST') {
+    header('Location: ../../login.php');
+    exit;
 }
 
-$idTorneo  = intval($_POST['id_torneo'] ?? 0);
-$idUsuario = intval($_SESSION['id_usuario']);
-$idEquipo  = !empty($_POST['id_equipo']) ? intval($_POST['id_equipo']) : null;
+$id_torneo = filter_input(INPUT_POST, 'id_torneo', FILTER_VALIDATE_INT);
+$id_usuario = $_SESSION['id_usuario'];
 
-if ($idTorneo > 0 && $idUsuario > 0) {
-    try {
-        // Step 1: Verificar si el id_usuario existe en la tabla participantes
-        $stmtCheckPart = $pdo->prepare("SELECT COUNT(*) FROM participantes WHERE id_participante = :id_usuario");
-        $stmtCheckPart->execute([':id_usuario' => $idUsuario]);
+if (!$id_torneo) {
+    header('Location: ../busquedaTorneo.php');
+    exit;
+}
 
-        // Si no existe, intentar crearlo
-        if ($stmtCheckPart->fetchColumn() == 0) {
-            try {
-                $stmtInsPart = $pdo->prepare("INSERT INTO participantes (id_participante) VALUES (:id_usuario)");
-                $stmtInsPart->execute([':id_usuario' => $idUsuario]);
-            } catch (PDOException $ePart) {
-                die("Error al crear el registro en la tabla 'participantes': " . $ePart->getMessage() . 
-                    "<br>Asegúrate de que el ID $idUsuario exista previamente en la tabla de usuarios.");
-            }
-        }
+try {
+    // 1. Obtener el id_participante correspondiente al id_usuario actual
+    $stmtPart = $pdo->prepare("SELECT id_participante FROM PARTICIPANTES WHERE id_usuario = ?");
+    $stmtPart->execute([$id_usuario]);
+    $participante = $stmtPart->fetch(PDO::FETCH_ASSOC);
 
-        // Step 2: Verificar si ya está inscrito en el torneo
-        $stmtCheck = $pdo->prepare("SELECT COUNT(*) FROM INSCRIPCIONES_TORNEO WHERE id_torneo = :id_torneo AND id_participante = :id_usuario");
-        $stmtCheck->execute([
-            ':id_torneo'  => $idTorneo,
-            ':id_usuario' => $idUsuario
-        ]);
-
-        if ($stmtCheck->fetchColumn() == 0) {
-            // Step 3: Insertar la inscripción
-            $sql = "INSERT INTO INSCRIPCIONES_TORNEO (id_torneo, id_participante, id_equipo, estado_inscripcion) 
-                    VALUES (:id_torneo, :id_usuario, :id_equipo, 'Confirmado')";
-            
-            $stmt = $pdo->prepare($sql);
-            $stmt->execute([
-                ':id_torneo'  => $idTorneo,
-                ':id_usuario' => $idUsuario,
-                ':id_equipo'  => $idEquipo
-            ]);
-        }
-
-        header("Location: ../detalleTorneo.php?id=" . $idTorneo . "&estado=inscrito");
-        exit();
-
-    } catch (PDOException $e) {
-        die("Error en INSCRIPCIONES_TORNEO: " . $e->getMessage());
+    // 2. Si el usuario no existe aún en PARTICIPANTES, se crea la fila automáticamente
+    if (!$participante) {
+        $stmtInsPart = $pdo->prepare("INSERT INTO PARTICIPANTES (id_usuario) VALUES (?)");
+        $stmtInsPart->execute([$id_usuario]);
+        $id_participante = $pdo->lastInsertId();
+    } else {
+        $id_participante = $participante['id_participante'];
     }
-} else {
-    die("Error: Parámetros inválidos.");
+
+    // 3. Evitar registros duplicados en INSCRIPCIONES_TORNEO
+    $stmtCheck = $pdo->prepare("SELECT COUNT(*) FROM INSCRIPCIONES_TORNEO WHERE id_torneo = ? AND id_participante = ?");
+    $stmtCheck->execute([$id_torneo, $id_participante]);
+
+    if ($stmtCheck->fetchColumn() > 0) {
+        header('Location: ../detalleTorneo.php?id=' . $id_torneo . '&estado=error');
+        exit;
+    }
+
+    // 4. Insertar la inscripción en la tabla intermedia
+    $stmtInscripcion = $pdo->prepare("INSERT INTO INSCRIPCIONES_TORNEO (id_torneo, id_participante, estado_inscripcion) VALUES (?, ?, 'Confirmado')");
+    $stmtInscripcion->execute([$id_torneo, $id_participante]);
+
+    header('Location: ../detalleTorneo.php?id=' . $id_torneo . '&estado=inscrito');
+    exit;
+
+} catch (PDOException $e) {
+    // Redireccionar con error ante fallos de BD
+    header('Location: ../detalleTorneo.php?id=' . $id_torneo . '&estado=error');
+    exit;
 }

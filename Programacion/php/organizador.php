@@ -8,29 +8,164 @@ $rolActual = $_SESSION['rol'] ?? 'visitante';
 $usuarioActual = $_SESSION['usuario'] ?? 'Visitante';
 $idUsuarioActual = $_SESSION['id_usuario'] ?? 0;
 
-// Consulta de torneos asignados según el rol
+$mensajeExito = '';
+$mensajeError = '';
+$accion = $_POST['accion'] ?? '';
+
+// ==========================================
+// AUTO-ACTIVAR PRIMERA RONDA SI LLEGÓ LA FECHA
+// ==========================================
 try {
-    if ($rolActual === 'administrador') {
-        // El administrador ve todos los torneos
-        $sql = "SELECT t.*, m.nombre_modulo AS disciplina 
-                FROM TORNEOS t 
-                LEFT JOIN MODULOS_COMPETENCIA m ON t.id_modulo = m.id_modulo 
-                ORDER BY t.id_torneo DESC";
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute();
-    } else {
-        // El organizador ve solo los torneos que creó/tiene asignados
-        $sql = "SELECT t.*, m.nombre_modulo AS disciplina 
-                FROM TORNEOS t 
-                LEFT JOIN MODULOS_COMPETENCIA m ON t.id_modulo = m.id_modulo 
-                WHERE t.id_creador = :id_creador 
-                ORDER BY t.id_torneo DESC";
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute([':id_creador' => $idUsuarioActual]);
-    }
-    $torneosAsignados = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $sqlAutoActivar = "UPDATE RONDAS r
+                       INNER JOIN TORNEOS t ON r.id_torneo = t.id_torneo
+                       SET r.estado_ronda = 'en_curso'
+                       WHERE t.fecha_inicio <= CURDATE() 
+                         AND r.numero_ronda = 1 
+                         AND r.estado_ronda = 'pendiente'";
+    $pdo->query($sqlAutoActivar);
 } catch (PDOException $e) {
+    // Silencioso o log de error
+}
+
+// ==========================================
+// PROCESAMIENTO DE FORMULARIOS (POST)
+// ==========================================
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+    // 1. Inscripción manual de participantes
+    if ($accion === 'inscribir_participante') {
+        $idTorneo = filter_var($_POST['id_torneo'] ?? 0, FILTER_VALIDATE_INT);
+        $idEquipo = filter_var($_POST['id_equipo'] ?? 0, FILTER_VALIDATE_INT);
+
+        if ($idTorneo && $idEquipo) {
+            try {
+                // Inserta en la tabla de inscripciones sin la columna fecha_inscripcion
+                $sqlInscribir = "INSERT INTO INSCRIPCIONES_TORNEO (id_torneo, id_equipo, estado_inscripcion) 
+                                 VALUES (:id_torneo, :id_equipo, 'confirmado')";
+                $stmtInscribir = $pdo->prepare($sqlInscribir);
+                $stmtInscribir->execute([
+                    ':id_torneo' => $idTorneo,
+                    ':id_equipo' => $idEquipo
+                ]);
+
+                $mensajeExito = "Equipo inscrito correctamente en el torneo.";
+            } catch (PDOException $e) {
+                $mensajeError = "Error al inscribir equipo: " . $e->getMessage();
+            }
+        } else {
+            $mensajeError = "Por favor, seleccioná un torneo y un equipo válidos.";
+        }
+    }
+
+    // 2. Cargar/Guardar resultados múltiples
+    if ($accion === 'guardar_resultados') {
+        $resultados = $_POST['resultados'] ?? [];
+
+        if (!empty($resultados) && is_array($resultados)) {
+            try {
+                $pdo->beginTransaction();
+
+                $sqlEstado = "UPDATE ENFRENTAMIENTOS 
+                              SET estado_enfrentamiento = 'finalizado' 
+                              WHERE id_enfrentamiento = :id";
+                $stmtEstado = $pdo->prepare($sqlEstado);
+
+                $sqlResultado = "INSERT INTO RESULTADOS (id_enfrentamiento, puntuacion_local, puntuacion_visitante, id_usuario_registro)
+                                 VALUES (:id, :m_local, :m_visita, :id_usuario)
+                                 ON DUPLICATE KEY UPDATE 
+                                    puntuacion_local = VALUES(puntuacion_local), 
+                                    puntuacion_visitante = VALUES(puntuacion_visitante),
+                                    id_usuario_registro = VALUES(id_usuario_registro)";
+                $stmtResultado = $pdo->prepare($sqlResultado);
+
+                foreach ($resultados as $idEnfrentamiento => $datos) {
+                    $mLocal = filter_var($datos['local'] ?? null, FILTER_VALIDATE_INT);
+                    $mVisita = filter_var($datos['visita'] ?? null, FILTER_VALIDATE_INT);
+
+                    if ($idEnfrentamiento && $mLocal !== false && $mVisita !== false) {
+                        // Actualizar estado del enfrentamiento a finalizado
+                        $stmtEstado->execute([':id' => $idEnfrentamiento]);
+
+                        // Guardar puntuaciones
+                        $stmtResultado->execute([
+                            ':id'         => $idEnfrentamiento,
+                            ':m_local'    => $mLocal,
+                            ':m_visita'   => $mVisita,
+                            ':id_usuario' => $idUsuarioActual
+                        ]);
+                    }
+                }
+
+                $pdo->commit();
+                $mensajeExito = "Marcadores guardados con éxito.";
+            } catch (PDOException $e) {
+                $pdo->rollBack();
+                $mensajeError = "Error al guardar los marcadores: " . $e->getMessage();
+            }
+        }
+    }
+}
+
+// ==========================================
+// CONSULTA DE TORNEOS, PARTIDOS Y EQUIPOS
+// ==========================================
+try {
+    // 1. Obtener lista de Torneos
+    if ($rolActual === 'administrador') {
+        $sqlTorneos = "SELECT t.*, m.nombre_modulo AS disciplina 
+                       FROM TORNEOS t 
+                       LEFT JOIN MODULOS_COMPETENCIA m ON t.id_modulo = m.id_modulo 
+                       ORDER BY t.id_torneo DESC";
+        $stmtT = $pdo->prepare($sqlTorneos);
+        $stmtT->execute();
+    } else {
+        $sqlTorneos = "SELECT t.*, m.nombre_modulo AS disciplina 
+                       FROM TORNEOS t 
+                       LEFT JOIN MODULOS_COMPETENCIA m ON t.id_modulo = m.id_modulo 
+                       WHERE t.id_organizador = :id_organizador 
+                       ORDER BY t.id_torneo DESC";
+        $stmtT = $pdo->prepare($sqlTorneos);
+        $stmtT->execute([':id_organizador' => $idUsuarioActual]);
+    }
+    $torneosAsignados = $stmtT->fetchAll(PDO::FETCH_ASSOC);
+
+    // 2. Obtener lista de Equipos registrados para el selector de inscripción
+    $stmtE = $pdo->query("SELECT id_equipo, nombre_equipo FROM EQUIPOS ORDER BY nombre_equipo ASC");
+    $listaEquipos = $stmtE->fetchAll(PDO::FETCH_ASSOC);
+
+    // 3. Obtener partidos pendientes
+    $sqlPartidos = "SELECT 
+                        e.id_enfrentamiento,
+                        COALESCE(loc.nombre_equipo, 'Por definir') AS equipo_local,
+                        COALESCE(vis.nombre_equipo, 'Por definir') AS equipo_visita,
+                        r.nombre_ronda,
+                        t.nombre_torneo,
+                        res.puntuacion_local AS marcador_local,
+                        res.puntuacion_visitante AS marcador_visita
+                    FROM ENFRENTAMIENTOS e
+                    INNER JOIN RONDAS r ON e.id_ronda = r.id_ronda
+                    INNER JOIN TORNEOS t ON r.id_torneo = t.id_torneo
+                    LEFT JOIN EQUIPOS loc ON e.id_local = loc.id_equipo
+                    LEFT JOIN EQUIPOS vis ON e.id_visitante = vis.id_equipo
+                    LEFT JOIN RESULTADOS res ON e.id_enfrentamiento = res.id_enfrentamiento
+                    WHERE e.estado_enfrentamiento != 'finalizado'";
+
+    if ($rolActual !== 'administrador') {
+        $sqlPartidos .= " AND t.id_organizador = :id_organizador";
+        $stmtP = $pdo->prepare($sqlPartidos);
+        $stmtP->execute([':id_organizador' => $idUsuarioActual]);
+    } else {
+        $stmtP = $pdo->prepare($sqlPartidos);
+        $stmtP->execute();
+    }
+    
+    $partidosPendientes = $stmtP->fetchAll(PDO::FETCH_ASSOC);
+
+} catch (PDOException $e) {
+    echo "<div style='color:red; background:#fff; padding:10px; margin:10px;'>Error SQL: " . $e->getMessage() . "</div>";
     $torneosAsignados = [];
+    $listaEquipos = [];
+    $partidosPendientes = [];
 }
 ?>
 <!DOCTYPE html>
@@ -70,6 +205,7 @@ try {
             <?php endif; ?>
 
             <?php if ($rolActual !== 'visitante'): ?>
+                <a href="equipo.php" class="sidebar-link">Equipos</a>
                 <a href="configuracion.php" class="sidebar-link">Configuración</a>
             <?php endif; ?>
         </nav>
@@ -98,6 +234,7 @@ try {
             </div>
         </label>
 
+        <!-- Busqueda de Torneo -->
         <form action="busquedaTorneo.php" method="GET" class="search-form" style="display: flex; flex: 1; max-width: 420px; margin: 0 12px;">
             <div class="search-container" style="margin: 0; width: 100%;">
                 <svg class="search-google-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -107,6 +244,7 @@ try {
             </div>
         </form>
 
+        <!-- Notificaciones -->
         <div class="notifications-dropdown">
             <input type="checkbox" id="noti-toggle" class="dropdown-checkbox">
             <label for="noti-toggle" class="notifications-dropdown-button" aria-label="Notificaciones">
@@ -135,6 +273,7 @@ try {
             </div>
         </div>
 
+        <!-- Perfil -->
         <div class="profile-dropdown">
             <input type="checkbox" id="profile-toggle" class="dropdown-checkbox">
             <label for="profile-toggle" class="profile-dropdown-button" aria-label="Menú de usuario">
@@ -147,12 +286,11 @@ try {
             <label for="profile-toggle" class="dropdown-overlay"></label>
             <div class="profile-menu-card">
                 <div class="profile-menu-header">
-                    <span class="profile-menu-name"><?php echo htmlspecialchars($usuarioActual); ?></span>
+                    <span class="profile-menu-name"><?= htmlspecialchars($usuarioActual) ?></span>
                 </div>
                 <div class="profile-menu-divider"></div>
                 <nav class="profile-menu-links">
                     <a href="perfil.php" class="profile-menu-item">Perfil</a>
-                    <div class="profile-menu-divider"></div>
                     <a href="logica/logout.php" class="profile-menu-item logout-item">Cierre de sesión</a>
                 </nav>
             </div>
@@ -235,79 +373,79 @@ try {
                 <!-- Pestaña: Fixtures y Resultados -->
                 <div class="seccion-organizador panel-fixtures">
                     <h3 class="titulo-seccion">Gestión de Fixtures y Rondas</h3>
-                    <p class="subtitulo-seccion">Controla el estado de las llaves y digita las puntuaciones oficiales.</p>
-                    
-                    <div class="cuadricula-fila-formulario">
-                        <div class="grupo-formulario">
-                            <label class="etiqueta-formulario">Seleccionar Torneo</label>
-                            <select class="control-formulario-seleccion">
-                                <?php foreach ($torneosAsignados as $itemTorneo): ?>
-                                    <option value="<?php echo $itemTorneo['id_torneo']; ?>">
-                                        <?php echo htmlspecialchars($itemTorneo['nombre_torneo']); ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-                        <div class="grupo-formulario">
-                            <label class="etiqueta-formulario">Fase / Jornada Actual</label>
-                            <select class="control-formulario-seleccion">
-                                <option>Fecha 1 - Serie A</option>
-                                <option>Fecha 2 - Serie A</option>
-                            </select>
-                        </div>
-                    </div>
+                    <p class="subtitulo-seccion">Controlá el estado de las llaves y digitá las puntuaciones oficiales.</p>
 
-                    <div class="grupo-checkbox caja-estado-ronda">
-                        <label class="contenedor-interruptor">
-                            <input type="checkbox" id="interruptor-estado-ronda" checked>
-                            <span class="deslizador"></span>
-                            <span class="etiqueta-interruptor"><strong>Ronda Publicada</strong> (Visible para la comunidad)</span>
-                        </label>
-                    </div>
+                    <?php if (!empty($mensajeExito)): ?>
+                        <div style="background-color: #1b4332; color: #2ec4b6; border: 1px solid #2ec4b6; padding: 10px; border-radius: 6px; margin-bottom: 15px;">
+                            ✓ <?php echo htmlspecialchars($mensajeExito); ?>
+                        </div>
+                    <?php endif; ?>
 
-                    <h4 class="encabezado-subseccion">Enfrentamientos de la Fecha</h4>
-                    <form action="#" method="POST" class="formulario-organizador">
-                        <div class="tarjeta-fila-partido">
-                            <span class="nombre-equipo texto-derecha">Equipo Alpha</span>
-                            <div class="entradas-marcador-partido">
-                                <input type="number" class="control-formulario-entrada entrada-marcador" value="2" min="0">
-                                <span class="divisor-marcador">vs</span>
-                                <input type="number" class="control-formulario-entrada entrada-marcador" value="1" min="0">
+                    <?php if (!empty($mensajeError)): ?>
+                        <div style="background-color: #4a151b; color: #ff6b6b; border: 1px solid #ff6b6b; padding: 10px; border-radius: 6px; margin-bottom: 15px;">
+                            ✕ <?php echo htmlspecialchars($mensajeError); ?>
+                        </div>
+                    <?php endif; ?>
+
+                    <form action="organizador.php" method="POST" class="formulario-organizador">
+                        <input type="hidden" name="accion" value="guardar_resultados">
+
+                        <?php if (!empty($partidosPendientes)): ?>
+                            <?php foreach ($partidosPendientes as $partido): ?>
+                                <?php $idEnf = $partido['id_enfrentamiento']; ?>
+                                <div style="font-size: 0.85rem; color: #D4AF37; margin-top: 10px; font-weight: bold;">
+                                    <?php echo htmlspecialchars($partido['nombre_torneo']); ?> - <?php echo htmlspecialchars($partido['nombre_ronda']); ?>
+                                </div>
+                                <div class="tarjeta-fila-partido" style="margin-bottom: 15px;">
+                                    <span class="nombre-equipo texto-derecha"><?php echo htmlspecialchars($partido['equipo_local'] ?? 'Equipo Local'); ?></span>
+                                    <div class="entradas-marcador-partido">
+                                        <input type="number" name="resultados[<?php echo $idEnf; ?>][local]" class="control-formulario-entrada entrada-marcador" value="<?php echo $partido['marcador_local'] ?? 0; ?>" min="0" required>
+                                        <span class="divisor-marcador">vs</span>
+                                        <input type="number" name="resultados[<?php echo $idEnf; ?>][visita]" class="control-formulario-entrada entrada-marcador" value="<?php echo $partido['marcador_visita'] ?? 0; ?>" min="0" required>
+                                    </div>
+                                    <span class="nombre-equipo texto-izquierda"><?php echo htmlspecialchars($partido['equipo_visita'] ?? 'Equipo Visitante'); ?></span>
+                                </div>
+                            <?php endforeach; ?>
+
+                            <div class="acciones-formulario">
+                                <button type="submit" class="btn-guardar">Guardar marcadores</button>
                             </div>
-                            <span class="nombre-equipo texto-izquierda">Equipo Beta</span>
-                        </div>
-
-                        <div class="acciones-formulario">
-                            <button type="submit" class="btn-guardar">Guardar marcadores</button>
-                        </div>
+                        <?php else: ?>
+                            <p style="padding: 15px; text-align: center;">No hay partidos pendientes para cargar resultados en la ronda activa.</p>
+                        <?php endif; ?>
                     </form>
                 </div>
 
                 <!-- Pestaña: Inscribir Participantes -->
                 <div class="seccion-organizador panel-participantes">
-                    <h3 class="titulo-seccion">Inscripción Manual de Equipos</h3>
-                    <p class="subtitulo-seccion">Agrega participantes directamente al torneo sin pasar por la pasarela pública.</p>
-                    
-                    <form action="#" method="POST" class="formulario-organizador">
-                        <div class="cuadricula-fila-formulario">
-                            <div class="grupo-formulario">
-                                <label for="torneo-destino" class="etiqueta-formulario">Asignar al Torneo</label>
-                                <select id="torneo-destino" class="control-formulario-seleccion">
-                                    <?php foreach ($torneosAsignados as $itemTorneo): ?>
-                                        <option value="<?php echo $itemTorneo['id_torneo']; ?>">
-                                            <?php echo htmlspecialchars($itemTorneo['nombre_torneo']); ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
-                            <div class="grupo-formulario">
-                                <label for="nombre-participante" class="etiqueta-formulario">Nombre del Competidor / Equipo</label>
-                                <input type="text" id="nombre-participante" class="control-formulario-entrada" placeholder="Ej: UTU FC o Juan Pérez">
-                            </div>
+                    <h3 class="titulo-seccion">Inscribir Participantes</h3>
+                    <p class="subtitulo-seccion">Seleccioná un equipo registrado para agregarlo al torneo.</p>
+
+                    <form action="organizador.php" method="POST" class="formulario-organizador">
+                        <input type="hidden" name="accion" value="inscribir_participante">
+
+                        <div class="grupo-formulario" style="margin-bottom: 15px;">
+                            <label for="id_torneo">Seleccionar Torneo</label>
+                            <select name="id_torneo" id="id_torneo" class="control-formulario-entrada" required>
+                                <option value="" disabled selected>Seleccioná un torneo</option>
+                                <?php foreach ($torneosAsignados as $t): ?>
+                                    <option value="<?php echo $t['id_torneo']; ?>"><?php echo htmlspecialchars($t['nombre_torneo']); ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+
+                        <div class="grupo-formulario" style="margin-bottom: 15px;">
+                            <label for="id_equipo">Seleccionar Equipo</label>
+                            <select name="id_equipo" id="id_equipo" class="control-formulario-entrada" required>
+                                <option value="" disabled selected>Seleccioná un equipo</option>
+                                <?php foreach ($listaEquipos as $eq): ?>
+                                    <option value="<?php echo $eq['id_equipo']; ?>"><?php echo htmlspecialchars($eq['nombre_equipo']); ?></option>
+                                <?php endforeach; ?>
+                            </select>
                         </div>
 
                         <div class="acciones-formulario">
-                            <button type="submit" class="btn-guardar">Confirmar Registro</button>
+                            <button type="submit" class="btn-guardar">Registrar Inscripción</button>
                         </div>
                     </form>
                 </div>
@@ -340,7 +478,7 @@ try {
             <div class="footer-right-group">
                 <nav class="footer-links" aria-label="Enlaces de pie de página">
                     <a href="#" class="footer-link">Sobre nosotros</a>
-                    <a href="#" class="footer-link">Help</a>
+                    <a href="#" class="footer-link">Ayuda</a>
                 </nav>
                 <p class="footer-copyright">&copy; 2026 Epsilon Software. Todos los derechos reservados.</p>
             </div>

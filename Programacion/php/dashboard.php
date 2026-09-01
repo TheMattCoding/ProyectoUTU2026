@@ -31,6 +31,7 @@ requerirRol('administrador');
             <a href="organizador.php" class="sidebar-link">Panel Organizador</a>
             <a href="formularioTorneo.php" class="sidebar-link">Crea tu torneo</a>
             <a href="dashboard.php" class="sidebar-link active">Panel Administrador</a>
+            <a href="equipo.php" class="sidebar-link">Equipos</a>
             <a href="configuracion.php" class="sidebar-link">Configuración</a>
         </nav>
 

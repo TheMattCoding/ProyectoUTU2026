@@ -1,6 +1,6 @@
 <?php
 require_once 'logica/auth.php';
-requerirRol(['organizador', 'administrador']);
+requerirRol(['administrador']);
 require_once 'db.php'; // Incluye la conexión a la base de datos
 
 $rolActual = $_SESSION['rol'] ?? 'visitante';
@@ -9,6 +9,19 @@ $idUsuarioActual = $_SESSION['id_usuario'] ?? 1; // ID del usuario autenticado (
 
 $mensaje = '';
 $tipoMensaje = '';
+
+// Función auxiliar para determinar el nombre de la ronda
+function obtenerNombreRonda($numeroActual, $totalRondas) {
+    $distanciaAlFinal = $totalRondas - $numeroActual;
+
+    return match ($distanciaAlFinal) {
+        0 => 'Final',
+        1 => 'Semifinal',
+        2 => 'Cuartos de Final',
+        3 => 'Octavos de Final',
+        default => "Ronda $numeroActual"
+    };
+}
 
 // Procesar el formulario cuando se envía mediante POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -19,6 +32,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $fecha = $_POST['fecha_inicio'] ?? '';
     $hora = $_POST['hora_inicio'] ?? '';
     $cantidad = !empty($_POST['max_participantes']) ? (int)$_POST['max_participantes'] : NULL;
+    $cantRondas = !empty($_POST['cantidad_rondas']) ? (int)$_POST['cantidad_rondas'] : 1;
+    $privacidad = $_POST['privacidad'] ?? '';
     $descripcion = trim($_POST['descripcion'] ?? '');
 
     if (!empty($nombre) && !empty($fecha) && !empty($disciplina)) {
@@ -39,8 +54,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
             // 2. Insertar en la tabla TORNEOS
-            $sqlTorneo = "INSERT INTO TORNEOS (nombre_torneo, descripcion, id_modulo, id_organizador, lugar, fecha_inicio, estado, privacidad) 
-                          VALUES (?, ?, ?, ?, ?, ?, 'pendiente', 'publico')";
+            $sqlTorneo = "INSERT INTO TORNEOS (nombre_torneo, descripcion, id_modulo, id_organizador, lugar, fecha_inicio, hora_inicio, estado, privacidad) 
+                          VALUES (?, ?, ?, ?, ?, ?, ?, 'pendiente', ?)";
             $stmtTorneo = $pdo->prepare($sqlTorneo);
             $stmtTorneo->execute([
                 $nombre,
@@ -48,7 +63,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $idModulo,
                 $idUsuarioActual,
                 'Montevideo',
-                $fecha
+                $fecha,
+                $hora,
+                $privacidad
             ]);
             $idTorneo = $pdo->lastInsertId();
 
@@ -57,9 +74,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmtConfig = $pdo->prepare($sqlConfig);
             $stmtConfig->execute([$idTorneo, $cantidad]);
 
+            // 4. Crear automáticamente las rondas del torneo
+            $sqlRonda = "INSERT INTO RONDAS (id_torneo, numero_ronda, nombre_ronda, estado_ronda) VALUES (?, ?, ?, ?)";
+            $stmtRonda = $pdo->prepare($sqlRonda);
+
+            for ($i = 1; $i <= $cantRondas; $i++) {
+                $nombreRonda = obtenerNombreRonda($i, $cantRondas);
+                
+                // Si la fecha de inicio es HOY o anterior, la primera ronda inicia "en_curso"
+                $estadoInicial = ($i === 1 && $fecha <= date('Y-m-d')) ? 'en_curso' : 'pendiente';
+
+                $stmtRonda->execute([$idTorneo, $i, 'Ronda ' . $i, $estadoInicial]);
+            }
+
             $pdo->commit();
 
-            $mensaje = "¡El torneo '$nombre' se ha creado correctamente en la base de datos!";
+            $mensaje = "¡El torneo '$nombre' se ha creado correctamente!";
             $tipoMensaje = "exito";
         } catch (PDOException $e) {
             $pdo->rollBack();
@@ -77,7 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SGDM - Panel de Organizador</title>
+    <title>SGDM - Crear Torneo</title>
     
     <link rel="icon" type="image/png" href="../img/logoapp2.jpeg">
     <link rel="stylesheet" href="../css/inicio.css">
@@ -85,7 +115,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
 
-    <!-- 5. Menú lateral -->
+    <!-- Menú lateral -->
     <input type="checkbox" id="menu-toggle" class="menu-checkbox">
 
     <div class="sidebar">
@@ -108,6 +138,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php endif; ?>
 
             <?php if ($rolActual !== 'visitante'): ?>
+                <a href="equipo.php" class="sidebar-link">Equipos</a>
                 <a href="configuracion.php" class="sidebar-link">Configuración</a>
             <?php endif; ?>
         </nav>
@@ -210,7 +241,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
             <?php endif; ?>
 
-            <!-- Formulario con atributos name y action corregidos -->
+            <!-- Formulario de Creación de Torneo -->
             <form action="formularioTorneo.php" method="POST">
 
                 <div class="columnas-flex-formulario">
@@ -250,14 +281,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <input type="date" id="fecha" name="fecha_inicio" required>
                             </div>
                             <div class="grupo-formulario columna-expandible">
-                                <label for="hora">Hora de Inicio</label>
-                                <input type="time" id="hora" name="hora_inicio" required>
+                                <label for="hora_inicio">Hora de Inicio</label>
+                                <input type="time" id="hora_inicio" name="hora_inicio" required>
                             </div>
                         </div>
 
-                        <div class="grupo-formulario">
-                            <label for="cantidad">Cantidad de Equipos</label>
-                            <input type="number" id="cantidad" name="max_participantes" placeholder="Ej: 16">
+                        <div class="fila-formulario">
+                            <div class="grupo-formulario columna-expandible">
+                                <label for="cantidad">Cantidad de Equipos</label>
+                                <input type="number" id="cantidad" name="max_participantes" placeholder="Ej: 16">
+                            </div>
+                            <div class="grupo-formulario columna-expandible">
+                                <label for="cantidad_rondas">Cantidad de Rondas</label>
+                                <input type="number" id="cantidad_rondas" name="cantidad_rondas" min="1" max="20" value="1" required>
+                            </div>
+                        </div>
+
+                        <div class="grupo-formulario columna-expandible">
+                            <label for="privacidad">Privacidad</label>
+                            <select id="privacidad" name="privacidad" required>
+                                <option value="" disabled selected>Seleccione la privacidad</option>
+                                <option value="publico">Público</option>
+                                <option value="privado">Privado</option>
+                            </select>
                         </div>
                     </div>
 
