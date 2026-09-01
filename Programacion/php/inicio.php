@@ -44,6 +44,7 @@ $rolActual = $_SESSION['rol'] ?? 'visitante';
 
             <!-- Solo Usuarios Registrados (no visitantes) -->
             <?php if ($rolActual !== 'visitante'): ?>
+                <a href="equipo.php" class="sidebar-link">Equipos</a>
                 <a href="configuracion.php" class="sidebar-link">Configuración</a>
             <?php endif; ?>
         </nav>
