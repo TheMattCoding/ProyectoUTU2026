@@ -1,0 +1,386 @@
+﻿Carpeta de Programacion Full Stack
+
+
+
+Solicitante: I. T. S - Instituto Tecnológico Superior Arias Balparda.
+Nombre Fantasía, de la nueva empresa: Epsilon Software.
+Grupo: 3° MS.
+Turno: Matutino.
+Unidad Curricular: Programacion Full-Stack.
+Nombres de los integrantes del grupo: Sophia Brum, Mateo Comini, Santiago Crespo, Thiago Iglesias.
+Fecha de entrega: 14/9/2026
+
+
+
+
+
+
+
+
+Instituto Tecnologíco Superior Arias Balparda.
+Blvr. José Batlle y Ordoñez 3570 esq. Gral. Flores - Montevideo.
+0. Índice
+0. Índice        2
+1. Objetivos y Alcance del documento.        4
+Objetivo        4
+Alcance        4
+2. Vocabulario de Términos Técnicos        5
+2.1 Término, Definición y Contexto Operativo        5
+2.2 Simbología, Acrónimos y Abreviaturas        6
+2.2.1 Acrónimos Metodológicos y de Gestión        6
+2.2.2 Acrónimos de Formatos y Tecnologías Web        8
+3. Temas para la primera entrega        8
+4. Introducción        8
+5. Tutoría de Proyecto UTULAB        9
+5.1 Definición de nombre y logo de grupo de proyecto (con justificación)        9
+5.2 Definición de logo de la aplicación        11
+5.3 Formularios de acta de reunión        12
+5.4 Actas de reunión formal interna        14
+19/5/2026        15
+26/5/2026        17
+2/6/2026        19
+9/6/2026        20
+16/6/2026        22
+14/7/2026        26
+5.5 Fundamentación de las elecciones de diseño del sistema        28
+5.5.1 Pagina de Inicio.        28
+5.5.2 Busqueda de torneos        31
+5.5.3 Detalle de torneo        33
+5.5.4 Perfil        35
+5.5.5 Calendario de torneos        37
+5.5.6 Crea tu torneo        39
+5.5.7 Panel Organizador        40
+5.5.8 Panel Administrador        46
+5.5.9 Configuracion        48
+5.5.10 Inicio de sesión        57
+6. Fundamentos de pensamiento basado en S.C.A.M.P.E.R        59
+7. Bibliografía        62
+
+
+________________
+1. Objetivos y Alcance del documento.
+
+
+Objetivo
+Establecer, documentar y justificar el diseño, el flujo de navegación de las interfaces de usuario (UI/UX) y los esquemas del Sistema de Gestión Deportiva Modular (SGDM) desarrollados por Epsilon Software. Este documento tiene como propósito consolidar la fundamentación técnica de las maquetaciones bajo un enfoque intuitivo y responsive (Mobile First y Escritorio), definir el modelo relacional del sistema e integrar los requisitos  exigidos para la materia Programación Full-Stack del Instituto Tecnológico Superior Arias Balparda.
+Alcance
+El alcance de este documento comprende las siguientes secciones técnicas y de diseño:
+Terminología, acrónimos, estándares web y paleta de colores (#151515 Matt Black, #D4AF37 Metallic Gold, #3AAFB9 Turquesa, #FFFFFF Blanco).  
+Esquemas Globales de Pantallas: Diagramación y maquetación comparativa del flujo de usuario para dispositivos móviles y de escritorio. 
+ Fundamentación de Diseño UI/UX: Justificación técnica y visual de las maquetaciones bajo el enfoque Mobile First y de escritorio para las pantallas del sistema:
+Página de Inicio: Carrusel, menú lateral interactivo y barra de        navegación.
+Búsqueda y Detalle de Torneos.
+Perfil de Usuario: Trofeos, torneos activos e historial.
+Calendario de Torneos.
+Módulo "Crea tu torneo".
+Panel Organizador: Gestión de torneos asignados, carga de resultados, inscripción manual y reportes.
+Panel Administrador: Métricas globales, logs/auditorías y estadísticas de rendimiento.
+Configuración: Edición de perfil, seguridad de cuenta, notificaciones, preferencias de tema y eliminación de cuenta.Inicio de Sesión.
+
+
+
+
+
+
+
+
+2. Vocabulario de Términos Técnicos
+A continuación, se presentan los términos técnicos utilizados en la carpeta de Programacion Full Stack para el proyecto SGDM y Epsilon Software.
+________________
+
+
+2.1 Término, Definición y Contexto Operativo
+________________
+
+
+
+
+Menú Hamburguesa: Elemento de diseño de interfaz accesible en la versión móvil que despliega el menú lateral principal optimizando el espacio en pantalla.
+Modo Oscuro / Claro: Preferencia de interfaz que permite alternar el contraste de color del sistema entre un esquema oscuro (Matt Black) o claro para confort visual.
+
+
+
+
+2.2 Simbología, Acrónimos y Abreviaturas
+A continuación se clasifican los acrónimos metodológicos, nomenclaturas de colores hexadecimales y símbolos tipográficos empleados en el documento. 
+2.2.1 Acrónimos Metodológicos y de Gestión
+APA: American Psychological Association (Normas de formato académico).
+ESRE: Especificación de Requisitos del Sistema y Software.
+ITS: Instituto Tecnológico Superior Arias Balparda.
+SGDM: Sistema de Gestión Deportiva Modular.
+UTU: Universidad del Trabajo del Uruguay. 
+Epsilon: Quinta letra del alfabeto griego utilizada en minúscula para el isotipo de la empresa.
+#151515 (Matt Black): Código hexadecimal para el color negro mate utilizado en el fondo de las vistas para brindar elegancia y contraste.
+#3AAFB9 (Turquesa / Cian): Código hexadecimal representativo de creatividad y tecnologías avanzadas dentro de la interfaz.
+#D4AF37 (Metallic Gold): Código hexadecimal asignado al dorado metálico para resaltar elementos triunfales (trofeos, botones e hitos).
+#FFFFFF (Blanco Puro): Código hexadecimal para los trazados del logo de la app e impresiones en negativo de la tipografía.
+________________
+2.2.2 Acrónimos de Formatos y Tecnologías Web
+CSS: Cascading Style Sheets (Hojas de estilo en cascada).
+HTML:HyperText Markup Language (Lenguaje de marcado de hipertexto).
+SVG: Scalable Vector Graphics (Gráficos vectoriales escalables utilizados en sustitución de los emojis estándar).
+URL: Uniform Resource Locator (Localizador uniforme de recursos).
+3. Temas para la entrega
+3.1 Primera entrega
+* Maquetado de todo el sitio mediante filosofia Mobile First (utilizando Flexbox o Grid)
+
+
+3.2 Segunda entrega
+* Modelo relacional normalizado.
+* DCL implementado.
+* Configuración de usuarios de BD con las restricciones pertinentes.
+* Implementación de los modelos alineados al modelo relacional.
+* Integración con PHP utilizando POO (mínimo gestión de usuarios funcionando).
+* Implementación con Apache.
+4. Introducción
+El presente documento constituye la especificación técnica, de diseño y arquitectura referente a la asignatura Programación Full-Stack. Su propósito fundamental es documentar de forma rigurosa la fundamentación de diseño UI/UX, el flujo de interfaz de usuario y los esquemas estructurales desarrollados para el Sistema de Gestión Deportiva Modular (SGDM) por parte de Epsilon Software. A través de este compendio, se respalda la toma de decisiones técnicas bajo un enfoque Mobile First y de escritorio, garantizando que el desarrollo del software cumpla de manera estricta con las pautas de proyecto, las entregas parciales y los requerimientos fijados por el equipo docente para nuestro proyecto de egreso.
+________________
+5. Programacion Full Stack
+
+
+
+
+5.5 Esquema de pantallas
+5.5.1 Módulo 1: Página de Inicio, Búsqueda y Calendario de Torneos  
+
+
+  
+
+
+
+
+
+5.5.2 Módulo 2: Panel Organizador
+  
+
+
+
+  
+
+5.5.3 Módulo 3: Panel Administrador y Configuración
+  
+
+  
+
+
+
+
+
+5.6 Esquema de pantallas en detalle
+
+
+5.6.1 Página de Inicio.
+Optamos por un diseño el cual sea agradable a la vista, intuitivo y fácil de navegar. Utilizamos un color Dorado Metálico (Metallic Gold #D4AF37) para los detalles. La razón del mismo fue encontrar un color que represente, no solo energía o movimiento, si no el objetivo principal de un torneo, la victoria. El color dorado está relacionado con los trofeos y medallas, el primer puesto al que uno aspira en una competición. La idea es dar una sensación de “gloria” con estos colores. Además, el uso del color negro mate (Matt Black #151515 ) da una sensación de poder y elegancia que contrasta muy bien con el blanco utilizado en el fondo.
+Vista de Escritorio
+   
+
+
+Vista de Celulares
+
+
+  
+  
+  
+
+
+
+Al ingresar a la página (ya sea desde una computadora o celular) el usuario se encontrará con un carrusel de noticias (el cual el organizador estará encargado de subir las mismas), un mensaje de bienvenida con el logo de la aplicación, dos islas con las opciones “Calendario de torneos” y en caso de ser organizador la opción de “Crear un torneo”. 
+La página cuenta con un menú lateral con el cual el usuario puede acceder de forma rápida a las distintas partes de nuestra aplicación: Inicio, Calendario de torneos, Crea tu torneo, Panel Organizador, Panel Administrador y Configuración. Además cuenta con la opción de cambiar a un modo oscuro/claro en la parte inferior del mismo. El usuario debe tener todo al alcance de la mano sin submenús que ralentice la experiencia. Este menú lateral cuenta con la función de ser desplegable en la versión de celulares mediante un menú hamburguesa y se mantiene en todas las páginas para que sea consistente.
+
+
+Vista de Escritorio  
+
+
+  
+
+
+
+________________
+
+
+Vista de Celulares
+
+
+  
+  
+
+
+
+En la parte superior de la página tenemos una barra de navegación la cual le brinda al usuario la opción de buscar torneos mediante palabras clave, el apartado de notificaciones y el apartado de perfil los cuales se muestran mediante un menú desplegable al hacer click. 
+
+
+5.5.2 Búsqueda de torneos
+Vista de Escritorio
+  
+
+Vista de Celulares
+  
+  
+
+Cuando el usuario escribe en la barra de búsqueda ciertas palabras clave, será redireccionado a la página de búsqueda de torneos. En ella se mostrará en pantalla islas en las cuales cada una contendrá una imagen (esta será previamente elegida por el organizador de torneos en el apartado “Crear un torneo”), la opción “Ver más” la cual al hacer click enviará al usuario a la página “Detalle de torneo”, y el nombre del Torneo.
+5.5.3 Detalle de torneo
+Vista de Escritorio
+  
+
+
+
+Vista de Celulares
+  
+  
+
+
+
+Cuando el usuario hace click en la opción “Ver más”, será redireccionado a la página de Detalle de torneo. En ella podrá visualizar la ubicación donde será llevado a cabo dicho torneo, el día y hora, una descripción del torneo, el formato del torneo, el creador del mismo, los cupos disponibles y un botón para inscribirse. Además de la foto que fue elegida previamente por el organizador de torneos. 
+
+
+________________
+5.5.4 Perfil
+Vista de Escritorio
+  
+
+Vista de Celulares
+  
+  
+
+Para el apartado de Perfil mantuvimos la misma estructura basada en “islas”  tarjetas. En ella se muestra información clave del usuario como su nombre, correo y sus trofeos. Estos trofeos serán adquiridos al ganar torneos. Se pensó a futuro implementar la opción de que cada torneo tenga un trofeo el cual será seleccionado por el Organizador. EL usuario al ganar dicho torneo podrá elegir hasta tres trofeos para ser exhibidos en su perfil.
+Además, el usuario tendrá acceso a sus torneos activos y a su historial de participaciones anteriores. Incluyendo resultados, tablas de posiciones y estadísticas de los torneos en los que participó.
+
+
+________________
+5.5.5 Calendario de torneos
+Vista de Escritorio
+  
+
+  
+
+________________
+
+
+Vista de Celulares
+  
+  
+
+
+
+Otra de las opciones del menú lateral es el ”Calendario de torneos”. Esta opción estará disponible tanto para usuarios (públicos y registrados), como para el organizador. La diferencia es que el organizador tiene la opción de añadir eventos en el calendario los cuales serán visibles para todos los usuarios. Cuenta con la opción de cambiar de mes para visualizar torneos en los meses subsecuentes.
+
+
+________________
+5.5.6 Crea tu torneo
+Vista de Escritorio
+  
+
+Vista de Celulares
+  
+  
+  
+
+Una de las funciones específicas del organizador de torneos es la de crear dichos torneos. Por ende, nos centramos en diseñar una página para la creación de torneos que contenga todas las opciones necesarias para poder crear distintos tipos de torneos con sus modalidades y disciplinas desde una sola página. En esta encontraremos las opciones de: Asignarle un nombre, la disciplina, el formato de clasificación (eliminación directa, todos contra todos, etc), modalidad (por equipos o individual), fecha y hora de inicio, descripción del torneo, cargar una imagen para que aparezca como portada y la ubicación de donde se llevará cabo.
+
+
+5.5.7 Panel Organizador
+Vista de Escritorio
+  
+
+  
+  
+
+  
+
+Vista de Celulares
+  
+  
+
+  
+  
+  
+
+  
+  
+
+  
+  
+
+Este apartado sólo será accesible para el Organizador de torneos. En el mismo se puede apreciar distintas pestañas en las cuales se dividen las distintas funciones que el organizador llevará a cabo.
+La primera de estas es la pestaña de “Torneos Asignados”. En este se podrá ver un listado de los torneos activos y su estado actual. Además de contar con un botón para crear un torneo el cual lo redireccionará a la pestaña “Crea tu torneo”.
+La segunda pestaña, “Cargar Resultados”, como dice el nombre, está centrada en la carga de datos de los puntajes. El Organizador selecciona el torneo que quiere gestionar. Cuenta con una función que permite cambiar el tipo de visibilidad del torneo (pública/privada).
+La tercera pestaña gira en torno a la carga de participantes de forma manual. En “Inscribir Participantes” el Organizador elige el torneo al cual quiere añadir un participante o equipo. Una vez ingresado el nombre al guardar los cambios ya queda registrado. 
+Por último tenemos la pestaña de “Reportes del Torneo”, en esta el Organizador puede descargar la lista de participantes o exportar un excel con los participantes destacados.
+
+
+________________
+5.5.8 Panel Administrador
+Vista de Escritorio
+  
+  
+
+________________
+
+
+Vista de Celulares
+  
+  
+  
+
+Esta pestaña solo será visible para el Administrador del sistema. En ella se puede visualizar toda la información del sistema. Ya sea la cantidad de torneos creados, cuántos equipos están inscritos, los partidos que aún faltan por jugarse en el mes actual. También cuenta con un apartado de auditorías o logs que registra todos los eventos del sistema; Un listado de todos los torneos con la información correspondiente y por último apartado que muestra una gráfica con estadísticas del rendimiento del sistema.
+________________
+5.5.9 Configuracion
+Vista de Escritorio
+  
+
+  
+
+  
+
+  
+  
+
+________________
+
+
+Vista de Celulares
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+En el apartado de Configuración el usuario podrá efectuar cambios relacionados con su cuenta. 
+En la primera pestaña, “Editar Perfil”, el usuario tiene la opción de cambiar su nombre de usuario, su correo o añadir/editar una biografía.
+En la segunda pestaña, “Cuenta y seguridad”, el usuario podrá actualizar su contraseña. Solo debe ingresar su contraseña actual seguido de su nueva contraseña y una confirmación de la misma.
+En la tercera pestaña, “Notificaciones”, aparecen las opciones para habilitar/deshabilitar las distintas alertas del sistema según las preferencias del usuario.
+En la cuarta pestaña, “Preferencias”, tenemos la opción de configurar el tema principal de la aplicación. En caso de que el usuario prefiera modo oscuro por defecto
+Por último, la quinta pestaña es la de “Borrar cuenta”. Destacada por su color rojo indicando peligro. En caso de que el usuario así lo desee, tiene la opción de eliminar su cuenta en su totalidad ingresando su contraseña actual y confirmando al hacer click en el botón “Confirmar Eliminación”.
+
+
+________________
+5.5.10 Inicio de sesión
+Vista de Escritorio
+  
+
+________________
+
+
+Vista de Celulares
+  
+  
+
+Por último y no menos importante tenemos la página de Inicio de sesión. La cual le brinda al usuario distintos métodos para ingresar al sistema o la opción de registrarse. Se optó por no usar los colores dorados, dando la impresión de calma antes de lo que sería la página principal y su notación más enérgica y ambiciosa.
+
+
+5.7 Modelo Relacional Normalizado
+
+
+________________
+
+
+7. Bibliografía
