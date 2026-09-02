@@ -47,7 +47,6 @@ $correoActual = $_SESSION['correo'] ?? '';
 
             <!-- Usuarios registrados (No visitantes) -->
             <?php if ($rolActual !== 'visitante'): ?>
-                <a href="equipo.php" class="sidebar-link">Equipos</a>
                 <a href="configuracion.php" class="sidebar-link active">Configuración</a>
             <?php endif; ?>
         </nav>
