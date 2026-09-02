@@ -112,6 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="icon" type="image/png" href="../img/logoapp2.jpeg">
     <link rel="stylesheet" href="../css/inicio.css">
     <link rel="stylesheet" href="../css/formularioTorneo.css">
+    <script src="../js/formularioTorneo.js" defer></script>
 </head>
 <body>
 
@@ -145,8 +146,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="sidebar-footer">
             <div class="theme-switch-container">
                 <span class="theme-label">Modo Oscuro</span>
-                <button class="theme-toggle-btn" aria-label="Cambiar tema">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 18px; height: 18px; fill: currentColor; vertical-align: middle;">
+                <button class="theme-toggle-btn" id="btn-theme-toggle" aria-label="Cambiar tema">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icono-svg-tema">
                         <path d="M256 0C114.6 0 0 114.6 0 256S114.6 512 256 512c68.8 0 131.3-27.2 177.3-71.4 7.3-7 9.4-17.9 5.3-27.1s-13.7-14.9-23.8-14.1c-4.9 .4-9.8 .6-14.8 .6-101.6 0-184-82.4-184-184 0-72.1 41.5-134.6 102.1-164.8 9.1-4.5 14.3-14.3 13.1-24.4S322.6 8.5 312.7 6.3C294.4 2.2 275.4 0 256 0z"/>
                     </svg>
                 </button>
@@ -165,8 +166,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         </label>
 
-        <form action="busquedaTorneo.php" method="GET" class="search-form" style="display: flex; flex: 1; max-width: 420px; margin: 0 12px;">
-            <div class="search-container" style="margin: 0; width: 100%;">
+        <form action="busquedaTorneo.php" method="GET" class="search-form">
+            <div class="search-container">
                 <svg class="search-google-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                     <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" fill="#777777"/>
                 </svg>
@@ -228,20 +229,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <main class="main-container">
         <div class="isla-formulario-unica">
 
-            <div class="contenedor-logo-formulario" style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px; border-bottom: 2px solid #4a3b17; padding-bottom: 10px;">
-                <img src="../img/logoapp2.jpeg" alt="Logo" class="app-logo" style="height: 45px; width: auto; border-radius: 50%;">
-                <h2 style="margin: 0; border: none; padding: 0; font-size: 1.4rem; color: #D4AF37; font-weight: bold; letter-spacing: 0.5px;">CREAR NUEVO TORNEO</h2>
+            <div class="contenedor-logo-formulario">
+                <img src="../img/logoapp2.jpeg" alt="Logo" class="app-logo">
+                <h2>CREAR NUEVO TORNEO</h2>
             </div>
 
             <!-- Cartel de alerta si hay un mensaje -->
             <?php if (!empty($mensaje)): ?>
-                <div style="padding: 12px 16px; margin-bottom: 20px; border-radius: 6px; font-weight: bold; color: #fff; background-color: <?= $tipoMensaje === 'exito' ? '#28a745' : '#dc3545' ?>;">
+                <div class="alerta-mensaje <?= $tipoMensaje === 'exito' ? 'exito' : 'error' ?>">
                     <?= htmlspecialchars($mensaje) ?>
                 </div>
             <?php endif; ?>
 
             <!-- Formulario de Creación de Torneo -->
-            <form action="formularioTorneo.php" method="POST">
+            <form action="formularioTorneo.php" method="POST" enctype="multipart/form-data">
 
                 <div class="columnas-flex-formulario">
 
@@ -317,10 +318,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <div class="contenedor-subir-imagen">
                                 <input type="file" id="portada-torneo" name="portada" accept="image/*" class="input-archivo-oculto">
                                 <label for="portada-torneo" class="boton-subir-archivo">
-                                    <svg class="icono-subir" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 18px; height: 18px; fill: currentColor; margin-right: 8px; vertical-align: middle;">
+                                    <svg class="icono-subir" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                                         <path d="M288 109.3L288 352c0 17.7-14.3 32-32 32s-32-14.3-32-32l0-242.7-51.3 51.3c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3l105.4-105.4c12.5-12.5 32.8-12.5 45.3 0l105.4 105.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L288 109.3zM64 352l128 0c0 35.3 28.7 64 64 64s64-28.7 64-64l128 0c35.3 0 64 28.7 64 64l0 32c0 35.3-28.7 64-64 64L64 512c-35.3 0-64-28.7-64-64l0-32c0-35.3 28.7-64 64-64zm312 80a24 24 0 1 0 0-48 24 24 0 1 0 0 48z"/>
                                     </svg>
-                                    Seleccionar Imagen
+                                    <span id="texto-subir-archivo">Seleccionar Imagen</span>
                                 </label>
                             </div>
                         </div>
@@ -328,14 +329,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <div class="grupo-formulario">
                             <label>Ubicación del Torneo</label>
                             <div class="contenedor-mapa">
-                                <iframe src="https://maps.google.com/maps?q=Montevideo&t=&z=13&ie=UTF8&iwloc=&output=embed" width="100%" height="150" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                                <iframe src="https://maps.google.com/maps?q=Montevideo&t=&z=13&ie=UTF8&iwloc=&output=embed" allowfullscreen="" loading="lazy"></iframe>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="grupo-botones-formulario">
-                    <button type="button" class="boton-formulario boton-cancelar" onclick="window.location.href='inicio.php'">Cancelar</button>
+                    <button type="button" id="btn-cancelar" class="boton-formulario boton-cancelar">Cancelar</button>
                     <button type="submit" class="boton-formulario boton-enviar">Crear Torneo</button>
                 </div>
             </form>

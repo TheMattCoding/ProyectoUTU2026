@@ -51,7 +51,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if ($stmtVerificar->fetchColumn() > 0) {
                     $mensajeError = "El participante ya está inscrito en este torneo.";
                 } else {
-                    // Inserta en la tabla de inscripciones
                     $sqlInscribir = "INSERT INTO INSCRIPCIONES_TORNEO (id_torneo, id_participante, estado_inscripcion) 
                                      VALUES (:id_torneo, :id_participante, 'confirmado')";
                     $stmtInscribir = $pdo->prepare($sqlInscribir);
@@ -59,14 +58,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         ':id_torneo'       => $idTorneo,
                         ':id_participante' => $idParticipante
                     ]);
-                // Inserta en la tabla de inscripciones sin la columna fecha_inscripcion
-                $sqlInscribir = "INSERT INTO inscripciones_torneo (id_torneo, id_equipo, estado_inscripcion) 
-                                 VALUES (:id_torneo, :id_equipo, 'confirmado')";
-                $stmtInscribir = $pdo->prepare($sqlInscribir);
-                $stmtInscribir->execute([
-                    ':id_torneo' => $idTorneo,
-                    ':id_equipo' => $idEquipo
-                ]);
 
                     $mensajeExito = "Participante inscrito correctamente en el torneo.";
                 }
@@ -132,8 +123,8 @@ try {
     // 1. Obtener lista de Torneos
     if ($rolActual === 'administrador') {
         $sqlTorneos = "SELECT t.*, m.nombre_modulo AS disciplina 
-                       FROM TORNEOS t 
-                       LEFT JOIN MODULOS_COMPETENCIA m ON t.id_modulo = m.id_modulo 
+                       FROM torneos t 
+                       LEFT JOIN modulos_competencia m ON t.id_modulo = m.id_modulo 
                        ORDER BY t.id_torneo DESC";
         $stmtT = $pdo->prepare($sqlTorneos);
         $stmtT->execute();
@@ -148,9 +139,10 @@ try {
     }
     $torneosAsignados = $stmtT->fetchAll(PDO::FETCH_ASSOC);
 
-    // 2. Obtener lista de Participantes registrados
-    $stmtP = $pdo->query("SELECT id_participante, CONCAT(nombre, ' ', apellido) AS nombre_participante FROM PARTICIPANTES ORDER BY nombre ASC, apellido ASC");    $listaParticipantes = $stmtP->fetchAll(PDO::FETCH_ASSOC);
-    // 2. Obtener lista de Equipos registrados para el selector de inscripción
+    // 2. Obtener lista de Participantes y Equipos
+    $stmtP = $pdo->query("SELECT id_participante, CONCAT(nombre, ' ', apellido) AS nombre_participante FROM PARTICIPANTES ORDER BY nombre ASC, apellido ASC");
+    $listaParticipantes = $stmtP->fetchAll(PDO::FETCH_ASSOC);
+
     $stmtE = $pdo->query("SELECT id_equipo, nombre_equipo FROM equipos ORDER BY nombre_equipo ASC");
     $listaEquipos = $stmtE->fetchAll(PDO::FETCH_ASSOC);
 
@@ -183,7 +175,7 @@ try {
     $partidosPendientes = $stmtPartidos->fetchAll(PDO::FETCH_ASSOC);
 
 } catch (PDOException $e) {
-    echo "<div style='color:red; background:#fff; padding:10px; margin:10px;'>Error SQL: " . $e->getMessage() . "</div>";
+    $errorBaseDatos = "Error SQL: " . $e->getMessage();
     $torneosAsignados = [];
     $listaParticipantes = [];
     $partidosPendientes = [];
@@ -199,8 +191,13 @@ try {
     <link rel="icon" type="image/png" href="../img/logoapp2.jpeg">
     <link rel="stylesheet" href="../css/inicio.css">
     <link rel="stylesheet" href="../css/organizador.css">
+    <script src="../js/organizador.js" defer></script>
 </head>
 <body>
+
+    <?php if (isset($errorBaseDatos)): ?>
+        <div class="mensaje-sql-error"><?= htmlspecialchars($errorBaseDatos) ?></div>
+    <?php endif; ?>
 
     <!-- Menú lateral -->
     <input type="checkbox" id="menu-toggle" class="menu-checkbox">
@@ -233,7 +230,7 @@ try {
             <div class="theme-switch-container">
                 <span class="theme-label">Modo Oscuro</span>
                 <button class="theme-toggle-btn" aria-label="Cambiar tema">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 18px; height: 18px; fill: currentColor; vertical-align: middle;">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icono-tema">
                         <path d="M256 0C114.6 0 0 114.6 0 256S114.6 512 256 512c68.8 0 131.3-27.2 177.3-71.4 7.3-7 9.4-17.9 5.3-27.1s-13.7-14.9-23.8-14.1c-4.9 .4-9.8 .6-14.8 .6-101.6 0-184-82.4-184-184 0-72.1 41.5-134.6 102.1-164.8 9.1-4.5 14.3-14.3 13.1-24.4S322.6 8.5 312.7 6.3C294.4 2.2 275.4 0 256 0z"/>
                     </svg>
                 </button>
@@ -254,8 +251,8 @@ try {
         </label>
 
         <!-- Busqueda de Torneo -->
-        <form action="busquedaTorneo.php" method="GET" class="search-form" style="display: flex; flex: 1; max-width: 420px; margin: 0 12px;">
-            <div class="search-container" style="margin: 0; width: 100%;">
+        <form action="busquedaTorneo.php" method="GET" class="search-form navbar-search-form">
+            <div class="search-container navbar-search-container">
                 <svg class="search-google-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                     <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" fill="#777777"/>
                 </svg>
@@ -375,13 +372,13 @@ try {
                                                 </span>
                                             </td>
                                             <td data-etiqueta="Acción">
-                                                <a href="detalleTorneo.php?id=<?php echo $itemTorneo['id_torneo']; ?>" class="btn-secundario-chico" style="text-decoration:none;">Ver Detalle</a>
+                                                <a href="detalleTorneo.php?id=<?php echo $itemTorneo['id_torneo']; ?>" class="btn-secundario-chico">Ver Detalle</a>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>
                                 <?php else: ?>
                                     <tr>
-                                        <td colspan="4" style="text-align: center; padding: 20px;">No tienes torneos asignados actualmente.</td>
+                                        <td colspan="4" class="celda-tabla-vacia">No tienes torneos asignados actualmente.</td>
                                     </tr>
                                 <?php endif; ?>
                             </tbody>
@@ -400,10 +397,10 @@ try {
                         <?php if (!empty($partidosPendientes)): ?>
                             <?php foreach ($partidosPendientes as $partido): ?>
                                 <?php $idEnf = $partido['id_enfrentamiento']; ?>
-                                <div style="font-size: 0.85rem; color: #D4AF37; margin-top: 10px; font-weight: bold;">
+                                <div class="etiqueta-partido-torneo">
                                     <?php echo htmlspecialchars($partido['nombre_torneo']); ?> - <?php echo htmlspecialchars($partido['nombre_ronda']); ?>
                                 </div>
-                                <div class="tarjeta-fila-partido" style="margin-bottom: 15px;">
+                                <div class="tarjeta-fila-partido">
                                     <span class="nombre-equipo texto-derecha"><?php echo htmlspecialchars($partido['equipo_local'] ?? 'Equipo Local'); ?></span>
                                     <div class="entradas-marcador-partido">
                                         <input type="number" name="resultados[<?php echo $idEnf; ?>][local]" class="control-formulario-entrada entrada-marcador" value="<?php echo $partido['marcador_local'] ?? 0; ?>" min="0" required>
@@ -418,7 +415,7 @@ try {
                                 <button type="submit" class="btn-guardar">Guardar marcadores</button>
                             </div>
                         <?php else: ?>
-                            <p style="padding: 15px; text-align: center;">No hay partidos pendientes para cargar resultados en la ronda activa.</p>
+                            <p class="texto-sin-partidos">No hay partidos pendientes para cargar resultados en la ronda activa.</p>
                         <?php endif; ?>
                     </form>
                 </div>
@@ -429,13 +426,13 @@ try {
                     <p class="subtitulo-seccion">Seleccioná un participante registrado para agregarlo al torneo.</p>
 
                     <?php if (!empty($mensajeExito)): ?>
-                        <div style="background-color: #1b4332; color: #2ec4b6; border: 1px solid #2ec4b6; padding: 10px; border-radius: 6px; margin-bottom: 15px;">
+                        <div class="mensaje-alerta alerta-exito">
                             ✓ <?php echo htmlspecialchars($mensajeExito); ?>
                         </div>
                     <?php endif; ?>
 
                     <?php if (!empty($mensajeError)): ?>
-                        <div style="background-color: #4a151b; color: #ff6b6b; border: 1px solid #ff6b6b; padding: 10px; border-radius: 6px; margin-bottom: 15px;">
+                        <div class="mensaje-alerta alerta-error">
                             ✕ <?php echo htmlspecialchars($mensajeError); ?>
                         </div>
                     <?php endif; ?>
@@ -443,8 +440,8 @@ try {
                     <form action="organizador.php" method="POST" class="formulario-organizador">
                         <input type="hidden" name="accion" value="inscribir_participante">
 
-                        <div class="grupo-formulario" style="margin-bottom: 15px;">
-                            <label for="id_torneo">Seleccionar Torneo</label>
+                        <div class="grupo-formulario">
+                            <label for="id_torneo" class="etiqueta-formulario">Seleccionar Torneo</label>
                             <select name="id_torneo" id="id_torneo" class="control-formulario-entrada" required>
                                 <option value="" disabled selected>Seleccioná un torneo</option>
                                 <?php foreach ($torneosAsignados as $t): ?>
@@ -453,8 +450,8 @@ try {
                             </select>
                         </div>
 
-                        <div class="grupo-formulario" style="margin-bottom: 15px;">
-                            <label for="id_participante">Seleccionar Participante</label>
+                        <div class="grupo-formulario">
+                            <label for="id_participante" class="etiqueta-formulario">Seleccionar Participante</label>
                             <select name="id_participante" id="id_participante" class="control-formulario-entrada" required>
                                 <option value="" disabled selected>Seleccioná un participante</option>
                                 <?php foreach ($listaParticipantes as $p): ?>

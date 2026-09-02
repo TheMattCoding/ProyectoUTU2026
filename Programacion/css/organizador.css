@@ -1,5 +1,5 @@
 /* ==========================================================================
-   1. Configuración Estructural Base (Aprovechando espacio)
+   1. Configuración Estructural Base
    ========================================================================== */
 .main-container {
     background-color: #ffffff;
@@ -12,7 +12,7 @@
 
 .contenedor-organizador {
     width: 100%;
-    max-width: 1200px; /* Expandido para aprovechar el escritorio */
+    max-width: 1200px;
     display: flex;
     flex-direction: column;
     gap: 24px;
@@ -27,7 +27,6 @@
     letter-spacing: 0.5px;
 }
 
-/* Estilo para el enlace activo del menú lateral */
 .sidebar-link.active-link {
     background-color: rgba(255, 255, 255, 0.1);
     border-left: 4px solid #ffffff;
@@ -35,7 +34,29 @@
 }
 
 /* ==========================================================================
-   2. Navegación por Radio Hack (Sin JavaScript)
+   2. Ajustes Navbar / Búsqueda
+   ========================================================================== */
+.navbar-search-form {
+    display: flex;
+    flex: 1;
+    max-width: 420px;
+    margin: 0 12px;
+}
+
+.navbar-search-container {
+    margin: 0;
+    width: 100%;
+}
+
+.icono-tema {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+    vertical-align: middle;
+}
+
+/* ==========================================================================
+   3. Navegación por Radio Hack (Sin JavaScript)
    ========================================================================== */
 .control-radio-pestana {
     display: none;
@@ -66,7 +87,6 @@
     color: #111111;
 }
 
-/* Estado Activo Dinámico */
 #radio-pestana-torneos:checked ~ .contenedor-organizador .label-torneos,
 #radio-pestana-fixtures:checked ~ .contenedor-organizador .label-fixtures,
 #radio-pestana-participantes:checked ~ .contenedor-organizador .label-participantes,
@@ -77,7 +97,7 @@
 }
 
 /* ==========================================================================
-   3. Contenedor del Panel Operativo (Isla Negra)
+   4. Contenedor del Panel Operativo
    ========================================================================== */
 .tarjeta-contenido-organizador {
     background-color: #1a1a1a;
@@ -95,7 +115,6 @@
     flex-direction: column;
 }
 
-/* Despliegue de paneles condicional */
 #radio-pestana-torneos:checked ~ .contenedor-organizador .panel-torneos,
 #radio-pestana-fixtures:checked ~ .contenedor-organizador .panel-fixtures,
 #radio-pestana-participantes:checked ~ .contenedor-organizador .panel-participantes,
@@ -125,10 +144,26 @@
     line-height: 1.4;
 }
 
-/* Componentes de Formulario estándar */
-.formulario-organizador { display: flex; flex-direction: column; gap: 16px; }
-.grupo-formulario { display: flex; flex-direction: column; gap: 6px; width: 100%; }
-.etiqueta-formulario { font-size: 13px; font-weight: 500; color: #cccccc; }
+/* Formulario */
+.formulario-organizador { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 16px; 
+}
+
+.grupo-formulario { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 6px; 
+    width: 100%; 
+    margin-bottom: 15px;
+}
+
+.etiqueta-formulario { 
+    font-size: 13px; 
+    font-weight: 500; 
+    color: #cccccc; 
+}
 
 .control-formulario-entrada,
 .control-formulario-seleccion {
@@ -145,7 +180,7 @@
 }
 
 /* ==========================================================================
-   4. Solución al Responsive de Tablas (Mobile Fix)
+   5. Tablas
    ========================================================================== */
 .contenedor-tabla { 
     width: 100%; 
@@ -171,10 +206,14 @@
     border-bottom: 1px solid #2c2c2e; 
 }
 
-/* Rediseño completo para pantallas medianas y chicas (Móviles) */
+.celda-tabla-vacia {
+    text-align: center;
+    padding: 20px;
+}
+
 @media (max-width: 768px) {
     .tabla-datos thead {
-        display: none; /* Ocultamos los encabezados nativos */
+        display: none;
     }
     
     .tabla-datos tr {
@@ -199,7 +238,6 @@
         border-bottom: none;
     }
     
-    /* Inyectamos los títulos usando el atributo HTML data-etiqueta */
     .tabla-datos td::before {
         content: attr(data-etiqueta);
         float: left;
@@ -212,14 +250,32 @@
 }
 
 /* ==========================================================================
-   5. Componentes de Cruces y Fixtures
+   6. Fixtures y Partidos
    ========================================================================== */
 .insignia { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; }
 .insignia-exito { background-color: rgba(48, 209, 88, 0.15); color: #30d158; }
 .insignia-advertencia { background-color: rgba(255, 159, 10, 0.15); color: #ff9f0a; }
+.insignia-secundario { background-color: rgba(142, 142, 147, 0.15); color: #8e8e93; }
 
-.encabezado-subseccion { font-size: 13px; font-weight: bold; color: #8e8e93; text-transform: uppercase; margin-top: 12px; border-bottom: 1px solid #2c2c2e; padding-bottom: 8px; letter-spacing: 0.5px; }
-.tarjeta-fila-partido { display: flex; align-items: center; justify-content: space-between; background-color: #222222; border: 1px solid #2c2c2e; border-radius: 14px; padding: 14px; gap: 12px; margin-bottom: 10px; }
+.etiqueta-partido-torneo {
+    font-size: 0.85rem;
+    color: #D4AF37;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.tarjeta-fila-partido { 
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between; 
+    background-color: #222222; 
+    border: 1px solid #2c2c2e; 
+    border-radius: 14px; 
+    padding: 14px; 
+    gap: 12px; 
+    margin-bottom: 15px; 
+}
+
 .nombre-equipo { flex: 1; font-size: 14px; font-weight: 600; color: #ffffff; }
 .texto-derecha { text-align: right; }
 .texto-izquierda { text-align: left; }
@@ -227,38 +283,94 @@
 .entrada-marcador { width: 48px; height: 38px; text-align: center; font-weight: bold; font-size: 16px; padding: 0; }
 .divisor-marcador { color: #636366; font-size: 12px; font-weight: bold; }
 
-/* Switch de Estado */
-.caja-estado-ronda { background-color: #2c2c2e; padding: 14px; border-radius: 12px; margin-top: 16px; }
-.contenedor-interruptor { display: flex; align-items: center; gap: 12px; cursor: pointer; font-size: 13.5px; color: #ffffff; }
-.contenedor-interruptor input { display: none; }
-.contenedor-interruptor .deslizador { width: 36px; height: 20px; background-color: #48484a; border-radius: 10px; position: relative; display: inline-block; flex-shrink: 0; transition: background-color 0.2s; }
-.contenedor-interruptor .deslizador::before { content: ""; position: absolute; width: 16px; height: 16px; left: 2px; top: 2px; background-color: #ffffff; border-radius: 50%; transition: transform 0.2s; }
-.contenedor-interruptor input:checked + .deslizador { background-color: #30d158; }
-.contenedor-interruptor input:checked + .deslizador::before { transform: translateX(16px); }
+.texto-sin-partidos {
+    padding: 15px;
+    text-align: center;
+}
 
-/* Reportes */
+/* ==========================================================================
+   7. Mensajes de Alerta y Estado
+   ========================================================================== */
+.mensaje-sql-error {
+    color: #ff6b6b;
+    background-color: #4a151b;
+    border: 1px solid #ff6b6b;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 6px;
+}
+
+.mensaje-alerta {
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+}
+
+.alerta-exito {
+    background-color: #1b4332;
+    color: #2ec4b6;
+    border: 1px solid #2ec4b6;
+}
+
+.alerta-error {
+    background-color: #4a151b;
+    color: #ff6b6b;
+    border: 1px solid #ff6b6b;
+}
+
+/* ==========================================================================
+   8. Reportes
+   ========================================================================== */
 .cuadricula-acciones-reporte { display: flex; flex-direction: column; gap: 12px; }
 .tarjeta-descarga-reporte { display: flex; justify-content: space-between; align-items: center; background-color: #222222; padding: 16px; border-radius: 14px; border: 1px solid #2c2c2e; gap: 10px; }
 .tarjeta-descarga-reporte h5 { font-size: 14px; font-weight: 500; color: #ffffff; margin: 0; }
 
-/* Botones */
-.btn-guardar, .btn-secundario-chico { display: inline-flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; border: none; text-decoration: none; }
-.btn-guardar { background-color: #ffffff; color: #111111; padding: 12px 24px; border-radius: 20px; font-size: 13.5px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); align-self: flex-start; transition: background-color 0.15s; }
+/* ==========================================================================
+   9. Botones
+   ========================================================================== */
+.btn-guardar, .btn-secundario-chico { 
+    display: inline-flex; 
+    align-items: center; 
+    justify-content: center; 
+    font-weight: bold; 
+    cursor: pointer; 
+    border: none; 
+    text-decoration: none; 
+}
+
+.btn-guardar { 
+    background-color: #ffffff; 
+    color: #111111; 
+    padding: 12px 24px; 
+    border-radius: 20px; 
+    font-size: 13.5px; 
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2); 
+    align-self: flex-start; 
+    transition: background-color 0.15s; 
+}
+
 .btn-guardar:hover { background-color: #e5e5ea; }
-.btn-secundario-chico { background-color: #2c2c2e; color: #ffffff; border: 1px solid #444444; padding: 8px 14px; border-radius: 10px; font-size: 12px; transition: background-color 0.15s; }
+
+.btn-secundario-chico { 
+    background-color: #2c2c2e; 
+    color: #ffffff; 
+    border: 1px solid #444444; 
+    padding: 8px 14px; 
+    border-radius: 10px; 
+    font-size: 12px; 
+    transition: background-color 0.15s; 
+}
+
 .btn-secundario-chico:hover { background-color: #3a3a3c; }
 .acciones-formulario { margin-top: 8px; }
 
-/* Ajuste responsive para filas de partidos en pantallas muy chicas */
+/* Media Queries */
 @media (max-width: 480px) {
     .tarjeta-fila-partido { flex-direction: column; text-align: center; gap: 8px; }
     .texto-derecha, .texto-izquierda { text-align: center; }
     .entradas-marcador-partido { justify-content: center; width: 100%; }
 }
 
-/* ==========================================================================
-   6. Media Query Unificada para Escritorio (Aprovechamiento Real)
-   ========================================================================== */
 @media (min-width: 1024px) {
     .contenedor-organizador { flex-direction: row; align-items: flex-start; gap: 40px; }
     .pestanas-organizador { width: 280px; flex-shrink: 0; position: sticky; top: 110px; }

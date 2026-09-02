@@ -48,7 +48,7 @@ $fechaFormateada = !empty($torneo['fecha_inicio'] && !empty($torneo['hora_inicio
     ? date('d/m/Y - h:i A', strtotime($torneo['fecha_inicio'] . ' ' . $torneo['hora_inicio'])) 
     : 'Por confirmar';
 
-// Verificación corregida usando la relación de id_usuario -> id_participante
+// Verificación usando la relación de id_usuario -> id_participante
 $yaInscrito = false;
 if ($idUsuarioActual && $idTorneo) {
     $stmtPart = $pdo->prepare("SELECT id_participante FROM PARTICIPANTES WHERE id_usuario = :id_usuario");
@@ -112,7 +112,7 @@ if ($idUsuarioActual && $idTorneo) {
             <div class="theme-switch-container">
                 <span class="theme-label">Modo Oscuro</span>
                 <button class="theme-toggle-btn" aria-label="Cambiar tema">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 18px; height: 18px; fill: currentColor; vertical-align: middle;">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="theme-toggle-svg">
                         <path d="M256 0C114.6 0 0 114.6 0 256S114.6 512 256 512c68.8 0 131.3-27.2 177.3-71.4 7.3-7 9.4-17.9 5.3-27.1s-13.7-14.9-23.8-14.1c-4.9 .4-9.8 .6-14.8 .6-101.6 0-184-82.4-184-184 0-72.1 41.5-134.6 102.1-164.8 9.1-4.5 14.3-14.3 13.1-24.4S322.6 8.5 312.7 6.3C294.4 2.2 275.4 0 256 0z"/>
                     </svg>
                 </button>
@@ -133,8 +133,8 @@ if ($idUsuarioActual && $idTorneo) {
         </label>
 
         <!-- Búsqueda de Torneo -->
-        <form action="busquedaTorneo.php" method="GET" class="search-form" style="display: flex; flex: 1; max-width: 420px; margin: 0 12px;">
-            <div class="search-container" style="margin: 0; width: 100%;">
+        <form action="busquedaTorneo.php" method="GET" class="search-form">
+            <div class="search-container">
                 <svg class="search-google-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                     <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" fill="#777777"/>
                 </svg>
@@ -263,14 +263,14 @@ if ($idUsuarioActual && $idTorneo) {
             <div class="modal-contenido">
                 <button type="button" id="btn-cerrar-modal" class="modal-cerrar">&times;</button>
                 <h3>Inscripción al Torneo</h3>
-                <p style="margin-bottom: 15px; color: #ccc;">Ingresa los datos para confirmar tu participación.</p>
+                <p class="modal-subtitulo">Ingresa los datos para confirmar tu participación.</p>
             
                 <form action="logica/inscribir.php" method="POST">
                     <input type="hidden" name="id_torneo" value="<?php echo $idTorneo; ?>">
                 
-                    <div class="grupo-entrada" style="margin-bottom: 15px;">
-                        <label for="nombre_equipo" style="display:block; margin-bottom: 5px;">Nombre del Equipo / Participante:</label>
-                        <input type="text" id="nombre_equipo" name="nombre_equipo" required placeholder="Ej: Epsilon FC / Tu Nombre" class="control-formulario-entrada" style="width: 100%; padding: 10px; border-radius: 6px;">
+                    <div class="grupo-entrada">
+                        <label for="nombre_equipo" class="etiqueta-entrada">Nombre del Equipo / Participante:</label>
+                        <input type="text" id="nombre_equipo" name="nombre_equipo" required placeholder="Ej: Epsilon FC / Tu Nombre" class="control-formulario-entrada">
                     </div>
 
                     <button type="submit" class="btn-principal">
@@ -280,32 +280,32 @@ if ($idUsuarioActual && $idTorneo) {
             </div>
         </div>
 
-        <!-- Botón dinámico -->
+        <!-- Botón para Cancelar Inscripción -->
         <?php if ($yaInscrito): ?>
-            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-                <form action="logica/cancelarInscripcion.php" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas cancelar tu inscripción a este torneo?');" style="flex: 1; min-width: 200px;">
+            <div class="contenedor-acciones-inscrito">
+                <form action="logica/cancelarInscripcion.php" method="POST" class="form-cancelar-inscripcion">
                     <input type="hidden" name="id_torneo" value="<?php echo $idTorneo; ?>">
-                    <button type="submit" class="btn-principal" style="background-color: #e63946; border-color: #e63946; color: white;">
+                    <button type="submit" class="btn-principal btn-cancelar">
                         CANCELAR INSCRIPCIÓN
                     </button>
                 </form>
             </div>
         <?php endif; ?>
        
+        <!-- Mensajes de respuesta -->
         <?php if (isset($_GET['estado']) && $_GET['estado'] === 'inscrito'): ?>
-            <div style="background-color: #1b4332; color: #2ec4b6; border: 1px solid #2ec4b6; padding: 12px; border-radius: 100px; margin-bottom: 20px; text-align: center;">
+            <div class="alerta alerta-exito">
                 ✓ ¡Te has inscrito exitosamente al torneo!
             </div>
         <?php elseif (isset($_GET['estado']) && $_GET['estado'] === 'cancelado'): ?>
-            <div style="background-color: #3d2314; color: #ffb703; border: 1px solid #ffb703; padding: 12px; border-radius: 100px; margin-bottom: 20px; text-align: center;">
+            <div class="alerta alerta-advertencia">
                 ✓ Has cancelado tu inscripción al torneo.
             </div>
         <?php elseif (isset($_GET['estado']) && $_GET['estado'] === 'error'): ?>
-            <div style="background-color: #4a151b; color: #ff6b6b; border: 1px solid #ff6b6b; padding: 12px; border-radius: 100px; margin-bottom: 20px; text-align: center;">
+            <div class="alerta alerta-error">
                 ✕ Ocurrió un error al procesar tu inscripción. Inténtalo nuevamente.
             </div>
         <?php endif; ?>
-
 
         <script src="../js/modalInscripcion.js"></script>
     </main>
