@@ -16,8 +16,8 @@ $accion = $_POST['accion'] ?? '';
 // AUTO-ACTIVAR PRIMERA RONDA SI LLEGÓ LA FECHA
 // ==========================================
 try {
-    $sqlAutoActivar = "UPDATE RONDAS r
-                       INNER JOIN TORNEOS t ON r.id_torneo = t.id_torneo
+    $sqlAutoActivar = "UPDATE rondas r
+                       INNER JOIN torneos t ON r.id_torneo = t.id_torneo
                        SET r.estado_ronda = 'en_curso'
                        WHERE t.fecha_inicio <= CURDATE() 
                          AND r.numero_ronda = 1 
@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($idTorneo && $idEquipo) {
             try {
                 // Inserta en la tabla de inscripciones sin la columna fecha_inscripcion
-                $sqlInscribir = "INSERT INTO INSCRIPCIONES_TORNEO (id_torneo, id_equipo, estado_inscripcion) 
+                $sqlInscribir = "INSERT INTO inscripciones_torneo (id_torneo, id_equipo, estado_inscripcion) 
                                  VALUES (:id_torneo, :id_equipo, 'confirmado')";
                 $stmtInscribir = $pdo->prepare($sqlInscribir);
                 $stmtInscribir->execute([
@@ -65,12 +65,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
                 $pdo->beginTransaction();
 
-                $sqlEstado = "UPDATE ENFRENTAMIENTOS 
+                $sqlEstado = "UPDATE enfrentamientos 
                               SET estado_enfrentamiento = 'finalizado' 
                               WHERE id_enfrentamiento = :id";
                 $stmtEstado = $pdo->prepare($sqlEstado);
 
-                $sqlResultado = "INSERT INTO RESULTADOS (id_enfrentamiento, puntuacion_local, puntuacion_visitante, id_usuario_registro)
+                $sqlResultado = "INSERT INTO resultados (id_enfrentamiento, puntuacion_local, puntuacion_visitante, id_usuario_registro)
                                  VALUES (:id, :m_local, :m_visita, :id_usuario)
                                  ON DUPLICATE KEY UPDATE 
                                     puntuacion_local = VALUES(puntuacion_local), 
@@ -120,8 +120,8 @@ try {
         $stmtT->execute();
     } else {
         $sqlTorneos = "SELECT t.*, m.nombre_modulo AS disciplina 
-                       FROM TORNEOS t 
-                       LEFT JOIN MODULOS_COMPETENCIA m ON t.id_modulo = m.id_modulo 
+                       FROM torneos t 
+                       LEFT JOIN modulos_competencia m ON t.id_modulo = m.id_modulo 
                        WHERE t.id_organizador = :id_organizador 
                        ORDER BY t.id_torneo DESC";
         $stmtT = $pdo->prepare($sqlTorneos);
@@ -130,7 +130,7 @@ try {
     $torneosAsignados = $stmtT->fetchAll(PDO::FETCH_ASSOC);
 
     // 2. Obtener lista de Equipos registrados para el selector de inscripción
-    $stmtE = $pdo->query("SELECT id_equipo, nombre_equipo FROM EQUIPOS ORDER BY nombre_equipo ASC");
+    $stmtE = $pdo->query("SELECT id_equipo, nombre_equipo FROM equipos ORDER BY nombre_equipo ASC");
     $listaEquipos = $stmtE->fetchAll(PDO::FETCH_ASSOC);
 
     // 3. Obtener partidos pendientes
@@ -142,12 +142,12 @@ try {
                         t.nombre_torneo,
                         res.puntuacion_local AS marcador_local,
                         res.puntuacion_visitante AS marcador_visita
-                    FROM ENFRENTAMIENTOS e
-                    INNER JOIN RONDAS r ON e.id_ronda = r.id_ronda
-                    INNER JOIN TORNEOS t ON r.id_torneo = t.id_torneo
-                    LEFT JOIN EQUIPOS loc ON e.id_local = loc.id_equipo
-                    LEFT JOIN EQUIPOS vis ON e.id_visitante = vis.id_equipo
-                    LEFT JOIN RESULTADOS res ON e.id_enfrentamiento = res.id_enfrentamiento
+                    FROM enfrentamientos e
+                    INNER JOIN rondas r ON e.id_ronda = r.id_ronda
+                    INNER JOIN torneos t ON r.id_torneo = t.id_torneo
+                    LEFT JOIN equipos loc ON e.id_local = loc.id_equipo
+                    LEFT JOIN equipos vis ON e.id_visitante = vis.id_equipo
+                    LEFT JOIN resultados res ON e.id_enfrentamiento = res.id_enfrentamiento
                     WHERE e.estado_enfrentamiento != 'finalizado'";
 
     if ($rolActual !== 'administrador') {

@@ -18,13 +18,13 @@ if (!$id_torneo) {
 
 try {
     // 1. Obtener el id_participante correspondiente al id_usuario actual
-    $stmtPart = $pdo->prepare("SELECT id_participante FROM PARTICIPANTES WHERE id_usuario = ?");
+    $stmtPart = $pdo->prepare("SELECT id_participante FROM participantes WHERE id_usuario = ?");
     $stmtPart->execute([$id_usuario]);
     $participante = $stmtPart->fetch(PDO::FETCH_ASSOC);
 
     // 2. Si el usuario no existe aún en PARTICIPANTES, se crea la fila automáticamente
     if (!$participante) {
-        $stmtInsPart = $pdo->prepare("INSERT INTO PARTICIPANTES (id_usuario) VALUES (?)");
+        $stmtInsPart = $pdo->prepare("INSERT INTO participantes (id_usuario) VALUES (?)");
         $stmtInsPart->execute([$id_usuario]);
         $id_participante = $pdo->lastInsertId();
     } else {
@@ -32,7 +32,7 @@ try {
     }
 
     // 3. Evitar registros duplicados en INSCRIPCIONES_TORNEO
-    $stmtCheck = $pdo->prepare("SELECT COUNT(*) FROM INSCRIPCIONES_TORNEO WHERE id_torneo = ? AND id_participante = ?");
+    $stmtCheck = $pdo->prepare("SELECT COUNT(*) FROM inscripciones_torneo WHERE id_torneo = ? AND id_participante = ?");
     $stmtCheck->execute([$id_torneo, $id_participante]);
 
     if ($stmtCheck->fetchColumn() > 0) {
@@ -41,7 +41,7 @@ try {
     }
 
     // 4. Insertar la inscripción en la tabla intermedia
-    $stmtInscripcion = $pdo->prepare("INSERT INTO INSCRIPCIONES_TORNEO (id_torneo, id_participante, estado_inscripcion) VALUES (?, ?, 'Confirmado')");
+    $stmtInscripcion = $pdo->prepare("INSERT INTO inscripciones_torneo (id_torneo, id_participante, estado_inscripcion) VALUES (?, ?, 'Confirmado')");
     $stmtInscripcion->execute([$id_torneo, $id_participante]);
 
     header('Location: ../detalleTorneo.php?id=' . $id_torneo . '&estado=inscrito');

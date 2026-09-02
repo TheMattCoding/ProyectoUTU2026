@@ -41,20 +41,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $pdo->beginTransaction();
 
             // 1. Verificar o insertar el módulo de competencia (disciplina)
-            $stmtMod = $pdo->prepare("SELECT id_modulo FROM MODULOS_COMPETENCIA WHERE nombre_modulo = ?");
+            $stmtMod = $pdo->prepare("SELECT id_modulo FROM modulos_competencia WHERE nombre_modulo = ?");
             $stmtMod->execute([$disciplina]);
             $modulo = $stmtMod->fetch();
 
             if ($modulo) {
                 $idModulo = $modulo['id_modulo'];
             } else {
-                $stmtInsMod = $pdo->prepare("INSERT INTO MODULOS_COMPETENCIA (nombre_modulo, descripcion) VALUES (?, ?)");
+                $stmtInsMod = $pdo->prepare("INSERT INTO modulos_competencia (nombre_modulo, descripcion) VALUES (?, ?)");
                 $stmtInsMod->execute([$disciplina, "Módulo de $disciplina"]);
                 $idModulo = $pdo->lastInsertId();
             }
 
             // 2. Insertar en la tabla TORNEOS
-            $sqlTorneo = "INSERT INTO TORNEOS (nombre_torneo, descripcion, id_modulo, id_organizador, lugar, fecha_inicio, hora_inicio, estado, privacidad) 
+            $sqlTorneo = "INSERT INTO torneos (nombre_torneo, descripcion, id_modulo, id_organizador, lugar, fecha_inicio, hora_inicio, estado, privacidad) 
                           VALUES (?, ?, ?, ?, ?, ?, ?, 'pendiente', ?)";
             $stmtTorneo = $pdo->prepare($sqlTorneo);
             $stmtTorneo->execute([
@@ -70,12 +70,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $idTorneo = $pdo->lastInsertId();
 
             // 3. Insertar la configuración del torneo
-            $sqlConfig = "INSERT INTO CONFIGURACION_TORNEO (id_torneo, max_participantes) VALUES (?, ?)";
+            $sqlConfig = "INSERT INTO configuracion_torneo (id_torneo, max_participantes, formato) VALUES (?, ?, ?)";
             $stmtConfig = $pdo->prepare($sqlConfig);
-            $stmtConfig->execute([$idTorneo, $cantidad]);
+            $stmtConfig->execute([$idTorneo, $cantidad, $formato]);
 
             // 4. Crear automáticamente las rondas del torneo
-            $sqlRonda = "INSERT INTO RONDAS (id_torneo, numero_ronda, nombre_ronda, estado_ronda) VALUES (?, ?, ?, ?)";
+            $sqlRonda = "INSERT INTO rondas (id_torneo, numero_ronda, nombre_ronda, estado_ronda) VALUES (?, ?, ?, ?)";
             $stmtRonda = $pdo->prepare($sqlRonda);
 
             for ($i = 1; $i <= $cantRondas; $i++) {

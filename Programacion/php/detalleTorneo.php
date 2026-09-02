@@ -16,10 +16,10 @@ if (!$idTorneo) {
 $sql = "SELECT t.*, 
                m.nombre_modulo AS disciplina,
                c.max_participantes,
-               (SELECT COUNT(*) FROM INSCRIPCIONES_TORNEO i WHERE i.id_torneo = t.id_torneo) AS total_inscritos
-        FROM TORNEOS t
-        LEFT JOIN MODULOS_COMPETENCIA m ON t.id_modulo = m.id_modulo
-        LEFT JOIN CONFIGURACION_TORNEO c ON t.id_torneo = c.id_torneo
+               (SELECT COUNT(*) FROM inscripciones_torneo i WHERE i.id_torneo = t.id_torneo) AS total_inscritos
+        FROM torneos t
+        LEFT JOIN modulos_competencia m ON t.id_modulo = m.id_modulo
+        LEFT JOIN configuracion_torneo c ON t.id_torneo = c.id_torneo
         WHERE t.id_torneo = :id";
 
 $stmt = $pdo->prepare($sql);

@@ -8,8 +8,8 @@ $idUsuarioActual = $_SESSION['id_usuario'] ?? null;
 // 1. Obtener Torneos Globales
 $stmtGlobal = $pdo->prepare("
     SELECT t.id_torneo, t.nombre_torneo, t.fecha_inicio, t.lugar, m.nombre_modulo AS disciplina
-    FROM TORNEOS t
-    LEFT JOIN MODULOS_COMPETENCIA m ON t.id_modulo = m.id_modulo
+    FROM torneos t
+    LEFT JOIN modulos_competencia m ON t.id_modulo = m.id_modulo
     WHERE t.fecha_inicio IS NOT NULL
     ORDER BY t.fecha_inicio ASC
 ");
@@ -21,9 +21,9 @@ $torneosPropios = [];
 if ($idUsuarioActual) {
     $stmtPropio = $pdo->prepare("
         SELECT t.id_torneo, t.nombre_torneo, t.fecha_inicio, t.lugar, m.nombre_modulo AS disciplina
-        FROM INSCRIPCIONES_TORNEO i
-        JOIN TORNEOS t ON i.id_torneo = t.id_torneo
-        LEFT JOIN MODULOS_COMPETENCIA m ON t.id_modulo = m.id_modulo
+        FROM inscripciones_torneo i
+        JOIN torneos t ON i.id_torneo = t.id_torneo
+        LEFT JOIN modulos_competencia m ON t.id_modulo = m.id_modulo
         WHERE i.id_participante = :id_usuario AND t.fecha_inicio IS NOT NULL
         ORDER BY t.fecha_inicio ASC
     ");
