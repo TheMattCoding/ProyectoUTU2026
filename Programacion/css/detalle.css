@@ -16,12 +16,12 @@ body {
     width: 100% !important;
     max-width: none !important;
     min-height: 100vh;
-    padding: 0 !important; /* Eliminamos el padding aquí para que la navbar toque los bordes */
+    padding: 0 !important;
     margin: 0 !important;
     box-sizing: border-box !important;
 }
 
-/* Arreglo Maestro para la Navbar de Detalle: Evita que se encoja o se despegue */
+/* Navbar */
 .navbar {
     width: 100% !important;
     max-width: 100% !important;
@@ -30,14 +30,33 @@ body {
     box-sizing: border-box !important;
 }
 
-/* Encapsulamos el contenido del torneo para darle el espaciado correcto en celulares */
+.navbar .search-form {
+    display: flex;
+    flex: 1;
+    max-width: 420px;
+    margin: 0 12px;
+}
+
+.navbar .search-container {
+    margin: 0;
+    width: 100%;
+}
+
+.theme-toggle-svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+    vertical-align: middle;
+}
+
+/* Encapsulamos el contenido del torneo */
 .contenido-principal {
     width: 100% !important;
-    max-width: 450px; /* Alineado exactamente al tamaño móvil de la Home */
+    max-width: 450px;
     display: flex !important;
     flex-direction: column !important;
     gap: 24px !important;
-    padding: 24px 16px !important; /* El espacio con los bordes se da acá adentro */
+    padding: 24px 16px !important;
     box-sizing: border-box !important;
 }
 
@@ -45,7 +64,7 @@ body {
    2. Componentes de la Vista de Detalle (Mobile First)
    ========================================================================== */
 
-/* Tarjeta Principal (Hero con Imagen) */
+/* Tarjeta Principal (Hero) */
 .portada-torneo {
     position: relative;
     width: 100%;
@@ -87,7 +106,7 @@ body {
     margin: 0;
 }
 
-/* Sección de Información Rápida (Estilo Tarjeta) */
+/* Información Rápida */
 .seccion-info-rapida {
     display: flex;
     flex-direction: column;
@@ -120,7 +139,7 @@ body {
     color: #3498db; 
 }
 
-/* Bloques de Texto de Detalles */
+/* Bloques de Texto */
 .bloque-descripcion {
     display: flex;
     flex-direction: column;
@@ -139,7 +158,7 @@ body {
     line-height: 1.6;
 }
 
-/* Grilla de Datos Técnicos (Formato y Creador) */
+/* Grilla de Datos Técnicos */
 .rejilla-info-tecnica {
     display: flex;
     gap: 16px;
@@ -169,7 +188,7 @@ body {
     color: #2c3e50;
 }
 
-/* Barra de Cupos Disponibles */
+/* Cupos */
 .contenedor-cupos {
     width: 100%;
 }
@@ -193,17 +212,15 @@ body {
 
 .relleno-progreso {
     height: 100%;
-    width: 50%; 
     background-color: #2ecc71;
     border-radius: 5px;
+    transition: width 0.3s ease;
 }
 
-
 /* ==========================================================================
-   3. Vista de Escritorio (Sincronización Total con la Sidebar fija)
+   3. Vista de Escritorio
    ========================================================================== */
 @media (min-width: 1024px) {
-    
     .contenedor-celular, .contenedor-principal {
         width: 100% !important;
         max-width: none !important;
@@ -216,24 +233,21 @@ body {
         padding: 0 40px !important;
     }
 
-    /* La grilla pasa a dos columnas simétricas idénticas a la Home */
     .contenido-principal {
         max-width: 1150px !important;
         width: 100% !important;
         display: grid !important;
         grid-template-columns: 1fr 1fr !important; 
         gap: 32px !important;
-        padding: 40px !important; /* El aire de la página en PC */
+        padding: 40px !important;
     }
 
-    /* El Hero se estira en toda la fila superior */
     .portada-torneo {
         grid-column: 1 / -1 !important;
         height: 380px !important;
         border-radius: 24px !important;
     }
 
-    /* Bloque izquierdo (Detalles y descripción) */
     .bloque-descripcion {
         display: flex !important;
         flex-direction: column !important;
@@ -244,7 +258,6 @@ body {
         width: 100% !important;
     }
 
-    /* Bloque derecho (Panel gris de acciones e inscripción) */
     .seccion-info-rapida {
         display: flex !important;
         flex-direction: column !important;
@@ -257,13 +270,14 @@ body {
         width: 100% !important;
     }
 }
+
 /* ==========================================================================
-   4. Estilos para Botones Principales y Estados
+   4. Botones, Formulario Modal y Alertas de Estado
    ========================================================================== */
 
-/* Estilo base para todos los botones principales */
 .btn-principal {
     width: 100%;
+    height: 48px;
     background-color: #ffffff;
     color: #27ae60;
     border: 2px solid #27ae60;
@@ -272,7 +286,7 @@ body {
     font-weight: 700;
     text-transform: uppercase;
     text-align: center;
-    border-radius: 30px;
+    border-radius: 50px;
     cursor: pointer;
     transition: all 0.2s ease;
     box-shadow: 0 4px 10px rgba(39, 174, 96, 0.15);
@@ -285,7 +299,6 @@ body {
     color: #ffffff;
 }
 
-/* Estado deshabilitado (cuando ya está inscrito) */
 .btn-principal:disabled,
 .btn-deshabilitado {
     background-color: #e0e0e0 !important;
@@ -293,6 +306,18 @@ body {
     border-color: #cccccc !important;
     cursor: not-allowed !important;
     box-shadow: none !important;
+}
+
+/* Botón Cancelar */
+.btn-cancelar {
+    background-color: #e63946 !important;
+    border-color: #e63946 !important;
+    color: #ffffff !important;
+}
+
+.btn-cancelar:hover:not(:disabled) {
+    background-color: #c12a36 !important;
+    border-color: #c12a36 !important;
 }
 
 /* Estilos del Modal */
@@ -321,6 +346,11 @@ body {
     border: 1px solid #333344;
 }
 
+.modal-subtitulo {
+    margin-bottom: 15px;
+    color: #cccccc;
+}
+
 .modal-cerrar {
     position: absolute;
     top: 12px;
@@ -334,4 +364,60 @@ body {
 
 .modal-cerrar:hover {
     color: #ffffff;
+}
+
+.grupo-entrada {
+    margin-bottom: 15px;
+}
+
+.etiqueta-entrada {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.control-formulario-entrada {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    box-sizing: border-box;
+}
+
+/* Acciones de inscripción */
+.contenedor-acciones-inscrito {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.form-cancelar-inscripcion {
+    flex: 1;
+    min-width: 200px;
+}
+
+/* Alertas de Estado */
+.alerta {
+    padding: 12px;
+    border-radius: 100px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-weight: 500;
+}
+
+.alerta-exito {
+    background-color: #1b4332;
+    color: #2ec4b6;
+    border: 1px solid #2ec4b6;
+}
+
+.alerta-advertencia {
+    background-color: #3d2314;
+    color: #ffb703;
+    border: 1px solid #ffb703;
+}
+
+.alerta-error {
+    background-color: #4a151b;
+    color: #ff6b6b;
+    border: 1px solid #ff6b6b;
 }

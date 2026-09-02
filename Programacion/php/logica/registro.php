@@ -60,8 +60,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['registrarse'])) {
         // Verificar duplicados en USUARIOS (email/username) y PARTICIPANTES (ci)
         $stmt_check = $pdo->prepare("
             SELECT u.id_usuario 
-            FROM USUARIOS u 
-            LEFT JOIN PARTICIPANTES p ON u.id_usuario = p.id_usuario 
+            FROM usuarios u 
+            LEFT JOIN participantes p ON u.id_usuario = p.id_usuario 
             WHERE u.email = ? OR u.username = ? OR p.ci = ?
         ");
         $stmt_check->execute([$correo, $username, $ci]);
@@ -78,13 +78,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['registrarse'])) {
         $pdo->beginTransaction();
 
         // A) Insertar en USUARIOS (id_rol = 3 correspondiente a usuario estándar)[cite: 10, 11]
-        $stmt_user = $pdo->prepare("INSERT INTO USUARIOS (username, email, password_hash, id_rol) VALUES (?, ?, ?, 3)");
+        $stmt_user = $pdo->prepare("INSERT INTO usuarios (username, email, password_hash, id_rol) VALUES (?, ?, ?, 3)");
         $stmt_user->execute([$username, $correo, $hash_contrasena]);
         
         $id_usuario = $pdo->lastInsertId();
 
         // B) Insertar en PARTICIPANTES[cite: 10]
-        $stmt_part = $pdo->prepare("INSERT INTO PARTICIPANTES (nombre, apellido, ci, telefono, id_usuario) VALUES (?, ?, ?, ?, ?)");
+        $stmt_part = $pdo->prepare("INSERT INTO participantes (nombre, apellido, ci, telefono, id_usuario) VALUES (?, ?, ?, ?, ?)");
         $stmt_part->execute([$nombre, $apellido, $ci, $telefono, $id_usuario]);
 
         // CONFIRMAR TRANSACCIÓN

@@ -17,8 +17,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
             // Consulta relacionando la tabla USUARIOS con ROLES
             $sql = "SELECT u.*, r.nombre_rol AS nombre_rol 
-                    FROM USUARIOS u
-                    LEFT JOIN ROLES r ON u.id_rol = r.id_rol
+                    FROM usuarios u
+                    LEFT JOIN roles r ON u.id_rol = r.id_rol
                     WHERE u.email = :correo LIMIT 1";
 
             $stmt = $pdo->prepare($sql);

@@ -17,7 +17,7 @@ if (!$id_torneo) {
 
 try {
     // 1. Obtener el id_participante
-    $stmtPart = $pdo->prepare("SELECT id_participante FROM PARTICIPANTES WHERE id_usuario = ?");
+    $stmtPart = $pdo->prepare("SELECT id_participante FROM participantes WHERE id_usuario = ?");
     $stmtPart->execute([$id_usuario]);
     $participante = $stmtPart->fetch(PDO::FETCH_ASSOC);
 
@@ -25,7 +25,7 @@ try {
         $id_participante = $participante['id_participante'];
 
         // 2. Eliminar la inscripción
-        $stmtDel = $pdo->prepare("DELETE FROM INSCRIPCIONES_TORNEO WHERE id_torneo = ? AND id_participante = ?");
+        $stmtDel = $pdo->prepare("DELETE FROM inscripciones_torneo WHERE id_torneo = ? AND id_participante = ?");
         $stmtDel->execute([$id_torneo, $id_participante]);
     }
 
