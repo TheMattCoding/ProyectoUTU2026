@@ -354,31 +354,32 @@ ________________
 ________________
 
 5.10 Diagrama UML
+5.10.1 Diagrama de Casos de Uso:
+
+
   
 
-Organizador de torneos:
+5.10.1.1 Organizador de torneos:
   
 
-Administrador general:  
+5.10.1.2 Administrador general:  
 ________________
-Usuario Público:
-  
-________________
-
-Participante:
-  
-
-________________
-
-
-Consultar y tener acceso + iniciar sesión y generar y compartir enlace de torneo:
+5.10.1.3 Usuario Público:
   
 ________________
 
-Configuración, cuenta y notificaciones:
+5.10.1.4 Participante:
   
 
+________________
 
+
+5.10.1.5 Consultar y tener acceso + iniciar sesión y generar y compartir enlace de torneo:
+  
+________________
+
+5.10.1.6 Configuración, cuenta y notificaciones:
+  
 
 5.11 PLANILLAS DE CASOS DE USO
 SGDM – Sistema de Gestión Deportiva Modular
@@ -1639,9 +1640,14 @@ Caso de uso: RF-OT-08
 
 	
 
+________________
 
+
+5.12 Diagrama de Clases:
+  
 
 Estudio de factibilidad
+________________
 Plan de contingencias 
 ________________
 6. Bibliografía:
