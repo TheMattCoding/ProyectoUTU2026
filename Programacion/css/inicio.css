@@ -120,6 +120,15 @@ body {
 
 /*==============4. Perfil y Notificaciones ======================*/
 
+.profile-menu-card .avatar-svg {
+    width: 16px;          
+    height: 16px;          
+    fill: currentColor;    
+    margin-right: 8px;    
+    vertical-align: middle;
+}
+
+
 .profile-dropdown, .notifications-dropdown {
     position: relative;
     display: inline-block;
