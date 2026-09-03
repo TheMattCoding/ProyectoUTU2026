@@ -108,12 +108,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     if ($idEnfrentamiento && $mLocal !== false && $mVisita !== false) {
                         $stmtEstado->execute([':id' => $idEnfrentamiento]);
 
-                        $stmtResultado->execute([
-                            ':id'         => $idEnfrentamiento,
-                            ':m_local'    => $mLocal,
-                            ':m_visita'   => $mVisita,
-                            ':id_usuario' => $idUsuarioActual
-                        ]);
                     }
                 }
 
@@ -126,7 +120,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
-}
+
 
 // ==========================================
 // CONSULTA DE TORNEOS, PARTIDOS Y PARTICIPANTES
