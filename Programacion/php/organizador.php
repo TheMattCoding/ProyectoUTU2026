@@ -51,6 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if ($stmtVerificar->fetchColumn() > 0) {
                     $mensajeError = "El participante ya está inscrito en este torneo.";
                 } else {
+                    // Inserta en la tabla de inscripciones
                     $sqlInscribir = "INSERT INTO INSCRIPCIONES_TORNEO (id_torneo, id_participante, estado_inscripcion) 
                                      VALUES (:id_torneo, :id_participante, 'confirmado')";
                     $stmtInscribir = $pdo->prepare($sqlInscribir);
@@ -139,12 +140,8 @@ try {
     }
     $torneosAsignados = $stmtT->fetchAll(PDO::FETCH_ASSOC);
 
-    // 2. Obtener lista de Participantes y Equipos
-    $stmtP = $pdo->query("SELECT id_participante, CONCAT(nombre, ' ', apellido) AS nombre_participante FROM PARTICIPANTES ORDER BY nombre ASC, apellido ASC");
-    $listaParticipantes = $stmtP->fetchAll(PDO::FETCH_ASSOC);
-
-    $stmtE = $pdo->query("SELECT id_equipo, nombre_equipo FROM equipos ORDER BY nombre_equipo ASC");
-    $listaEquipos = $stmtE->fetchAll(PDO::FETCH_ASSOC);
+    // 2. Obtener lista de Participantes registrados
+    $stmtP = $pdo->query("SELECT id_participante, CONCAT(nombre, ' ', apellido) AS nombre_participante FROM PARTICIPANTES ORDER BY nombre ASC, apellido ASC");    $listaParticipantes = $stmtP->fetchAll(PDO::FETCH_ASSOC);
 
     // 3. Obtener partidos pendientes
     $sqlPartidos = "SELECT 
@@ -426,13 +423,13 @@ try {
                     <p class="subtitulo-seccion">Seleccioná un participante registrado para agregarlo al torneo.</p>
 
                     <?php if (!empty($mensajeExito)): ?>
-                        <div class="mensaje-alerta alerta-exito">
+                        <div style="background-color: #1b4332; color: #2ec4b6; border: 1px solid #2ec4b6; padding: 10px; border-radius: 6px; margin-bottom: 15px;">
                             ✓ <?php echo htmlspecialchars($mensajeExito); ?>
                         </div>
                     <?php endif; ?>
 
                     <?php if (!empty($mensajeError)): ?>
-                        <div class="mensaje-alerta alerta-error">
+                        <div style="background-color: #4a151b; color: #ff6b6b; border: 1px solid #ff6b6b; padding: 10px; border-radius: 6px; margin-bottom: 15px;">
                             ✕ <?php echo htmlspecialchars($mensajeError); ?>
                         </div>
                     <?php endif; ?>
@@ -450,8 +447,8 @@ try {
                             </select>
                         </div>
 
-                        <div class="grupo-formulario">
-                            <label for="id_participante" class="etiqueta-formulario">Seleccionar Participante</label>
+                        <div class="grupo-formulario" style="margin-bottom: 15px;">
+                            <label for="id_participante">Seleccionar Participante</label>
                             <select name="id_participante" id="id_participante" class="control-formulario-entrada" required>
                                 <option value="" disabled selected>Seleccioná un participante</option>
                                 <?php foreach ($listaParticipantes as $p): ?>
