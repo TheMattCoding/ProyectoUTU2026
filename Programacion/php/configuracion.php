@@ -1,9 +1,37 @@
 <?php
 require_once 'logica/auth.php';
+require_once 'db.php';
+
+$conexion = $pdo;
+
 requerirLogin();
+
+$idUsuario = $_SESSION['id_usuario'] ?? $_SESSION['id'] ?? null;
 $rolActual = $_SESSION['rol'] ?? 'visitante';
-$usuarioActual = $_SESSION['usuario'] ?? 'Usuario';
-$correoActual = $_SESSION['correo'] ?? '';
+
+// Obtener datos actualizados del usuario y su perfil de participante
+$usuarioDatos = [];
+if ($idUsuario) {
+    $stmt = $conexion->prepare("
+        SELECT u.username, u.email, p.nombre, p.apellido, p.telefono, p.ci 
+        FROM usuarios u 
+        LEFT JOIN participantes p ON u.id_usuario = p.id_usuario 
+        WHERE u.id_usuario = :id
+    ");
+    $stmt->execute([':id' => $idUsuario]);
+    $usuarioDatos = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
+}
+
+$username = $usuarioDatos['username'] ?? $_SESSION['usuario'] ?? 'Usuario';
+$email    = $usuarioDatos['email'] ?? $_SESSION['correo'] ?? '';
+$nombre   = $usuarioDatos['nombre'] ?? $_SESSION['nombre'] ?? '';
+$apellido = $usuarioDatos['apellido'] ?? $_SESSION['apellido'] ?? '';
+$telefono = $usuarioDatos['telefono'] ?? $_SESSION['telefono'] ?? '';
+
+// Mensajes de feedback
+$mensajeExito = $_SESSION['mensaje_exito'] ?? null;
+$mensajeError = $_SESSION['mensaje_error'] ?? null;
+unset($_SESSION['mensaje_exito'], $_SESSION['mensaje_error']);
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -18,48 +46,40 @@ $correoActual = $_SESSION['correo'] ?? '';
 </head>
 <body>
 
-    <!-- 5. Menú lateral -->
+    <!-- Menú lateral -->
     <input type="checkbox" id="menu-toggle" class="menu-checkbox">
-
     <div class="sidebar">
-
-        <!--5. Movil cerrar menú -->
         <div class="sidebar-header">
             <span class="sidebar-title">Menú</span>
             <label for="menu-toggle" class="close-sidebar-btn" aria-label="Cerrar menú">X</label>
         </div>
         
         <nav class="sidebar-nav">
-            <!-- Visible para todos -->
             <a href="inicio.php" class="sidebar-link">Inicio</a>
             <a href="calendario.php" class="sidebar-link">Calendario de torneos</a>
 
-            <!-- Solo Organizadores y Administradores -->
             <?php if (in_array($rolActual, ['organizador', 'administrador'])): ?>
                 <a href="organizador.php" class="sidebar-link">Panel Organizador</a>
             <?php endif; ?>
 
-            <!-- Solo Administradores -->
             <?php if ($rolActual === 'administrador'): ?>
                 <a href="formularioTorneo.php" class="sidebar-link">Crea tu torneo</a>
                 <a href="dashboard.php" class="sidebar-link">Panel Administrador</a>
             <?php endif; ?>
 
-            <!-- Usuarios registrados (No visitantes) -->
             <?php if ($rolActual !== 'visitante'): ?>
                 <a href="configuracion.php" class="sidebar-link active">Configuración</a>
             <?php endif; ?>
         </nav>
 
-        <!--5. Modo Oscuro-Claro -->
         <div class="sidebar-footer">
             <div class="theme-switch-container">
                 <span class="theme-label">Modo Oscuro</span>
-                    <button class="theme-toggle-btn" aria-label="Cambiar tema">
+                <button class="theme-toggle-btn" aria-label="Cambiar tema">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 18px; height: 18px; fill: currentColor; vertical-align: middle;">
                         <path d="M256 0C114.6 0 0 114.6 0 256S114.6 512 256 512c68.8 0 131.3-27.2 177.3-71.4 7.3-7 9.4-17.9 5.3-27.1s-13.7-14.9-23.8-14.1c-4.9 .4-9.8 .6-14.8 .6-101.6 0-184-82.4-184-184 0-72.1 41.5-134.6 102.1-164.8 9.1-4.5 14.3-14.3 13.1-24.4S322.6 8.5 312.7 6.3C294.4 2.2 275.4 0 256 0z"/>
                     </svg>
-                    </button>
+                </button>
             </div>
         </div>
     </div>
@@ -67,7 +87,7 @@ $correoActual = $_SESSION['correo'] ?? '';
     <label for="menu-toggle" class="sidebar-overlay"></label>
 
     <!-- 2. Navbar y Menú hamburguesa -->
-<nav class="navbar" aria-label="Navegación principal">
+    <nav class="navbar" aria-label="Navegación principal">
     <label for="menu-toggle" class="nav-button" aria-label="Abrir menú de navegación">
         <div class="hamburger-box">
             <span class="line"></span>
@@ -173,7 +193,14 @@ $correoActual = $_SESSION['correo'] ?? '';
 
     <main class="contenedor-principal">
         
-        <!--12. Control de pestañas-->
+        <?php if ($mensajeExito): ?>
+            <div class="alerta alerta-exito"><?= htmlspecialchars($mensajeExito) ?></div>
+        <?php endif; ?>
+        <?php if ($mensajeError): ?>
+            <div class="alerta alerta-error"><?= htmlspecialchars($mensajeError) ?></div>
+        <?php endif; ?>
+
+        <!-- Control de pestañas -->
         <input type="radio" name="grupo-pestanas-config" id="radio-pestana-perfil" checked class="control-radio-pestana">
         <input type="radio" name="grupo-pestanas-config" id="radio-pestana-seguridad" class="control-radio-pestana">
         <input type="radio" name="grupo-pestanas-config" id="radio-pestana-notificaciones" class="control-radio-pestana">
@@ -191,15 +218,15 @@ $correoActual = $_SESSION['correo'] ?? '';
                 <label for="radio-pestana-borrar" class="btn-pestana btn-pestana-peligro etiqueta-borrar">Borrar cuenta</label>
             </aside>
 
-            <!--13. Panel de Configuración -->              
             <section class="tarjeta-contenido-config">
                 
-                <!--13. Editar perfil -->              
+                <!-- 1. Editar Perfil -->              
                 <div id="perfil" class="seccion-configuracion panel-perfil">
                     <h3 class="titulo-seccion">Información del Perfil</h3>
                     <p class="subtitulo-seccion">Personaliza tu identidad dentro de la plataforma de torneos.</p>
                     
-                    <form action="#" method="POST" class="formulario-configuracion">
+                    <form action="logica/actualizarConfiguracion.php" method="POST" class="formulario-configuracion">
+                        <input type="hidden" name="accion" value="actualizar_perfil">
                         <div class="contenedor-edicion-avatar">
                             <div class="avatar-usuario avatar-grande">
                                 <svg class="avatar-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
@@ -212,17 +239,28 @@ $correoActual = $_SESSION['correo'] ?? '';
                         <div class="cuadrícula-fila-formulario">
                             <div class="grupo-formulario">
                                 <label for="nombre-usuario" class="etiqueta-formulario">Nombre de usuario</label>
-                                <input type="text" id="nombre-usuario" name="nombre_usuario" class="control-input-formulario" value="Usuario">
+                                <input type="text" id="nombre-usuario" name="nombre_usuario" class="control-input-formulario" value="<?= htmlspecialchars($username) ?>" required>
                             </div>
                             <div class="grupo-formulario">
                                 <label for="correo" class="etiqueta-formulario">Correo Electrónico</label>
-                                <input type="email" id="correo" name="correo" class="control-input-formulario" value="usuario@ejemplo.com">
+                                <input type="email" id="correo" name="correo" class="control-input-formulario" value="<?= htmlspecialchars($email) ?>" required>
+                            </div>
+                        </div>
+
+                        <div class="cuadrícula-fila-formulario">
+                            <div class="grupo-formulario">
+                                <label for="nombre" class="etiqueta-formulario">Nombre</label>
+                                <input type="text" id="nombre" name="nombre" class="control-input-formulario" value="<?= htmlspecialchars($nombre) ?>" placeholder="Tu nombre">
+                            </div>
+                            <div class="grupo-formulario">
+                                <label for="apellido" class="etiqueta-formulario">Apellido</label>
+                                <input type="text" id="apellido" name="apellido" class="control-input-formulario" value="<?= htmlspecialchars($apellido) ?>" placeholder="Tu apellido">
                             </div>
                         </div>
 
                         <div class="grupo-formulario">
-                            <label for="biografia" class="etiqueta-formulario">Biografía / Presentación</label>
-                            <textarea id="biografia" name="biografia" class="control-textarea-formulario" placeholder="Contale a la comunidad sobre tu nivel, tu equipo o tu rol favorito..."></textarea>
+                            <label for="telefono" class="etiqueta-formulario">Teléfono / Celular</label>
+                            <input type="tel" id="telefono" name="telefono" class="control-input-formulario" value="<?= htmlspecialchars($telefono) ?>" placeholder="Ej: 099123456">
                         </div>
 
                         <div class="acciones-formulario">
@@ -231,25 +269,27 @@ $correoActual = $_SESSION['correo'] ?? '';
                     </form>
                 </div>
                 
-                <!--13. Cuenta y Seguridad -->
+                <!-- 2. Cuenta y Seguridad -->
                 <div id="seguridad" class="seccion-configuracion panel-seguridad">
                     <h3 class="titulo-seccion">Seguridad de la Cuenta</h3>
                     <p class="subtitulo-seccion">Gestiona tus credenciales de acceso de forma segura.</p>
                     
-                    <form action="#" method="POST" class="formulario-configuracion">
+                    <form action="logica/actualizarConfiguracion.php" method="POST" id="form-seguridad" class="formulario-configuracion">
+                        <input type="hidden" name="accion" value="cambiar_password">
+
                         <div class="grupo-formulario">
                             <label for="contrasena-actual" class="etiqueta-formulario">Contraseña actual</label>
-                            <input type="password" id="contrasena-actual" name="contrasena_actual" class="control-input-formulario" placeholder="••••••••">
+                            <input type="password" id="contrasena-actual" name="contrasena_actual" class="control-input-formulario" placeholder="••••••••" required>
                         </div>
 
                         <div class="cuadrícula-fila-formulario">
                             <div class="grupo-formulario">
                                 <label for="nueva-contrasena" class="etiqueta-formulario">Nueva contraseña</label>
-                                <input type="password" id="nueva-contrasena" name="nueva_contrasena" class="control-input-formulario" placeholder="Mínimo 8 caracteres">
+                                <input type="password" id="nueva-contrasena" name="nueva_contrasena" class="control-input-formulario" placeholder="Mínimo 6 caracteres" required>
                             </div>
                             <div class="grupo-formulario">
                                 <label for="confirmar-contrasena" class="etiqueta-formulario">Confirmar nueva contraseña</label>
-                                <input type="password" id="confirmar-contrasena" name="confirmar_contrasena" class="control-input-formulario" placeholder="Repite la contraseña">
+                                <input type="password" id="confirmar-contrasena" name="confirmar_contrasena" class="control-input-formulario" placeholder="Repite la contraseña" required>
                             </div>
                         </div>
 
@@ -259,38 +299,20 @@ $correoActual = $_SESSION['correo'] ?? '';
                     </form>
                 </div>
 
-                <!--13. Notificaciones -->
+                <!-- 3. Notificaciones -->
                 <div id="notificaciones" class="seccion-configuracion panel-notificaciones">
                     <h3 class="titulo-seccion">Preferencias de Alertas</h3>
-                    <p class="subtitulo-seccion">Elige qué eventos del torneo querés recibir en la campana de notificaciones.</p>
+                    <p class="subtitulo-seccion">Elige qué eventos del torneo querés recibir.</p>
                     
-                    <!--14. Formulario de Configuración -->
-                    <form action="#" method="POST" class="formulario-configuracion">
+                    <form action="logica/actualizarConfiguracion.php" method="POST" class="formulario-configuracion">
+                        <input type="hidden" name="accion" value="guardar_notificaciones">
+                        
                         <div class="grupo-checkbox">
                             <label class="contenedor-interruptor">
-                                <input type="checkbox" checked>
+                                <input type="checkbox" name="noti_fixtures" checked>
                                 <span class="deslizador"></span>
-                                <span class="etiqueta-interruptor">Publicación de Fixtures (Calendarios)</span>
+                                <span class="etiqueta-interruptor">Publicación de Fixtures</span>
                             </label>
-                            <p class="desc-checkbox">Te avisaremos cuando el organizador genere las llaves o cruces del torneo.</p>
-                        </div>
-
-                        <div class="grupo-checkbox">
-                            <label class="contenedor-interruptor">
-                                <input type="checkbox" checked>
-                                <span class="deslizador"></span>
-                                <span class="etiqueta-interruptor">Recordatorios de partidos próximos</span>
-                            </label>
-                            <p class="desc-checkbox">Recibe un aviso 30 minutos antes de que empiece tu encuentro programado.</p>
-                        </div>
-
-                        <div class="grupo-checkbox">
-                            <label class="contenedor-interruptor">
-                                <input type="checkbox">
-                                <span class="deslizador"></span>
-                                <span class="etiqueta-interruptor">Resultados y tablas de posiciones</span>
-                            </label>
-                            <p class="desc-checkbox">Alertas cuando finalice un partido del grupo en el que estás compitiendo.</p>
                         </div>
 
                         <div class="acciones-formulario">
@@ -298,16 +320,17 @@ $correoActual = $_SESSION['correo'] ?? '';
                         </div>
                     </form>
                 </div>
-                
-                <!--13. Preferencias -->
+
+                <!-- 4. Preferencias -->
                 <div id="preferencias" class="seccion-configuracion panel-preferencias">
                     <h3 class="titulo-seccion">Preferencias de la Aplicación</h3>
                     <p class="subtitulo-seccion">Configura el comportamiento visual de tu cuenta.</p>
                     
-                    <form action="#" method="POST" class="formulario-configuracion">
+                    <form action="logica/actualizarConfiguracion.php" method="POST" class="formulario-configuracion">
+                        <input type="hidden" name="accion" value="guardar_preferencias">
                         <div class="grupo-formulario">
                             <label for="seleccion-tema" class="etiqueta-formulario">Tema Visual Principal</label>
-                            <select id="seleccion-tema" class="control-select-formulario">
+                            <select id="seleccion-tema" name="tema" class="control-select-formulario">
                                 <option value="dark" selected>Modo Oscuro Predeterminado</option>
                                 <option value="light">Modo Claro</option>
                             </select>
@@ -319,14 +342,16 @@ $correoActual = $_SESSION['correo'] ?? '';
                     </form>
                 </div>
 
-                <!--13. Borrar cuenta -->
+                <!-- 5. Borrar cuenta -->
                 <div id="borrar-cuenta" class="seccion-configuracion panel-borrar">
                     <h3 class="titulo-seccion titulo-peligro">Eliminar Cuenta Permanentemente</h3>
-                    <p class="subtitulo-seccion">Esta acción es irreversible. Se perderán todos tus datos de torneos, estadísticas y equipos.</p>
+                    <p class="subtitulo-seccion">Esta acción es irreversible. Se perderán tus datos de usuario en el sistema.</p>
                     
-                    <form action="#" method="POST" class="formulario-configuracion">
+                    <form action="logica/actualizarConfiguracion.php" method="POST" id="form-borrar-cuenta" class="formulario-configuracion">
+                        <input type="hidden" name="accion" value="borrar_cuenta">
+                        
                         <div class="grupo-formulario">
-                            <label for="contrasena-borrado" class="etiqueta-formulario">Escriba contraseña actual para el borrado de cuenta</label>
+                            <label for="contrasena-borrado" class="etiqueta-formulario">Escriba su contraseña actual para confirmar el borrado</label>
                             <input type="password" id="contrasena-borrado" name="contrasena_borrado" class="control-input-formulario" placeholder="••••••••" required>
                         </div>
 
@@ -340,20 +365,15 @@ $correoActual = $_SESSION['correo'] ?? '';
         </div>
     </main>
 
-     <!--7. Footer -->
     <footer class="main-footer">
         <div class="footer-content">
             <img src="../img/epsilonSoftware2.png" alt="Logo Epsilon Software" class="footer-logo">
-        
             <div class="footer-right-group">
-                <nav class="footer-links" aria-label="Enlaces de pie de página">
-                    <a href="#" class="footer-link">Sobre nosotros</a>
-                    <a href="#" class="footer-link">Ayuda</a>
-                </nav>
                 <p class="footer-copyright">&copy; 2026 Epsilon Software. Todos los derechos reservados.</p>
             </div>
         </div>
     </footer>
 
+    <script src="../js/configuracion.js"></script>
 </body>
 </html>
