@@ -29,32 +29,29 @@ Alcance        4
 2.2 Simbología, Acrónimos y Abreviaturas        6
 2.2.1 Acrónimos Metodológicos y de Gestión        6
 2.2.2 Acrónimos de Formatos y Tecnologías Web        8
-3. Temas para la primera entrega        8
-4. Introducción        8
-5. Tutoría de Proyecto UTULAB        9
-5.1 Definición de nombre y logo de grupo de proyecto (con justificación)        9
-5.2 Definición de logo de la aplicación        11
-5.3 Formularios de acta de reunión        12
-5.4 Actas de reunión formal interna        14
-19/5/2026        15
-26/5/2026        17
-2/6/2026        19
-9/6/2026        20
-16/6/2026        22
-14/7/2026        26
-5.5 Fundamentación de las elecciones de diseño del sistema        28
-5.5.1 Pagina de Inicio.        28
-5.5.2 Busqueda de torneos        31
-5.5.3 Detalle de torneo        33
-5.5.4 Perfil        35
-5.5.5 Calendario de torneos        37
-5.5.6 Crea tu torneo        39
-5.5.7 Panel Organizador        40
-5.5.8 Panel Administrador        46
-5.5.9 Configuracion        48
-5.5.10 Inicio de sesión        57
-6. Fundamentos de pensamiento basado en S.C.A.M.P.E.R        59
-7. Bibliografía        62
+3. Temas para las entregas        8
+3.1 Primera entrega        8
+3.2 Segunda entrega        8
+3.3 Tercera entrega        8
+4. Introducción        9
+5. Programacion Full Stack        10
+5.5 Esquema de pantallas        10
+5.5.1 Módulo 1: Página de Inicio, Búsqueda y Calendario de Torneos        10
+5.5.2 Módulo 2: Panel Organizador        12
+5.5.3 Módulo 3: Panel Administrador y Configuración        14
+5.6 Esquema de pantallas en detalle        15
+5.6.1 Página de Inicio.        16
+5.5.2 Búsqueda de torneos        19
+5.5.3 Detalle de torneo        21
+5.5.4 Perfil        24
+5.5.5 Calendario de torneos        27
+5.5.6 Crea tu torneo        29
+5.5.7 Panel Organizador        30
+5.5.8 Panel Administrador        39
+5.5.9 Configuracion        41
+5.5.10 Inicio de sesión        51
+5.7 Modelo Relacional Normalizado        53
+7. Bibliografía        54
 
 
 ________________
@@ -120,7 +117,7 @@ CSS: Cascading Style Sheets (Hojas de estilo en cascada).
 HTML:HyperText Markup Language (Lenguaje de marcado de hipertexto).
 SVG: Scalable Vector Graphics (Gráficos vectoriales escalables utilizados en sustitución de los emojis estándar).
 URL: Uniform Resource Locator (Localizador uniforme de recursos).
-3. Temas para la entrega
+3. Temas para las entregas
 3.1 Primera entrega
 * Maquetado de todo el sitio mediante filosofia Mobile First (utilizando Flexbox o Grid)
 
@@ -132,6 +129,8 @@ URL: Uniform Resource Locator (Localizador uniforme de recursos).
 * Implementación de los modelos alineados al modelo relacional.
 * Integración con PHP utilizando POO (mínimo gestión de usuarios funcionando).
 * Implementación con Apache.
+3.3 Tercera entrega 
+* Implementación completa del sistema, de manera portable mediante Docker con datos de prueba (mínimo 50 registros cada componente)
 4. Introducción
 El presente documento constituye la especificación técnica, de diseño y arquitectura referente a la asignatura Programación Full-Stack. Su propósito fundamental es documentar de forma rigurosa la fundamentación de diseño UI/UX, el flujo de interfaz de usuario y los esquemas estructurales desarrollados para el Sistema de Gestión Deportiva Modular (SGDM) por parte de Epsilon Software. A través de este compendio, se respalda la toma de decisiones técnicas bajo un enfoque Mobile First y de escritorio, garantizando que el desarrollo del software cumpla de manera estricta con las pautas de proyecto, las entregas parciales y los requerimientos fijados por el equipo docente para nuestro proyecto de egreso.
 ________________

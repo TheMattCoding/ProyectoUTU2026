@@ -21,26 +21,70 @@ ________________
 1.Objetivos y Alcance del documento        3
 Objetivo        3
 Alcance        3
-2. Vocabulario de Términos Técnicos        4
-2.2 Término, Definición y Contexto Operativo        4
-2.3 Simbología, Acrónimos y Abreviaturas        6
-2.3.1 Acrónimos de Ingeniería de Software        6
-2.3.2 Abreviaturas de Tecnologías y Lenguajes        6
+2. Vocabulario de Términos Técnicos        5
+2.1 Término, Definición y Contexto Operativo        5
+2.2 Simbología, Acrónimos y Abreviaturas        6
+2.2.1 Acrónimos de Ingeniería de Software        6
+2.2.2 Abreviaturas de Tecnologías y Lenguajes        6
 2.3.3 Abreviaturas y Símbolos de Reglas del Grupo        7
-3. Temas de la primer entrega        7
-4. Introducción        7
-5. Ingeniería de Software        8
-5.1 Organización del equipo (Mantei y Constantine)        8
-5.2 Roles dentro del equipo        9
-5.3 Reglas del grupo (Código de convivencia)        10
-5.4 Ciclo de vida del proyecto        12
-5.5 Diagrama de Gantt        13
-5.6 Justificación de técnicas de relevamiento de datos        14
-5.7 Modelo de formulario/s empleado/s para relevar datos.        16
-5.8 Resultados crudos de las técnicas de relevamiento utilizadas        18
-5.9 Identificación de roles y perfiles de usuario de la aplicación con sus responsabilidades y nivel de acceso (tabla de datos)        23
-6. Bibliografía:        24
-7. Anexos:        25
+3. Temas para las entrega        8
+3.1 Primer entrega        8
+3.2 Segunda entrega        8
+3.3 Tercera entrega        8
+4. Introducción        9
+5. Ingeniería de Software        10
+5.1 Organización del equipo (Mantei y Constantine)        10
+5.2 Roles dentro del equipo        12
+5.3 Reglas del grupo (Código de convivencia)        13
+5.4 Ciclo de vida del proyecto        15
+5.5 Diagrama de Gantt        16
+5.6 Justificación de técnicas de relevamiento de datos        17
+5.7 Modelo de formulario/s empleado/s para relevar datos.        19
+5.8 Resultados crudos de las técnicas de relevamiento utilizadas        22
+5.9 Identificación de roles y perfiles de usuario de la aplicación con sus responsabilidades y nivel de acceso (tabla de datos)        28
+5.10 Diagrama UML        29
+5.11 PLANILLAS DE CASOS DE USO        30
+RF-UNA-01        30
+RF-UNA-02        31
+RF-GEN-01        32
+RF-GEN-02        33
+RF-GEN-03        34
+RF-GEN-04        35
+RF-GEN-05        36
+RF-GEN-06        37
+RF-GEN-07        38
+RF-GEN-08        39
+RF-UA-01        40
+RF-UA-02        41
+RF-UA-04        43
+RF-UP-01        44
+RF-UP-02        45
+RF-UP-03        46
+RF-UP-04        47
+RF-UP-05        48
+RF-UP-06        49
+RF-UP-07        50
+RF-UP-08        51
+RF-AG-01        52
+RF-AG-02        53
+RF-AG-03        54
+RF-AG-04        55
+RF-AG-05        56
+RF-AG-06        57
+RF-AG-07        58
+RF-AG-08        59
+RF-OT-01        60
+RF-OT-02        61
+RF-OT-03        62
+RF-OT-04        63
+RF-OT-05        64
+RF-OT-06        65
+RF-OT-07        66
+RF-OT-08        67
+Estudio de factibilidad        68
+Plan de contingencias        68
+6. Bibliografía:        69
+7. Anexos:        70
 ________________
 
 
@@ -104,7 +148,8 @@ PHP: Hypertext Preprocessor (Lenguaje de programación del lado del servidor).
 % sanción: Descuento del 1% a la cuota del grupo y penalización del +3% en el aporte monetario al integrante sancionado.
 Strike (x1): Sistema de advertencia formal acumulable previo a la sanción económica y administrativa.
 ________________
-3. Temas de la primer entrega
+3. Temas para las entrega
+3.1 Primer entrega
 * Documentación de inicio y planificación del proyecto
 * Cómo está organizado su equipo, según Mantei y Constantine, justificada
 * Reglas del grupo (mínimo 7)
@@ -116,6 +161,23 @@ ________________
 * Resultados crudos de las técnicas de relevamiento utilizadas.
 * Documento ESRE (IEEE 29148) con los apartados mínimos: Propósito, Alcance, Definiciones, acrónimos y abreviaciones y Limitaciones
 * Identificación de roles y perfiles de usuario de la aplicación con sus responsabilidades y nivel de acceso (tabla de datos) 
+3.2 Segunda entrega 
+* Actualización de ESRE con requisitos específicos (funcionales y no funcionales) 
+* UML – diagramas 
+   * Diagramas UML (Casos de Uso) (Planilla y diagramación)
+   * Diagramas de clase. 
+* Estudio de factibilidad 
+* Plan de contingencias. 
+* Diagrama de Gantt (hasta la segunda entrega). 
+3.3 Tercera entrega 
+* Documento de calidad de software en entornos web (familia ISO 25000) 
+* Plan de testing con implementación de pruebas de testing manual y unitario (phpunit, cypress, etc) 
+* Encuesta de percepción de calidad 
+* Plan de seguridad web basado en OWASP 
+* Cálculo de métricas de proyecto (punto de función) 
+* Diagrama de Gantt (cronograma de la gestión del proyecto completo). 
+* Manual de usuario operacionales 
+* Manual de administrador 
 4. Introducción
 Este documento es un seguimiento de la materia de Ingeniería de Software la cual organiza y estructura de la creación, el diseño y testing del sistema SGDM por parte todos los integrantes del equipo Epsilon Software para tener todas las tareas realizadas y reuniones documentadas con el fin de que cumpla con los estándares y la revisión de docentes en cada plazo establecido y captar el conocimiento y en el ciclo de vida que nos encontramos para realizar el proyecto de fin de año.
 5. Ingeniería de Software
@@ -291,7 +353,8 @@ ________________
   
 ________________
 
-PLANILLAS DE CASOS DE USO
+5.10 Diagrama UML
+  5.11 PLANILLAS DE CASOS DE USO
 SGDM – Sistema de Gestión Deportiva Modular
 
 
@@ -1613,6 +1676,9 @@ Caso de uso: RF-OT-08
 
 
 
+Estudio de factibilidad
+Plan de contingencias 
+________________
 6. Bibliografía:
 Estándar IEEE 830. (s. f.). Material didáctico del curso de Ingeniería de Software. Dirección General de Educación Técnico Profesional – UTU.
 Estándar IEEE 29148 (2011). (s. f.). Material didáctico del curso de Ingeniería de Software. Dirección General de Educación Técnico Profesional – UTU.

@@ -22,20 +22,34 @@ Objetivo        3
 Alcance        3
 2. Vocabulario de Términos Técnicos        4
 2.1 Término, Definición y Contexto Operativo        4
-2.2 Símbolos, Acrónimos y Abreviaturas        5
-2.3.1 Archivos de Configuración del Sistema Operativo        5
-2.3.2 Comandos de Consola y Parámetros del Script        5
+2.2 Símbolos, Acrónimos y Abreviaturas        6
+2.3.1 Archivos de Configuración del Sistema Operativo        6
+2.3.2 Comandos de Consola y Parámetros del Script        6
 2.3.3 Acrónimos Tecnológicos y de Sistemas Operativos        6
-3. Temas para la primera entrega        6
-4. Introducción        6
-5. Administración de Sistemas Operativos        7
-5.1 Análisis de Usuario de Sistema:        7
-5.2 Estudio Modelo cliente-servidor:        9
-5.3 Script de gestión de usuarios del sistema        13
-5.3.1 Introducción        13
-5.3.2 Funcionamiento del script        14
-6. Bibliografía        21
-7. Anexos        22
+3. Temas para las entregas        7
+3.1 Primera entrega        7
+3.2 Segunda entrega        7
+3.3 Tercera entrega        7
+4. Introducción        8
+5. Administración de Sistemas Operativos        9
+5.1 Análisis de Usuario de Sistema:        9
+5.2 Estudio Modelo cliente-servidor:        12
+5.3 Script de gestión de usuarios del sistema        16
+5.3.1 Introducción        16
+5.3.2 Funcionamiento del script        19
+5.4 Políticas de respaldo        26
+5.4.1 Objetivo        26
+5.4.2 Información a respaldar        26
+5.4.3 Ejecución de los respaldos        26
+5.4.4 Ubicación y conservación        27
+5.4.5 Recuperación de la información        27
+5.4.6 Verificación de los respaldos        27
+5.5 Script de respaldos y automatización (cron)        28
+5.5.1 Introducción        28
+5.5.2 Funcionamiento del script        28
+5.6 Sistema de monitoreo implementado en el servidor (zabbix, grafana, etc).        34
+6. Bibliografía        35
+7. Anexos        37
 ________________
 1.Objetivos y Alcance del documento
 Objetivo
@@ -94,10 +108,27 @@ LTS: Long Term Support (Soporte a largo plazo).
 RHEL:Red Hat Enterprise Linux.
 SO: Sistema Operativo.
 UID: User Identifier (Identificador numérico de usuario).
-3. Temas para la primera entrega 
+3. Temas para las entregas
+3.1 Primera entrega
 * Estudio de sistemas operativos cliente y servidor.
 * Análisis de usuarios de sistema.
 * Script de gestión de usuarios del sistema implementado en el servidor. 
+3.2 Segunda entrega 
+* Política de respaldos. 
+   * Tipos de respaldos a utilizar 
+   * Cronograma de respaldo definido 
+* Script de respaldos y automatización (cron) implementado en el servidor. 
+* Sistema de monitoreo implementado en el servidor (zabbix, grafana, etc).
+3.3 Tercera entrega 
+* Políticas de seguridad. 
+* Implementación de firewall, iptables, antivirus, entre otros dentro del servidor. 
+* Script de consultas y monitoreo de base de datos dentro del servidor. 
+* Script general de gestión del servidor 
+* Implementación con Docker de la aplicación web
+
+
+
+
 4. Introducción
 Este documento de la asignatura ASO nos permite documentar el proceso de configurar, mantener, asegurar la gestión de usuarios, control de datos y seguridad del sistema realizado por el equipo de Epsilon software para realizar todas las tareas con el fin de que cumpla con los estándares y la revisión de docentes en cada plazo establecido y captar el conocimiento y en el ciclo de vida que nos encontramos para realizar el proyecto de fin de año.
 ________________
@@ -308,7 +339,7 @@ Después de ejecutar el script, se podrá comprobar la existencia de los archivo
 
 
 
-5.5 Script de respaldo
+5.5 Script de respaldos y automatización (cron)
 5.5.1 Introducción
 Para garantizar el cumplimiento de las políticas de respaldo definidas para el proyecto, desarrollamos un script automatizado en Bash que se encarga de resguardar tanto la base de datos MariaDB como los archivos de la aplicación del SGDM (Sistema de Gestión Deportiva Modular). Este proceso previene la pérdida de datos y permite restaurar el sistema ante fallas, asegurando la continuidad del servicio y respetando la regla de conservación de los últimos cuatro respaldos.
 
@@ -317,6 +348,10 @@ Para garantizar el cumplimiento de las políticas de respaldo definidas para el 
 1. Configuración de variables y entorno
 En esta primera sección se declara el intérprete Bash y se define la variable PATH explícita, necesaria para que la herramienta cron localice correctamente las utilidades del sistema durante la ejecución automatizada. Asimismo, se configuran las rutas de origen y destino, los parámetros de conexión a MariaDB (mysqldump), el cual es una herramienta de línea de comandos en sistemas MySQL y MariaDB que sirve para realizar copias de seguridad de bases de datos.
 Además de la fecha para dar un nombre único al archivo y el comando trap, que garantiza la limpieza de la carpeta temporal si el proceso se interrumpe por algún error.
+
+
+
+
   
 
 
@@ -346,6 +381,12 @@ Al listar el directorio /var/respaldos/sgdm con el comando ls -lh, se comprueba 
 
 
 
+6. Automatización de la ejecución mediante Cron
+Para cumplir con la política de respaldos, se programó la ejecución automatizada del script mediante el demonio cron del sistema operativo. Se configuró editando la tabla de tareas con el comando crontab -e.
+
+
+La sintaxis utilizada (0 3 * * 0) establece que el respaldo se ejecutará automáticamente todos los domingos a las 03:00 AM, seleccionando un horario de baja concurrencia para evitar impactos en el rendimiento del sistema. Además, se incluye la redirección >> /var/log/sgdm_respaldo.log 2>&1 para guardar un registro (log) detallado de las ejecuciones y detectar posibles errores.
+  
 
 
 
@@ -356,6 +397,10 @@ Al listar el directorio /var/respaldos/sgdm con el comando ls -lh, se comprueba 
 
 
 
+
+
+
+5.6 Sistema de monitoreo implementado en el servidor (zabbix, grafana, etc).
 ________________
 6. Bibliografía
 * Silberschatz, A., Galvin, P. B., & Gagne, G. (2018). Operating System Concepts (10.ª ed.). Wiley.
