@@ -36,7 +36,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($accion === 'inscribir_participante') {
         $idTorneo = filter_var($_POST['id_torneo'] ?? 0, FILTER_VALIDATE_INT);
         $idParticipante = filter_var($_POST['id_participante'] ?? 0, FILTER_VALIDATE_INT);
+        $idParticipante = filter_var($_POST['id_participante'] ?? 0, FILTER_VALIDATE_INT);
 
+        if ($idTorneo && $idParticipante) {
         if ($idTorneo && $idParticipante) {
             try {
                 // Verificar si el participante ya se encuentra inscrito en el torneo
@@ -62,7 +64,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     $mensajeExito = "Participante inscrito correctamente en el torneo.";
                 }
-            } catch (PDOException $e) {
+                    $mensajeExito = "Participante inscrito correctamente en el torneo.";
+                }
+        
+                catch (PDOException $e) {
                 $mensajeError = "Error al inscribir participante: " . $e->getMessage();
             }
         } else {
@@ -148,8 +153,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
+}
 
 // ==========================================
+// CONSULTA DE TORNEOS, PARTIDOS Y PARTICIPANTES
 // CONSULTA DE TORNEOS, PARTIDOS Y PARTICIPANTES
 // ==========================================
 try {
@@ -201,16 +208,22 @@ try {
         $sqlPartidos .= " AND t.id_organizador = :id_organizador";
         $stmtPartidos = $pdo->prepare($sqlPartidos);
         $stmtPartidos->execute([':id_organizador' => $idUsuarioActual]);
+        $stmtPartidos = $pdo->prepare($sqlPartidos);
+        $stmtPartidos->execute([':id_organizador' => $idUsuarioActual]);
     } else {
+        $stmtPartidos = $pdo->prepare($sqlPartidos);
+        $stmtPartidos->execute();
         $stmtPartidos = $pdo->prepare($sqlPartidos);
         $stmtPartidos->execute();
     }
     
     $partidosPendientes = $stmtPartidos->fetchAll(PDO::FETCH_ASSOC);
+    $partidosPendientes = $stmtPartidos->fetchAll(PDO::FETCH_ASSOC);
 
 } catch (PDOException $e) {
     $errorBaseDatos = "Error SQL: " . $e->getMessage();
     $torneosAsignados = [];
+    $listaParticipantes = [];
     $listaParticipantes = [];
     $partidosPendientes = [];
 }
@@ -464,6 +477,19 @@ try {
                 <!-- Pestaña: Inscribir Participantes -->
                 <div class="seccion-organizador panel-participantes">
                     <h3 class="titulo-seccion">Inscribir Participantes</h3>
+                    <p class="subtitulo-seccion">Seleccioná un participante registrado para agregarlo al torneo.</p>
+
+                    <?php if (!empty($mensajeExito)): ?>
+                        <div style="background-color: #1b4332; color: #2ec4b6; border: 1px solid #2ec4b6; padding: 10px; border-radius: 6px; margin-bottom: 15px;">
+                            ✓ <?php echo htmlspecialchars($mensajeExito); ?>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if (!empty($mensajeError)): ?>
+                        <div style="background-color: #4a151b; color: #ff6b6b; border: 1px solid #ff6b6b; padding: 10px; border-radius: 6px; margin-bottom: 15px;">
+                            ✕ <?php echo htmlspecialchars($mensajeError); ?>
+                        </div>
+                    <?php endif; ?>
                     <p class="subtitulo-seccion">Seleccioná un participante registrado para agregarlo al torneo.</p>
 
                     <?php if (!empty($mensajeExito)): ?>
