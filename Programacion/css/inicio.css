@@ -112,6 +112,15 @@ body {
 
 /*==============4. Perfil y Notificaciones ======================*/
 
+.profile-menu-card .avatar-svg {
+    width: 16px;          
+    height: 16px;          
+    fill: currentColor;    
+    margin-right: 8px;    
+    vertical-align: middle;
+}
+
+
 .profile-dropdown, .notifications-dropdown {
     position: relative;
     display: inline-block;
@@ -549,37 +558,350 @@ body {
 .welcome-logo { width: 65px; height: auto; margin-bottom: 8px; }
 .welcome-text { font-size: 15px; font-weight: 600; color: #111111; } 
 
-/*==============7. Footer ======================*/
+/*============== 7. Footer ==============*/
 
 .main-footer {
     background-color: var(--bg-dark);   
     border-top: 1px solid var(--search-border);
-    padding: 24px 20px 32px 20px; 
+    padding: 24px 32px; 
     width: 100%;
+    position: relative;
+    box-sizing: border-box;
 }
 
 .footer-content {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    justify-content: space-between; 
-    max-width: 450px; 
+    max-width: 1200px;
     margin: 0 auto;
+    width: 100%;
 }
 
-.footer-logo { height: 38px; width: auto; }
-.footer-right-group { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
-.footer-links { display: flex; gap: 16px; }
-.footer-link { color: var(--gold-muted); font-size: 13px; text-decoration: none; }
-.footer-link:hover { color: var(--gold-bright); }
-.footer-copyright { color: #555555; font-size: 10px; }
+/* Control del logo permanente en el Footer */
+.footer-logo {
+    height: 40px !important;
+    width: auto !important;
+    max-width: 180px !important;
+    object-fit: contain !important;
+    display: block !important;
+}
 
+/* Grupo de navegación y copyright a la derecha */
+.footer-right-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+}
 
-.profile-menu-card .avatar-svg {
-    width: 16px;          
-    height: 16px;          
-    fill: currentColor;    
-    margin-right: 8px;     
-    vertical-align: middle; 
+/* Contenedor de enlaces */
+.footer-links {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+/* Botón "Sobre nosotros" y Enlace "Ayuda" */
+.footer-link-btn,
+.footer-link {
+    background: transparent;
+    border: none;
+    color: var(--gold-bright, #d4af37);
+    font-size: 15px;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    padding: 0;
+    text-decoration: none;
+    transition: color 0.2s ease, opacity 0.2s ease;
+}
+
+.footer-link-btn:hover,
+.footer-link:hover {
+    color: #ffffff;
+    opacity: 0.9;
+}
+
+/* Texto de Copyright visible */
+.footer-copyright {
+    color: #a0a0a0;
+    font-size: 13px;
+    margin: 0;
+    line-height: 1.4;
+}
+
+/*============== Modal / Flotante "Sobre Nosotros" ==============*/
+
+/* Fondo Oscurecido Pantalla Completa */
+.fondo-seccion {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    background-color: rgba(0, 0, 0, 0.75) !important;
+    backdrop-filter: blur(3px) !important;
+    z-index: 2000 !important;
+    display: none;
+}
+
+/* Tarjeta Flotante */
+#seccion-sobre-nosotros.seccion-desplegable {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: 90% !important;
+    max-width: 480px !important;
+    max-height: 85vh !important;
+    overflow-y: auto !important;
+    background-color: #1a1a1a !important;
+    border: 1px solid var(--gold-dark) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 15px rgba(212, 175, 55, 0.15) !important;
+    z-index: 2010 !important;
+    display: none;
+    padding: 24px !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+}
+
+/* Visibilidad activada con JS */
+.fondo-seccion.activo,
+#seccion-sobre-nosotros.activa {
+    display: block !important;
+}
+
+/* Encabezado */
+#seccion-sobre-nosotros .seccion-encabezado {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--search-border);
+    padding-bottom: 12px;
+    margin-bottom: 16px;
+}
+
+#seccion-sobre-nosotros .seccion-titulo {
+    color: var(--bg-main);
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0;
+}
+
+#seccion-sobre-nosotros .btn-cerrar-seccion {
+    background: transparent;
+    border: none;
+    color: var(--gold-muted);
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0 4px;
+    transition: color 0.2s ease;
+}
+
+#seccion-sobre-nosotros .btn-cerrar-seccion:hover {
+    color: var(--gold-bright);
+}
+
+/* Contenedor y Tamaño Controlado del Logo */
+#seccion-sobre-nosotros .logo-empresa-contenedor {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    margin-bottom: 20px !important;
+    width: 100% !important;
+}
+
+#seccion-sobre-nosotros img.logo-modal,
+#seccion-sobre-nosotros .logo-empresa-contenedor img {
+    height: 48px !important;
+    width: auto !important;
+    max-height: 48px !important;
+    max-width: 200px !important;
+    min-height: unset !important;
+    object-fit: contain !important;
+    display: block !important;
+    margin: 0 auto !important;
+}
+
+#seccion-sobre-nosotros .bloque-nosotros {
+    margin-bottom: 16px;
+}
+
+#seccion-sobre-nosotros .subtitulo-nosotros {
+    color: var(--gold-bright);
+    font-size: 13px;
+    font-weight: 600;
+    margin: 0 0 4px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+#seccion-sobre-nosotros .texto-nosotros {
+    color: #cccccc;
+    font-size: 13px;
+    line-height: 1.5;
+    margin: 0;
+}
+
+#seccion-sobre-nosotros .detalles-nosotros {
+    margin-top: 20px;
+    padding-top: 14px;
+    border-top: 1px dashed var(--search-border);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+#seccion-sobre-nosotros .item-detalle {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+}
+
+#seccion-sobre-nosotros .etiqueta-detalle {
+    color: var(--gold-muted);
+}
+
+#seccion-sobre-nosotros .valor-detalle {
+    color: var(--bg-main);
+    font-weight: 500;
+}
+
+/*============== Modal / Flotante "Ayuda" ==============*/
+
+#seccion-ayuda.seccion-desplegable {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: 90% !important;
+    max-width: 520px !important;
+    max-height: 85vh !important;
+    overflow-y: auto !important;
+    background-color: #1a1a1a !important;
+    border: 1px solid var(--gold-dark, #d4af37) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 15px rgba(212, 175, 55, 0.2) !important;
+    z-index: 2010 !important;
+    display: none;
+    padding: 24px !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+    color: #ffffff !important;
+}
+
+#seccion-ayuda.activa {
+    display: block !important;
+}
+
+/* Encabezado */
+#seccion-ayuda .seccion-encabezado {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    border-bottom: 1px solid var(--search-border, #333) !important;
+    padding-bottom: 12px !important;
+    margin-bottom: 16px !important;
+}
+
+#seccion-ayuda .seccion-titulo {
+    color: #ffffff !important;
+    font-size: 18px !important;
+    font-weight: bold !important;
+    margin: 0 !important;
+}
+
+#seccion-ayuda .btn-cerrar-seccion {
+    background: transparent !important;
+    border: none !important;
+    color: var(--gold-muted, #a08020) !important;
+    font-size: 24px !important;
+    font-weight: bold !important;
+    cursor: pointer !important;
+    line-height: 1 !important;
+    padding: 0 4px !important;
+    transition: color 0.2s ease !important;
+}
+
+#seccion-ayuda .btn-cerrar-seccion:hover {
+    color: var(--gold-bright, #ffd700) !important;
+}
+
+/* Subtítulos y párrafos de texto */
+#seccion-ayuda .subtitulo-nosotros {
+    color: var(--gold-bright, #ffd700) !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    margin: 16px 0 8px 0 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+}
+
+#seccion-ayuda .texto-nosotros {
+    color: #cccccc !important;
+    font-size: 13px !important;
+    line-height: 1.5 !important;
+    margin: 0 0 10px 0 !important;
+}
+
+/* Acordeón FAQ */
+#seccion-ayuda .item-faq {
+    background-color: #242424 !important;
+    border: 1px solid #333333 !important;
+    border-radius: 8px !important;
+    margin-bottom: 8px !important;
+    padding: 10px 12px !important;
+}
+
+#seccion-ayuda .pregunta-faq {
+    color: #ffffff !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    outline: none !important;
+}
+
+#seccion-ayuda .pregunta-faq:hover,
+#seccion-ayuda .item-faq[open] .pregunta-faq {
+    color: var(--gold-bright, #ffd700) !important;
+}
+
+/* Detalles de Soporte y Enlaces */
+#seccion-ayuda .detalles-nosotros {
+    margin-top: 10px !important;
+    padding-top: 10px !important;
+    border-top: 1px dashed #333333 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+}
+
+#seccion-ayuda .item-detalle {
+    display: flex !important;
+    justify-content: space-between !important;
+    font-size: 12px !important;
+}
+
+#seccion-ayuda .etiqueta-detalle {
+    color: #aaaaaa !important;
+}
+
+#seccion-ayuda .valor-detalle {
+    color: #ffffff !important;
+    font-weight: 500 !important;
+}
+
+#seccion-ayuda .enlace-ayuda {
+    color: var(--gold-bright, #ffd700) !important;
+    text-decoration: underline !important;
+}
+
+#seccion-ayuda .enlace-ayuda:hover {
+    color: #ffffff !important;
 }
 
 /*==============8. Versión de Escritorio (media query) ======================*/

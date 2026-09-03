@@ -7,7 +7,7 @@ $idUsuarioActual = $_SESSION['id_usuario'] ?? null;
 
 // 1. Obtener Torneos Globales
 $stmtGlobal = $pdo->prepare("
-    SELECT t.id_torneo, t.nombre_torneo, t.fecha_inicio, t.lugar, m.nombre_modulo AS disciplina
+    SELECT DISTINCT t.id_torneo, t.nombre_torneo, t.fecha_inicio, t.lugar, m.nombre_modulo AS disciplina
     FROM torneos t
     LEFT JOIN modulos_competencia m ON t.id_modulo = m.id_modulo
     WHERE t.fecha_inicio IS NOT NULL
@@ -16,18 +16,25 @@ $stmtGlobal = $pdo->prepare("
 $stmtGlobal->execute();
 $torneosGlobales = $stmtGlobal->fetchAll(PDO::FETCH_ASSOC);
 
-// 2. Obtener Torneos Propios (Donde el usuario está inscrito)
+// 2. Obtener Torneos Propios
 $torneosPropios = [];
 if ($idUsuarioActual) {
     $stmtPropio = $pdo->prepare("
-        SELECT t.id_torneo, t.nombre_torneo, t.fecha_inicio, t.lugar, m.nombre_modulo AS disciplina
-        FROM inscripciones_torneo i
-        JOIN torneos t ON i.id_torneo = t.id_torneo
+        SELECT DISTINCT t.id_torneo, t.nombre_torneo, t.fecha_inicio, t.lugar, m.nombre_modulo AS disciplina
+        FROM torneos t
         LEFT JOIN modulos_competencia m ON t.id_modulo = m.id_modulo
-        WHERE i.id_participante = :id_usuario AND t.fecha_inicio IS NOT NULL
+        INNER JOIN inscripciones_torneo i ON t.id_torneo = i.id_torneo
+        LEFT JOIN participantes p_directo ON i.id_participante = p_directo.id_participante
+        LEFT JOIN equipos e ON i.id_equipo = e.id_equipo
+        LEFT JOIN participantes p_equipo ON e.id_participante = p_equipo.id_participante
+        WHERE (p_directo.id_usuario = :id_usuario1 OR p_equipo.id_usuario = :id_usuario2)
+          AND t.fecha_inicio IS NOT NULL
         ORDER BY t.fecha_inicio ASC
     ");
-    $stmtPropio->execute([':id_usuario' => $idUsuarioActual]);
+    $stmtPropio->execute([
+        ':id_usuario1' => $idUsuarioActual,
+        ':id_usuario2' => $idUsuarioActual
+    ]);
     $torneosPropios = $stmtPropio->fetchAll(PDO::FETCH_ASSOC);
 }
 ?>
