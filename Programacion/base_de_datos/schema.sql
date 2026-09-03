@@ -34,28 +34,18 @@ CREATE TABLE participantes (
 -- 5. Tabla EQUIPOS
 CREATE TABLE equipos (
     id_equipo INT AUTO_INCREMENT PRIMARY KEY,
-    nombre_equipo VARCHAR(100) NOT NULL,
-    id_creador INT NOT NULL,
-    FOREIGN KEY (id_creador) REFERENCES usuarios(id_usuario) ON DELETE CASCADE ON UPDATE CASCADE
-);
-
--- 6. Tabla INTEGRANTES_EQUIPO (Tabla de relación N:M entre EQUIPOS y PARTICIPANTES)
-CREATE TABLE integrantes_equipo (
-    id_equipo INT NOT NULL,
     id_participante INT NOT NULL,
-    PRIMARY KEY (id_equipo, id_participante),
-    FOREIGN KEY (id_equipo) REFERENCES equipos(id_equipo) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (id_participante) REFERENCES participantes(id_participante) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
--- 7. Tabla MODULOS_COMPETENCIA
+-- 6. Tabla MODULOS_COMPETENCIA
 CREATE TABLE modulos_competencia (
     id_modulo INT AUTO_INCREMENT PRIMARY KEY,
     nombre_modulo VARCHAR(100) NOT NULL,
     descripcion TEXT
 );
 
--- 8. Tabla TORNEOS
+-- 7. Tabla TORNEOS
 CREATE TABLE torneos (
     id_torneo INT AUTO_INCREMENT PRIMARY KEY,
     nombre_torneo VARCHAR(100) NOT NULL,
@@ -72,7 +62,7 @@ CREATE TABLE torneos (
     FOREIGN KEY (id_organizador) REFERENCES usuarios(id_usuario) ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
--- 9. Tabla CONFIGURACION_TORNEO
+-- 8. Tabla CONFIGURACION_TORNEO
 CREATE TABLE configuracion_torneo (
     id_configuracion INT AUTO_INCREMENT PRIMARY KEY,
     id_torneo INT NOT NULL,
@@ -84,7 +74,7 @@ CREATE TABLE configuracion_torneo (
     FOREIGN KEY (id_torneo) REFERENCES torneos(id_torneo) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
--- 10. Tabla INSCRIPCIONES_TORNEO
+-- 9. Tabla INSCRIPCIONES_TORNEO
 CREATE TABLE inscripciones_torneo (
     id_inscripcion INT AUTO_INCREMENT PRIMARY KEY,
     id_torneo INT NOT NULL,
@@ -96,7 +86,7 @@ CREATE TABLE inscripciones_torneo (
     FOREIGN KEY (id_participante) REFERENCES participantes(id_participante) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
--- 11. Tabla RONDAS
+-- 10. Tabla RONDAS
 CREATE TABLE rondas (
     id_ronda INT AUTO_INCREMENT PRIMARY KEY,
     id_torneo INT NOT NULL,
@@ -106,7 +96,7 @@ CREATE TABLE rondas (
     FOREIGN KEY (id_torneo) REFERENCES torneos(id_torneo) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
--- 12. Tabla ENFRENTAMIENTOS
+-- 11. Tabla ENFRENTAMIENTOS
 CREATE TABLE enfrentamientos (
     id_enfrentamiento INT AUTO_INCREMENT PRIMARY KEY,
     id_ronda INT NOT NULL,
@@ -118,7 +108,7 @@ CREATE TABLE enfrentamientos (
     FOREIGN KEY (id_visitante) REFERENCES equipos(id_equipo) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
--- 13. Tabla RESULTADOS
+-- 12. Tabla RESULTADOS
 CREATE TABLE resultados (
     id_resultado INT AUTO_INCREMENT PRIMARY KEY,
     id_enfrentamiento INT NOT NULL,
@@ -131,7 +121,7 @@ CREATE TABLE resultados (
     FOREIGN KEY (id_usuario_registro) REFERENCES usuarios(id_usuario) ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
--- 14. Tabla AUDITORIA
+-- 13. Tabla AUDITORIA
 CREATE TABLE auditoria (
     id_auditoria INT AUTO_INCREMENT PRIMARY KEY,
     accion VARCHAR(100) NOT NULL,
