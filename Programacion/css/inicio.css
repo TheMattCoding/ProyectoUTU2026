@@ -74,6 +74,14 @@ body {
     border-radius: 2px;
 }
 
+.profile-menu-card .avatar-svg {
+    width: 16px;          
+    height: 16px;          
+    fill: currentColor;    
+    margin-right: 8px;    
+    vertical-align: middle;
+}
+
 /*==============3. Barra de busqueda ======================*/
 
 .search-container {
