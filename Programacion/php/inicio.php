@@ -208,38 +208,139 @@ $rolActual = $_SESSION['rol'] ?? 'visitante';
         <div class="cards-row-wrapper">
             <section class="info-card" aria-labelledby="calendar-title">
                 <div class="card-header-row">
-                    <h2 id="calendar-title" class="card-main-title">Calendario de torneos</h2>
+                    <h2 id="calendar-title" class="card-main-title">Calendario de Torneos</h2>
                 </div>
-                <p class="card-short-desc">Entérate de las fechas, formatos y horarios de las próximas competencias oficiales y de la comunidad.</p>
-                <a href="calendario.php" class="card-action-link">Ver fixture completo →</a>
+                <p class="card-short-desc">Entérate de las fechas, formatos y horarios de las próximas competencias.</p>
+                <a href="calendario.php" class="card-action-link">Ver Calendario Global →</a>
             </section>
 
             <!--6. Isla de Organización de Torneos -->
             <section class="info-card" aria-labelledby="organize-title">
                 <div class="card-header-row">
-                    <h2 id="organize-title" class="card-main-title">Organiza tu torneo</h2>
+                    <h2 id="organize-title" class="card-main-title">Lista de Torneos</h2>
                 </div>
-                <p class="card-short-desc">Crea tu propia competencia, define las reglas, gestiona los equipos inscritos y comparte el fixture con tus amigos.</p>
-                <a href="formularioTorneo.php" class="card-action-link">Comenzar a crear →</a>
+                <p class="card-short-desc">Consulta y explora los torneos disponibles.</p>
+                <a href="formularioTorneo.php" class="card-action-link">Ver Torneos →</a>
             </section>
         </div>
 
     </main>
 
-    <!--7. Footer -->
+<!-- 7. Footer -->
     <footer class="main-footer">
         <div class="footer-content">
             <img src="../img/epsilonSoftware2.png" alt="Logo Epsilon Software" class="footer-logo">
         
             <div class="footer-right-group">
                 <nav class="footer-links" aria-label="Enlaces de pie de página">
-                    <a href="#" class="footer-link">Sobre nosotros</a>
-                    <a href="#" class="footer-link">Ayuda</a>
+                    <button type="button" id="btn-seccion-nosotros" class="footer-link-btn">Sobre nosotros</button>
+                    <button type="button" id="btn-seccion-ayuda" class="footer-link-btn">Ayuda</button>
                 </nav>
                 <p class="footer-copyright">&copy; 2026 Epsilon Software. Todos los derechos reservados.</p>
             </div>
         </div>
     </footer>
 
+    <!-- Fondo Oscurecido para Modales -->
+    <div id="fondo-seccion-nosotros" class="fondo-seccion"></div>
+
+    <!-- Modal Sobre Nosotros -->
+    <section id="seccion-sobre-nosotros" class="seccion-desplegable" aria-hidden="true">
+        <div class="seccion-encabezado">
+            <h3 class="seccion-titulo">Sobre Nosotros</h3>
+            <button type="button" id="btn-cerrar-seccion-nosotros" class="btn-cerrar-seccion" aria-label="Cerrar sección">&times;</button>
+        </div>
+
+        <div class="seccion-contenido">
+            <div class="logo-empresa-contenedor">
+                <img src="../img/epsilonSoftware2.png" alt="Logo Epsilon Software" class="logo-modal">
+            </div>
+
+            <div class="bloque-nosotros">
+                <h4 class="subtitulo-nosotros">Misión</h4>
+                <p class="texto-nosotros">Proporcionar a comunidades y organizadores una plataforma intuitiva y eficiente para la gestión integral de torneos deportivos y de eSports, centralizando fixtures, inscripciones y resultados en un solo lugar.</p>
+            </div>
+
+            <div class="bloque-nosotros">
+                <h4 class="subtitulo-nosotros">Visión</h4>
+                <p class="texto-nosotros">Ser la solución digital referente en el desarrollo y automatización de eventos competitivos, impulsando el crecimiento del talento deportivo y gaming en la región.</p>
+            </div>
+
+            <div class="detalles-nosotros">
+                <div class="item-detalle">
+                    <span class="etiqueta-detalle">Desarrollado por:</span>
+                    <span class="valor-detalle">Epsilon Software</span>
+                </div>
+                <div class="item-detalle">
+                    <span class="etiqueta-detalle">Versión de la App:</span>
+                    <span class="valor-detalle">v1.0.0</span>
+                </div>
+                <div class="item-detalle">
+                    <span class="etiqueta-detalle">Contacto:</span>
+                    <span class="valor-detalle">epsilonsoftwarecontacto@gmail.com</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal Ayuda y Soporte -->
+    <section id="seccion-ayuda" class="seccion-desplegable" aria-hidden="true">
+        <div class="seccion-encabezado">
+            <h3 class="seccion-titulo">Centro de Ayuda</h3>
+            <button type="button" id="btn-cerrar-seccion-ayuda" class="btn-cerrar-seccion" aria-label="Cerrar sección">&times;</button>
+        </div>
+
+        <div class="seccion-contenido">
+            <!-- 1. Preguntas Frecuentes (FAQ) -->
+            <div class="bloque-nosotros">
+                <h4 class="subtitulo-nosotros">Preguntas Frecuentes</h4>
+                
+                <details class="item-faq">
+                    <summary class="pregunta-faq">¿Cómo me inscribo a un torneo?</summary>
+                    <p class="texto-nosotros">Ve a la sección de torneos, selecciona la competencia deseada y presiona en "Inscribirse".</p>
+                </details>
+
+                <details class="item-faq">
+                    <summary class="pregunta-faq">¿Cómo edito la información de mi perfil?</summary>
+                    <p class="texto-nosotros">Haz clic en la seccion de configuración del menú lateral y accede a la pestaña "Editar perfil" para actualizar tus datos personales.</p>
+                </details>
+            </div>
+
+            <!-- 2. Soporte Técnico y Contacto Directo -->
+            <div class="bloque-nosotros">
+                <h4 class="subtitulo-nosotros">Soporte Técnico y Contacto Directo</h4>
+                <div class="detalles-nosotros">
+                    <div class="item-detalle">
+                        <span class="etiqueta-detalle">Correo de soporte:</span>
+                        <span class="valor-detalle">epsilonsoftwarecontacto@gmail.com</span>
+                    </div>
+                    <div class="item-detalle">
+                        <span class="etiqueta-detalle">Horarios de atención:</span>
+                        <span class="valor-detalle">Lunes a Viernes de 09:00 a 18:00 hs</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3 y 4. Guías, Tutoriales y Reporte de Errores -->
+            <div class="bloque-nosotros">
+                <h4 class="subtitulo-nosotros">Recursos y Reporte de Errores</h4>
+                <p class="texto-nosotros">¿Encontraste un fallo o un error? Puedes notificarlo o consultar nuestra documentación oficial:</p>
+                <div class="detalles-nosotros">
+                    <div class="item-detalle">
+                        <span class="etiqueta-detalle">Manual de usuario:</span>
+                        <a href="#" class="valor-detalle enlace-ayuda" target="_blank" rel="noopener">Ver Guía en PDF</a>
+                    </div>
+                    <div class="item-detalle">
+                        <span class="etiqueta-detalle">Reportar fallo (Bug):</span>
+                        <a href="https://mail.google.com/mail/?view=cm&fs=1&to=epsilonsoftwarecontacto@gmail.com&su=Error&body=Descripción%20del%20error:%0A%0APágina/Sección:%0A%0APasos%20para%20reproducirlo:" class="valor-detalle enlace-ayuda" target="_blank" rel="noopener">Enviar reporte de error</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- JavaScript del Footer -->
+    <script src="../js/seccionSobreNosotros.js"></script>
+    <script src="../js/seccionAyuda.js"></script>
 </body>
 </html>
