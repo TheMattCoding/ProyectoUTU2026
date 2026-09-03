@@ -277,3 +277,141 @@
     font-size: 11px;
     font-weight: 600;
 }
+/* Mensajes de Alerta */
+.alert-mensaje {
+    padding: 12px;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 1150px;
+    box-sizing: border-box;
+}
+
+.alert-mensaje.exito {
+    background-color: rgba(46, 204, 113, 0.2);
+    color: #2ecc71;
+}
+
+.alert-mensaje.error {
+    background-color: rgba(255, 107, 107, 0.2);
+    color: #ff6b6b;
+}
+
+/* Ajustes de Navbar Búsqueda */
+.nav-search-form {
+    display: flex;
+    flex: 1;
+    max-width: 420px;
+    margin: 0 12px;
+}
+
+.nav-search-container {
+    margin: 0;
+    width: 100%;
+}
+
+/* Textos e Informativos */
+.subtitulo-ayuda {
+    color: #aaa;
+    font-size: 12px;
+    margin-top: -8px;
+}
+
+.texto-secundario {
+    color: #888;
+    font-size: 12px;
+}
+
+.tabla-vacia {
+    text-align: center;
+    color: #888;
+}
+
+/* Formularios e Inputs en Tablas */
+.form-inline {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.form-accion-inline {
+    display: inline;
+}
+
+.input-tabla,
+.select-tabla {
+    background: #2b2b2b;
+    color: #fff;
+    border: 1px solid #444;
+    border-radius: 4px;
+    padding: 4px;
+}
+
+.input-tabla.width-sm {
+    width: 90px;
+}
+
+.input-tabla.width-xs {
+    width: 80px;
+}
+
+/* Botones de Acción */
+.btn-accion {
+    color: #fff;
+    border: none;
+    padding: 4px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: opacity 0.2s;
+}
+
+.btn-accion:hover {
+    opacity: 0.85;
+}
+
+.btn-guardar { background: #D4AF37; }
+.btn-eliminar { background: #e74c3c; }
+.btn-sacar    { background: #e67e22; }
+.btn-editar   { background: #3498db; }
+
+/* Contenedor de Filtros y Búsqueda de Tablas */
+.barra-filtros {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.input-busqueda-tabla {
+    flex: 1;
+    min-width: 220px;
+    background: #2b2b2b;
+    border: 1px solid #444;
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.input-busqueda-tabla:focus {
+    border-color: #D4AF37;
+}
+
+.select-ordenar-tabla {
+    background: #2b2b2b;
+    border: 1px solid #444;
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+
+.select-ordenar-tabla:focus {
+    border-color: #D4AF37;
+}

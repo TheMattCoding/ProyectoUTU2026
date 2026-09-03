@@ -35,25 +35,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // 1. Inscripción manual de participantes
     if ($accion === 'inscribir_participante') {
         $idTorneo = filter_var($_POST['id_torneo'] ?? 0, FILTER_VALIDATE_INT);
-        $idEquipo = filter_var($_POST['id_equipo'] ?? 0, FILTER_VALIDATE_INT);
+        $idParticipante = filter_var($_POST['id_participante'] ?? 0, FILTER_VALIDATE_INT);
 
-        if ($idTorneo && $idEquipo) {
+        if ($idTorneo && $idParticipante) {
             try {
-                // Inserta en la tabla de inscripciones sin la columna fecha_inscripcion
-                $sqlInscribir = "INSERT INTO inscripciones_torneo (id_torneo, id_equipo, estado_inscripcion) 
-                                 VALUES (:id_torneo, :id_equipo, 'confirmado')";
-                $stmtInscribir = $pdo->prepare($sqlInscribir);
-                $stmtInscribir->execute([
-                    ':id_torneo' => $idTorneo,
-                    ':id_equipo' => $idEquipo
+                // Verificar si el participante ya se encuentra inscrito en el torneo
+                $sqlVerificar = "SELECT COUNT(*) FROM INSCRIPCIONES_TORNEO 
+                                 WHERE id_torneo = :id_torneo AND id_participante = :id_participante";
+                $stmtVerificar = $pdo->prepare($sqlVerificar);
+                $stmtVerificar->execute([
+                    ':id_torneo'       => $idTorneo,
+                    ':id_participante' => $idParticipante
                 ]);
 
-                $mensajeExito = "Equipo inscrito correctamente en el torneo.";
+                if ($stmtVerificar->fetchColumn() > 0) {
+                    $mensajeError = "El participante ya está inscrito en este torneo.";
+                } else {
+                    // Inserta en la tabla de inscripciones
+                    $sqlInscribir = "INSERT INTO INSCRIPCIONES_TORNEO (id_torneo, id_participante, estado_inscripcion) 
+                                     VALUES (:id_torneo, :id_participante, 'confirmado')";
+                    $stmtInscribir = $pdo->prepare($sqlInscribir);
+                    $stmtInscribir->execute([
+                        ':id_torneo'       => $idTorneo,
+                        ':id_participante' => $idParticipante
+                    ]);
+
+                    $mensajeExito = "Participante inscrito correctamente en el torneo.";
+                }
             } catch (PDOException $e) {
-                $mensajeError = "Error al inscribir equipo: " . $e->getMessage();
+                $mensajeError = "Error al inscribir participante: " . $e->getMessage();
             }
         } else {
-            $mensajeError = "Por favor, seleccioná un torneo y un equipo válidos.";
+            $mensajeError = "Por favor, seleccioná un torneo y un participante válidos.";
         }
     }
 
@@ -83,10 +96,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $mVisita = filter_var($datos['visita'] ?? null, FILTER_VALIDATE_INT);
 
                     if ($idEnfrentamiento && $mLocal !== false && $mVisita !== false) {
-                        // Actualizar estado del enfrentamiento a finalizado
                         $stmtEstado->execute([':id' => $idEnfrentamiento]);
 
-                        // Guardar puntuaciones
                         $stmtResultado->execute([
                             ':id'         => $idEnfrentamiento,
                             ':m_local'    => $mLocal,
@@ -107,14 +118,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 // ==========================================
-// CONSULTA DE TORNEOS, PARTIDOS Y EQUIPOS
+// CONSULTA DE TORNEOS, PARTIDOS Y PARTICIPANTES
 // ==========================================
 try {
     // 1. Obtener lista de Torneos
     if ($rolActual === 'administrador') {
         $sqlTorneos = "SELECT t.*, m.nombre_modulo AS disciplina 
-                       FROM TORNEOS t 
-                       LEFT JOIN MODULOS_COMPETENCIA m ON t.id_modulo = m.id_modulo 
+                       FROM torneos t 
+                       LEFT JOIN modulos_competencia m ON t.id_modulo = m.id_modulo 
                        ORDER BY t.id_torneo DESC";
         $stmtT = $pdo->prepare($sqlTorneos);
         $stmtT->execute();
@@ -129,9 +140,8 @@ try {
     }
     $torneosAsignados = $stmtT->fetchAll(PDO::FETCH_ASSOC);
 
-    // 2. Obtener lista de Equipos registrados para el selector de inscripción
-    $stmtE = $pdo->query("SELECT id_equipo, nombre_equipo FROM equipos ORDER BY nombre_equipo ASC");
-    $listaEquipos = $stmtE->fetchAll(PDO::FETCH_ASSOC);
+    // 2. Obtener lista de Participantes registrados
+    $stmtP = $pdo->query("SELECT id_participante, CONCAT(nombre, ' ', apellido) AS nombre_participante FROM participantes ORDER BY nombre ASC, apellido ASC");    $listaParticipantes = $stmtP->fetchAll(PDO::FETCH_ASSOC);
 
     // 3. Obtener partidos pendientes
     $sqlPartidos = "SELECT 
@@ -152,19 +162,19 @@ try {
 
     if ($rolActual !== 'administrador') {
         $sqlPartidos .= " AND t.id_organizador = :id_organizador";
-        $stmtP = $pdo->prepare($sqlPartidos);
-        $stmtP->execute([':id_organizador' => $idUsuarioActual]);
+        $stmtPartidos = $pdo->prepare($sqlPartidos);
+        $stmtPartidos->execute([':id_organizador' => $idUsuarioActual]);
     } else {
-        $stmtP = $pdo->prepare($sqlPartidos);
-        $stmtP->execute();
+        $stmtPartidos = $pdo->prepare($sqlPartidos);
+        $stmtPartidos->execute();
     }
     
-    $partidosPendientes = $stmtP->fetchAll(PDO::FETCH_ASSOC);
+    $partidosPendientes = $stmtPartidos->fetchAll(PDO::FETCH_ASSOC);
 
 } catch (PDOException $e) {
-    echo "<div style='color:red; background:#fff; padding:10px; margin:10px;'>Error SQL: " . $e->getMessage() . "</div>";
+    $errorBaseDatos = "Error SQL: " . $e->getMessage();
     $torneosAsignados = [];
-    $listaEquipos = [];
+    $listaParticipantes = [];
     $partidosPendientes = [];
 }
 ?>
@@ -178,14 +188,18 @@ try {
     <link rel="icon" type="image/png" href="../img/logoapp2.jpeg">
     <link rel="stylesheet" href="../css/inicio.css">
     <link rel="stylesheet" href="../css/organizador.css">
+    <script src="../js/organizador.js" defer></script>
 </head>
 <body>
+
+    <?php if (isset($errorBaseDatos)): ?>
+        <div class="mensaje-sql-error"><?= htmlspecialchars($errorBaseDatos) ?></div>
+    <?php endif; ?>
 
     <!-- Menú lateral -->
     <input type="checkbox" id="menu-toggle" class="menu-checkbox">
 
     <div class="sidebar">
-
         <div class="sidebar-header">
             <span class="sidebar-title">Menú</span>
             <label for="menu-toggle" class="close-sidebar-btn" aria-label="Cerrar menú">X</label>
@@ -205,7 +219,6 @@ try {
             <?php endif; ?>
 
             <?php if ($rolActual !== 'visitante'): ?>
-                <a href="equipo.php" class="sidebar-link">Equipos</a>
                 <a href="configuracion.php" class="sidebar-link">Configuración</a>
             <?php endif; ?>
         </nav>
@@ -214,7 +227,7 @@ try {
             <div class="theme-switch-container">
                 <span class="theme-label">Modo Oscuro</span>
                 <button class="theme-toggle-btn" aria-label="Cambiar tema">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 18px; height: 18px; fill: currentColor; vertical-align: middle;">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="icono-tema">
                         <path d="M256 0C114.6 0 0 114.6 0 256S114.6 512 256 512c68.8 0 131.3-27.2 177.3-71.4 7.3-7 9.4-17.9 5.3-27.1s-13.7-14.9-23.8-14.1c-4.9 .4-9.8 .6-14.8 .6-101.6 0-184-82.4-184-184 0-72.1 41.5-134.6 102.1-164.8 9.1-4.5 14.3-14.3 13.1-24.4S322.6 8.5 312.7 6.3C294.4 2.2 275.4 0 256 0z"/>
                     </svg>
                 </button>
@@ -224,78 +237,110 @@ try {
 
     <label for="menu-toggle" class="sidebar-overlay"></label>
 
-    <!-- Navbar -->
-    <nav class="navbar" aria-label="Navegación principal">
-        <label for="menu-toggle" class="nav-button" aria-label="Abrir menú de navegación">
-            <div class="hamburger-box">
-                <span class="line"></span>
-                <span class="line"></span>
-                <span class="line"></span>
+    <!-- 2. Navbar y Menú hamburguesa -->
+<nav class="navbar" aria-label="Navegación principal">
+    <label for="menu-toggle" class="nav-button" aria-label="Abrir menú de navegación">
+        <div class="hamburger-box">
+            <span class="line"></span>
+            <span class="line"></span>
+            <span class="line"></span>
+        </div>
+    </label>
+
+    <!-- 3. Búsqueda de Torneo -->
+    <form action="busquedaTorneo.php" method="GET" class="search-form" style="display: flex; flex: 1; max-width: 420px; margin: 0 12px;">
+        <div class="search-container" style="margin: 0; width: 100%;">
+            <svg class="search-google-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" fill="#777777"/>
+            </svg>
+            <input type="text" class="search-input" placeholder="Buscar un torneo" aria-label="Buscar torneos" name="query">
+        </div>
+    </form>
+
+    <!-- 4. Campana de Notificaciones -->
+    <div class="notifications-dropdown">
+        <input type="checkbox" id="noti-toggle" class="dropdown-checkbox">
+
+        <label for="noti-toggle" class="notifications-dropdown-button" aria-label="Notificaciones">
+            <div class="notifications-icon-wrapper">
+                <svg class="bell-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z" fill="#cccccc"/>
+                </svg>
+                <span class="notification-dot"></span>
             </div>
         </label>
 
-        <!-- Busqueda de Torneo -->
-        <form action="busquedaTorneo.php" method="GET" class="search-form" style="display: flex; flex: 1; max-width: 420px; margin: 0 12px;">
-            <div class="search-container" style="margin: 0; width: 100%;">
-                <svg class="search-google-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                    <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" fill="#777777"/>
+        <label for="noti-toggle" class="dropdown-overlay"></label>
+
+        <div class="notifications-menu-card">
+            <div class="notifications-menu-header">
+                <span class="notifications-menu-title">Notificaciones</span>
+            </div>
+            <div class="notifications-menu-divider"></div>
+            <div class="notifications-menu-list">
+                <a href="#" class="notification-item unread">
+                    <div class="noti-indicator"></div>
+                    <div class="noti-content">
+                        <p class="noti-text">Tu inscripción para la <strong>Copa de Invierno</strong> ha sido confirmada exitosamente.</p>
+                        <span class="noti-time">Hace 10 min</span>
+                    </div>
+                </a>
+                <a href="#" class="notification-item">
+                    <div class="noti-indicator"></div>
+                    <div class="noti-content">
+                        <p class="noti-text">El fixture del <strong>Torneo Relámpago</strong> ya se encuentra disponible.</p>
+                        <span class="noti-time">Hace 2 horas</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. Apartado de perfil -->
+    <div class="profile-dropdown">
+        <input type="checkbox" id="profile-toggle" class="dropdown-checkbox">
+
+        <label for="profile-toggle" class="profile-dropdown-button" aria-label="Menú de usuario">
+            <div class="user-avatar">
+                <svg class="avatar-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+                    <path d="M320 312C386.3 312 440 258.3 440 192C440 125.7 386.3 72 320 72C253.7 72 200 125.7 200 192C200 258.3 253.7 312 320 312zM290.3 368C191.8 368 112 447.8 112 546.3C112 562.7 125.3 576 141.7 576L498.3 576C514.7 576 528 562.7 528 546.3C528 447.8 448.2 368 349.7 368L290.3 368z" />
                 </svg>
-                <input type="text" class="search-input" placeholder="Buscar un torneo" aria-label="Buscar torneos" name="query">
             </div>
-        </form>
+        </label>
 
-        <!-- Notificaciones -->
-        <div class="notifications-dropdown">
-            <input type="checkbox" id="noti-toggle" class="dropdown-checkbox">
-            <label for="noti-toggle" class="notifications-dropdown-button" aria-label="Notificaciones">
-                <div class="notifications-icon-wrapper">
-                    <svg class="bell-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z" fill="#cccccc"/>
-                    </svg>
-                    <span class="notification-dot"></span>
-                </div>
-            </label>
-            <label for="noti-toggle" class="dropdown-overlay"></label>
-            <div class="notifications-menu-card">
-                <div class="notifications-menu-header">
-                    <span class="notifications-menu-title">Notificaciones</span>
-                </div>
-                <div class="notifications-menu-divider"></div>
-                <div class="notifications-menu-list">
-                    <a href="#" class="notification-item unread">
-                        <div class="noti-indicator"></div>
-                        <div class="noti-content">
-                            <p class="noti-text">Tu inscripción para la <strong>Copa de Invierno</strong> ha sido confirmada exitosamente.</p>
-                            <span class="noti-time">Hace 10 min</span>
-                        </div>
+        <label for="profile-toggle" class="dropdown-overlay"></label>
+
+        <div class="profile-menu-card">
+            <div class="profile-menu-header">
+                <span class="profile-menu-name">
+                    <?= htmlspecialchars($_SESSION['nombre'] ?? $_SESSION['usuario'] ?? 'Invitado') ?>
+                </span>
+            </div>
+            <div class="profile-menu-divider"></div>
+            <nav class="profile-menu-links">
+                <?php if ($rolActual === 'visitante'): ?>
+                    <a href="logica/login.php" class="profile-menu-item">
+                        <svg class="avatar-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                            <path d="M352 96l64 0c17.7 0 32 14.3 32 32l0 256c0 17.7-14.3 32-32 32l-64 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l64 0c53 0 96-43 96-96l0-256c0-53-43-96-96-96l-64 0c-17.7 0-32 14.3-32 32s14.3 32 32 32zm-9.4 182.6c12.5-12.5 12.5-32.8 0-45.3l-128-128c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L242.7 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l210.7 0-73.4 73.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l128-128z"/>
+                        </svg> Iniciar sesión
                     </a>
-                </div>
-            </div>
+                <?php else: ?>
+                    <a href="perfil.php" class="profile-menu-item">
+                        <svg class="avatar-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+                            <path d="M320 312C386.3 312 440 258.3 440 192C440 125.7 386.3 72 320 72C253.7 72 200 125.7 200 192C200 258.3 253.7 312 320 312zM290.3 368C191.8 368 112 447.8 112 546.3C112 562.7 125.3 576 141.7 576L498.3 576C514.7 576 528 562.7 528 546.3C528 447.8 448.2 368 349.7 368L290.3 368z" />
+                        </svg> Perfil
+                    </a>
+                    <div class="profile-menu-divider"></div>
+                    <a href="logica/logout.php" class="profile-menu-item logout-item">
+                        <svg class="avatar-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                            <path d="M377.9 105.9L468.1 196c11.1 11.1 11.1 29.1 0 40.2l-90.1 90.1c-11.5 11.5-30.1 11.5-41.6 0s-11.5-30.1 0-41.6l39.3-39.3L160 245.4c-16.3 0-29.4-13.2-29.4-29.4s13.2-29.4 29.4-29.4l215.7 0-39.3-39.3c-11.5-11.5-11.5-30.1 0-41.6s30.1-11.5 41.6 0zM120 96c0-13.3-10.7-24-24-24C43 72 0 115 0 168L0 344c0 53 43 96 96 96c13.3 0 24-10.7 24-24s-10.7-24-24-24c-26.5 0-48-21.5-48-48l0-176c0-26.5 21.5-48 48-48c13.3 0 24-10.7 24-24z"/>
+                        </svg> Cierre de sesión
+                    </a>
+                <?php endif; ?>
+            </nav>
         </div>
-
-        <!-- Perfil -->
-        <div class="profile-dropdown">
-            <input type="checkbox" id="profile-toggle" class="dropdown-checkbox">
-            <label for="profile-toggle" class="profile-dropdown-button" aria-label="Menú de usuario">
-                <div class="user-avatar">
-                    <svg class="avatar-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
-                        <path d="M320 312C386.3 312 440 258.3 440 192C440 125.7 386.3 72 320 72C253.7 72 200 125.7 200 192C200 258.3 253.7 312 320 312zM290.3 368C191.8 368 112 447.8 112 546.3C112 562.7 125.3 576 141.7 576L498.3 576C514.7 576 528 562.7 528 546.3C528 447.8 448.2 368 349.7 368L290.3 368z" />
-                    </svg>
-                </div>
-            </label>
-            <label for="profile-toggle" class="dropdown-overlay"></label>
-            <div class="profile-menu-card">
-                <div class="profile-menu-header">
-                    <span class="profile-menu-name"><?= htmlspecialchars($usuarioActual) ?></span>
-                </div>
-                <div class="profile-menu-divider"></div>
-                <nav class="profile-menu-links">
-                    <a href="perfil.php" class="profile-menu-item">Perfil</a>
-                    <a href="logica/logout.php" class="profile-menu-item logout-item">Cierre de sesión</a>
-                </nav>
-            </div>
-        </div>
-    </nav>
+    </div>
+</nav>
 
     <main class="main-container">
         <input type="radio" name="grupo-pestanas-organizador" id="radio-pestana-torneos" checked class="control-radio-pestana">
@@ -356,13 +401,13 @@ try {
                                                 </span>
                                             </td>
                                             <td data-etiqueta="Acción">
-                                                <a href="detalleTorneo.php?id=<?php echo $itemTorneo['id_torneo']; ?>" class="btn-secundario-chico" style="text-decoration:none;">Ver Detalle</a>
+                                                <a href="detalleTorneo.php?id=<?php echo $itemTorneo['id_torneo']; ?>" class="btn-secundario-chico">Ver Detalle</a>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>
                                 <?php else: ?>
                                     <tr>
-                                        <td colspan="4" style="text-align: center; padding: 20px;">No tienes torneos asignados actualmente.</td>
+                                        <td colspan="4" class="celda-tabla-vacia">No tienes torneos asignados actualmente.</td>
                                     </tr>
                                 <?php endif; ?>
                             </tbody>
@@ -375,28 +420,16 @@ try {
                     <h3 class="titulo-seccion">Gestión de Fixtures y Rondas</h3>
                     <p class="subtitulo-seccion">Controlá el estado de las llaves y digitá las puntuaciones oficiales.</p>
 
-                    <?php if (!empty($mensajeExito)): ?>
-                        <div style="background-color: #1b4332; color: #2ec4b6; border: 1px solid #2ec4b6; padding: 10px; border-radius: 6px; margin-bottom: 15px;">
-                            ✓ <?php echo htmlspecialchars($mensajeExito); ?>
-                        </div>
-                    <?php endif; ?>
-
-                    <?php if (!empty($mensajeError)): ?>
-                        <div style="background-color: #4a151b; color: #ff6b6b; border: 1px solid #ff6b6b; padding: 10px; border-radius: 6px; margin-bottom: 15px;">
-                            ✕ <?php echo htmlspecialchars($mensajeError); ?>
-                        </div>
-                    <?php endif; ?>
-
                     <form action="organizador.php" method="POST" class="formulario-organizador">
                         <input type="hidden" name="accion" value="guardar_resultados">
 
                         <?php if (!empty($partidosPendientes)): ?>
                             <?php foreach ($partidosPendientes as $partido): ?>
                                 <?php $idEnf = $partido['id_enfrentamiento']; ?>
-                                <div style="font-size: 0.85rem; color: #D4AF37; margin-top: 10px; font-weight: bold;">
+                                <div class="etiqueta-partido-torneo">
                                     <?php echo htmlspecialchars($partido['nombre_torneo']); ?> - <?php echo htmlspecialchars($partido['nombre_ronda']); ?>
                                 </div>
-                                <div class="tarjeta-fila-partido" style="margin-bottom: 15px;">
+                                <div class="tarjeta-fila-partido">
                                     <span class="nombre-equipo texto-derecha"><?php echo htmlspecialchars($partido['equipo_local'] ?? 'Equipo Local'); ?></span>
                                     <div class="entradas-marcador-partido">
                                         <input type="number" name="resultados[<?php echo $idEnf; ?>][local]" class="control-formulario-entrada entrada-marcador" value="<?php echo $partido['marcador_local'] ?? 0; ?>" min="0" required>
@@ -411,7 +444,7 @@ try {
                                 <button type="submit" class="btn-guardar">Guardar marcadores</button>
                             </div>
                         <?php else: ?>
-                            <p style="padding: 15px; text-align: center;">No hay partidos pendientes para cargar resultados en la ronda activa.</p>
+                            <p class="texto-sin-partidos">No hay partidos pendientes para cargar resultados en la ronda activa.</p>
                         <?php endif; ?>
                     </form>
                 </div>
@@ -419,13 +452,25 @@ try {
                 <!-- Pestaña: Inscribir Participantes -->
                 <div class="seccion-organizador panel-participantes">
                     <h3 class="titulo-seccion">Inscribir Participantes</h3>
-                    <p class="subtitulo-seccion">Seleccioná un equipo registrado para agregarlo al torneo.</p>
+                    <p class="subtitulo-seccion">Seleccioná un participante registrado para agregarlo al torneo.</p>
+
+                    <?php if (!empty($mensajeExito)): ?>
+                        <div style="background-color: #1b4332; color: #2ec4b6; border: 1px solid #2ec4b6; padding: 10px; border-radius: 6px; margin-bottom: 15px;">
+                            ✓ <?php echo htmlspecialchars($mensajeExito); ?>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if (!empty($mensajeError)): ?>
+                        <div style="background-color: #4a151b; color: #ff6b6b; border: 1px solid #ff6b6b; padding: 10px; border-radius: 6px; margin-bottom: 15px;">
+                            ✕ <?php echo htmlspecialchars($mensajeError); ?>
+                        </div>
+                    <?php endif; ?>
 
                     <form action="organizador.php" method="POST" class="formulario-organizador">
                         <input type="hidden" name="accion" value="inscribir_participante">
 
-                        <div class="grupo-formulario" style="margin-bottom: 15px;">
-                            <label for="id_torneo">Seleccionar Torneo</label>
+                        <div class="grupo-formulario">
+                            <label for="id_torneo" class="etiqueta-formulario">Seleccionar Torneo</label>
                             <select name="id_torneo" id="id_torneo" class="control-formulario-entrada" required>
                                 <option value="" disabled selected>Seleccioná un torneo</option>
                                 <?php foreach ($torneosAsignados as $t): ?>
@@ -435,11 +480,11 @@ try {
                         </div>
 
                         <div class="grupo-formulario" style="margin-bottom: 15px;">
-                            <label for="id_equipo">Seleccionar Equipo</label>
-                            <select name="id_equipo" id="id_equipo" class="control-formulario-entrada" required>
-                                <option value="" disabled selected>Seleccioná un equipo</option>
-                                <?php foreach ($listaEquipos as $eq): ?>
-                                    <option value="<?php echo $eq['id_equipo']; ?>"><?php echo htmlspecialchars($eq['nombre_equipo']); ?></option>
+                            <label for="id_participante" class="etiqueta-formulario">Seleccionar Participante</label>
+                            <select name="id_participante" id="id_participante" class="control-formulario-entrada" required>
+                                <option value="" disabled selected>Seleccioná un participante</option>
+                                <?php foreach ($listaParticipantes as $p): ?>
+                                    <option value="<?php echo $p['id_participante']; ?>"><?php echo htmlspecialchars($p['nombre_participante']); ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>

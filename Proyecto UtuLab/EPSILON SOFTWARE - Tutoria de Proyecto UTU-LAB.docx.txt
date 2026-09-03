@@ -25,36 +25,45 @@ Blvr. José Batlle y Ordoñez 3570 esq. Gral. Flores - Montevideo.
 Objetivo        4
 Alcance        4
 2. Vocabulario de Términos Técnicos        5
-2.1 Término, Definición y Contexto Operativo        5
-2.2 Simbología, Acrónimos y Abreviaturas        6
-2.2.1 Acrónimos Metodológicos y de Gestión        6
+2.1 Término, Definición y Contexto Operativo        6
+2.2 Simbología, Acrónimos y Abreviaturas        7
+2.2.1 Acrónimos Metodológicos y de Gestión        7
 2.2.2 Acrónimos de Formatos y Tecnologías Web        8
-3. Temas para la primera entrega        8
-4. Introducción        8
-5. Tutoría de Proyecto UTULAB        9
-5.1 Definición de nombre y logo de grupo de proyecto (con justificación)        9
-5.2 Definición de logo de la aplicación        11
-5.3 Formularios de acta de reunión        12
-5.4 Actas de reunión formal interna        14
-19/5/2026        15
-26/5/2026        17
-2/6/2026        19
-9/6/2026        20
-16/6/2026        22
-14/7/2026        26
-5.5 Fundamentación de las elecciones de diseño del sistema        28
-5.5.1 Pagina de Inicio.        28
-5.5.2 Busqueda de torneos        31
-5.5.3 Detalle de torneo        33
-5.5.4 Perfil        35
-5.5.5 Calendario de torneos        37
-5.5.6 Crea tu torneo        39
-5.5.7 Panel Organizador        40
-5.5.8 Panel Administrador        46
-5.5.9 Configuracion        48
-5.5.10 Inicio de sesión        57
-6. Fundamentos de pensamiento basado en S.C.A.M.P.E.R        59
-7. Bibliografía        62
+3. Temas para las entregas        8
+Primera entrega        8
+Segunda entrega        8
+Tercera entrega        8
+4. Introducción        9
+5. Tutoría de Proyecto UTULAB        10
+5.1 Definición de nombre y logo de grupo de proyecto (con justificación)        10
+5.2 Definición de logo de la aplicación        13
+5.3 Formularios de acta de reunión        15
+5.4 Actas de reunión formal interna        17
+19/5/2026        18
+26/5/2026        20
+2/6/2026        23
+9/6/2026        25
+16/6/2026        28
+14/7/2026        32
+5.5 Fundamentación de las elecciones de diseño del sistema        34
+5.5.1 Pagina de Inicio.        34
+5.5.2 Busqueda de torneos        38
+5.5.3 Detalle de torneo        40
+5.5.4 Perfil        43
+5.5.5 Calendario de torneos        46
+5.5.6 Crea tu torneo        48
+5.5.7 Panel Organizador        49
+5.5.8 Panel Administrador        58
+5.5.9 Configuracion        60
+5.5.10 Inicio de sesión        70
+6. Fundamentos de pensamiento basado en S.C.A.M.P.E.R        73
+8. Análisis FODA del proyecto a realizar        76
+Introducción        76
+9. Repositorio git accesible con toda la implementación del proyecto        80
+10. Actas de reunión formal interna de la segunda entrega (mínimo 6)        80
+11. Análisis costo-beneficio del sistema a desarrollar        80
+12. Seguimiento de planificación del sistema        80
+13. Bibliografía        81
 
 
 ________________
@@ -123,13 +132,27 @@ CSS: Cascading Style Sheets (Hojas de estilo en cascada).
 HTML:HyperText Markup Language (Lenguaje de marcado de hipertexto).
 SVG: Scalable Vector Graphics (Gráficos vectoriales escalables utilizados en sustitución de los emojis estándar).
 URL: Uniform Resource Locator (Localizador uniforme de recursos).
-3. Temas para la primera entrega
+3. Temas para las entregas
+Primera entrega
 * Definición de nombre y logo de grupo de proyecto (con justificación)
 * Definición de logo de la aplicación
 * Fundamentos de pensamiento basado en S.C.A.M.P.E.R
 * Formularios de acta de reunión
 * Actas de reunión formal interna (mínimo 6)
 * Fundamentación de las elecciones de diseño del sistema 
+Segunda entrega
+* Análisis FODA del proyecto a realizar 
+* Repositorio git accesible con toda la implementación del proyecto 
+* Actas de reunión formal interna de la segunda entrega (mínimo 6) 
+* Análisis costo-beneficio del sistema a desarrollar 
+* Seguimiento de planificación del sistema 
+
+
+Tercera entrega 
+* Actas de reunión formal interna de la tercera entrega (mínimo 6) 
+* Modelo 3D de producto diseñado para marketing de la empresa 
+* Manual de usuario de todos los roles del sistema 
+* Seguimiento final de la planificación del sistema 
 4. Introducción
 Documento que representa al seguimiento y realización de tareas y reuniones documentadas y principalmente el camino que tomamos en la materia Tutoría de Proyecto UTU-LAB la cual tiene la función de apoyar el resto de asignaturas y respaldar las dudas de los alumnos a lo largo del año con el fin de que cumplamos con los estándares y la revisión de docentes en cada plazo establecido y captar el conocimiento y en el ciclo de vida que nos encontramos para realizar el proyecto de fin de año. 
 ________________
@@ -791,7 +814,13 @@ Problemas de seguridad como amenazas o ataques de inyección, entre otros ataque
 Preferencias de usuario o institución deportiva donde prefieran las plantillas o otras administraciones manuales.
 Nuevas modalidades, cambios en las reglas o enfrentamientos que obliguen al sistema a adaptarse e implementar dichos cambios antes de quedarse obsoleto.
 Incremento de los costos de recursos y mantenimiento que pueden llevar a un sistema obsoleto
+
+
+9. Repositorio git accesible con toda la implementación del proyecto 
+10. Actas de reunión formal interna de la segunda entrega (mínimo 6) 
+11. Análisis costo-beneficio del sistema a desarrollar 
+12. Seguimiento de planificación del sistema 
 ________________
 
 
-7. Bibliografía
+13. Bibliografía

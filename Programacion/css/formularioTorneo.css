@@ -10,19 +10,76 @@
     background: linear-gradient(135deg, #151515 0%, #1c1810 100%); 
     padding: 25px 35px;
     border-radius: 24px;
-    /* Sombras más profundas con un toque de glow dorado */
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 0 0 20px rgba(212, 175, 55, 0.08); 
     width: 100%;
     max-width: 1050px; 
-    border: 1.5px solid #4a3b17; /* Borde dorado oscuro */
+    border: 1.5px solid #4a3b17;
     box-sizing: border-box;
     margin: 10px auto 30px auto;
 }
 
-/* Asegura la perfecta visualización y estilo del título */
+.contenedor-logo-formulario {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #4a3b17;
+    padding-bottom: 10px;
+}
+
+.contenedor-logo-formulario .app-logo {
+    height: 45px;
+    width: auto;
+    border-radius: 50%;
+}
+
 .contenedor-logo-formulario h2 {
-    color: #D4AF37 !important; /* Dorado brillante de alta visibilidad */
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); /* Sombra de texto para destacar */
+    margin: 0;
+    border: none;
+    padding: 0;
+    font-size: 1.4rem;
+    color: #D4AF37 !important;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Mensajes de Alerta */
+.alerta-mensaje {
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    border-radius: 6px;
+    font-weight: bold;
+    color: #ffffff;
+}
+
+.alerta-mensaje.exito {
+    background-color: #28a745;
+}
+
+.alerta-mensaje.error {
+    background-color: #dc3545;
+}
+
+/* Ajustes de Barra de Búsqueda Navbar */
+.search-form {
+    display: flex;
+    flex: 1;
+    max-width: 420px;
+    margin: 0 12px;
+}
+
+.search-container {
+    margin: 0;
+    width: 100%;
+}
+
+/* Iconos SVG */
+.icono-svg-tema {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+    vertical-align: middle;
 }
 
 /* ==========================================================================
@@ -39,10 +96,9 @@
     display: flex;
     flex-direction: column;
     flex: 1;
-    min-width: 0; /* Evita que los hijos flex desborden en webkit */
+    min-width: 0;
 }
 
-/* Forzamos a la descripción a estirarse uniformemente */
 .columna-derecha-ajustada {
     justify-content: space-between;
 }
@@ -62,8 +118,6 @@
     flex-direction: column;
 }
 
-/* CORREGIDO: Ahora el estilo sólo se aplica a las etiquetas del formulario, 
-   previniendo que interfiera con las etiquetas funcionales de tu navbar. */
 .grupo-formulario label {
     display: block;
     margin-bottom: 6px;
@@ -72,7 +126,6 @@
     color: #aaaaaa;
 }
 
-/* Filtro selectivo para no pisar componentes de la barra de navegación */
 .isla-formulario-unica form input[type="text"],
 .isla-formulario-unica form input[type="number"],
 .isla-formulario-unica form input[type="date"],
@@ -107,7 +160,6 @@
     resize: none;
 }
 
-/* El enfoque ahora brilla en dorado */
 .isla-formulario-unica form input:focus, 
 .isla-formulario-unica form select:focus, 
 .isla-formulario-unica form textarea:focus {
@@ -152,7 +204,6 @@
     transform: scale(0.98); 
 }
 
-/* Botón Enviar con fondo dorado brillante de la marca */
 .boton-enviar {
     background-color: var(--gold-bright, #D4AF37);
     color: #111111;
@@ -162,7 +213,6 @@
     background-color: var(--gold-dark, #9C8255); 
 }
 
-/* Botón Cancelar con borde y letras doradas */
 .boton-cancelar {
     background-color: transparent;
     border: 1.5px solid var(--gold-bright, #D4AF37);
@@ -174,7 +224,7 @@
 }
 
 /* ==========================================================================
-   5. Estilos para el Botón de Subir Imagen
+   5. Estilos para el Botón de Subir Imagen y Mapa
    ========================================================================== */
 .input-archivo-oculto {
     display: none !important;
@@ -206,28 +256,42 @@
     transform: scale(0.98);
 }
 
+.icono-subir {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
+.contenedor-mapa iframe {
+    width: 100%;
+    height: 150px;
+    border: 0;
+}
+
 /* ==========================================================================
-   6. Adaptabilidad Mobile (¡NUEVO!)
+   6. Adaptabilidad Mobile
    ========================================================================== */
 @media (max-width: 768px) {
     .isla-formulario-unica {
-        padding: 20px 15px; /* Reducimos el padding interno para ganar espacio */
-        margin: 10px;       /* Margen externo pequeño para que no toque los bordes del celular */
+        padding: 20px 15px;
+        margin: 10px;
         width: calc(100% - 20px);
     }
 
     .columnas-flex-formulario {
-        flex-direction: column; /* Pasamos de filas a columnas una abajo de la otra */
-        gap: 15px;             /* Reducimos la separación */
+        flex-direction: column;
+        gap: 15px;
     }
 
     .fila-formulario {
-        flex-direction: column; /* Si "Fecha" y "Hora" estaban al lado, ahora van en cascada */
+        flex-direction: column;
         gap: 12px;
     }
 
     .grupo-botones-formulario {
-        flex-direction: column-reverse; /* El botón de cancelar queda abajo del de enviar */
+        flex-direction: column-reverse;
         gap: 10px;
     }
 }
