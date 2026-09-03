@@ -1,9 +1,44 @@
 <?php
 require_once 'logica/auth.php';
+require_once 'db.php'; 
 requerirLogin();
-$rolActual = $_SESSION['rol'] ?? 'visitante';
-$usuarioActual = $_SESSION['usuario'] ?? 'Usuario';
-$correoActual = $_SESSION['correo'] ?? '';
+
+$rolActual   = $_SESSION['rol'] ?? 'visitante';
+$idUsuarioBD = $_SESSION['id_usuario'] ?? null;
+
+$nombrePerfil = $_SESSION['usuario'] ?? 'Usuario';
+$correoPerfil = $_SESSION['correo'] ?? 'correo@ejemplo.com';
+
+$torneosActivos = [];
+
+// Si tenemos ID de usuario, obtenemos la información de la BD
+if ($idUsuarioBD && isset($pdo)) {
+    try {
+        // 1. Obtener datos del usuario
+        $stmtUser = $pdo->prepare("SELECT username, email FROM usuarios WHERE id_usuario = ?");
+        $stmtUser->execute([$idUsuarioBD]);
+        $usuarioBD = $stmtUser->fetch(PDO::FETCH_ASSOC);
+
+        if ($usuarioBD) {
+            $nombrePerfil = $usuarioBD['username'];
+            $correoPerfil = $usuarioBD['email'];
+        }
+
+        // 2. Obtener Torneos Activos donde está inscrito el participante
+        $stmtActivos = $pdo->prepare("
+            SELECT t.id_torneo, t.nombre_torneo 
+            FROM inscripciones_torneo i
+            JOIN participantes p ON i.id_participante = p.id_participante
+            JOIN torneos t ON i.id_torneo = t.id_torneo
+            WHERE p.id_usuario = :id_usuario
+        ");
+        $stmtActivos->execute([':id_usuario' => $idUsuarioBD]);
+        $torneosActivos = $stmtActivos->fetchAll(PDO::FETCH_ASSOC);
+
+    } catch (PDOException $e) {
+        // En caso de fallo de BD mantenemos variables por defecto
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -181,10 +216,10 @@ $correoActual = $_SESSION['correo'] ?? '';
                         <path d="M320 312C386.3 312 440 258.3 440 192C440 125.7 386.3 72 320 72C253.7 72 200 125.7 200 192C200 258.3 253.7 312 320 312zM290.3 368C191.8 368 112 447.8 112 546.3C112 562.7 125.3 576 141.7 576L498.3 576C514.7 576 528 562.7 528 546.3C528 447.8 448.2 368 349.7 368L290.3 368z" />
                      </svg>
                 </div>
-                <div class="info-texto-usuario">
-                    <h1 class="nombre-perfil">Nombre de Usuario</h1>
-                    <p class="correo-perfil">usuario@correo.com</p>
-                </div>
+            <div class="info-texto-usuario">
+                <h1 class="nombre-perfil"><?= htmlspecialchars($nombrePerfil) ?></h1>
+                <p class="correo-perfil"><?= htmlspecialchars($correoPerfil) ?></p>
+            </div>
             </div>
 
             <div class="seccion-perfil seccion-trofeos">
