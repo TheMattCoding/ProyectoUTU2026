@@ -182,3 +182,158 @@
         padding: 25px 20px;
     }
 }
+/* ==========================================================================
+   6. Isla de Ranking (Estilos del Maquetado Visual)
+   ========================================================================= */
+.isla-ranking {
+    width: 100%;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.ranking-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--search-border, #444444);
+}
+
+.ranking-user-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.ranking-label {
+    font-size: 14px;
+    color: var(--gold-muted, #A89880);
+}
+
+.ranking-posicion {
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--gold-bright, #D4AF37);
+    background-color: var(--bg-dark, #151515);
+    padding: 4px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--gold-bright, #D4AF37);
+}
+
+.ranking-usuario-nombre {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--white, #ffffff);
+}
+
+.ranking-tabs {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+}
+
+.tab-btn {
+    background-color: var(--bg-dark, #151515);
+    color: var(--gold-muted, #A89880);
+    border: 1px solid var(--search-border, #444444);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+}
+
+.tab-btn:hover {
+    border-color: var(--gold-bright, #D4AF37);
+    color: var(--gold-bright, #D4AF37);
+}
+
+.tab-btn.active {
+    background-color: var(--gold-bright, #D4AF37);
+    color: var(--bg-dark, #151515);
+    border-color: var(--gold-bright, #D4AF37);
+}
+
+
+.ranking-tabla-container {
+    width: 100%;
+    overflow-x: auto;
+    background-color: var(--bg-dark, #151515); 
+    border-radius: 16px;                      
+    border: 1px solid var(--search-border, #444444);
+    padding: 10px 16px;                        
+    box-sizing: border-box;
+}
+
+.tabla-ranking {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 14px;
+    background-color: transparent; 
+}
+
+.tabla-ranking tbody tr:last-child td {
+    border-bottom: none; 
+}
+
+.tabla-ranking th {
+    color: var(--gold-bright, #D4AF37);
+    padding: 12px 10px;
+    border-bottom: 1px solid var(--search-border, #444444);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+}
+
+.tabla-ranking td {
+    padding: 12px 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    color:#ffffff
+}
+
+.tabla-ranking tbody tr:hover {
+    background-color: rgba(212, 175, 55, 0.05);
+}
+
+.fuera_top-3 .posicion-num {
+    font-weight: bold;
+    width: 40px;
+    color: var(--gold-muted, #A89880);
+}
+
+.top-3 .posicion-num {
+    color: var(--gold-bright, #D4AF37);
+}
+
+.col-jugador {
+    font-weight: 500;
+}
+
+.col-puntos {
+    font-weight: bold;
+    color: var(--gold-bright, #D4AF37);
+}
+
+@media (max-width: 600px) {
+    .ranking-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .tabla-ranking {
+        font-size: 13px;
+    }
+    
+    .tabla-ranking th, 
+    .tabla-ranking td {
+        padding: 8px 6px;
+    }
+}

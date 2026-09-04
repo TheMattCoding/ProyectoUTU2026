@@ -239,13 +239,103 @@ if ($idUsuarioBD && isset($pdo)) {
         </section>
 
         <div class="fila-sub-islas">
-           
-            <section class="tarjeta-perfil isla-secundaria">
+            <section class="tarjeta-perfil isla-ranking">
+                <div class="ranking-header">
+                <div class="ranking-user-info">
+                    <span class="ranking-label">Tu Ranking Global:</span>
+                    <span class="ranking-posicion">#12</span>
+                </div>
+                <div class="ranking-user-name">
+                    <span class="ranking-usuario-nombre"><?= htmlspecialchars($nombrePerfil) ?></span>
+                </div>
+                </div>
+        </div>
+        <div class="ranking-tabs">
+            <button type="button" class="tab-btn active">Global</button>
+            <button type="button" class="tab-btn">Fútbol</button>
+            <button type="button" class="tab-btn">Básquetbol</button>
+            <button type="button" class="tab-btn">Vóley</button>
+        </div>
+        <div class="ranking-tabla-container">
+            <table class="tabla-ranking">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Jugador</th>
+                        <th>Deporte</th>
+                        <th>Puntos</th>
+                        <th>Torneo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="top-3">
+                        <td class="posicion-num">1</td>
+                        <td class="col-jugador">
+                            <span class="nombre-jugador">MateoSilva</span>
+                        </td>
+                        <td>Fútbol</td>
+                        <td class="col-puntos">450 pts</td>
+                        <td>Copa de Verano</td>
+                    </tr>
+                    <tr class="top-3">
+                        <td class="posicion-num">2</td>
+                        <td class="col-jugador">
+                            <span class="nombre-jugador">Martina_</span>
+                        </td>
+                        <td>Básquetbol</td>
+                        <td class="col-puntos">320 pts</td>
+                        <td>Voley 2026</td>
+                    </tr>
+                    <tr class="top-3">
+                        <td class="posicion-num">3</td>
+                        <td class="col-jugador">
+                            <span class="nombre-jugador">LucasGamer</span>
+                        </td>
+                        <td>Vóley</td>
+                        <td class="col-puntos">180 pts</td>
+                        <td>Torneo Relámpago</td>
+                    </tr>
+                    <tr class="fuera_top-3">
+                        <td class="posicion-num">4</td>
+                        <td class="col-jugador">
+                            <span class="nombre-jugador">Valentina_22</span>
+                        </td>
+                        <td>Fútbol</td>
+                        <td class="col-puntos">50 pts</td>
+                        <td>Copa Invierno</td>
+                    </tr>
+                    <tr class="fuera_top-3">
+                        <td class="posicion-num">5</td>
+                        <td class="col-jugador">
+                            <span class="nombre-jugador">IgnacioPro</span>
+                        </td>
+                        <td>Básquetbol</td>
+                        <td class="col-puntos">35 pts</td>
+                        <td>Voley 2026</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        </section>
+           <section class="tarjeta-perfil isla-secundaria">
                 <h2 class="titulo-seccion">Tus torneos</h2>
                 <div class="cuerpo-isla">
-                    <p class="descripcion-isla">Revisa tus inscripciones activas, los fixtures asignados y tus próximas partidas en la comunidad.</p>
+                    <?php if (!empty($torneosActivos)): ?>
+                        <ul style="list-style: none; padding: 0; margin: 0 0 15px 0;">
+                            <?php foreach ($torneosActivos as $torneo): ?>
+                                <li style="margin-bottom: 8px;">
+                                    <a href="detalleTorneo.php?id=<?= $torneo['id_torneo'] ?>" style="color: var(--gold-bright, #D4AF37); text-decoration: none; font-weight: bold; font-size: 14px;">
+                                        <?= htmlspecialchars($torneo['nombre_torneo']) ?>
+                                    </a>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    <?php else: ?>
+                        <p class="descripcion-isla">Revisa tus inscripciones activas, los fixtures asignados y tus próximas partidas en la comunidad.</p>
+                    <?php endif; ?>
                 </div>
-                <a href="#" class="enlace-accion-tarjeta">Ver torneos activos →</a>
+                <!-- Apunta directo a la pestaña "Mi Calendario" -->
+                <a href="calendario.php?vista=propio" class="enlace-accion-tarjeta">Ver torneos activos →</a>
             </section>
 
             <section class="tarjeta-perfil isla-secundaria">
