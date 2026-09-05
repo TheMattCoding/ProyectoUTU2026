@@ -19,23 +19,22 @@ $torneosGlobales = $stmtGlobal->fetchAll(PDO::FETCH_ASSOC);
 // 2. Obtener Torneos Propios
 $torneosPropios = [];
 if ($idUsuarioActual) {
-    $stmtPropio = $pdo->prepare("
-        SELECT DISTINCT t.id_torneo, t.nombre_torneo, t.fecha_inicio, t.lugar, m.nombre_modulo AS disciplina
-        FROM torneos t
-        LEFT JOIN modulos_competencia m ON t.id_modulo = m.id_modulo
-        INNER JOIN inscripciones_torneo i ON t.id_torneo = i.id_torneo
-        LEFT JOIN participantes p_directo ON i.id_participante = p_directo.id_participante
-        LEFT JOIN equipos e ON i.id_equipo = e.id_equipo
-        LEFT JOIN participantes p_equipo ON e.id_participante = p_equipo.id_participante
-        WHERE (p_directo.id_usuario = :id_usuario1 OR p_equipo.id_usuario = :id_usuario2)
-          AND t.fecha_inicio IS NOT NULL
-        ORDER BY t.fecha_inicio ASC
-    ");
-    $stmtPropio->execute([
-        ':id_usuario1' => $idUsuarioActual,
-        ':id_usuario2' => $idUsuarioActual
-    ]);
-    $torneosPropios = $stmtPropio->fetchAll(PDO::FETCH_ASSOC);
+    try {
+        $stmtPropio = $pdo->prepare("
+            SELECT DISTINCT t.id_torneo, t.nombre_torneo, t.fecha_inicio, t.lugar, m.nombre_modulo AS disciplina
+            FROM torneos t
+            LEFT JOIN modulos_competencia m ON t.id_modulo = m.id_modulo
+            INNER JOIN inscripciones_torneo i ON t.id_torneo = i.id_torneo
+            LEFT JOIN participantes p_directo ON i.id_participante = p_directo.id_participante
+            WHERE p_directo.id_usuario = :id_usuario
+              AND t.fecha_inicio IS NOT NULL
+            ORDER BY t.fecha_inicio ASC
+        ");
+        $stmtPropio->execute([':id_usuario' => $idUsuarioActual]);
+        $torneosPropios = $stmtPropio->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        $torneosPropios = [];
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -201,12 +200,16 @@ if ($idUsuarioActual) {
     <div class="contenedor-grilla-calendario">
         
         <!-- Botones de alternancia de calendario -->
+        <?php 
+            // Detectamos si en la URL viene ?vista=propio
+            $vistaActiva = $_GET['vista'] ?? 'global'; 
+        ?>
         <div class="selector-vista-calendario">
-            <button type="button" class="btn-tab-cal activo" id="btn-tab-global">
+            <button type="button" class="btn-tab-cal <?= ($vistaActiva !== 'propio') ? 'activo' : '' ?>" id="btn-tab-global">
                 <i class="fas fa-globe"></i> Calendario Global
             </button>
             <?php if ($idUsuarioActual): ?>
-                <button type="button" class="btn-tab-cal" id="btn-tab-propio">
+                <button type="button" class="btn-tab-cal <?= ($vistaActiva === 'propio') ? 'activo' : '' ?>" id="btn-tab-propio">
                     <i class="fas fa-user-check"></i> Mi Calendario
                 </button>
             <?php else: ?>

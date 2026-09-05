@@ -169,6 +169,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         return divGrupo;
     }
+    document.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('vista') === 'propio') {
+        const btnPropio = document.getElementById('btn-tab-propio');
+        if (btnPropio && !btnPropio.disabled) {
+            btnPropio.click();
+        }
+    }
+    });
 
     // Inicializar la grilla con los datos cargados
     renderizarCalendario();
