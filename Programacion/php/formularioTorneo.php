@@ -36,70 +36,150 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $privacidad = $_POST['privacidad'] ?? '';
     $descripcion = trim($_POST['descripcion'] ?? '');
 
-    if (!empty($nombre) && !empty($fecha) && !empty($disciplina)) {
-        try {
-            $pdo->beginTransaction();
+    if (!preg_match('/^[\p{L}\p{N}\s]+$/u', $nombre)) {
+    $mensaje = "El nombre del torneo solo puede contener letras, números y espacios.";
+    $tipoMensaje = "error";
+    }
 
-            // 1. Verificar o insertar el módulo de competencia (disciplina)
-            $stmtMod = $pdo->prepare("SELECT id_modulo FROM modulos_competencia WHERE nombre_modulo = ?");
-            $stmtMod->execute([$disciplina]);
-            $modulo = $stmtMod->fetch();
+    if ($disciplina === 'Otra') {
+    $disciplina = trim($_POST['otra_disciplina'] ?? '');
+    }
 
-            if ($modulo) {
-                $idModulo = $modulo['id_modulo'];
-            } else {
-                $stmtInsMod = $pdo->prepare("INSERT INTO modulos_competencia (nombre_modulo, descripcion) VALUES (?, ?)");
-                $stmtInsMod->execute([$disciplina, "Módulo de $disciplina"]);
-                $idModulo = $pdo->lastInsertId();
-            }
+    if (empty($disciplina)) {
+    $mensaje = "Por favor, indica la disciplina.";
+    $tipoMensaje = "error";
+    }
 
-            // 2. Insertar en la tabla TORNEOS
-            $sqlTorneo = "INSERT INTO torneos (nombre_torneo, descripcion, id_modulo, id_organizador, lugar, fecha_inicio, hora_inicio, estado, privacidad) 
-                          VALUES (?, ?, ?, ?, ?, ?, ?, 'pendiente', ?)";
-            $stmtTorneo = $pdo->prepare($sqlTorneo);
-            $stmtTorneo->execute([
-                $nombre,
-                $descripcion,
-                $idModulo,
-                $idUsuarioActual,
-                'Montevideo',
-                $fecha,
-                $hora,
-                $privacidad
-            ]);
-            $idTorneo = $pdo->lastInsertId();
+    if (!empty($disciplina) && !preg_match('/^[\p{L}\s]+$/u', $disciplina)) {
+    $mensaje = "La disciplina solo puede contener letras y espacios.";
+    $tipoMensaje = "error";
+    }
 
-            // 3. Insertar la configuración del torneo
-            $sqlConfig = "INSERT INTO configuracion_torneo (id_torneo, max_participantes, formato) VALUES (?, ?, ?)";
-            $stmtConfig = $pdo->prepare($sqlConfig);
-            $stmtConfig->execute([$idTorneo, $cantidad, $formato]);
+    if (empty($fecha)) {
+    $mensaje = "Por favor, selecciona una fecha de inicio.";
+    $tipoMensaje = "error";
+    } elseif (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $fecha)) {
+        $mensaje = "La fecha de inicio no es válida.";
+        $tipoMensaje = "error";
+    } elseif (strtotime($fecha) < strtotime(date('Y-m-d'))) {
+    $mensaje = "La fecha de inicio no puede ser anterior a hoy.";
+    $tipoMensaje = "error";
+    }
 
-            // 4. Crear automáticamente las rondas del torneo
-            $sqlRonda = "INSERT INTO rondas (id_torneo, numero_ronda, nombre_ronda, estado_ronda) VALUES (?, ?, ?, ?)";
-            $stmtRonda = $pdo->prepare($sqlRonda);
+    if ($modalidad === 'individual') {
+    if ($cantidad === NULL || $cantidad < 2) {
+        $mensaje = "La cantidad de participantes debe ser de al menos 2.";
+        $tipoMensaje = "error";
+    }
+    }
 
-            for ($i = 1; $i <= $cantRondas; $i++) {
-                $nombreRonda = obtenerNombreRonda($i, $cantRondas);
-                
-                // Si la fecha de inicio es HOY o anterior, la primera ronda inicia "en_curso"
-                $estadoInicial = ($i === 1 && $fecha <= date('Y-m-d')) ? 'en_curso' : 'pendiente';
-
-                $stmtRonda->execute([$idTorneo, $i, 'Ronda ' . $i, $estadoInicial]);
-            }
-
-            $pdo->commit();
-
-            $mensaje = "¡El torneo '$nombre' se ha creado correctamente!";
-            $tipoMensaje = "exito";
-        } catch (PDOException $e) {
-            $pdo->rollBack();
-            $mensaje = "Error en la base de datos: " . $e->getMessage();
+    if ($modalidad === 'equipos') {
+        if ($cantidad === NULL || $cantidad < 2) {
+            $mensaje = "La cantidad de equipos debe ser de al menos 2.";
             $tipoMensaje = "error";
         }
-    } else {
+
+        $participantesEquipo = !empty($_POST['participantes_equipo'])
+            ? (int)$_POST['participantes_equipo']
+            : NULL;
+
+        if ($participantesEquipo === NULL || $participantesEquipo < 1) {
+            $mensaje = "Los equipos deben tener al menos 1 participante.";
+            $tipoMensaje = "error";
+        }
+    }
+
+    if ($cantRondas < 1 || $cantRondas > 20) {
+    $mensaje = "La cantidad de rondas debe estar entre 1 y 20.";
+    $tipoMensaje = "error";
+    }
+
+    if (empty($formato) || empty($modalidad) || empty($privacidad)) {
+    $mensaje = "Por favor, completa todos los campos obligatorios.";
+    $tipoMensaje = "error";
+    }
+
+    if (
+    !empty($nombre) &&
+    !empty($disciplina) &&
+    !empty($formato) &&
+    !empty($modalidad) &&
+    !empty($fecha) &&
+    !empty($hora) &&
+    $cantidad !== NULL &&
+    $cantidad >= 1 &&
+    $cantRondas >= 1 &&
+    $cantRondas <= 20 &&
+    !empty($privacidad) &&
+    !empty($descripcion) &&
+    $mensaje === ''
+) {
+    try {
+        $pdo->beginTransaction();
+
+        // 1. Verificar o insertar el módulo de competencia (disciplina)
+        $stmtMod = $pdo->prepare("SELECT id_modulo FROM modulos_competencia WHERE nombre_modulo = ?");
+        $stmtMod->execute([$disciplina]);
+        $modulo = $stmtMod->fetch();
+
+        if ($modulo) {
+            $idModulo = $modulo['id_modulo'];
+        } else {
+            $stmtInsMod = $pdo->prepare("INSERT INTO modulos_competencia (nombre_modulo, descripcion) VALUES (?, ?)");
+            $stmtInsMod->execute([$disciplina, "Módulo de $disciplina"]);
+            $idModulo = $pdo->lastInsertId();
+        }
+
+        // 2. Insertar en la tabla TORNEOS
+        $sqlTorneo = "INSERT INTO torneos (nombre_torneo, descripcion, id_modulo, id_organizador, lugar, fecha_inicio, hora_inicio, estado, privacidad) 
+                      VALUES (?, ?, ?, ?, ?, ?, ?, 'pendiente', ?)";
+        $stmtTorneo = $pdo->prepare($sqlTorneo);
+        $stmtTorneo->execute([
+            $nombre,
+            $descripcion,
+            $idModulo,
+            $idUsuarioActual,
+            'Montevideo',
+            $fecha,
+            $hora,
+            $privacidad
+        ]);
+
+        $idTorneo = $pdo->lastInsertId();
+
+        // 3. Insertar la configuración del torneo
+        $sqlConfig = "INSERT INTO configuracion_torneo (id_torneo, max_participantes, formato) VALUES (?, ?, ?)";
+        $stmtConfig = $pdo->prepare($sqlConfig);
+        $stmtConfig->execute([$idTorneo, $cantidad, $formato]);
+
+        // 4. Crear automáticamente las rondas del torneo
+        $sqlRonda = "INSERT INTO rondas (id_torneo, numero_ronda, nombre_ronda, estado_ronda) VALUES (?, ?, ?, ?)";
+        $stmtRonda = $pdo->prepare($sqlRonda);
+
+        for ($i = 1; $i <= $cantRondas; $i++) {
+            $nombreRonda = obtenerNombreRonda($i, $cantRondas);
+
+            $estadoInicial = ($i === 1 && $fecha <= date('Y-m-d')) ? 'en_curso' : 'pendiente';
+
+            $stmtRonda->execute([$idTorneo, $i, $nombreRonda, $estadoInicial]);
+        }
+
+        $pdo->commit();
+
+        $mensaje = "¡El torneo '$nombre' se ha creado correctamente!";
+        $tipoMensaje = "exito";
+
+    } catch (PDOException $e) {
+        $pdo->rollBack();
+        $mensaje = "Error en la base de datos: " . $e->getMessage();
+        $tipoMensaje = "error";
+    }
+} else {
+    if (empty($mensaje)) {
         $mensaje = "Por favor completa todos los campos requeridos.";
         $tipoMensaje = "error";
     }
+}
 }
 ?>
 <!DOCTYPE html>
@@ -285,12 +365,54 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="columna-formulario">
                         <div class="grupo-formulario">
                             <label for="nombre">Nombre del Torneo</label>
-                            <input type="text" id="nombre" name="nombre_torneo" placeholder="Ej: Torneo Relámpago" required>
+                            <input type="text"
+                                id="nombre"
+                                name="nombre_torneo"
+                                placeholder="Ej: Torneo Relámpago"
+                                pattern="[\p{L}\p{N} ]+"
+                                title="El nombre solo puede contener letras y espacios"
+                            required>
                         </div>
 
                         <div class="grupo-formulario">
                             <label for="disciplina">Disciplina</label>
-                            <input type="text" id="disciplina" name="disciplina" placeholder="Ej: Ajedrez" required>
+
+                            <select id="disciplina" name="disciplina" required>
+                                <option value="" disabled selected>Seleccione una disciplina</option>
+
+                                <!-- Deportes -->
+                                <option value="Fútbol">Fútbol</option>
+                                <option value="Futsal">Futsal</option>
+                                <option value="Básquetbol">Básquetbol</option>
+                                <option value="Vóleibol">Vóleibol</option>
+                                <option value="Handball">Handball</option>
+                                <option value="Rugby">Rugby</option>
+                                <option value="Hockey">Hockey</option>
+                                <option value="Tenis">Tenis</option>
+                                <option value="Tenis de mesa">Tenis de mesa</option>
+                                <option value="Bádminton">Bádminton</option>
+                                <option value="Atletismo">Atletismo</option>
+                                <option value="Natación">Natación</option>
+                                <option value="Ciclismo">Ciclismo</option>
+
+                                <!-- Juegos de estrategia y mesa -->
+                                <option value="Ajedrez">Ajedrez</option>
+                                <option value="Damas">Damas</option>
+                                <option value="Juegos de cartas">Juegos de cartas</option>
+
+                                <!-- Videojuegos -->
+                                <option value="Esports">Esports</option>
+                                <option value="Videojuegos">Videojuegos</option>
+
+                                <!-- Otras -->
+                                <option value="Otra">Otra</option>
+                            </select>
+
+                            <input type="text"
+                                id="otra-disciplina"
+                                name="otra_disciplina"
+                                placeholder="Escriba la disciplina"
+                                style="display: none;">
                         </div>
 
                         <div class="fila-formulario">
@@ -314,7 +436,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <div class="fila-formulario">
                             <div class="grupo-formulario columna-expandible">
                                 <label for="fecha">Fecha de Inicio</label>
-                                <input type="date" id="fecha" name="fecha_inicio" required>
+                                <input type="date" id="fecha" name="fecha_inicio" min="<?= date('Y-m-d') ?>" required>
                             </div>
                             <div class="grupo-formulario columna-expandible">
                                 <label for="hora_inicio">Hora de Inicio</label>
@@ -324,13 +446,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                         <div class="fila-formulario">
                             <div class="grupo-formulario columna-expandible">
-                                <label for="cantidad">Cantidad de Equipos</label>
-                                <input type="number" id="cantidad" name="max_participantes" placeholder="Ej: 16">
+                                <label for="cantidad" id="label-cantidad">Cantidad de Equipos</label>
+                                <input type="number" id="cantidad" name="max_participantes" placeholder="Ej: 16" min="2" required>
                             </div>
-                            <div class="grupo-formulario columna-expandible">
-                                <label for="cantidad_rondas">Cantidad de Rondas</label>
-                                <input type="number" id="cantidad_rondas" name="cantidad_rondas" min="1" max="20" value="1" required>
+
+                            <div class="grupo-formulario columna-expandible" id="grupo-participantes-equipo">
+                                <label for="participantes_equipo">Participantes por equipo</label>
+                                <input type="number" id="participantes_equipo" name="participantes_equipo" placeholder="Ej: 5" min="1" required>
                             </div>
+                        </div>
+
+                        <div class="grupo-formulario columna-expandible">
+                            <label for="cantidad_rondas">Cantidad de Rondas</label>
+                            <input type="number" id="cantidad_rondas" name="cantidad_rondas" min="1" max="20" value="1" required>
                         </div>
 
                         <div class="grupo-formulario columna-expandible">
@@ -346,7 +474,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="columna-formulario columna-derecha-ajustada">
                         <div class="grupo-formulario contenedor-area-texto">
                             <label for="descripcion">Descripción del Torneo</label>
-                            <textarea id="descripcion" name="descripcion" placeholder="Escribe las reglas o detalles del torneo..."></textarea>
+                            <textarea id="descripcion" name="descripcion" placeholder="Escribe las reglas o detalles del torneo..." required></textarea>
                         </div>
                         
                         <div class="grupo-formulario">
