@@ -149,7 +149,7 @@ try {
     $stmtP = $pdo->query("SELECT id_participante, CONCAT(nombre, ' ', apellido) AS nombre_participante FROM participantes ORDER BY nombre ASC, apellido ASC");
     $listaParticipantes = $stmtP->fetchAll(PDO::FETCH_ASSOC);
     // 2. Obtener lista de Participantes registrados
-    $stmtP = $pdo->query("SELECT id_participante, CONCAT(nombre, ' ', apellido) AS nombre_participante FROM PARTICIPANTES ORDER BY nombre ASC, apellido ASC");    $listaParticipantes = $stmtP->fetchAll(PDO::FETCH_ASSOC);
+    $stmtP = $pdo->query("SELECT id_participante, CONCAT(nombre, ' ', apellido) AS nombre_participante FROM participantes ORDER BY nombre ASC, apellido ASC");    $listaParticipantes = $stmtP->fetchAll(PDO::FETCH_ASSOC);
 
     // 3. Obtener partidos pendientes
     $sqlPartidos = "SELECT 
