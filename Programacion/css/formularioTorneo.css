@@ -44,6 +44,10 @@
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
+#otra-disciplina {
+    margin-top: 10px;
+}
+
 /* Mensajes de Alerta */
 .alerta-mensaje {
     padding: 12px 16px;

@@ -195,3 +195,19 @@ body {
 .enlace-registro a:hover {
     text-decoration: underline;
 }
+
+.contenedor-volver {
+    font-size: 0.9rem;
+    color: var(--texto-atenuado);
+    padding: 11px;
+}
+
+.contenedor-volver a {
+    color: var(--texto-claro);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.contenedor-volver a:hover {
+    text-decoration: underline;
+}
