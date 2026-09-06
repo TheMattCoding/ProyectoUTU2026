@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar Sesión - SGDM</title>
+    <title>SGDM - Iniciar Sesión</title>
     <link rel="icon" type="image/png" href="../../img/logoapp2.jpeg">
     <link rel="stylesheet" href="../../css/login.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -100,6 +100,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="enlace-registro">
             ¿No tienes una cuenta? 
             <a href="registro.php">Registrar</a>
+        </div>
+
+        <div class="contenedor-volver">
+            <a href="../inicio.php">Volver al inicio</a>
         </div>
     </div>
 </body>
