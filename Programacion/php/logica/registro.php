@@ -10,7 +10,7 @@ if (isset($_GET['campos'])) {
 } elseif (isset($_GET['password'])) {
     $error = 'Las contraseñas no coinciden.';
 } elseif (isset($_GET['correo'])) {
-    $error = 'El correo electrónico no es válido.';
+    $error = 'El correo electrónico debe ser una cuenta válida finalizada en @gmail.com.';
 } elseif (isset($_GET['existente'])) {
     $error = 'El correo electrónico, nombre de usuario o CI ya se encuentra registrado.';
 } elseif (isset($_GET['segura'])) {
@@ -31,74 +31,70 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['registrarse'])) {
     $ci = trim($_POST['ci'] ?? '');
     $telefono = trim($_POST['telefono'] ?? '');
 
-    // Validar campos requeridos[cite: 11]
-    if (empty($username) || empty($correo) || empty($contrasena) || empty($confirmar_contrasena) || empty($nombre) || empty($apellido) || empty($ci)) {
-        header('Location: registro.php?campos=1');
-        exit;
+    // --- VALIDACIONES DE SERVIDOR ---
+    if (empty($username) || empty($correo) || empty($contrasena) || empty($confirmar_contrasena) || empty($nombre) || empty($apellido) || empty($ci) || empty($telefono)) {
+        $error = 'Por favor, completá todos los campos obligatorios.';
+    } elseif (!preg_match('/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]{1,15}$/u', $nombre)) {
+        $error = 'El nombre no puede tener números, caracteres especiales ni superar los 15 caracteres.';
+    } elseif (!preg_match('/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]{1,15}$/u', $apellido)) {
+        $error = 'El apellido no puede tener números, caracteres especiales ni superar los 15 caracteres.';
+    } elseif (!preg_match('/^\d{8}$/', $ci)) {
+        $error = 'La cédula de identidad debe tener exactamente 8 números.';
+    } elseif (!preg_match('/^\d{9}$/', $telefono)) {
+        $error = 'El número de celular debe tener exactamente 9 dígitos.';
+    } elseif (!preg_match('/^[a-zA-Z0-9]{1,20}$/', $username)) {
+        $error = 'El nombre de usuario no permite caracteres especiales y debe tener máximo 20 caracteres.';
+    } elseif (!preg_match('/^[a-zA-Z0-9._%+-]+@gmail\.com$/i', $correo)) {
+        $error = 'El correo electrónico debe finalizar obligatoriamente en @gmail.com.';
+    } elseif ($contrasena !== $confirmar_contrasena) {
+        $error = 'Las contraseñas no coinciden.';
+    } elseif (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/', $contrasena)) {
+        $error = 'La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un símbolo.';
     }
 
-    // Validar formato de correo[cite: 11]
-    if (!filter_var($correo, FILTER_VALIDATE_EMAIL)) {
-        header('Location: registro.php?correo=1');
-        exit;
-    }
+    if (empty($error)) {
+        try {
+            // Verificar duplicados en USUARIOS (email/username) y PARTICIPANTES (ci)
+            $stmt_check = $pdo->prepare("
+                SELECT u.id_usuario 
+                FROM usuarios u 
+                LEFT JOIN participantes p ON u.id_usuario = p.id_usuario 
+                WHERE u.email = ? OR u.username = ? OR p.ci = ?
+            ");
+            $stmt_check->execute([$correo, $username, $ci]);
 
-    // Validar coincidencia de contraseñas[cite: 11]
-    if ($contrasena !== $confirmar_contrasena) {
-        header('Location: registro.php?password=1');
-        exit;
-    }
+            if ($stmt_check->fetch()) {
+                $error = 'El correo electrónico, nombre de usuario o CI ya se encuentra registrado.';
+            } else {
+                // Encriptar contraseña[cite: 11]
+                $hash_contrasena = password_hash($contrasena, PASSWORD_BCRYPT);
 
-    // Validar complejidad de contraseña[cite: 11]
-    $patron = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/';
-    if (!preg_match($patron, $contrasena)) {
-        header('Location: registro.php?segura=1');
-        exit;
-    }
+                // INICIO DE LA TRANSACCIÓN
+                $pdo->beginTransaction();
 
-    try {
-        // Verificar duplicados en USUARIOS (email/username) y PARTICIPANTES (ci)
-        $stmt_check = $pdo->prepare("
-            SELECT u.id_usuario 
-            FROM usuarios u 
-            LEFT JOIN participantes p ON u.id_usuario = p.id_usuario 
-            WHERE u.email = ? OR u.username = ? OR p.ci = ?
-        ");
-        $stmt_check->execute([$correo, $username, $ci]);
+                // A) Insertar en USUARIOS[cite: 10, 11]
+                $stmt_user = $pdo->prepare("INSERT INTO usuarios (username, email, password_hash, id_rol) VALUES (?, ?, ?, 3)");
+                $stmt_user->execute([$username, $correo, $hash_contrasena]);
+                
+                $id_usuario = $pdo->lastInsertId();
 
-        if ($stmt_check->fetch()) {
-            header('Location: registro.php?existente=1');
-            exit;
+                // B) Insertar en PARTICIPANTES[cite: 10]
+                $stmt_part = $pdo->prepare("INSERT INTO participantes (nombre, apellido, ci, telefono, id_usuario) VALUES (?, ?, ?, ?, ?)");
+                $stmt_part->execute([$nombre, $apellido, $ci, $telefono, $id_usuario]);
+
+                // CONFIRMAR TRANSACCIÓN
+                $pdo->commit();
+
+                header('Location: login.php?registrado=1');
+                exit;
+            }
+
+        } catch (Exception $e) {
+            if ($pdo->inTransaction()) {
+                $pdo->rollBack();
+            }
+            $error = 'Error al registrar la cuenta: ' . $e->getMessage();
         }
-
-        // Encriptar contraseña[cite: 11]
-        $hash_contrasena = password_hash($contrasena, PASSWORD_BCRYPT);
-
-        // INICIO DE LA TRANSACCIÓN
-        $pdo->beginTransaction();
-
-        // A) Insertar en USUARIOS (id_rol = 3 correspondiente a usuario estándar)[cite: 10, 11]
-        $stmt_user = $pdo->prepare("INSERT INTO usuarios (username, email, password_hash, id_rol) VALUES (?, ?, ?, 3)");
-        $stmt_user->execute([$username, $correo, $hash_contrasena]);
-        
-        $id_usuario = $pdo->lastInsertId();
-
-        // B) Insertar en PARTICIPANTES[cite: 10]
-        $stmt_part = $pdo->prepare("INSERT INTO participantes (nombre, apellido, ci, telefono, id_usuario) VALUES (?, ?, ?, ?, ?)");
-        $stmt_part->execute([$nombre, $apellido, $ci, $telefono, $id_usuario]);
-
-        // CONFIRMAR TRANSACCIÓN
-        $pdo->commit();
-
-        header('Location: login.php?registrado=1');
-        exit;
-
-    } catch (Exception $e) {
-        // Si ocurre algún fallo, se revierten todos los cambios en la BD
-        if ($pdo->inTransaction()) {
-            $pdo->rollBack();
-        }
-        $error = 'Error al registrar la cuenta: ' . $e->getMessage();
     }
 }
 ?>
@@ -134,33 +130,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['registrarse'])) {
                 <!-- Datos Personales (PARTICIPANTES) -->
                 <div class="grupo-formulario">
                     <label for="nombre">Nombre</label>
-                    <input type="text" id="nombre" name="nombre" placeholder="Ej: Juan" required>
+                    <input type="text" id="nombre" name="nombre" placeholder="Ej: Juan" maxlength="15" required>
                 </div>
 
                 <div class="grupo-formulario">
                     <label for="apellido">Apellido</label>
-                    <input type="text" id="apellido" name="apellido" placeholder="Ej: Pérez" required>
+                    <input type="text" id="apellido" name="apellido" placeholder="Ej: Pérez" maxlength="15" required>
                 </div>
 
                 <div class="grupo-formulario">
-                    <label for="ci">Cédula de Identidad (CI)</label>
-                    <input type="text" id="ci" name="ci" placeholder="Ej: 12345678" required>
+                    <label for="ci">Cédula de Identidad (8 dígitos)</label>
+                    <input type="text" id="ci" name="ci" placeholder="Ej: 12345678" maxlength="8" minlength="8" required>
                 </div>
 
                 <div class="grupo-formulario">
-                    <label for="telefono">Teléfono / Celular</label>
-                    <input type="tel" id="telefono" name="telefono" placeholder="Ej: 099123456">
+                    <label for="telefono">Teléfono / Celular (9 dígitos)</label>
+                    <input type="tel" id="telefono" name="telefono" placeholder="Ej: 099123456" maxlength="9" minlength="9" required>
                 </div>
 
                 <!-- Datos de Cuenta (USUARIOS) -->
                 <div class="grupo-formulario">
                     <label for="username">Nombre de usuario</label>
-                    <input type="text" id="username" name="username" placeholder="Ej: juanperez99" required>
+                    <input type="text" id="username" name="username" placeholder="Ej: juanperez99" maxlength="20" required>
                 </div>
 
                 <div class="grupo-formulario">
-                    <label for="correo">Correo electrónico</label>
-                    <input type="email" id="correo" name="correo" placeholder="ejemplo@correo.com" required>
+                    <label for="correo">Correo electrónico (@gmail.com)</label>
+                    <input type="email" id="correo" name="correo" placeholder="ejemplo@gmail.com" pattern="[a-zA-Z0-9._%+-]+@gmail\.com$" required>
                 </div>
 
                 <div class="grupo-formulario">
@@ -198,13 +194,72 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['registrarse'])) {
     </main>
 
     <script>
-    document.querySelector('.formulario-registro').addEventListener('submit', function(event) {
-        const contrasena = document.getElementById('contrasena').value;
-        const confirmar = document.getElementById('confirmar_contrasena').value;
-        if (contrasena !== confirmar) {
-            event.preventDefault();
-            alert('Las contraseñas no coinciden.');
+    document.addEventListener('DOMContentLoaded', () => {
+        const inputNombre = document.getElementById('nombre');
+        const inputApellido = document.getElementById('apellido');
+        const inputCi = document.getElementById('ci');
+        const inputTelefono = document.getElementById('telefono');
+        const inputUsername = document.getElementById('username');
+        const inputCorreo = document.getElementById('correo');
+
+        // 1. Nombre y Apellido: solo letras y espacios (máximo 15 caracteres)
+        [inputNombre, inputApellido].forEach(input => {
+            if (input) {
+                input.addEventListener('input', (e) => {
+                    e.target.value = e.target.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '');
+                });
+            }
+        });
+
+        // 2. CI: solo números y exactamente 8 dígitos
+        if (inputCi) {
+            inputCi.addEventListener('input', (e) => {
+                e.target.value = e.target.value.replace(/\D/g, '');
+            });
         }
+
+        // 3. Celular: solo números y exactamente 9 dígitos
+        if (inputTelefono) {
+            inputTelefono.addEventListener('input', (e) => {
+                e.target.value = e.target.value.replace(/\D/g, '');
+            });
+        }
+
+        // 4. Username: solo letras y números, sin caracteres especiales (máximo 20 caracteres)
+        if (inputUsername) {
+            inputUsername.addEventListener('input', (e) => {
+                e.target.value = e.target.value.replace(/[^a-zA-Z0-9]/g, '');
+            });
+        }
+
+        // 5. Validaciones previas al envío
+        document.querySelector('.formulario-registro').addEventListener('submit', function(event) {
+            const contrasena = document.getElementById('contrasena').value;
+            const confirmar = document.getElementById('confirmar_contrasena').value;
+
+            if (inputCi.value.length !== 8) {
+                event.preventDefault();
+                alert('La Cédula de Identidad debe tener exactamente 8 números.');
+                return;
+            }
+
+            if (inputTelefono.value.length !== 9) {
+                event.preventDefault();
+                alert('El número de celular debe tener exactamente 9 dígitos.');
+                return;
+            }
+
+            if (!inputCorreo.value.toLowerCase().endsWith('@gmail.com')) {
+                event.preventDefault();
+                alert('El correo electrónico debe ser obligatoriamente una dirección @gmail.com');
+                return;
+            }
+
+            if (contrasena !== confirmar) {
+                event.preventDefault();
+                alert('Las contraseñas no coinciden.');
+            }
+        });
     });
     </script>
 </body>

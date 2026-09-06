@@ -218,7 +218,7 @@ $rolActual = $_SESSION['rol'] ?? 'visitante';
                     <h2 id="organize-title" class="card-main-title">Lista de Torneos</h2>
                 </div>
                 <p class="card-short-desc">Consulta y explora los torneos disponibles.</p>
-                <a href="formularioTorneo.php" class="card-action-link">Ver Torneos →</a>
+                <a href="busquedaTorneo.php" class="card-action-link">Ver Torneos →</a>
             </section>
         </div>
 

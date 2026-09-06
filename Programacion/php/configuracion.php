@@ -221,53 +221,54 @@ unset($_SESSION['mensaje_exito'], $_SESSION['mensaje_error']);
             <section class="tarjeta-contenido-config">
                 
                 <!-- 1. Editar Perfil -->              
-                <div id="perfil" class="seccion-configuracion panel-perfil">
-                    <h3 class="titulo-seccion">Información del Perfil</h3>
-                    <p class="subtitulo-seccion">Personaliza tu identidad dentro de la plataforma de torneos.</p>
-                    
-                    <form action="logica/actualizarConfiguracion.php" method="POST" class="formulario-configuracion">
-                        <input type="hidden" name="accion" value="actualizar_perfil">
-                        <div class="contenedor-edicion-avatar">
-                            <div class="avatar-usuario avatar-grande">
-                                <svg class="avatar-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
-                                    <path d="M320 312C386.3 312 440 258.3 440 192C440 125.7 386.3 72 320 72C253.7 72 200 125.7 200 192C200 258.3 253.7 312 320 312zM290.3 368C191.8 368 112 447.8 112 546.3C112 562.7 125.3 576 141.7 576L498.3 576C514.7 576 528 562.7 528 546.3C528 447.8 448.2 368 349.7 368L290.3 368z" />
-                                </svg>
-                            </div>
-                            <button type="button" class="btn-secundario-sm">Cambiar foto</button>
-                        </div>
-
-                        <div class="cuadrícula-fila-formulario">
-                            <div class="grupo-formulario">
-                                <label for="nombre-usuario" class="etiqueta-formulario">Nombre de usuario</label>
-                                <input type="text" id="nombre-usuario" name="nombre_usuario" class="control-input-formulario" value="<?= htmlspecialchars($username) ?>" required>
-                            </div>
-                            <div class="grupo-formulario">
-                                <label for="correo" class="etiqueta-formulario">Correo Electrónico</label>
-                                <input type="email" id="correo" name="correo" class="control-input-formulario" value="<?= htmlspecialchars($email) ?>" required>
-                            </div>
-                        </div>
-
-                        <div class="cuadrícula-fila-formulario">
-                            <div class="grupo-formulario">
-                                <label for="nombre" class="etiqueta-formulario">Nombre</label>
-                                <input type="text" id="nombre" name="nombre" class="control-input-formulario" value="<?= htmlspecialchars($nombre) ?>" placeholder="Tu nombre">
-                            </div>
-                            <div class="grupo-formulario">
-                                <label for="apellido" class="etiqueta-formulario">Apellido</label>
-                                <input type="text" id="apellido" name="apellido" class="control-input-formulario" value="<?= htmlspecialchars($apellido) ?>" placeholder="Tu apellido">
-                            </div>
-                        </div>
-
-                        <div class="grupo-formulario">
-                            <label for="telefono" class="etiqueta-formulario">Teléfono / Celular</label>
-                            <input type="tel" id="telefono" name="telefono" class="control-input-formulario" value="<?= htmlspecialchars($telefono) ?>" placeholder="Ej: 099123456">
-                        </div>
-
-                        <div class="acciones-formulario">
-                            <button type="submit" class="btn-guardar">Guardar perfil</button>
-                        </div>
-                    </form>
+            <div id="perfil" class="seccion-configuracion panel-perfil">
+                <h3 class="titulo-seccion">Información del Perfil</h3>
+                <p class="subtitulo-seccion">Personaliza tu identidad dentro de la plataforma de torneos.</p>
+    
+                <form action="logica/actualizarConfiguracion.php" method="POST" id="form-perfil" class="formulario-configuracion">
+                    <input type="hidden" name="accion" value="actualizar_perfil">
+        
+                    <div class="contenedor-edicion-avatar">
+                        <div class="avatar-usuario avatar-grande">
+                            <svg class="avatar-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+                            <path d="M320 312C386.3 312 440 258.3 440 192C440 125.7 386.3 72 320 72C253.7 72 200 125.7 200 192C200 258.3 253.7 312 320 312zM290.3 368C191.8 368 112 447.8 112 546.3C112 562.7 125.3 576 141.7 576L498.3 576C514.7 576 528 562.7 528 546.3C528 447.8 448.2 368 349.7 368L290.3 368z" />
+                        </svg>
+                    </div>
+                    <button type="button" class="btn-secundario-sm">Cambiar foto</button>
                 </div>
+
+                <div class="cuadrícula-fila-formulario">
+                    <div class="grupo-formulario">
+                        <label for="nombre-usuario" class="etiqueta-formulario">Nombre de usuario (Máx. 20)</label>
+                        <input type="text" id="nombre-usuario" name="nombre_usuario" class="control-input-formulario" value="<?= htmlspecialchars($username) ?>" maxlength="20" required>
+                    </div>
+                    <div class="grupo-formulario">
+                        <label for="correo" class="etiqueta-formulario">Correo Electrónico (@gmail.com)</label>
+                        <input type="email" id="correo" name="correo" class="control-input-formulario" value="<?= htmlspecialchars($email) ?>" pattern="[a-zA-Z0-9._%+-]+@gmail\.com$" required>
+                    </div>
+                </div>
+
+                <div class="cuadrícula-fila-formulario">
+                    <div class="grupo-formulario">
+                        <label for="nombre" class="etiqueta-formulario">Nombre (Máx. 15)</label>
+                        <input type="text" id="nombre" name="nombre" class="control-input-formulario" value="<?= htmlspecialchars($nombre) ?>" placeholder="Tu nombre" maxlength="15" required>
+                    </div>
+                    <div class="grupo-formulario">
+                        <label for="apellido" class="etiqueta-formulario">Apellido (Máx. 15)</label>
+                        <input type="text" id="apellido" name="apellido" class="control-input-formulario" value="<?= htmlspecialchars($apellido) ?>" placeholder="Tu apellido" maxlength="15" required>
+                    </div>
+                </div>
+
+                <div class="grupo-formulario">
+                    <label for="telefono" class="etiqueta-formulario">Teléfono / Celular (9 dígitos)</label>
+                    <input type="tel" id="telefono" name="telefono" class="control-input-formulario" value="<?= htmlspecialchars($telefono) ?>" placeholder="Ej: 099123456" maxlength="9" minlength="9" required>
+                </div>
+
+                <div class="acciones-formulario">
+                    <button type="submit" class="btn-guardar">Guardar perfil</button>
+                </div>
+            </form>
+        </div>
                 
                 <!-- 2. Cuenta y Seguridad -->
                 <div id="seguridad" class="seccion-configuracion panel-seguridad">
@@ -365,15 +366,123 @@ unset($_SESSION['mensaje_exito'], $_SESSION['mensaje_error']);
         </div>
     </main>
 
+    <!-- 7. Footer -->
     <footer class="main-footer">
         <div class="footer-content">
             <img src="../img/epsilonSoftware2.png" alt="Logo Epsilon Software" class="footer-logo">
+        
             <div class="footer-right-group">
+                <nav class="footer-links" aria-label="Enlaces de pie de página">
+                    <button type="button" id="btn-seccion-nosotros" class="footer-link-btn">Sobre nosotros</button>
+                    <button type="button" id="btn-seccion-ayuda" class="footer-link-btn">Ayuda</button>
+                </nav>
                 <p class="footer-copyright">&copy; 2026 Epsilon Software. Todos los derechos reservados.</p>
             </div>
         </div>
     </footer>
 
+    <!-- Fondo Oscurecido para Modales -->
+    <div id="fondo-seccion-nosotros" class="fondo-seccion"></div>
+
+    <!-- Modal Sobre Nosotros -->
+    <section id="seccion-sobre-nosotros" class="seccion-desplegable" aria-hidden="true">
+        <div class="seccion-encabezado">
+            <h3 class="seccion-titulo">Sobre Nosotros</h3>
+            <button type="button" id="btn-cerrar-seccion-nosotros" class="btn-cerrar-seccion" aria-label="Cerrar sección">&times;</button>
+        </div>
+
+        <div class="seccion-contenido">
+            <div class="logo-empresa-contenedor">
+                <img src="../img/epsilonSoftware2.png" alt="Logo Epsilon Software" class="logo-modal">
+            </div>
+
+            <div class="bloque-nosotros">
+                <h4 class="subtitulo-nosotros">Misión</h4>
+                <p class="texto-nosotros">Proporcionar a comunidades y organizadores una plataforma intuitiva y eficiente para la gestión integral de torneos deportivos y de eSports, centralizando fixtures, inscripciones y resultados en un solo lugar.</p>
+            </div>
+
+            <div class="bloque-nosotros">
+                <h4 class="subtitulo-nosotros">Visión</h4>
+                <p class="texto-nosotros">Ser la solución digital referente en el desarrollo y automatización de eventos competitivos, impulsando el crecimiento del talento deportivo y gaming en la región.</p>
+            </div>
+
+            <div class="detalles-nosotros">
+                <div class="item-detalle">
+                    <span class="etiqueta-detalle">Desarrollado por:</span>
+                    <span class="valor-detalle">Epsilon Software</span>
+                </div>
+                <div class="item-detalle">
+                    <span class="etiqueta-detalle">Versión de la App:</span>
+                    <span class="valor-detalle">v1.0.0</span>
+                </div>
+                <div class="item-detalle">
+                    <span class="etiqueta-detalle">Contacto:</span>
+                    <span class="valor-detalle">epsilonsoftwarecontacto@gmail.com</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal Ayuda y Soporte -->
+    <section id="seccion-ayuda" class="seccion-desplegable" aria-hidden="true">
+        <div class="seccion-encabezado">
+            <h3 class="seccion-titulo">Centro de Ayuda</h3>
+            <button type="button" id="btn-cerrar-seccion-ayuda" class="btn-cerrar-seccion" aria-label="Cerrar sección">&times;</button>
+        </div>
+
+        <div class="seccion-contenido">
+            <!-- 1. Preguntas Frecuentes (FAQ) -->
+            <div class="bloque-nosotros">
+                <h4 class="subtitulo-nosotros">Preguntas Frecuentes</h4>
+                
+                <details class="item-faq">
+                    <summary class="pregunta-faq">¿Cómo me inscribo a un torneo?</summary>
+                    <p class="texto-nosotros">Ve a la sección de torneos, selecciona la competencia deseada y presiona en "Inscribirse".</p>
+                </details>
+
+                <details class="item-faq">
+                    <summary class="pregunta-faq">¿Cómo edito la información de mi perfil?</summary>
+                    <p class="texto-nosotros">Haz clic en la seccion de configuración del menú lateral y accede a la pestaña "Editar perfil" para actualizar tus datos personales.</p>
+                </details>
+            </div>
+
+            <!-- 2. Soporte Técnico y Contacto Directo -->
+            <div class="bloque-nosotros">
+                <h4 class="subtitulo-nosotros">Soporte Técnico y Contacto Directo</h4>
+                <div class="detalles-nosotros">
+                    <div class="item-detalle">
+                        <span class="etiqueta-detalle">Correo de soporte:</span>
+                        <span class="valor-detalle">epsilonsoftwarecontacto@gmail.com</span>
+                    </div>
+                    <div class="item-detalle">
+                        <span class="etiqueta-detalle">Horarios de atención:</span>
+                        <span class="valor-detalle">Lunes a Viernes de 09:00 a 18:00 hs</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3 y 4. Guías, Tutoriales y Reporte de Errores -->
+            <div class="bloque-nosotros">
+                <h4 class="subtitulo-nosotros">Recursos y Reporte de Errores</h4>
+                <p class="texto-nosotros">¿Encontraste un fallo o un error? Puedes notificarlo o consultar nuestra documentación oficial:</p>
+                <div class="detalles-nosotros">
+                    <div class="item-detalle">
+                        <span class="etiqueta-detalle">Manual de usuario:</span>
+                        <a href="#" class="valor-detalle enlace-ayuda" target="_blank" rel="noopener">Ver Guía en PDF</a>
+                    </div>
+                    <div class="item-detalle">
+                        <span class="etiqueta-detalle">Reportar fallo (Bug):</span>
+                        <a href="https://mail.google.com/mail/?view=cm&fs=1&to=epsilonsoftwarecontacto@gmail.com&su=Error&body=Descripción%20del%20error:%0A%0APágina/Sección:%0A%0APasos%20para%20reproducirlo:" class="valor-detalle enlace-ayuda" target="_blank" rel="noopener">Enviar reporte de error</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- JavaScript del Footer -->
+    <script src="../js/seccionSobreNosotros.js"></script>
+    <script src="../js/seccionAyuda.js"></script>
+    <!-- JavaScript de Configuración -->
     <script src="../js/configuracion.js"></script>
 </body>
 </html>

@@ -1,6 +1,6 @@
 -- 1. Crear base de datos
-CREATE DATABASE IF NOT EXISTS sistema_torneos;
-USE sistema_torneos;
+CREATE DATABASE IF NOT EXISTS sgdm_db;
+USE sgdm_db;
 
 -- 2. Tabla ROLES
 CREATE TABLE roles (
