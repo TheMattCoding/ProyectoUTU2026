@@ -10,6 +10,7 @@ $nombrePerfil = $_SESSION['usuario'] ?? 'Usuario';
 $correoPerfil = $_SESSION['correo'] ?? 'correo@ejemplo.com';
 
 $torneosActivos = [];
+$historialTorneos = [];
 
 // Si tenemos ID de usuario, obtenemos la información de la BD
 if ($idUsuarioBD && isset($pdo)) {
@@ -34,6 +35,24 @@ if ($idUsuarioBD && isset($pdo)) {
         ");
         $stmtActivos->execute([':id_usuario' => $idUsuarioBD]);
         $torneosActivos = $stmtActivos->fetchAll(PDO::FETCH_ASSOC);
+
+        // 3. Obtener historial de torneos del usuario
+        $stmtHistorial = $pdo->prepare("
+            SELECT 
+                t.id_torneo,
+                t.nombre_torneo,
+                t.fecha_inicio,
+                t.estado
+            FROM inscripciones_torneo i
+            JOIN participantes p ON i.id_participante = p.id_participante
+            JOIN torneos t ON i.id_torneo = t.id_torneo
+            WHERE p.id_usuario = :id_usuario
+            AND t.estado = 'finalizado'
+            ORDER BY t.fecha_inicio DESC
+        ");
+
+        $stmtHistorial->execute([':id_usuario' => $idUsuarioBD]);
+        $historialTorneos = $stmtHistorial->fetchAll(PDO::FETCH_ASSOC);
 
     } catch (PDOException $e) {
         // En caso de fallo de BD mantenemos variables por defecto
@@ -343,9 +362,51 @@ if ($idUsuarioBD && isset($pdo)) {
                 <div class="cuerpo-isla">
                     <p class="descripcion-isla">Consulta los resultados de tus competencias anteriores, tablas de posiciones y tus estadísticas de juego.</p>
                 </div>
-                <a href="#" class="enlace-accion-tarjeta">Historial de torneos →</a>
+                <a href="#" class="enlace-accion-tarjeta" id="abrir-historial">
+                    Historial de torneos →
+                </a>
             </section>
+            <!-- Ventana del historial de torneos -->
+            <div id="fondo-historial" class="fondo-seccion"></div>
 
+            <section id="seccion-historial" class="seccion-desplegable" aria-hidden="true">
+                <button type="button" id="cerrar-historial" class="boton-cerrar-seccion">
+                    ×
+                </button>
+
+                <h2 class="titulo-seccion">Historial de torneos</h2>
+
+                <div class="cuerpo-isla">
+
+                    <?php if (!empty($historialTorneos)): ?>
+
+                        <?php foreach ($historialTorneos as $torneo): ?>
+
+                            <div class="item-historial">
+                                <h3><?= htmlspecialchars($torneo['nombre_torneo']) ?></h3>
+
+                                <p>
+                                    Fecha:
+                                    <?= htmlspecialchars($torneo['fecha_inicio']) ?>
+                                </p>
+
+                                <a href="calendario.php?vista=torneo&id=<?= $torneo['id_torneo'] ?>">
+                                    Ver torneo →
+                                </a>
+                            </div>
+
+                        <?php endforeach; ?>
+
+                    <?php else: ?>
+
+                        <p class="descripcion-isla">
+                            Todavía no tenés torneos finalizados en tu historial.
+                        </p>
+
+                    <?php endif; ?>
+
+                </div>
+            </section>
         </div>
     </div>
     </main>
@@ -466,5 +527,7 @@ if ($idUsuarioBD && isset($pdo)) {
     <!-- JavaScript del Footer -->
     <script src="../js/seccionSobreNosotros.js"></script>
     <script src="../js/seccionAyuda.js"></script>
+    <script src="../js/perfil.js"></script>
+    
 </body>
 </html>

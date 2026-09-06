@@ -337,3 +337,167 @@
         padding: 8px 6px;
     }
 }
+/*============== Modal / Flotante "Historial de Torneos" ==============*/
+
+/* Ventana del historial */
+#seccion-historial.seccion-desplegable {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+
+    width: 90% !important;
+    max-width: 520px !important;
+    max-height: 85vh !important;
+
+    overflow-y: auto !important;
+
+    background-color: #1a1a1a !important;
+    border: 1px solid var(--gold-dark, #9C8255) !important;
+    border-radius: 16px !important;
+
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.8),
+        0 0 15px rgba(212, 175, 55, 0.2) !important;
+
+    z-index: 2010 !important;
+
+    display: none;
+
+    padding: 24px !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+
+    color: #ffffff !important;
+}
+
+/* Mostrar historial */
+#seccion-historial.activo {
+    display: block !important;
+}
+
+/* Botón cerrar */
+#seccion-historial .boton-cerrar-seccion {
+    position: absolute !important;
+    top: 14px !important;
+    right: 16px !important;
+
+    background: transparent !important;
+    border: none !important;
+
+    color: var(--gold-muted, #A89880) !important;
+
+    font-size: 28px !important;
+    font-weight: bold !important;
+
+    cursor: pointer !important;
+    line-height: 1 !important;
+
+    padding: 0 !important;
+
+    transition: color 0.2s ease, transform 0.2s ease !important;
+}
+
+#seccion-historial .boton-cerrar-seccion:hover {
+    color: var(--gold-bright, #D4AF37) !important;
+    transform: scale(1.1) !important;
+}
+
+/* Título */
+#seccion-historial .titulo-seccion {
+    color: var(--gold-bright, #D4AF37) !important;
+    font-size: 18px !important;
+    font-weight: bold !important;
+
+    margin: 0 35px 20px 0 !important;
+
+    text-align: left !important;
+}
+
+/* Contenedor del contenido */
+#seccion-historial .cuerpo-isla {
+    margin-bottom: 0 !important;
+}
+
+/* Cada torneo del historial */
+#seccion-historial .item-historial {
+    background-color: #242424 !important;
+
+    border: 1px solid #333333 !important;
+    border-radius: 10px !important;
+
+    padding: 14px !important;
+    margin-bottom: 10px !important;
+
+    text-align: left !important;
+}
+
+/* Último elemento sin margen */
+#seccion-historial .item-historial:last-child {
+    margin-bottom: 0 !important;
+}
+
+/* Nombre del torneo */
+#seccion-historial .item-historial h3 {
+    color: var(--gold-bright, #D4AF37) !important;
+
+    font-size: 15px !important;
+    font-weight: bold !important;
+
+    margin: 0 0 8px 0 !important;
+}
+
+/* Fecha */
+#seccion-historial .item-historial p {
+    color: #cccccc !important;
+
+    font-size: 13px !important;
+    line-height: 1.5 !important;
+
+    margin: 0 0 10px 0 !important;
+}
+
+/* Enlace Ver torneo */
+#seccion-historial .item-historial a {
+    display: inline-block !important;
+
+    color: var(--gold-bright, #D4AF37) !important;
+
+    font-size: 13px !important;
+    font-weight: 600 !important;
+
+    text-decoration: none !important;
+
+    transition: color 0.2s ease !important;
+}
+
+#seccion-historial .item-historial a:hover {
+    color: #ffffff !important;
+}
+
+/* Mensaje cuando no hay historial */
+#seccion-historial .descripcion-isla {
+    color: var(--gold-muted, #A89880) !important;
+
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+
+    margin: 0 !important;
+}
+
+/* Ajuste para celulares */
+@media (max-width: 600px) {
+    #seccion-historial.seccion-desplegable {
+        width: 92% !important;
+        max-height: 80vh !important;
+        padding: 20px !important;
+    }
+
+    #seccion-historial .titulo-seccion {
+        font-size: 16px !important;
+    }
+
+    #seccion-historial .item-historial {
+        padding: 12px !important;
+    }
+}
