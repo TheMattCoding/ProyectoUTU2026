@@ -1,5 +1,29 @@
 document.addEventListener("DOMContentLoaded", () => {
 
+    // --- VISTA PREVIA INSTANTÁNEA DE FOTO DE PERFIL ---
+    const inputFoto = document.getElementById('foto-perfil-input');
+    const fotoPreview = document.getElementById('foto-preview');
+    const svgDefault = document.getElementById('svg-default-avatar');
+
+    if (inputFoto) {
+        inputFoto.addEventListener('change', (e) => {
+            const archivo = e.target.files[0];
+            if (archivo) {
+                const lector = new FileReader();
+                lector.onload = (evt) => {
+                    if (fotoPreview) {
+                        fotoPreview.src = evt.target.result;
+                        fotoPreview.style.display = 'block';
+                    }
+                    if (svgDefault) {
+                        svgDefault.style.display = 'none';
+                    }
+                };
+                lector.readAsDataURL(archivo);
+            }
+        });
+    }
+
     // --- FILTROS EN TIEMPO REAL Y VALIDACIÓN DE PERFIL ---
     const formPerfil = document.getElementById("form-perfil");
     const inputNombre = document.getElementById("nombre");

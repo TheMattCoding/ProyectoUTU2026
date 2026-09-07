@@ -9,11 +9,11 @@ requerirLogin();
 $idUsuario = $_SESSION['id_usuario'] ?? $_SESSION['id'] ?? null;
 $rolActual = $_SESSION['rol'] ?? 'visitante';
 
-// Obtener datos actualizados del usuario y su perfil de participante
+// Obtener datos actualizados del usuario y su perfil de participante (incluyendo foto_perfil)
 $usuarioDatos = [];
 if ($idUsuario) {
     $stmt = $conexion->prepare("
-        SELECT u.username, u.email, p.nombre, p.apellido, p.telefono, p.ci 
+        SELECT u.username, u.email, p.nombre, p.apellido, p.telefono, p.ci, u.foto_perfil 
         FROM usuarios u 
         LEFT JOIN participantes p ON u.id_usuario = p.id_usuario 
         WHERE u.id_usuario = :id
@@ -22,11 +22,12 @@ if ($idUsuario) {
     $usuarioDatos = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
 }
 
-$username = $usuarioDatos['username'] ?? $_SESSION['usuario'] ?? 'Usuario';
-$email    = $usuarioDatos['email'] ?? $_SESSION['correo'] ?? '';
-$nombre   = $usuarioDatos['nombre'] ?? $_SESSION['nombre'] ?? '';
-$apellido = $usuarioDatos['apellido'] ?? $_SESSION['apellido'] ?? '';
-$telefono = $usuarioDatos['telefono'] ?? $_SESSION['telefono'] ?? '';
+$username   = $usuarioDatos['username'] ?? $_SESSION['usuario'] ?? 'Usuario';
+$email      = $usuarioDatos['email'] ?? $_SESSION['correo'] ?? '';
+$nombre     = $usuarioDatos['nombre'] ?? $_SESSION['nombre'] ?? '';
+$apellido   = $usuarioDatos['apellido'] ?? $_SESSION['apellido'] ?? '';
+$telefono   = $usuarioDatos['telefono'] ?? $_SESSION['telefono'] ?? '';
+$fotoPerfil = $usuarioDatos['foto_perfil'] ?? $_SESSION['foto_perfil'] ?? null;
 
 // Mensajes de feedback
 $mensajeExito = $_SESSION['mensaje_exito'] ?? null;
@@ -145,15 +146,19 @@ unset($_SESSION['mensaje_exito'], $_SESSION['mensaje_error']);
         </div>
     </div>
 
-    <!-- 5. Apartado de perfil -->
+    <!-- 5. Apartado de perfil en Navbar -->
     <div class="profile-dropdown">
         <input type="checkbox" id="profile-toggle" class="dropdown-checkbox">
 
         <label for="profile-toggle" class="profile-dropdown-button" aria-label="Menú de usuario">
             <div class="user-avatar">
-                <svg class="avatar-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
-                    <path d="M320 312C386.3 312 440 258.3 440 192C440 125.7 386.3 72 320 72C253.7 72 200 125.7 200 192C200 258.3 253.7 312 320 312zM290.3 368C191.8 368 112 447.8 112 546.3C112 562.7 125.3 576 141.7 576L498.3 576C514.7 576 528 562.7 528 546.3C528 447.8 448.2 368 349.7 368L290.3 368z" />
-                </svg>
+                <?php if (!empty($fotoPerfil) && file_exists('../' . $fotoPerfil)): ?>
+                    <img src="../<?= htmlspecialchars($fotoPerfil) ?>" alt="Avatar" class="img-avatar">
+                <?php else: ?>
+                    <svg class="avatar-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+                        <path d="M320 312C386.3 312 440 258.3 440 192C440 125.7 386.3 72 320 72C253.7 72 200 125.7 200 192C200 258.3 253.7 312 320 312zM290.3 368C191.8 368 112 447.8 112 546.3C112 562.7 125.3 576 141.7 576L498.3 576C514.7 576 528 562.7 528 546.3C528 447.8 448.2 368 349.7 368L290.3 368z" />
+                    </svg>
+                <?php endif; ?>
             </div>
         </label>
 
@@ -221,54 +226,63 @@ unset($_SESSION['mensaje_exito'], $_SESSION['mensaje_error']);
             <section class="tarjeta-contenido-config">
                 
                 <!-- 1. Editar Perfil -->              
-            <div id="perfil" class="seccion-configuracion panel-perfil">
-                <h3 class="titulo-seccion">Información del Perfil</h3>
-                <p class="subtitulo-seccion">Personaliza tu identidad dentro de la plataforma de torneos.</p>
-    
-                <form action="logica/actualizarConfiguracion.php" method="POST" id="form-perfil" class="formulario-configuracion">
-                    <input type="hidden" name="accion" value="actualizar_perfil">
+                <div id="perfil" class="seccion-configuracion panel-perfil">
+                    <h3 class="titulo-seccion">Información del Perfil</h3>
+                    <p class="subtitulo-seccion">Personaliza tu identidad dentro de la plataforma de torneos.</p>
         
-                    <div class="contenedor-edicion-avatar">
-                        <div class="avatar-usuario avatar-grande">
-                            <svg class="avatar-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
-                            <path d="M320 312C386.3 312 440 258.3 440 192C440 125.7 386.3 72 320 72C253.7 72 200 125.7 200 192C200 258.3 253.7 312 320 312zM290.3 368C191.8 368 112 447.8 112 546.3C112 562.7 125.3 576 141.7 576L498.3 576C514.7 576 528 562.7 528 546.3C528 447.8 448.2 368 349.7 368L290.3 368z" />
-                        </svg>
-                    </div>
-                    <button type="button" class="btn-secundario-sm">Cambiar foto</button>
-                </div>
+                    <form action="logica/actualizarConfiguracion.php" method="POST" enctype="multipart/form-data" id="form-perfil" class="formulario-configuracion">
+                        <input type="hidden" name="accion" value="actualizar_perfil">
+            
+                        <!-- Avatar y Cambio de Foto -->
+                        <div class="contenedor-edicion-avatar">
+                            <div class="avatar-usuario avatar-grande" id="avatar-preview-container">
+                                <?php if (!empty($fotoPerfil) && file_exists('../' . $fotoPerfil)): ?>
+                                    <img src="../<?= htmlspecialchars($fotoPerfil) ?>" alt="Foto de Perfil" id="foto-preview" class="img-avatar">
+                                <?php else: ?>
+                                    <img src="" alt="Foto de Perfil" id="foto-preview" class="img-avatar" style="display: none;">
+                                    <svg id="svg-default-avatar" class="avatar-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+                                        <path d="M320 312C386.3 312 440 258.3 440 192C440 125.7 386.3 72 320 72C253.7 72 200 125.7 200 192C200 258.3 253.7 312 320 312zM290.3 368C191.8 368 112 447.8 112 546.3C112 562.7 125.3 576 141.7 576L498.3 576C514.7 576 528 562.7 528 546.3C528 447.8 448.2 368 349.7 368L290.3 368z" />
+                                    </svg>
+                                <?php endif; ?>
+                            </div>
 
-                <div class="cuadrícula-fila-formulario">
-                    <div class="grupo-formulario">
-                        <label for="nombre-usuario" class="etiqueta-formulario">Nombre de usuario (Máx. 20)</label>
-                        <input type="text" id="nombre-usuario" name="nombre_usuario" class="control-input-formulario" value="<?= htmlspecialchars($username) ?>" maxlength="20" required>
-                    </div>
-                    <div class="grupo-formulario">
-                        <label for="correo" class="etiqueta-formulario">Correo Electrónico (@gmail.com)</label>
-                        <input type="email" id="correo" name="correo" class="control-input-formulario" value="<?= htmlspecialchars($email) ?>" pattern="[a-zA-Z0-9._%+-]+@gmail\.com$" required>
-                    </div>
-                </div>
+                            <!-- Input oculto para cargar la imagen -->
+                            <input type="file" id="foto-perfil-input" name="foto_perfil" accept="image/png, image/jpeg, image/jpg, image/webp" style="display: none;">
+                            <label for="foto-perfil-input" class="btn-secundario-sm" style="cursor: pointer; display: inline-block;">Cambiar foto</label>
+                        </div>
 
-                <div class="cuadrícula-fila-formulario">
-                    <div class="grupo-formulario">
-                        <label for="nombre" class="etiqueta-formulario">Nombre (Máx. 15)</label>
-                        <input type="text" id="nombre" name="nombre" class="control-input-formulario" value="<?= htmlspecialchars($nombre) ?>" placeholder="Tu nombre" maxlength="15" required>
-                    </div>
-                    <div class="grupo-formulario">
-                        <label for="apellido" class="etiqueta-formulario">Apellido (Máx. 15)</label>
-                        <input type="text" id="apellido" name="apellido" class="control-input-formulario" value="<?= htmlspecialchars($apellido) ?>" placeholder="Tu apellido" maxlength="15" required>
-                    </div>
-                </div>
+                        <div class="cuadrícula-fila-formulario">
+                            <div class="grupo-formulario">
+                                <label for="nombre-usuario" class="etiqueta-formulario">Nombre de usuario (Máx. 20)</label>
+                                <input type="text" id="nombre-usuario" name="nombre_usuario" class="control-input-formulario" value="<?= htmlspecialchars($username) ?>" maxlength="20" required>
+                            </div>
+                            <div class="grupo-formulario">
+                                <label for="correo" class="etiqueta-formulario">Correo Electrónico (@gmail.com)</label>
+                                <input type="email" id="correo" name="correo" class="control-input-formulario" value="<?= htmlspecialchars($email) ?>" pattern="[a-zA-Z0-9._%+-]+@gmail\.com$" required>
+                            </div>
+                        </div>
 
-                <div class="grupo-formulario">
-                    <label for="telefono" class="etiqueta-formulario">Teléfono / Celular (9 dígitos)</label>
-                    <input type="tel" id="telefono" name="telefono" class="control-input-formulario" value="<?= htmlspecialchars($telefono) ?>" placeholder="Ej: 099123456" maxlength="9" minlength="9" required>
-                </div>
+                        <div class="cuadrícula-fila-formulario">
+                            <div class="grupo-formulario">
+                                <label for="nombre" class="etiqueta-formulario">Nombre (Máx. 15)</label>
+                                <input type="text" id="nombre" name="nombre" class="control-input-formulario" value="<?= htmlspecialchars($nombre) ?>" placeholder="Tu nombre" maxlength="15" required>
+                            </div>
+                            <div class="grupo-formulario">
+                                <label for="apellido" class="etiqueta-formulario">Apellido (Máx. 15)</label>
+                                <input type="text" id="apellido" name="apellido" class="control-input-formulario" value="<?= htmlspecialchars($apellido) ?>" placeholder="Tu apellido" maxlength="15" required>
+                            </div>
+                        </div>
 
-                <div class="acciones-formulario">
-                    <button type="submit" class="btn-guardar">Guardar perfil</button>
+                        <div class="grupo-formulario">
+                            <label for="telefono" class="etiqueta-formulario">Teléfono / Celular (9 dígitos)</label>
+                            <input type="tel" id="telefono" name="telefono" class="control-input-formulario" value="<?= htmlspecialchars($telefono) ?>" placeholder="Ej: 099123456" maxlength="9" minlength="9" required>
+                        </div>
+
+                        <div class="acciones-formulario">
+                            <button type="submit" class="btn-guardar">Guardar perfil</button>
+                        </div>
+                    </form>
                 </div>
-            </form>
-        </div>
                 
                 <!-- 2. Cuenta y Seguridad -->
                 <div id="seguridad" class="seccion-configuracion panel-seguridad">
