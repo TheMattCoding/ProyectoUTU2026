@@ -12,7 +12,6 @@ $correoPerfil = $_SESSION['correo'] ?? 'correo@ejemplo.com';
 $torneosActivos = [];
 $historialTorneos = [];
 
-// Si tenemos ID de usuario, obtenemos la información de la BD
 if ($idUsuarioBD && isset($pdo)) {
     try {
         // 1. Obtener datos del usuario
@@ -58,6 +57,36 @@ if ($idUsuarioBD && isset($pdo)) {
         // En caso de fallo de BD mantenemos variables por defecto
     }
 }
+    $trofeosPrimero = [];
+    $trofeosSegundo = [];
+    $trofeosTercero = [];
+
+    $puntosPrimeroTotal = 0;
+    $puntosSegundoTotal = 0;
+    $puntosTerceroTotal = 0;
+
+    $listaTorneos = $historial ?? $historialTorneos ?? []; 
+
+    if (!empty($listaTorneos) && is_array($listaTorneos)) {
+        foreach ($listaTorneos as $torneo) {
+            // Leemos la posición de forma segura (soporta 'puesto', 'posicion' o 'lugar')
+            $puesto = (int)($torneo['puesto'] ?? $torneo['posicion'] ?? $torneo['lugar'] ?? 0);
+
+            if ($puesto === 1) {
+                $torneo['puntos'] = 15;
+                $puntosPrimeroTotal += 15;
+                $trofeosPrimero[] = $torneo;
+            } elseif ($puesto === 2) {
+                $torneo['puntos'] = 10;
+                $puntosSegundoTotal += 10;
+                $trofeosSegundo[] = $trofeo;
+            } elseif ($puesto === 3) {
+                $torneo['puntos'] = 5;
+                $puntosTerceroTotal += 5;
+                $trofeosTercero[] = $torneo;
+            }
+        }
+    }
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -244,15 +273,26 @@ if ($idUsuarioBD && isset($pdo)) {
             <div class="seccion-perfil seccion-trofeos">
                 <h2 class="titulo-seccion">Tus trofeos</h2>
                 <div class="fila-trofeos">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" style="width: 30px; height: 30px; fill: currentColor; vertical-align: middle;">
-                        <path d="M208.3 64L432.3 64C458.8 64 480.4 85.8 479.4 112.2C479.2 117.5 479 122.8 478.7 128L528.3 128C554.4 128 577.4 149.6 575.4 177.8C567.9 281.5 514.9 338.5 457.4 368.3C441.6 376.5 425.5 382.6 410.2 387.1C390 415.7 369 430.8 352.3 438.9L352.3 512L416.3 512C434 512 448.3 526.3 448.3 544C448.3 561.7 434 576 416.3 576L224.3 576C206.6 576 192.3 561.7 192.3 544C192.3 526.3 206.6 512 224.3 512L288.3 512L288.3 438.9C272.3 431.2 252.4 416.9 233 390.6C214.6 385.8 194.6 378.5 175.1 367.5C121 337.2 72.2 280.1 65.2 177.6C63.3 149.5 86.2 127.9 112.3 127.9L161.9 127.9C161.6 122.7 161.4 117.5 161.2 112.1C160.2 85.6 181.8 63.9 208.3 63.9zM165.5 176L113.1 176C119.3 260.7 158.2 303.1 198.3 325.6C183.9 288.3 172 239.6 165.5 176zM444 320.8C484.5 297 521.1 254.7 527.3 176L475 176C468.8 236.9 457.6 284.2 444 320.8z"/>
-                    </svg>
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" style="width: 30px; height: 30px; fill: currentColor; vertical-align: middle;">
-                        <path d="M320.3 192L235.7 51.1C229.2 40.3 215.6 36.4 204.4 42L117.8 85.3C105.9 91.2 101.1 105.6 107 117.5L176.6 256.6C146.5 290.5 128.3 335.1 128.3 384C128.3 490 214.3 576 320.3 576C426.3 576 512.3 490 512.3 384C512.3 335.1 494 290.5 464 256.6L533.6 117.5C539.5 105.6 534.7 91.2 522.9 85.3L436.2 41.9C425 36.3 411.3 40.3 404.9 51L320.3 192zM351.1 334.5C352.5 337.3 355.1 339.2 358.1 339.6L408.2 346.9C415.9 348 418.9 357.4 413.4 362.9L377.1 398.3C374.9 400.5 373.9 403.5 374.4 406.6L383 456.5C384.3 464.1 376.3 470 369.4 466.4L324.6 442.8C321.9 441.4 318.6 441.4 315.9 442.8L271.1 466.4C264.2 470 256.2 464.2 257.5 456.5L266.1 406.6C266.6 403.6 265.6 400.5 263.4 398.3L227.1 362.9C221.5 357.5 224.6 348.1 232.3 346.9L282.4 339.6C285.4 339.2 288.1 337.2 289.4 334.5L311.8 289.1C315.2 282.1 325.1 282.1 328.6 289.1L351 334.5z"/>
-                    </svg>
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" style="width: 30px; height: 30px; fill: currentColor; vertical-align: middle;">
-                        <path d="M341.9 38.1C328.5 29.9 311.6 29.9 298.2 38.1C273.8 53 258.7 57 230.1 56.4C214.4 56 199.8 64.5 192.2 78.3C178.5 103.4 167.4 114.5 142.3 128.2C128.5 135.7 120.1 150.4 120.4 166.1C121.1 194.7 117 209.8 102.1 234.2C93.9 247.6 93.9 264.5 102.1 277.9C117 302.3 121 317.4 120.4 346C120 361.7 128.5 376.3 142.3 383.9C164.4 396 175.6 406 187.4 425.4L138.7 522.5C132.8 534.4 137.6 548.8 149.4 554.7L235.4 597.7C246.9 603.4 260.9 599.1 267.1 587.9L319.9 492.8L372.7 587.9C378.9 599.1 392.9 603.5 404.4 597.7L490.4 554.7C502.3 548.8 507.1 534.4 501.1 522.5L452.5 425.3C464.2 405.9 475.5 395.9 497.6 383.8C511.4 376.3 519.8 361.6 519.5 345.9C518.8 317.3 522.9 302.2 537.8 277.8C546 264.4 546 247.5 537.8 234.1C522.9 209.7 518.9 194.6 519.5 166C519.9 150.3 511.4 135.7 497.6 128.1C472.5 114.4 461.4 103.3 447.7 78.2C440.2 64.4 425.5 56 409.8 56.3C381.2 57 366.1 52.9 341.7 38zM320 160C373 160 416 203 416 256C416 309 373 352 320 352C267 352 224 309 224 256C224 203 267 160 320 160z"/>
-                    </svg>
+                    <!-- Trofeo 1.er lugar -->
+                    <button type="button" class="btn-trofeo-modal" data-target="seccion-trofeo-1" title="Ver trofeos de 1.er lugar">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" style="width: 30px; height: 30px; fill: currentColor; vertical-align: middle;">
+                            <path d="M208.3 64L432.3 64C458.8 64 480.4 85.8 479.4 112.2C479.2 117.5 479 122.8 478.7 128L528.3 128C554.4 128 577.4 149.6 575.4 177.8C567.9 281.5 514.9 338.5 457.4 368.3C441.6 376.5 425.5 382.6 410.2 387.1C390 415.7 369 430.8 352.3 438.9L352.3 512L416.3 512C434 512 448.3 526.3 448.3 544C448.3 561.7 434 576 416.3 576L224.3 576C206.6 576 192.3 561.7 192.3 544C192.3 526.3 206.6 512 224.3 512L288.3 512L288.3 438.9C272.3 431.2 252.4 416.9 233 390.6C214.6 385.8 194.6 378.5 175.1 367.5C121 337.2 72.2 280.1 65.2 177.6C63.3 149.5 86.2 127.9 112.3 127.9L161.9 127.9C161.6 122.7 161.4 117.5 161.2 112.1C160.2 85.6 181.8 63.9 208.3 63.9zM165.5 176L113.1 176C119.3 260.7 158.2 303.1 198.3 325.6C183.9 288.3 172 239.6 165.5 176zM444 320.8C484.5 297 521.1 254.7 527.3 176L475 176C468.8 236.9 457.6 284.2 444 320.8z"/>
+                        </svg>
+                    </button>
+
+                    <!-- Trofeo 2.º lugar -->
+                    <button type="button" class="btn-trofeo-modal" data-target="seccion-trofeo-2" title="Ver trofeos de 2.º lugar">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" style="width: 30px; height: 30px; fill: currentColor; vertical-align: middle;">
+                            <path d="M320.3 192L235.7 51.1C229.2 40.3 215.6 36.4 204.4 42L117.8 85.3C105.9 91.2 101.1 105.6 107 117.5L176.6 256.6C146.5 290.5 128.3 335.1 128.3 384C128.3 490 214.3 576 320.3 576C426.3 576 512.3 490 512.3 384C512.3 335.1 494 290.5 464 256.6L533.6 117.5C539.5 105.6 534.7 91.2 522.9 85.3L436.2 41.9C425 36.3 411.3 40.3 404.9 51L320.3 192zM351.1 334.5C352.5 337.3 355.1 339.2 358.1 339.6L408.2 346.9C415.9 348 418.9 357.4 413.4 362.9L377.1 398.3C374.9 400.5 373.9 403.5 374.4 406.6L383 456.5C384.3 464.1 376.3 470 369.4 466.4L324.6 442.8C321.9 441.4 318.6 441.4 315.9 442.8L271.1 466.4C264.2 470 256.2 464.2 257.5 456.5L266.1 406.6C266.6 403.6 265.6 400.5 263.4 398.3L227.1 362.9C221.5 357.5 224.6 348.1 232.3 346.9L282.4 339.6C285.4 339.2 288.1 337.2 289.4 334.5L311.8 289.1C315.2 282.1 325.1 282.1 328.6 289.1L351 334.5z"/>
+                        </svg>
+                    </button>
+
+                    <!-- Trofeo 3.er lugar -->
+                    <button type="button" class="btn-trofeo-modal" data-target="seccion-trofeo-3" title="Ver trofeos de 3.er lugar">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" style="width: 30px; height: 30px; fill: currentColor; vertical-align: middle;">
+                            <path d="M341.9 38.1C328.5 29.9 311.6 29.9 298.2 38.1C273.8 53 258.7 57 230.1 56.4C214.4 56 199.8 64.5 192.2 78.3C178.5 103.4 167.4 114.5 142.3 128.2C128.5 135.7 120.1 150.4 120.4 166.1C121.1 194.7 117 209.8 102.1 234.2C93.9 247.6 93.9 264.5 102.1 277.9C117 302.3 121 317.4 120.4 346C120 361.7 128.5 376.3 142.3 383.9C164.4 396 175.6 406 187.4 425.4L138.7 522.5C132.8 534.4 137.6 548.8 149.4 554.7L235.4 597.7C246.9 603.4 260.9 599.1 267.1 587.9L319.9 492.8L372.7 587.9C378.9 599.1 392.9 603.5 404.4 597.7L490.4 554.7C502.3 548.8 507.1 534.4 501.1 522.5L452.5 425.3C464.2 405.9 475.5 395.9 497.6 383.8C511.4 376.3 519.8 361.6 519.5 345.9C518.8 317.3 522.9 302.2 537.8 277.8C546 264.4 546 247.5 537.8 234.1C522.9 209.7 518.9 194.6 519.5 166C519.9 150.3 511.4 135.7 497.6 128.1C472.5 114.4 461.4 103.3 447.7 78.2C440.2 64.4 425.5 56 409.8 56.3C381.2 57 366.1 52.9 341.7 38zM320 160C373 160 416 203 416 256C416 309 373 352 320 352C267 352 224 309 224 256C224 203 267 160 320 160z"/>
+                        </svg>
+                    </button>
                 </div>
             </div>
         </section>
@@ -405,6 +445,36 @@ if ($idUsuarioBD && isset($pdo)) {
 
                     <?php endif; ?>
 
+                </div>
+            </section>
+
+            <!-- Fondo oscuro para modales de trofeos -->
+            <div id="fondo-trofeos" class="fondo-seccion"></div>
+
+            <!-- Modal 1.er Lugar -->
+            <section id="seccion-trofeo-1" class="seccion-desplegable modal-trofeo-estilo" aria-hidden="true">
+                <button type="button" class="cerrar-modal-trofeo boton-cerrar-seccion">×</button>
+                <h2 class="titulo-seccion">Trofeos de 1.er Lugar (15 pts c/u)</h2>
+                <div class="cuerpo-isla">
+                    <p class="descripcion-isla">No tenés trofeos de primer lugar registrados todavía.</p>
+                </div>
+            </section>
+
+            <!-- Modal 2.º Lugar -->
+            <section id="seccion-trofeo-2" class="seccion-desplegable modal-trofeo-estilo" aria-hidden="true">
+                <button type="button" class="cerrar-modal-trofeo boton-cerrar-seccion">×</button>
+                <h2 class="titulo-seccion">Trofeos de 2.º Lugar (10 pts c/u)</h2>
+                <div class="cuerpo-isla">
+                    <p class="descripcion-isla">No tenés trofeos de segundo lugar registrados todavía.</p>
+                </div>
+            </section>
+
+            <!-- Modal 3.er Lugar -->
+            <section id="seccion-trofeo-3" class="seccion-desplegable modal-trofeo-estilo" aria-hidden="true">
+                <button type="button" class="cerrar-modal-trofeo boton-cerrar-seccion">×</button>
+                <h2 class="titulo-seccion">Trofeos de 3.er Lugar (5 pts c/u)</h2>
+                <div class="cuerpo-isla">
+                    <p class="descripcion-isla">No tenés trofeos de tercer lugar registrados todavía.</p>
                 </div>
             </section>
         </div>

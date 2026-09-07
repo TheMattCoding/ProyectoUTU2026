@@ -129,6 +129,13 @@
     margin-bottom: 4px;
 }
 
+.grupo-formulario { 
+    margin-bottom: 15px; 
+    font-size: 13px; 
+    font-weight: 500; 
+    color: #cccccc;
+}
+
 .encabezado-seccion-enlinea {
     display: flex;
     justify-content: space-between;
