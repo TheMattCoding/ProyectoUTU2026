@@ -4,6 +4,18 @@ requerirRol('administrador');
 
 require_once 'db.php';
 
+// Obtener la ruta de la foto de perfil desde la sesión
+$fotoPerfilRaw = $_SESSION['foto_perfil'] ?? $_SESSION['foto'] ?? null;
+$fotoPerfilActual = null;
+
+if (!empty($fotoPerfilRaw)) {
+    if (strpos($fotoPerfilRaw, '../') === 0 || strpos($fotoPerfilRaw, 'http') === 0) {
+        $fotoPerfilActual = $fotoPerfilRaw;
+    } else {
+        $fotoPerfilActual = '../' . ltrim($fotoPerfilRaw, '/');
+    }
+}
+
 $mensaje = '';
 $error = '';
 
@@ -206,15 +218,19 @@ $inscripciones = $stmtInscripciones->fetchAll();
             </div>
         </div>
 
-        <!-- Perfil -->
+        <!-- Perfil con Foto Dinámica -->
         <div class="profile-dropdown">
             <input type="checkbox" id="profile-toggle" class="dropdown-checkbox">
 
             <label for="profile-toggle" class="profile-dropdown-button" aria-label="Menú de usuario">
                 <div class="user-avatar">
-                    <svg class="avatar-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
-                        <path d="M320 312C386.3 312 440 258.3 440 192C440 125.7 386.3 72 320 72C253.7 72 200 125.7 200 192C200 258.3 253.7 312 320 312zM290.3 368C191.8 368 112 447.8 112 546.3C112 562.7 125.3 576 141.7 576L498.3 576C514.7 576 528 562.7 528 546.3C528 447.8 448.2 368 349.7 368L290.3 368z" />
-                    </svg>
+                    <?php if ($fotoPerfilActual): ?>
+                        <img src="<?= htmlspecialchars($fotoPerfilActual) ?>" alt="Avatar" class="avatar-img" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">
+                    <?php else: ?>
+                        <svg class="avatar-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+                            <path d="M320 312C386.3 312 440 258.3 440 192C440 125.7 386.3 72 320 72C253.7 72 200 125.7 200 192C200 258.3 253.7 312 320 312zM290.3 368C191.8 368 112 447.8 112 546.3C112 562.7 125.3 576 141.7 576L498.3 576C514.7 576 528 562.7 528 546.3C528 447.8 448.2 368 349.7 368L290.3 368z" />
+                        </svg>
+                    <?php endif; ?>
                 </div>
             </label>
 
@@ -461,7 +477,7 @@ $inscripciones = $stmtInscripciones->fetchAll();
 
     </main>
 
-<!-- 7. Footer -->
+    <!-- Footer -->
     <footer class="main-footer">
         <div class="footer-content">
             <img src="../img/epsilonSoftware2.png" alt="Logo Epsilon Software" class="footer-logo">
@@ -577,7 +593,6 @@ $inscripciones = $stmtInscripciones->fetchAll();
     <!-- JavaScript del Footer -->
     <script src="../js/seccionSobreNosotros.js"></script>
     <script src="../js/seccionAyuda.js"></script>
-    
     <script src="../js/dashboard.js"></script>
 </body>
 </html>

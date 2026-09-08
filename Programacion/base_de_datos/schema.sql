@@ -114,8 +114,7 @@ CREATE TABLE enfrentamientos (
 CREATE TABLE resultados (
     id_resultado INT AUTO_INCREMENT PRIMARY KEY,
     id_enfrentamiento INT NOT NULL,
-    puntuacion_local INT DEFAULT 0,
-    puntuacion_visitante INT DEFAULT 0,
+    puntuacion INT DEFAULT 0,
     id_ganador INT,
     id_usuario_registro INT NOT NULL,
     FOREIGN KEY (id_enfrentamiento) REFERENCES enfrentamientos(id_enfrentamiento) ON DELETE CASCADE ON UPDATE CASCADE,

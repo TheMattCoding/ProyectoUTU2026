@@ -7,9 +7,35 @@ if (file_exists('logica/auth.php')) {
     require_once 'logica/auth.php';
 }
 
-$rolActual = $_SESSION['rol'] ?? 'visitante';
+$rolActual  = $_SESSION['rol'] ?? 'visitante';
+$idUsuario  = $_SESSION['id_usuario'] ?? $_SESSION['id'] ?? null;
+$fotoPerfil = $_SESSION['foto_perfil'] ?? null;
+
 $ultimoTorneo = null;
 $proximoTorneo = null;
+
+// Función para obtener la ruta de la portada (idéntica a la lógica de búsqueda)
+function obtenerImagenPortada($torneo) {
+    $imagenPortada = '../img/torneo-ajedrez.jpg'; // Imagen predeterminada
+    if (empty($torneo)) return $imagenPortada;
+
+    $campoImagen = $torneo['imagen_portada'] ?? $torneo['imagen'] ?? $torneo['portada'] ?? $torneo['foto_portada'] ?? null;
+
+    if (!empty($campoImagen)) {
+        if (strpos($campoImagen, 'http') === 0) {
+            $imagenPortada = $campoImagen;
+        } else {
+            $nombreArchivo = basename($campoImagen);
+            $rutaFisica   = __DIR__ . '/../img/portadas/' . $nombreArchivo;
+            $rutaRelativa = '../img/portadas/' . $nombreArchivo;
+
+            if (file_exists($rutaFisica)) {
+                $imagenPortada = $rutaRelativa;
+            }
+        }
+    }
+    return $imagenPortada;
+}
 
 if (file_exists('db.php')) {
     include_once 'db.php';
@@ -17,13 +43,21 @@ if (file_exists('db.php')) {
 
     if ($db) {
         try {
-            // 1. Consulta para el último torneo creado
-            $sqlUltimo = "SELECT id_torneo, nombre_torneo, descripcion 
+            // Si la foto no está en la sesión pero el usuario está logueado, consultar DB
+            if ($idUsuario && empty($fotoPerfil) && $db instanceof PDO) {
+                $stmtFoto = $db->prepare("SELECT foto_perfil FROM usuarios WHERE id_usuario = ?");
+                $stmtFoto->execute([$idUsuario]);
+                $fotoPerfil = $stmtFoto->fetchColumn();
+                $_SESSION['foto_perfil'] = $fotoPerfil;
+            }
+
+            // 1. Consulta para el último torneo creado (Traemos todas las columnas)
+            $sqlUltimo = "SELECT * 
                           FROM torneos 
                           ORDER BY id_torneo DESC 
                           LIMIT 1";
 
-            // 2. AQUÍ PEGAS LA CONSULTA SQL DEL PRÓXIMO TORNEO
+            // 2. Consulta del próximo torneo
             $sqlProximo = "SELECT t.* 
                            FROM torneos t
                            LEFT JOIN configuracion_torneo c ON t.id_torneo = c.id_torneo
@@ -62,6 +96,10 @@ if (file_exists('db.php')) {
         }
     }
 }
+
+// Resolver imágenes
+$imgUltimo = obtenerImagenPortada($ultimoTorneo);
+$imgProximo = obtenerImagenPortada($proximoTorneo);
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -75,7 +113,7 @@ if (file_exists('db.php')) {
 </head>
 <body>
 
-    <!-- 5. Menú lateral -->
+    <!-- Menú lateral -->
     <input type="checkbox" id="menu-toggle" class="menu-checkbox">
 
     <div class="sidebar">
@@ -123,7 +161,7 @@ if (file_exists('db.php')) {
 
     <label for="menu-toggle" class="sidebar-overlay"></label>
 
-    <!-- 2. Navbar y Menú hamburguesa -->
+    <!-- Navbar -->
     <nav class="navbar" aria-label="Navegación principal">
         <label for="menu-toggle" class="nav-button" aria-label="Abrir menú de navegación">
             <div class="hamburger-box">
@@ -188,9 +226,13 @@ if (file_exists('db.php')) {
 
             <label for="profile-toggle" class="profile-dropdown-button" aria-label="Menú de usuario">
                 <div class="user-avatar">
-                    <svg class="avatar-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
-                        <path d="M320 312C386.3 312 440 258.3 440 192C440 125.7 386.3 72 320 72C253.7 72 200 125.7 200 192C200 258.3 253.7 312 320 312zM290.3 368C191.8 368 112 447.8 112 546.3C112 562.7 125.3 576 141.7 576L498.3 576C514.7 576 528 562.7 528 546.3C528 447.8 448.2 368 349.7 368L290.3 368z" />
-                    </svg>
+                    <?php if (!empty($fotoPerfil) && file_exists('../' . $fotoPerfil)): ?>
+                        <img src="../<?= htmlspecialchars($fotoPerfil) ?>" alt="Avatar" class="img-avatar">
+                    <?php else: ?>
+                        <svg class="avatar-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+                            <path d="M320 312C386.3 312 440 258.3 440 192C440 125.7 386.3 72 320 72C253.7 72 200 125.7 200 192C200 258.3 253.7 312 320 312zM290.3 368C191.8 368 112 447.8 112 546.3C112 562.7 125.3 576 141.7 576L498.3 576C514.7 576 528 562.7 528 546.3C528 447.8 448.2 368 349.7 368L290.3 368z" />
+                        </svg>
+                    <?php endif; ?>
                 </div>
             </label>
 
@@ -228,77 +270,77 @@ if (file_exists('db.php')) {
         </div>
     </nav>
     
-    <!-- 6. Contenedor principal y vista de celular -->
     <main class="main-container">
     
-<!-- 6. Isla Principal de Inscripciones y Carrusel Dinámico -->
-<section class="news-carousel-card" aria-labelledby="banner-title">
-    <button type="button" class="carousel-btn prev-btn" id="prevSlide" aria-label="Noticia anterior">&#10094;</button>
-    
-    <div class="carousel-inner">
-        <!-- Diapositiva 1 -->
-        <div class="carousel-slide active">
-            <h1 id="banner-title" class="banner-heading">Súmate al próximo torneo de la comunidad</h1>
-            <p class="banner-description">Inscripciones abiertas. Miles de jugadores ya están listos para competir.</p>
-            <div class="banner-actions">
-                <a href="calendario.php" class="btn btn-secondary">Saber más</a>
-                <a href="formularioTorneo.php" class="btn btn-primary">Inscribirme</a>
-            </div>
-        </div>
-
-        <!-- Diapositiva 2: Muestra el último torneo de la BD -->
-        <div class="carousel-slide">
-            <?php if (!empty($ultimoTorneo)): ?>
-                <div class="torneo-card-banner" style="background-image: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.55)), url('../img/logoapp2.jpeg');">
-                    <span class="torneo-card-badge">Último Torneo Creado</span>
-                    <h2 class="torneo-card-title"><?= htmlspecialchars($ultimoTorneo['nombre_torneo']) ?></h2>
-                    <a href="detalleTorneo.php?id=<?= urlencode($ultimoTorneo['id_torneo']) ?>" class="btn-ver-mas-card">Ver más</a>
+        <!-- Carrusel -->
+        <section class="news-carousel-card" aria-labelledby="banner-title">
+            <button type="button" class="carousel-btn prev-btn" id="prevSlide" aria-label="Noticia anterior">&#10094;</button>
+            
+            <div class="carousel-inner">
+                <!-- Diapositiva 1 -->
+                <div class="carousel-slide active">
+                    <h1 id="banner-title" class="banner-heading">Súmate al próximo torneo de la comunidad</h1>
+                    <p class="banner-description">Inscripciones abiertas. Miles de jugadores ya están listos para competir.</p>
+                    <div class="banner-actions">
+                        <a href="calendario.php" class="btn btn-secondary">Saber más</a>
+                        <a href="formularioTorneo.php" class="btn btn-primary">Inscribirme</a>
+                    </div>
                 </div>
-            <?php else: ?>
-                <h2 class="banner-heading">Compite y gana en SGDM</h2>
-                <p class="banner-description">Mira los torneos disponibles y únete a la acción.</p>
-            <?php endif; ?>
-        </div>
 
-     <!-- Diapositiva 3: Próximo Torneo con Inscripciones -->
-<div class="carousel-slide">
-    <?php if (!empty($proximoTorneo)): ?>
-        <div class="torneo-card-banner" style="background-image: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.55)), url('../img/logoapp2.jpeg');">
-            <span class="torneo-card-badge">Próximo a Comenzar</span>
-            <h2 class="torneo-card-title"><?= htmlspecialchars($proximoTorneo['nombre_torneo']) ?></h2>
-            <p class="banner-description">
-                <strong>Fecha:</strong> <?= date('d/m/Y', strtotime($proximoTorneo['fecha_inicio'])) ?><br>
-                <strong>Lugar:</strong> <?= htmlspecialchars($proximoTorneo['lugar'] ?? 'Por confirmar') ?>
-            </p>
-            <div class="banner-actions">
-                <a href="detalleTorneo.php?id=<?= urlencode($proximoTorneo['id_torneo']) ?>" class="btn btn-primary">Inscribirme ahora</a>
+                <!-- Diapositiva 2: Último torneo de la BD -->
+                <div class="carousel-slide">
+                    <?php if (!empty($ultimoTorneo)): ?>
+                        <div class="torneo-card-banner" style="background-image: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.55)), url('<?= htmlspecialchars($imgUltimo) ?>');">
+                            <span class="torneo-card-badge">Último Torneo Creado</span>
+                            <h2 class="torneo-card-title"><?= htmlspecialchars($ultimoTorneo['nombre_torneo']) ?></h2>
+                            <a href="detalleTorneo.php?id=<?= urlencode($ultimoTorneo['id_torneo']) ?>" class="btn-ver-mas-card">Ver más</a>
+                        </div>
+                    <?php else: ?>
+                        <h2 class="banner-heading">Compite y gana en SGDM</h2>
+                        <p class="banner-description">Mira los torneos disponibles y únete a la acción.</p>
+                    <?php endif; ?>
+                </div>
+
+                <!-- Diapositiva 3: Próximo Torneo -->
+                <div class="carousel-slide">
+                    <?php if (!empty($proximoTorneo)): ?>
+                        <div class="torneo-card-banner" style="background-image: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.55)), url('<?= htmlspecialchars($imgProximo) ?>');">
+                            <span class="torneo-card-badge">Próximo a Comenzar</span>
+                            <h2 class="torneo-card-title"><?= htmlspecialchars($proximoTorneo['nombre_torneo']) ?></h2>
+                            <p class="banner-description">
+                                <strong>Fecha:</strong> <?= date('d/m/Y', strtotime($proximoTorneo['fecha_inicio'])) ?><br>
+                                <strong>Lugar:</strong> <?= htmlspecialchars($proximoTorneo['lugar'] ?? 'Por confirmar') ?>
+                            </p>
+                            <div class="banner-actions">
+                                <a href="detalleTorneo.php?id=<?= urlencode($proximoTorneo['id_torneo']) ?>" class="btn btn-primary">Inscribirme ahora</a>
+                            </div>
+                        </div>
+                    <?php else: ?>
+                        <h2 class="banner-heading">Próximos Torneos</h2>
+                        <p class="banner-description">No hay torneos próximos con inscripciones abiertas en este momento.</p>
+                        <div class="banner-actions">
+                            <a href="calendario.php" class="btn btn-secondary">Ver Calendario</a>
+                        </div>
+                    <?php endif; ?>
+                </div>
             </div>
-        </div>
-    <?php else: ?>
-        <h2 class="banner-heading">Próximos Torneos</h2>
-        <p class="banner-description">No hay torneos próximos con inscripciones abiertas en este momento.</p>
-        <div class="banner-actions">
-            <a href="calendario.php" class="btn btn-secondary">Ver Calendario</a>
-        </div>
-    <?php endif; ?>
-</div>
 
-    <button type="button" class="carousel-btn next-btn" id="nextSlide" aria-label="Siguiente noticia">&#10095;</button>
+            <button type="button" class="carousel-btn next-btn" id="nextSlide" aria-label="Siguiente noticia">&#10095;</button>
 
-    <div class="carousel-dots" aria-hidden="true">
-        <span class="dot active" data-slide="0"></span>
-        <span class="dot" data-slide="1"></span>
-        <span class="dot" data-slide="2"></span>
-    </div>
-</section>
+            <div class="carousel-dots" aria-hidden="true">
+                <span class="dot active" data-slide="0"></span>
+                <span class="dot" data-slide="1"></span>
+                <span class="dot" data-slide="2"></span>
+            </div>
+        </section>
 
-        <!-- 6. Mensaje de Bienvenida -->
+        <!-- Mensaje de Bienvenida -->
         <section class="welcome-container" aria-label="Bienvenida">
             <img src="../img/logoapp.png" alt="Logo SGDM" class="welcome-logo">
             <h2 class="welcome-text">Bienvenido a SGDM</h2>
         </section>
 
-        <!-- 6. Isla de Ingreso al Calendario -->
+        <!-- Enlaces a secciones -->
         <div class="cards-row-wrapper">
             <section class="info-card" aria-labelledby="calendar-title">
                 <div class="card-header-row">
@@ -320,7 +362,7 @@ if (file_exists('db.php')) {
 
     </main>
 
-    <!-- 7. Footer -->
+    <!-- Footer -->
     <footer class="main-footer">
         <div class="footer-content">
             <img src="../img/epsilonSoftware2.png" alt="Logo Epsilon Software" class="footer-logo">
@@ -377,7 +419,7 @@ if (file_exists('db.php')) {
         </div>
     </section>
 
-    <!-- Modal Ayuda y Soporte -->
+    <!-- Modal Ayuda -->
     <section id="seccion-ayuda" class="seccion-desplegable" aria-hidden="true">
         <div class="seccion-encabezado">
             <h3 class="seccion-titulo">Centro de Ayuda</h3>
