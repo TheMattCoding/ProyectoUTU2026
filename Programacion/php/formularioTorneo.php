@@ -11,7 +11,7 @@ $mensaje = '';
 $tipoMensaje = '';
 
 // Función auxiliar para determinar el nombre de la ronda
-function obtenerNombreRonda($numeroActual, $totalRondas) {
+function obtenerNombreRondaPorNumero($numeroActual, $totalRondas) {
     $distanciaAlFinal = $totalRondas - $numeroActual;
 
     return match ($distanciaAlFinal) {
@@ -35,26 +35,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $cantRondas = !empty($_POST['cantidad_rondas']) ? (int)$_POST['cantidad_rondas'] : 1;
     $privacidad = $_POST['privacidad'] ?? '';
     $descripcion = trim($_POST['descripcion'] ?? '');
-
-    // Lógica para subir la imagen de portada ('portada' coincidiendo con el HTML)
-    $rutaImagenBD = NULL;
-    if (isset($_FILES['portada']) && $_FILES['portada']['error'] === UPLOAD_ERR_OK) {
-        $ext = strtolower(pathinfo($_FILES['portada']['name'], PATHINFO_EXTENSION));
-        $extensionesPermitidas = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
-
-        if (in_array($ext, $extensionesPermitidas)) {
-            $directorioSubida = '../img/portadas/';
-            if (!is_dir($directorioSubida)) {
-                mkdir($directorioSubida, 0777, true);
-            }
-            $nombreArchivo = uniqid('torneo_') . '.' . $ext;
-            $rutaDestino = $directorioSubida . $nombreArchivo;
-
-            if (move_uploaded_file($_FILES['portada']['tmp_name'], $rutaDestino)) {
-                $rutaImagenBD = '../img/portadas/' . $nombreArchivo;
-            }
-        }
-    }
 
     // Lógica para subir la imagen de portada ('portada' coincidiendo con el HTML)
     $rutaImagenBD = NULL;
@@ -198,7 +178,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmtRonda = $pdo->prepare($sqlRonda);
 
         for ($i = 1; $i <= $cantRondas; $i++) {
-            $nombreRonda = obtenerNombreRonda($i, $cantRondas);
+            $nombreRonda = obtenerNombreRondaPorNumero($i, $cantRondas);
 
             $estadoInicial = ($i === 1 && $fecha <= date('Y-m-d')) ? 'en_curso' : 'pendiente';
 

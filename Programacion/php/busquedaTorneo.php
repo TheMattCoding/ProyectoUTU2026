@@ -176,23 +176,37 @@ $torneos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 </p>
             <?php else: ?>
                 <?php foreach ($torneos as $torneo): 
-                    // Obtener la ruta de portada guardada o usar la de defecto
-                    $imagenPortada = !empty($torneo['imagen_portada']) ? $torneo['imagen_portada'] : '../img/torneo-ajedrez.jpg';
-                ?>
-                    <article class="tarjeta-torneo">
-                        <div class="contenedor-imagen">
-                            <img src="<?php echo htmlspecialchars($imagenPortada); ?>" alt="<?php echo htmlspecialchars($torneo['nombre_torneo']); ?>" class="imagen-torneo">
-                            <div class="superposicion-tarjeta"></div>
-                            <h3 class="titulo-torneo"><?php echo htmlspecialchars($torneo['nombre_torneo']); ?></h3>
-                        </div>
-                        <div class="info-tarjeta">
-                            <span class="fecha-torneo">
-                                <?php echo $torneo['fecha_inicio'] ? date('d/m', strtotime($torneo['fecha_inicio'])) : '--/--'; ?>
-                            </span>
-                            <a href="detalleTorneo.php?id=<?php echo $torneo['id_torneo']; ?>" class="btn btn-secondary btn-ver-mas">Ver más</a>
-                        </div>
-                    </article>
-                <?php endforeach; ?>
+    $imagenPortada = '../img/torneo-ajedrez.jpg'; // Imagen por defecto
+    $campoImagen   = $torneo['imagen_portada'] ?? $torneo['imagen'] ?? $torneo['portada'] ?? $torneo['foto_portada'] ?? null;
+
+    if (!empty($campoImagen)) {
+        if (strpos($campoImagen, 'http') === 0) {
+            $imagenPortada = $campoImagen;
+        } else {
+            $nombreArchivo = basename($campoImagen);
+            $rutaFisica   = __DIR__ . '/../img/portadas/' . $nombreArchivo;
+            $rutaRelativa = '../img/portadas/' . $nombreArchivo;
+
+            if (file_exists($rutaFisica)) {
+                $imagenPortada = $rutaRelativa;
+            }
+        }
+    }
+?>
+    <article class="tarjeta-torneo">
+        <div class="contenedor-imagen">
+            <img src="<?php echo htmlspecialchars($imagenPortada); ?>" alt="<?php echo htmlspecialchars($torneo['nombre_torneo']); ?>" class="imagen-torneo">
+            <div class="superposicion-tarjeta"></div>
+            <h3 class="titulo-torneo"><?php echo htmlspecialchars($torneo['nombre_torneo']); ?></h3>
+        </div>
+        <div class="info-tarjeta">
+            <span class="fecha-torneo">
+                <?php echo $torneo['fecha_inicio'] ? date('d/m', strtotime($torneo['fecha_inicio'])) : '--/--'; ?>
+            </span>
+            <a href="detalleTorneo.php?id=<?php echo $torneo['id_torneo']; ?>" class="btn btn-secondary btn-ver-mas">Ver más</a>
+        </div>
+    </article>
+<?php endforeach; ?>
             <?php endif; ?>
         </section>
     </main>

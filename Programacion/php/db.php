@@ -14,4 +14,7 @@ try {
 } catch (PDOException $e) {
     die("Error al conectar a la base de datos: " . $e->getMessage());
 }
+
+require_once __DIR__ . '/logica/procesarTorneosAuto.php';
+
 ?>
