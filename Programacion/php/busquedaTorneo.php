@@ -5,6 +5,18 @@ require_once 'db.php';
 $rolActual = $_SESSION['rol'] ?? 'visitante';
 $busqueda  = trim($_GET['query'] ?? '');
 
+// Obtener la ruta de la foto de perfil desde la sesión
+$fotoPerfilRaw = $_SESSION['foto_perfil'] ?? $_SESSION['foto'] ?? null;
+$fotoPerfilActual = null;
+
+if (!empty($fotoPerfilRaw)) {
+    if (strpos($fotoPerfilRaw, '../') === 0 || strpos($fotoPerfilRaw, 'http') === 0) {
+        $fotoPerfilActual = $fotoPerfilRaw;
+    } else {
+        $fotoPerfilActual = '../' . ltrim($fotoPerfilRaw, '/');
+    }
+}
+
 // Comodines % para la búsqueda parcial por coincidencia de letras/palabras
 $paramBusqueda = '%' . $busqueda . '%';
 
@@ -96,7 +108,7 @@ $torneos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <svg class="search-google-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                     <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" fill="#777777"/>
                 </svg>
-                <input type="text" class="search-input" placeholder="Buscar un torneo" aria-label="Buscar torneos" name="query">
+                <input type="text" class="search-input" placeholder="Buscar un torneo" aria-label="Buscar torneos" name="query" value="<?= htmlspecialchars($busqueda) ?>">
             </div>
         </form>
 
@@ -132,9 +144,13 @@ $torneos = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <input type="checkbox" id="profile-toggle" class="dropdown-checkbox">
             <label for="profile-toggle" class="profile-dropdown-button" aria-label="Menú de usuario">
                 <div class="user-avatar">
-                    <svg class="avatar-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
-                        <path d="M320 312C386.3 312 440 258.3 440 192C440 125.7 386.3 72 320 72C253.7 72 200 125.7 200 192C200 258.3 253.7 312 320 312zM290.3 368C191.8 368 112 447.8 112 546.3C112 562.7 125.3 576 141.7 576L498.3 576C514.7 576 528 562.7 528 546.3C528 447.8 448.2 368 349.7 368L290.3 368z" />
-                    </svg>
+                    <?php if ($fotoPerfilActual): ?>
+                        <img src="<?= htmlspecialchars($fotoPerfilActual) ?>" alt="Avatar" class="avatar-img" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">
+                    <?php else: ?>
+                        <svg class="avatar-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+                            <path d="M320 312C386.3 312 440 258.3 440 192C440 125.7 386.3 72 320 72C253.7 72 200 125.7 200 192C200 258.3 253.7 312 320 312zM290.3 368C191.8 368 112 447.8 112 546.3C112 562.7 125.3 576 141.7 576L498.3 576C514.7 576 528 562.7 528 546.3C528 447.8 448.2 368 349.7 368L290.3 368z" />
+                        </svg>
+                    <?php endif; ?>
                 </div>
             </label>
             <label for="profile-toggle" class="dropdown-overlay"></label>
@@ -176,42 +192,42 @@ $torneos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 </p>
             <?php else: ?>
                 <?php foreach ($torneos as $torneo): 
-    $imagenPortada = '../img/torneo-ajedrez.jpg'; // Imagen por defecto
-    $campoImagen   = $torneo['imagen_portada'] ?? $torneo['imagen'] ?? $torneo['portada'] ?? $torneo['foto_portada'] ?? null;
+                    $imagenPortada = '../img/torneo-ajedrez.jpg'; // Imagen por defecto
+                    $campoImagen   = $torneo['imagen_portada'] ?? $torneo['imagen'] ?? $torneo['portada'] ?? $torneo['foto_portada'] ?? null;
 
-    if (!empty($campoImagen)) {
-        if (strpos($campoImagen, 'http') === 0) {
-            $imagenPortada = $campoImagen;
-        } else {
-            $nombreArchivo = basename($campoImagen);
-            $rutaFisica   = __DIR__ . '/../img/portadas/' . $nombreArchivo;
-            $rutaRelativa = '../img/portadas/' . $nombreArchivo;
+                    if (!empty($campoImagen)) {
+                        if (strpos($campoImagen, 'http') === 0) {
+                            $imagenPortada = $campoImagen;
+                        } else {
+                            $nombreArchivo = basename($campoImagen);
+                            $rutaFisica   = __DIR__ . '/../img/portadas/' . $nombreArchivo;
+                            $rutaRelativa = '../img/portadas/' . $nombreArchivo;
 
-            if (file_exists($rutaFisica)) {
-                $imagenPortada = $rutaRelativa;
-            }
-        }
-    }
-?>
-    <article class="tarjeta-torneo">
-        <div class="contenedor-imagen">
-            <img src="<?php echo htmlspecialchars($imagenPortada); ?>" alt="<?php echo htmlspecialchars($torneo['nombre_torneo']); ?>" class="imagen-torneo">
-            <div class="superposicion-tarjeta"></div>
-            <h3 class="titulo-torneo"><?php echo htmlspecialchars($torneo['nombre_torneo']); ?></h3>
-        </div>
-        <div class="info-tarjeta">
-            <span class="fecha-torneo">
-                <?php echo $torneo['fecha_inicio'] ? date('d/m', strtotime($torneo['fecha_inicio'])) : '--/--'; ?>
-            </span>
-            <a href="detalleTorneo.php?id=<?php echo $torneo['id_torneo']; ?>" class="btn btn-secondary btn-ver-mas">Ver más</a>
-        </div>
-    </article>
-<?php endforeach; ?>
+                            if (file_exists($rutaFisica)) {
+                                $imagenPortada = $rutaRelativa;
+                            }
+                        }
+                    }
+                ?>
+                    <article class="tarjeta-torneo">
+                        <div class="contenedor-imagen">
+                            <img src="<?php echo htmlspecialchars($imagenPortada); ?>" alt="<?php echo htmlspecialchars($torneo['nombre_torneo']); ?>" class="imagen-torneo">
+                            <div class="superposicion-tarjeta"></div>
+                            <h3 class="titulo-torneo"><?php echo htmlspecialchars($torneo['nombre_torneo']); ?></h3>
+                        </div>
+                        <div class="info-tarjeta">
+                            <span class="fecha-torneo">
+                                <?php echo $torneo['fecha_inicio'] ? date('d/m', strtotime($torneo['fecha_inicio'])) : '--/--'; ?>
+                            </span>
+                            <a href="detalleTorneo.php?id=<?php echo $torneo['id_torneo']; ?>" class="btn btn-secondary btn-ver-mas">Ver más</a>
+                        </div>
+                    </article>
+                <?php endforeach; ?>
             <?php endif; ?>
         </section>
     </main>
 
-<!-- 7. Footer -->
+    <!-- Footer -->
     <footer class="main-footer">
         <div class="footer-content">
             <img src="../img/epsilonSoftware2.png" alt="Logo Epsilon Software" class="footer-logo">

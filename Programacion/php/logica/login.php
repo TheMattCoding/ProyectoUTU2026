@@ -33,6 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['correo']     = $usuario['email'];
                 // Guarda el nombre del rol (o 'usuario' si no se encuentra relación)
                 $_SESSION['rol']        = $usuario['nombre_rol'] ?? 'usuario';
+                $_SESSION['foto_perfil'] = $usuario['foto_perfil'];
 
                 header('Location: ../inicio.php'); 
                 exit();
