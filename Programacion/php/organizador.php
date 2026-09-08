@@ -466,8 +466,8 @@ try {
                             </select>
                         </div>
 
-                        <div class="grupo-formulario" style="margin-bottom: 15px;">
-                            <label for="id_participante">Seleccionar Participante</label>
+                        <div class="grupo-formulario">
+                            <label for="id_participante" class="etiqueta-formulario">Seleccionar Participante</label>
                             <select name="id_participante" id="id_participante" class="control-formulario-entrada" required>
                                 <option value="" disabled selected>Seleccioná un participante</option>
                                 <?php foreach ($listaParticipantes as $p): ?>
