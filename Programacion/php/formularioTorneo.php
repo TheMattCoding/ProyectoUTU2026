@@ -15,10 +15,10 @@ function obtenerNombreRonda($numeroActual, $totalRondas) {
     $distanciaAlFinal = $totalRondas - $numeroActual;
 
     return match ($distanciaAlFinal) {
-        0 => 'Final',
-        1 => 'Semifinal',
-        2 => 'Cuartos de Final',
-        3 => 'Octavos de Final',
+        1 => 'Final',
+        2 => 'Semifinal',
+        3 => 'Cuartos de Final',
+        4 => 'Octavos de Final',
         default => "Ronda $numeroActual"
     };
 }
@@ -35,6 +35,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $cantRondas = !empty($_POST['cantidad_rondas']) ? (int)$_POST['cantidad_rondas'] : 1;
     $privacidad = $_POST['privacidad'] ?? '';
     $descripcion = trim($_POST['descripcion'] ?? '');
+
+    // Lógica para subir la imagen de portada ('portada' coincidiendo con el HTML)
+    $rutaImagenBD = NULL;
+    if (isset($_FILES['portada']) && $_FILES['portada']['error'] === UPLOAD_ERR_OK) {
+        $ext = strtolower(pathinfo($_FILES['portada']['name'], PATHINFO_EXTENSION));
+        $extensionesPermitidas = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
+
+        if (in_array($ext, $extensionesPermitidas)) {
+            $directorioSubida = '../img/portadas/';
+            if (!is_dir($directorioSubida)) {
+                mkdir($directorioSubida, 0777, true);
+            }
+            $nombreArchivo = uniqid('torneo_') . '.' . $ext;
+            $rutaDestino = $directorioSubida . $nombreArchivo;
+
+            if (move_uploaded_file($_FILES['portada']['tmp_name'], $rutaDestino)) {
+                $rutaImagenBD = '../img/portadas/' . $nombreArchivo;
+            }
+        }
+    }
+
+    // Lógica para subir la imagen de portada ('portada' coincidiendo con el HTML)
+    $rutaImagenBD = NULL;
+    if (isset($_FILES['portada']) && $_FILES['portada']['error'] === UPLOAD_ERR_OK) {
+        $ext = strtolower(pathinfo($_FILES['portada']['name'], PATHINFO_EXTENSION));
+        $extensionesPermitidas = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
+
+        if (in_array($ext, $extensionesPermitidas)) {
+            $directorioSubida = '../img/portadas/';
+            if (!is_dir($directorioSubida)) {
+                mkdir($directorioSubida, 0777, true);
+            }
+            $nombreArchivo = uniqid('torneo_') . '.' . $ext;
+            $rutaDestino = $directorioSubida . $nombreArchivo;
+
+            if (move_uploaded_file($_FILES['portada']['tmp_name'], $rutaDestino)) {
+                $rutaImagenBD = '../img/portadas/' . $nombreArchivo;
+            }
+        }
+    }
 
     if (!preg_match('/^[\p{L}\p{N}\s]+$/u', $nombre)) {
     $mensaje = "El nombre del torneo solo puede contener letras, números y espacios.";
@@ -130,9 +170,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $idModulo = $pdo->lastInsertId();
         }
 
-        // 2. Insertar en la tabla TORNEOS
-        $sqlTorneo = "INSERT INTO torneos (nombre_torneo, descripcion, id_modulo, id_organizador, lugar, fecha_inicio, hora_inicio, estado, privacidad) 
-                      VALUES (?, ?, ?, ?, ?, ?, ?, 'pendiente', ?)";
+        // 2. Insertar en la tabla TORNEOS (corregida la columna a 'imagen_portada')
+        $sqlTorneo = "INSERT INTO torneos (nombre_torneo, descripcion, id_modulo, id_organizador, lugar, fecha_inicio, hora_inicio, estado, privacidad, imagen_portada) 
+                      VALUES (?, ?, ?, ?, ?, ?, ?, 'pendiente', ?, ?)";
         $stmtTorneo = $pdo->prepare($sqlTorneo);
         $stmtTorneo->execute([
             $nombre,
@@ -142,7 +182,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'Montevideo',
             $fecha,
             $hora,
-            $privacidad
+            $privacidad,
+                $rutaImagenBD
         ]);
 
         $idTorneo = $pdo->lastInsertId();
@@ -237,110 +278,82 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <label for="menu-toggle" class="sidebar-overlay"></label>
 
-    <!-- 2. Navbar y Menú hamburguesa -->
-<nav class="navbar" aria-label="Navegación principal">
-    <label for="menu-toggle" class="nav-button" aria-label="Abrir menú de navegación">
-        <div class="hamburger-box">
-            <span class="line"></span>
-            <span class="line"></span>
-            <span class="line"></span>
-        </div>
-    </label>
-
-    <!-- 3. Búsqueda de Torneo -->
-    <form action="busquedaTorneo.php" method="GET" class="search-form" style="display: flex; flex: 1; max-width: 420px; margin: 0 12px;">
-        <div class="search-container" style="margin: 0; width: 100%;">
-            <svg class="search-google-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" fill="#777777"/>
-            </svg>
-            <input type="text" class="search-input" placeholder="Buscar un torneo" aria-label="Buscar torneos" name="query">
-        </div>
-    </form>
-
-    <!-- 4. Campana de Notificaciones -->
-    <div class="notifications-dropdown">
-        <input type="checkbox" id="noti-toggle" class="dropdown-checkbox">
-
-        <label for="noti-toggle" class="notifications-dropdown-button" aria-label="Notificaciones">
-            <div class="notifications-icon-wrapper">
-                <svg class="bell-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z" fill="#cccccc"/>
-                </svg>
-                <span class="notification-dot"></span>
+    <!-- Navbar -->
+    <nav class="navbar" aria-label="Navegación principal">
+        <label for="menu-toggle" class="nav-button" aria-label="Abrir menú de navegación">
+            <div class="hamburger-box">
+                <span class="line"></span>
+                <span class="line"></span>
+                <span class="line"></span>
             </div>
         </label>
 
-        <label for="noti-toggle" class="dropdown-overlay"></label>
-
-        <div class="notifications-menu-card">
-            <div class="notifications-menu-header">
-                <span class="notifications-menu-title">Notificaciones</span>
-            </div>
-            <div class="notifications-menu-divider"></div>
-            <div class="notifications-menu-list">
-                <a href="#" class="notification-item unread">
-                    <div class="noti-indicator"></div>
-                    <div class="noti-content">
-                        <p class="noti-text">Tu inscripción para la <strong>Copa de Invierno</strong> ha sido confirmada exitosamente.</p>
-                        <span class="noti-time">Hace 10 min</span>
-                    </div>
-                </a>
-                <a href="#" class="notification-item">
-                    <div class="noti-indicator"></div>
-                    <div class="noti-content">
-                        <p class="noti-text">El fixture del <strong>Torneo Relámpago</strong> ya se encuentra disponible.</p>
-                        <span class="noti-time">Hace 2 horas</span>
-                    </div>
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <!-- 5. Apartado de perfil -->
-    <div class="profile-dropdown">
-        <input type="checkbox" id="profile-toggle" class="dropdown-checkbox">
-
-        <label for="profile-toggle" class="profile-dropdown-button" aria-label="Menú de usuario">
-            <div class="user-avatar">
-                <svg class="avatar-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
-                    <path d="M320 312C386.3 312 440 258.3 440 192C440 125.7 386.3 72 320 72C253.7 72 200 125.7 200 192C200 258.3 253.7 312 320 312zM290.3 368C191.8 368 112 447.8 112 546.3C112 562.7 125.3 576 141.7 576L498.3 576C514.7 576 528 562.7 528 546.3C528 447.8 448.2 368 349.7 368L290.3 368z" />
+        <form action="busquedaTorneo.php" method="GET" class="search-form" style="display: flex; flex: 1; max-width: 420px; margin: 0 12px;">
+            <div class="search-container" style="margin: 0; width: 100%;">
+                <svg class="search-google-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" fill="#777777"/>
                 </svg>
+                <input type="text" class="search-input" placeholder="Buscar un torneo" aria-label="Buscar torneos" name="query">
             </div>
-        </label>
+        </form>
 
-        <label for="profile-toggle" class="dropdown-overlay"></label>
-
-        <div class="profile-menu-card">
-            <div class="profile-menu-header">
-                <span class="profile-menu-name">
-                    <?= htmlspecialchars($_SESSION['nombre'] ?? $_SESSION['usuario'] ?? 'Invitado') ?>
-                </span>
+        <div class="notifications-dropdown">
+            <input type="checkbox" id="noti-toggle" class="dropdown-checkbox">
+            <label for="noti-toggle" class="notifications-dropdown-button" aria-label="Notificaciones">
+                <div class="notifications-icon-wrapper">
+                    <svg class="bell-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z" fill="#cccccc"/>
+                    </svg>
+                    <span class="notification-dot"></span>
+                </div>
+            </label>
+            <label for="noti-toggle" class="dropdown-overlay"></label>
+            <div class="notifications-menu-card">
+                <div class="notifications-menu-header">
+                    <span class="notifications-menu-title">Notificaciones</span>
+                </div>
+                <div class="notifications-menu-divider"></div>
+                <div class="notifications-menu-list">
+                    <a href="#" class="notification-item unread">
+                        <div class="noti-indicator"></div>
+                        <div class="noti-content">
+                            <p class="noti-text">Tu inscripción para la <strong>Copa de Invierno</strong> ha sido confirmada exitosamente.</p>
+                            <span class="noti-time">Hace 10 min</span>
+                        </div>
+                    </a>
+                </div>
             </div>
-            <div class="profile-menu-divider"></div>
-            <nav class="profile-menu-links">
-                <?php if ($rolActual === 'visitante'): ?>
-                    <a href="logica/login.php" class="profile-menu-item">
-                        <svg class="avatar-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                            <path d="M352 96l64 0c17.7 0 32 14.3 32 32l0 256c0 17.7-14.3 32-32 32l-64 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l64 0c53 0 96-43 96-96l0-256c0-53-43-96-96-96l-64 0c-17.7 0-32 14.3-32 32s14.3 32 32 32zm-9.4 182.6c12.5-12.5 12.5-32.8 0-45.3l-128-128c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L242.7 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l210.7 0-73.4 73.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l128-128z"/>
-                        </svg> Iniciar sesión
-                    </a>
-                <?php else: ?>
-                    <a href="perfil.php" class="profile-menu-item">
-                        <svg class="avatar-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
-                            <path d="M320 312C386.3 312 440 258.3 440 192C440 125.7 386.3 72 320 72C253.7 72 200 125.7 200 192C200 258.3 253.7 312 320 312zM290.3 368C191.8 368 112 447.8 112 546.3C112 562.7 125.3 576 141.7 576L498.3 576C514.7 576 528 562.7 528 546.3C528 447.8 448.2 368 349.7 368L290.3 368z" />
-                        </svg> Perfil
-                    </a>
-                    <div class="profile-menu-divider"></div>
-                    <a href="logica/logout.php" class="profile-menu-item logout-item">
-                        <svg class="avatar-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                            <path d="M377.9 105.9L468.1 196c11.1 11.1 11.1 29.1 0 40.2l-90.1 90.1c-11.5 11.5-30.1 11.5-41.6 0s-11.5-30.1 0-41.6l39.3-39.3L160 245.4c-16.3 0-29.4-13.2-29.4-29.4s13.2-29.4 29.4-29.4l215.7 0-39.3-39.3c-11.5-11.5-11.5-30.1 0-41.6s30.1-11.5 41.6 0zM120 96c0-13.3-10.7-24-24-24C43 72 0 115 0 168L0 344c0 53 43 96 96 96c13.3 0 24-10.7 24-24s-10.7-24-24-24c-26.5 0-48-21.5-48-48l0-176c0-26.5 21.5-48 48-48c13.3 0 24-10.7 24-24z"/>
-                        </svg> Cierre de sesión
-                    </a>
-                <?php endif; ?>
-            </nav>
         </div>
-    </div>
-</nav>
+
+        <div class="profile-dropdown">
+            <input type="checkbox" id="profile-toggle" class="dropdown-checkbox">
+            <label for="profile-toggle" class="profile-dropdown-button" aria-label="Menú de usuario">
+                <div class="user-avatar">
+                    <svg class="avatar-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+                        <path d="M320 312C386.3 312 440 258.3 440 192C440 125.7 386.3 72 320 72C253.7 72 200 125.7 200 192C200 258.3 253.7 312 320 312zM290.3 368C191.8 368 112 447.8 112 546.3C112 562.7 125.3 576 141.7 576L498.3 576C514.7 576 528 562.7 528 546.3C528 447.8 448.2 368 349.7 368L290.3 368z" />
+                    </svg>
+                </div>
+            </label>
+            <label for="profile-toggle" class="dropdown-overlay"></label>
+            <div class="profile-menu-card">
+                <div class="profile-menu-header">
+                    <span class="profile-menu-name">
+                        <?= htmlspecialchars($_SESSION['nombre'] ?? $_SESSION['usuario'] ?? 'Invitado') ?>
+                    </span>
+                </div>
+                <div class="profile-menu-divider"></div>
+                <nav class="profile-menu-links">
+                    <?php if ($rolActual === 'visitante'): ?>
+                        <a href="logica/login.php" class="profile-menu-item">Iniciar sesión</a>
+                    <?php else: ?>
+                        <a href="perfil.php" class="profile-menu-item">Perfil</a>
+                        <div class="profile-menu-divider"></div>
+                        <a href="logica/logout.php" class="profile-menu-item logout-item">Cierre de sesión</a>
+                    <?php endif; ?>
+                </nav>
+            </div>
+        </div>
+    </nav>
 
     <main class="main-container">
         <div class="isla-formulario-unica">
@@ -350,7 +363,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <h2>CREAR NUEVO TORNEO</h2>
             </div>
 
-            <!-- Cartel de alerta si hay un mensaje -->
             <?php if (!empty($mensaje)): ?>
                 <div class="alerta-mensaje <?= $tipoMensaje === 'exito' ? 'exito' : 'error' ?>">
                     <?= htmlspecialchars($mensaje) ?>

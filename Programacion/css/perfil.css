@@ -501,3 +501,103 @@
         padding: 12px !important;
     }
 }
+/* Botones de trofeos */
+.btn-trofeo-modal {
+    background: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    color: var(--gold-bright, #D4AF37);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.btn-trofeo-modal:hover {
+    transform: scale(1.15);
+    filter: drop-shadow(0 0 8px var(--gold-bright, #D4AF37));
+}
+
+/* Modales de Trofeos (Estilo copiado exactamente de #seccion-historial) */
+.modal-trofeo-estilo.seccion-desplegable {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: 90% !important;
+    max-width: 520px !important;
+    max-height: 85vh !important;
+    overflow-y: auto !important;
+    background-color: #1a1a1a !important;
+    border: 1px solid var(--gold-dark, #9C8255) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 15px rgba(212, 175, 55, 0.2) !important;
+    z-index: 2010 !important;
+    display: none;
+    padding: 24px !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+    color: #ffffff !important;
+}
+
+.modal-trofeo-estilo.activo {
+    display: block !important;
+}
+
+/* Estilos para badges de puntos y distribución */
+.item-historial.flex-entre {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.resumen-puntos {
+    font-size: 0.95rem;
+    color: #cccccc;
+    margin-bottom: 16px;
+}
+
+.resumen-puntos strong {
+    color: var(--gold-bright, #D4AF37);
+}
+
+.puntos-badge {
+    background-color: rgba(212, 175, 55, 0.15);
+    color: var(--gold-bright, #D4AF37);
+    border: 1px solid var(--gold-dark, #9C8255);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+.modal-trofeo-estilo .cerrar-modal-trofeo {
+    position: absolute !important;
+    top: 14px !important;
+    right: 16px !important;
+    background: transparent !important;
+    border: none !important;
+    color: var(--gold-muted, #A89880) !important;
+    font-size: 28px !important;
+    font-weight: bold !important;
+    cursor: pointer !important;
+    line-height: 1 !important;
+    padding: 0 !important;
+    transition: color 0.2s ease, transform 0.2s ease !important;
+}
+
+.modal-trofeo-estilo .cerrar-modal-trofeo:hover {
+    color: var(--gold-bright, #D4AF37) !important;
+    transform: scale(1.1) !important;
+}
+
+@media (max-width: 600px) {
+    .modal-trofeo-estilo.seccion-desplegable {
+        width: 92% !important;
+        max-height: 80vh !important;
+        padding: 20px !important;
+    }
+}

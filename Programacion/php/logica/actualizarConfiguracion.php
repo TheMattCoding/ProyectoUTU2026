@@ -36,11 +36,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $accion === 'actualizar_perfil') {
             if ($stmtCheck->fetch()) {
                 $_SESSION['mensaje_error'] = 'El nombre de usuario o correo ya se encuentra registrado por otro usuario.';
             } else {
+                
+                // --- PROCESAMIENTO Y GUARDADO DE LA FOTO DE PERFIL ---
+                $rutaFotoDB = null;
+                if (isset($_FILES['foto_perfil']) && $_FILES['foto_perfil']['error'] === UPLOAD_ERR_OK) {
+                    $fileTmpPath   = $_FILES['foto_perfil']['tmp_name'];
+                    $fileName      = $_FILES['foto_perfil']['name'];
+                    $fileExtension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+
+                    $extensionesPermitidas = ['jpg', 'jpeg', 'png', 'webp'];
+
+                    if (in_array($fileExtension, $extensionesPermitidas)) {
+                        // Ubicación física de la carpeta destino (2 niveles arriba desde php/logica)
+                        $dirDestino = '../../img/perfiles/';
+                        if (!file_exists($dirDestino)) {
+                            mkdir($dirDestino, 0777, true);
+                        }
+
+                        // Generar nombre único para evitar sobreescritura
+                        $nuevoNombre = 'perfil_' . $idUsuario . '_' . time() . '.' . $fileExtension;
+                        $destPath = $dirDestino . $nuevoNombre;
+
+                        if (move_uploaded_file($fileTmpPath, $destPath)) {
+                            // Ruta relativa almacenada en la BD para usarse desde php/
+                            $rutaFotoDB = 'img/perfiles/' . $nuevoNombre;
+                        }
+                    }
+                }
+
                 $pdo->beginTransaction();
 
-                // Actualizar tabla usuarios
-                $stmtUser = $pdo->prepare("UPDATE usuarios SET username = ?, email = ? WHERE id_usuario = ?");
-                $stmtUser->execute([$username, $correo, $idUsuario]);
+                // Actualizar tabla usuarios (incluyendo la foto si se subió una nueva)
+                if ($rutaFotoDB) {
+                    $stmtUser = $pdo->prepare("UPDATE usuarios SET username = ?, email = ?, foto_perfil = ? WHERE id_usuario = ?");
+                    $stmtUser->execute([$username, $correo, $rutaFotoDB, $idUsuario]);
+                    $_SESSION['foto_perfil'] = $rutaFotoDB;
+                } else {
+                    $stmtUser = $pdo->prepare("UPDATE usuarios SET username = ?, email = ? WHERE id_usuario = ?");
+                    $stmtUser->execute([$username, $correo, $idUsuario]);
+                }
 
                 // Actualizar tabla participantes
                 $stmtPart = $pdo->prepare("UPDATE participantes SET nombre = ?, apellido = ?, telefono = ? WHERE id_usuario = ?");

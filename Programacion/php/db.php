@@ -3,7 +3,7 @@
 $host = 'localhost';
 $dbname = 'sistema_torneos';
 $username = 'root';
-$password = '';     // Coloca la contraseña de tu MariaDB/XAMPP si la tiene
+$password = '';
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $username, $password, [

@@ -17,6 +17,7 @@ CREATE TABLE usuarios (
     password_hash VARCHAR(255) NOT NULL,
     estado VARCHAR(20) DEFAULT 'activo',
     id_rol INT NOT NULL,
+    foto_perfil VARCHAR(255) DEFAULT NULL,
     FOREIGN KEY (id_rol) REFERENCES roles(id_rol) ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
@@ -58,6 +59,7 @@ CREATE TABLE torneos (
     fecha_fin DATE,
     estado VARCHAR(20) DEFAULT 'pendiente',
     privacidad VARCHAR(20) DEFAULT 'publico',
+    imagen_portada VARCHAR(255) DEFAULT NULL,
     FOREIGN KEY (id_modulo) REFERENCES modulos_competencia(id_modulo) ON DELETE RESTRICT ON UPDATE CASCADE,
     FOREIGN KEY (id_organizador) REFERENCES usuarios(id_usuario) ON DELETE RESTRICT ON UPDATE CASCADE
 );
