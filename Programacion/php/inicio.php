@@ -16,7 +16,7 @@ $proximoTorneo = null;
 
 // Función para obtener la ruta de la portada (idéntica a la lógica de búsqueda)
 function obtenerImagenPortada($torneo) {
-    $imagenPortada = '../img/torneo-ajedrez.jpg'; // Imagen predeterminada
+    $imagenPortada = '../img/logoapp2.jpeg'; // Imagen predeterminada
     if (empty($torneo)) return $imagenPortada;
 
     $campoImagen = $torneo['imagen_portada'] ?? $torneo['imagen'] ?? $torneo['portada'] ?? $torneo['foto_portada'] ?? null;

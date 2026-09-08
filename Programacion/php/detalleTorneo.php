@@ -44,7 +44,7 @@ if (!$torneo) {
 }
 
 // Determinación dinámica de la imagen de portada
-$imagenTorneo = '../img/torneo-ajedrez.jpg'; // Imagen por defecto
+$imagenTorneo = '../img/logoapp2.jpeg'; // Imagen por defecto
 
 // Busca en los nombres de columna más comunes de la BD
 $campoImagen = $torneo['imagen_portada'] ?? $torneo['imagen'] ?? $torneo['portada'] ?? $torneo['foto_portada'] ?? null;
