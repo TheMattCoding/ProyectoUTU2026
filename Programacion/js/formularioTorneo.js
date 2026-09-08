@@ -22,18 +22,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 3. Conmutador de Tema Oscuro / Claro
-    const btnThemeToggle = document.getElementById('btn-theme-toggle');
-    if (btnThemeToggle) {
-        btnThemeToggle.addEventListener('click', () => {
-            document.body.classList.toggle('dark-mode');
-        });
-    }
-});
+   // 4. Manejo de Disciplina "Otra"
+    const disciplina = document.getElementById('disciplina');
+    const otraDisciplina = document.getElementById('otra-disciplina');
 
-        const disciplina = document.getElementById('disciplina');
-        const otraDisciplina = document.getElementById('otra-disciplina');
-
+    if (disciplina && otraDisciplina) {
         disciplina.addEventListener('change', function () {
             if (this.value === 'Otra') {
                 otraDisciplina.style.display = 'block';
@@ -44,33 +37,36 @@ document.addEventListener('DOMContentLoaded', () => {
                 otraDisciplina.value = '';
             }
         });
+    }
 
-        const modalidad = document.getElementById('modalidad');
-        const labelCantidad = document.getElementById('label-cantidad');
-        const grupoParticipantesEquipo = document.getElementById('grupo-participantes-equipo');
-        const participantesEquipo = document.getElementById('participantes_equipo');
+    // 5. Manejo de Modalidad (Individual / Equipos)
+    const modalidad = document.getElementById('modalidad');
+    const cantidad = document.getElementById('cantidad');
+    const labelCantidad = document.getElementById('label-cantidad');
+    const grupoParticipantesEquipo = document.getElementById('grupo-participantes-equipo');
+    const participantesEquipo = document.getElementById('participantes_equipo');
 
+    if (modalidad && cantidad && labelCantidad && grupoParticipantesEquipo && participantesEquipo) {
         function actualizarModalidad() {
             if (modalidad.value === 'individual') {
                 labelCantidad.textContent = 'Cantidad de participantes';
-
                 cantidad.min = 2;
-
+                cantidad.max = 128; // Máximo para torneos individuales
                 grupoParticipantesEquipo.style.display = 'none';
                 participantesEquipo.required = false;
                 participantesEquipo.value = '';
-
             } else if (modalidad.value === 'equipos') {
                 labelCantidad.textContent = 'Cantidad de Equipos';
-
                 cantidad.min = 2;
+                cantidad.max = 32; // Máximo para torneos por equipos
                 participantesEquipo.min = 1;
-
+                participantesEquipo.max = 26; // Máximo para participantes por equipo
                 grupoParticipantesEquipo.style.display = 'flex';
                 participantesEquipo.required = true;
             }
         }
 
         modalidad.addEventListener('change', actualizarModalidad);
-
         actualizarModalidad();
+    }
+});     

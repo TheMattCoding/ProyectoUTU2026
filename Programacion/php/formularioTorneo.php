@@ -5,7 +5,11 @@ require_once 'db.php'; // Incluye la conexión a la base de datos
 
 $rolActual = $_SESSION['rol'] ?? 'visitante';
 $usuarioActual = $_SESSION['usuario'] ?? 'Visitante';
-$idUsuarioActual = $_SESSION['id_usuario'] ?? 1; // ID del usuario autenticado (o 1 por defecto)
+$idUsuarioActual = $_SESSION['id_usuario'] ?? null;
+
+if (!$idUsuarioActual) {
+    die("Error: No se ha podido verificar la identidad del usuario.");
+}
 
 // Obtener la ruta de la foto de perfil desde la sesión
 $fotoPerfilRaw = $_SESSION['foto_perfil'] ?? $_SESSION['foto'] ?? null;
@@ -57,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (in_array($ext, $extensionesPermitidas)) {
             $directorioSubida = '../img/portadas/';
             if (!is_dir($directorioSubida)) {
-                mkdir($directorioSubida, 0777, true);
+                mkdir($directorioSubida, 0755, true);
             }
             $nombreArchivo = uniqid('torneo_') . '.' . $ext;
             $rutaDestino = $directorioSubida . $nombreArchivo;
@@ -73,6 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $tipoMensaje = "error";
     }
 
+    if (empty($mensaje)) {
     if ($disciplina === 'Otra') {
         $disciplina = trim($_POST['otra_disciplina'] ?? '');
     }
@@ -80,11 +85,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($disciplina)) {
         $mensaje = "Por favor, indica la disciplina.";
         $tipoMensaje = "error";
-    }
-
-    if (!empty($disciplina) && !preg_match('/^[\p{L}\s]+$/u', $disciplina)) {
-        $mensaje = "La disciplina solo puede contener letras y espacios.";
+    } elseif (!preg_match('/^[\p{L}\p{N}\s\-]+$/u', $disciplina)) {
+        $mensaje = "La disciplina solo puede contener letras, números, espacios y guiones.";
         $tipoMensaje = "error";
+    }
     }
 
     if (empty($fecha)) {
@@ -131,21 +135,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $tipoMensaje = "error";
     }
 
-    if (
-        !empty($nombre) &&
-        !empty($disciplina) &&
-        !empty($formato) &&
-        !empty($modalidad) &&
-        !empty($fecha) &&
-        !empty($hora) &&
-        $cantidad !== NULL &&
-        $cantidad >= 1 &&
-        $cantRondas >= 1 &&
-        $cantRondas <= 20 &&
-        !empty($privacidad) &&
-        !empty($descripcion) &&
-        $mensaje === ''
-    ) {
+    // Si no se generó ningún mensaje de error previa validación, procedemos
+    if (empty($mensaje)) {
         try {
             $pdo->beginTransaction();
 
@@ -189,9 +180,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $sqlRonda = "INSERT INTO rondas (id_torneo, numero_ronda, nombre_ronda, estado_ronda) VALUES (?, ?, ?, ?)";
             $stmtRonda = $pdo->prepare($sqlRonda);
 
+            // Se calcula el momento de inicio combinado (fecha + hora)
+            $inicioTorneoTimestamp = strtotime("$fecha $hora");
+            $ahoraTimestamp = time();
+
             for ($i = 1; $i <= $cantRondas; $i++) {
                 $nombreRonda = obtenerNombreRondaPorNumero($i, $cantRondas);
-                $estadoInicial = ($i === 1 && $fecha <= date('Y-m-d')) ? 'en_curso' : 'pendiente';
+                $estadoInicial = ($i === 1 && $inicioTorneoTimestamp <= $ahoraTimestamp) ? 'en_curso' : 'pendiente';
                 $stmtRonda->execute([$idTorneo, $i, $nombreRonda, $estadoInicial]);
             }
 
@@ -203,11 +198,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } catch (PDOException $e) {
             $pdo->rollBack();
             $mensaje = "Error en la base de datos: " . $e->getMessage();
-            $tipoMensaje = "error";
-        }
-    } else {
-        if (empty($mensaje)) {
-            $mensaje = "Por favor completa todos los campos requeridos.";
             $tipoMensaje = "error";
         }
     }
@@ -368,12 +358,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <div class="grupo-formulario">
                             <label for="nombre">Nombre del Torneo</label>
                             <input type="text"
-                                id="nombre"
-                                name="nombre_torneo"
-                                placeholder="Ej: Torneo Relámpago"
-                                pattern="[\p{L}\p{N} ]+"
-                                title="El nombre solo puede contener letras y espacios"
-                            required>
+                                    id="nombre"
+                                    name="nombre_torneo"
+                                    placeholder="Ej: Torneo Relámpago"
+                                    pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\s\-]+"
+                                    title="El nombre puede contener letras, números, espacios y guiones"
+                                    required>
                         </div>
 
                         <div class="grupo-formulario">
@@ -384,7 +374,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                                 <!-- Deportes -->
                                 <option value="Fútbol">Fútbol</option>
-                                <option value="Futsal">Futsal</option>
                                 <option value="Básquetbol">Básquetbol</option>
                                 <option value="Vóleibol">Vóleibol</option>
                                 <option value="Handball">Handball</option>
@@ -454,7 +443,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                             <div class="grupo-formulario columna-expandible" id="grupo-participantes-equipo">
                                 <label for="participantes_equipo">Participantes por equipo</label>
-                                <input type="number" id="participantes_equipo" name="participantes_equipo" placeholder="Ej: 5" min="1" required>
+                                <input type="number" id="participantes_equipo" name="participantes_equipo" placeholder="Ej: 5" min="1" max="15" required>
                             </div>
                         </div>
 
