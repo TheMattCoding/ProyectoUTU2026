@@ -34,14 +34,22 @@ if (!$torneo) {
 // Determinación dinámica de la imagen de portada
 $imagenTorneo = '../img/torneo-ajedrez.jpg'; // Imagen por defecto
 
-if (!empty($torneo['imagen'])) {
-    $imagenTorneo = (strpos($torneo['imagen'], '/') !== false || strpos($torneo['imagen'], 'http') === 0)
-        ? $torneo['imagen']
-        : '../img/' . $torneo['imagen'];
-} elseif (!empty($torneo['imagen_portada'])) {
-    $imagenTorneo = (strpos($torneo['imagen_portada'], '/') !== false || strpos($torneo['imagen_portada'], 'http') === 0)
-        ? $torneo['imagen_portada']
-        : '../img/' . $torneo['imagen_portada'];
+// Busca en los nombres de columna más comunes de la BD
+$campoImagen = $torneo['imagen_portada'] ?? $torneo['imagen'] ?? $torneo['portada'] ?? $torneo['foto_portada'] ?? null;
+
+if (!empty($campoImagen)) {
+    if (strpos($campoImagen, 'http') === 0) {
+        $imagenTorneo = $campoImagen;
+    } else {
+        // Extrae únicamente el nombre del archivo (ej: "torneo123.jpg")
+        $nombreArchivo = basename($campoImagen);
+        $rutaFisica   = __DIR__ . '/../img/portadas/' . $nombreArchivo;
+        $rutaRelativa = '../img/portadas/' . $nombreArchivo;
+
+        if (file_exists($rutaFisica)) {
+            $imagenTorneo = $rutaRelativa;
+        }
+    }
 }
 
 // Cálculo dinámico de cupos restando total_inscritos de max_participantes
@@ -56,8 +64,7 @@ if ($maxParticipantes > 0) {
     $porcentajeOcupado = 0;
 }
 
-$nombreCreador = !empty($torneo['id_creador']) ? 'Organizador #' . $torneo['id_creador'] : 'Organización';
-$fechaFormateada = !empty($torneo['fecha_inicio'] && !empty($torneo['hora_inicio'])) 
+$nombreCreador = !empty($torneo['id_organizador']) ? 'Organizador #' . $torneo['id_organizador'] : 'Organización';$fechaFormateada = !empty($torneo['fecha_inicio'] && !empty($torneo['hora_inicio'])) 
     ? date('d/m/Y - h:i A', strtotime($torneo['fecha_inicio'] . ' ' . $torneo['hora_inicio'])) 
     : 'Por confirmar';
 
