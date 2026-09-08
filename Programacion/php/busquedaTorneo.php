@@ -40,43 +40,38 @@ $torneos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </head>
 <body>
 
-    <!-- Menú lateral -->
+    <!-- 5. Menú lateral -->
     <input type="checkbox" id="menu-toggle" class="menu-checkbox">
 
     <div class="sidebar">
+
+        <!-- 5. Móvil cerrar menú -->
         <div class="sidebar-header">
             <span class="sidebar-title">Menú</span>
             <label for="menu-toggle" class="close-sidebar-btn" aria-label="Cerrar menú">X</label>
         </div>
         
         <nav class="sidebar-nav">
+            <!-- Visible para todos (incluyendo visitantes) -->
             <a href="inicio.php" class="sidebar-link">Inicio</a>
             <a href="calendario.php" class="sidebar-link">Calendario de torneos</a>
 
+            <!-- Solo Organizadores y Administradores -->
             <?php if (in_array($rolActual, ['organizador', 'administrador'])): ?>
                 <a href="organizador.php" class="sidebar-link">Panel Organizador</a>
             <?php endif; ?>
 
+            <!-- Solo Administradores -->
             <?php if ($rolActual === 'administrador'): ?>
                 <a href="formularioTorneo.php" class="sidebar-link">Crea tu torneo</a>
                 <a href="dashboard.php" class="sidebar-link">Panel Administrador</a>
             <?php endif; ?>
 
+            <!-- Solo Usuarios Registrados (no visitantes) -->
             <?php if ($rolActual !== 'visitante'): ?>
                 <a href="configuracion.php" class="sidebar-link">Configuración</a>
             <?php endif; ?>
         </nav>
-
-        <div class="sidebar-footer">
-            <div class="theme-switch-container">
-                <span class="theme-label">Modo Oscuro</span>
-                <button class="theme-toggle-btn" aria-label="Cambiar tema">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 18px; height: 18px; fill: currentColor; vertical-align: middle;">
-                        <path d="M256 0C114.6 0 0 114.6 0 256S114.6 512 256 512c68.8 0 131.3-27.2 177.3-71.4 7.3-7 9.4-17.9 5.3-27.1s-13.7-14.9-23.8-14.1c-4.9 .4-9.8 .6-14.8 .6-101.6 0-184-82.4-184-184 0-72.1 41.5-134.6 102.1-164.8 9.1-4.5 14.3-14.3 13.1-24.4S322.6 8.5 312.7 6.3C294.4 2.2 275.4 0 256 0z"/>
-                    </svg>
-                </button>
-            </div>
-        </div>
     </div>
 
     <label for="menu-toggle" class="sidebar-overlay"></label>
@@ -176,7 +171,7 @@ $torneos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 </p>
             <?php else: ?>
                 <?php foreach ($torneos as $torneo): 
-    $imagenPortada = '../img/torneo-ajedrez.jpg'; // Imagen por defecto
+    $imagenPortada = '../img/logoapp2.jpeg'; // Imagen por defecto
     $campoImagen   = $torneo['imagen_portada'] ?? $torneo['imagen'] ?? $torneo['portada'] ?? $torneo['foto_portada'] ?? null;
 
     if (!empty($campoImagen)) {
@@ -324,7 +319,7 @@ $torneos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
     </section>
 
-    <!-- JavaScript del Footer -->
+    <!-- JavaScript -->
     <script src="../js/seccionSobreNosotros.js"></script>
     <script src="../js/seccionAyuda.js"></script>
 

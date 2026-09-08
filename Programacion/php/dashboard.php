@@ -574,10 +574,10 @@ $inscripciones = $stmtInscripciones->fetchAll();
         </div>
     </section>
 
-    <!-- JavaScript del Footer -->
+    <!-- JavaScript -->
     <script src="../js/seccionSobreNosotros.js"></script>
     <script src="../js/seccionAyuda.js"></script>
-    
     <script src="../js/dashboard.js"></script>
+    
 </body>
 </html>
