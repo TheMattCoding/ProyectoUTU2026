@@ -7,6 +7,18 @@ $rolActual = $_SESSION['rol'] ?? 'visitante';
 $usuarioActual = $_SESSION['usuario'] ?? 'Visitante';
 $idUsuarioActual = $_SESSION['id_usuario'] ?? 1; // ID del usuario autenticado (o 1 por defecto)
 
+// Obtener la ruta de la foto de perfil desde la sesión
+$fotoPerfilRaw = $_SESSION['foto_perfil'] ?? $_SESSION['foto'] ?? null;
+$fotoPerfilActual = null;
+
+if (!empty($fotoPerfilRaw)) {
+    if (strpos($fotoPerfilRaw, '../') === 0 || strpos($fotoPerfilRaw, 'http') === 0) {
+        $fotoPerfilActual = $fotoPerfilRaw;
+    } else {
+        $fotoPerfilActual = '../' . ltrim($fotoPerfilRaw, '/');
+    }
+}
+
 $mensaje = '';
 $tipoMensaje = '';
 
@@ -57,40 +69,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (!preg_match('/^[\p{L}\p{N}\s]+$/u', $nombre)) {
-    $mensaje = "El nombre del torneo solo puede contener letras, números y espacios.";
-    $tipoMensaje = "error";
+        $mensaje = "El nombre del torneo solo puede contener letras, números y espacios.";
+        $tipoMensaje = "error";
     }
 
     if ($disciplina === 'Otra') {
-    $disciplina = trim($_POST['otra_disciplina'] ?? '');
+        $disciplina = trim($_POST['otra_disciplina'] ?? '');
     }
 
     if (empty($disciplina)) {
-    $mensaje = "Por favor, indica la disciplina.";
-    $tipoMensaje = "error";
+        $mensaje = "Por favor, indica la disciplina.";
+        $tipoMensaje = "error";
     }
 
     if (!empty($disciplina) && !preg_match('/^[\p{L}\s]+$/u', $disciplina)) {
-    $mensaje = "La disciplina solo puede contener letras y espacios.";
-    $tipoMensaje = "error";
+        $mensaje = "La disciplina solo puede contener letras y espacios.";
+        $tipoMensaje = "error";
     }
 
     if (empty($fecha)) {
-    $mensaje = "Por favor, selecciona una fecha de inicio.";
-    $tipoMensaje = "error";
+        $mensaje = "Por favor, selecciona una fecha de inicio.";
+        $tipoMensaje = "error";
     } elseif (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $fecha)) {
         $mensaje = "La fecha de inicio no es válida.";
         $tipoMensaje = "error";
     } elseif (strtotime($fecha) < strtotime(date('Y-m-d'))) {
-    $mensaje = "La fecha de inicio no puede ser anterior a hoy.";
-    $tipoMensaje = "error";
+        $mensaje = "La fecha de inicio no puede ser anterior a hoy.";
+        $tipoMensaje = "error";
     }
 
     if ($modalidad === 'individual') {
-    if ($cantidad === NULL || $cantidad < 2) {
-        $mensaje = "La cantidad de participantes debe ser de al menos 2.";
-        $tipoMensaje = "error";
-    }
+        if ($cantidad === NULL || $cantidad < 2) {
+            $mensaje = "La cantidad de participantes debe ser de al menos 2.";
+            $tipoMensaje = "error";
+        }
     }
 
     if ($modalidad === 'equipos') {
@@ -110,97 +122,95 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if ($cantRondas < 1 || $cantRondas > 20) {
-    $mensaje = "La cantidad de rondas debe estar entre 1 y 20.";
-    $tipoMensaje = "error";
+        $mensaje = "La cantidad de rondas debe estar entre 1 y 20.";
+        $tipoMensaje = "error";
     }
 
     if (empty($formato) || empty($modalidad) || empty($privacidad)) {
-    $mensaje = "Por favor, completa todos los campos obligatorios.";
-    $tipoMensaje = "error";
+        $mensaje = "Por favor, completa todos los campos obligatorios.";
+        $tipoMensaje = "error";
     }
 
     if (
-    !empty($nombre) &&
-    !empty($disciplina) &&
-    !empty($formato) &&
-    !empty($modalidad) &&
-    !empty($fecha) &&
-    !empty($hora) &&
-    $cantidad !== NULL &&
-    $cantidad >= 1 &&
-    $cantRondas >= 1 &&
-    $cantRondas <= 20 &&
-    !empty($privacidad) &&
-    !empty($descripcion) &&
-    $mensaje === ''
-) {
-    try {
-        $pdo->beginTransaction();
+        !empty($nombre) &&
+        !empty($disciplina) &&
+        !empty($formato) &&
+        !empty($modalidad) &&
+        !empty($fecha) &&
+        !empty($hora) &&
+        $cantidad !== NULL &&
+        $cantidad >= 1 &&
+        $cantRondas >= 1 &&
+        $cantRondas <= 20 &&
+        !empty($privacidad) &&
+        !empty($descripcion) &&
+        $mensaje === ''
+    ) {
+        try {
+            $pdo->beginTransaction();
 
-        // 1. Verificar o insertar el módulo de competencia (disciplina)
-        $stmtMod = $pdo->prepare("SELECT id_modulo FROM modulos_competencia WHERE nombre_modulo = ?");
-        $stmtMod->execute([$disciplina]);
-        $modulo = $stmtMod->fetch();
+            // 1. Verificar o insertar el módulo de competencia (disciplina)
+            $stmtMod = $pdo->prepare("SELECT id_modulo FROM modulos_competencia WHERE nombre_modulo = ?");
+            $stmtMod->execute([$disciplina]);
+            $modulo = $stmtMod->fetch();
 
-        if ($modulo) {
-            $idModulo = $modulo['id_modulo'];
-        } else {
-            $stmtInsMod = $pdo->prepare("INSERT INTO modulos_competencia (nombre_modulo, descripcion) VALUES (?, ?)");
-            $stmtInsMod->execute([$disciplina, "Módulo de $disciplina"]);
-            $idModulo = $pdo->lastInsertId();
-        }
+            if ($modulo) {
+                $idModulo = $modulo['id_modulo'];
+            } else {
+                $stmtInsMod = $pdo->prepare("INSERT INTO modulos_competencia (nombre_modulo, descripcion) VALUES (?, ?)");
+                $stmtInsMod->execute([$disciplina, "Módulo de $disciplina"]);
+                $idModulo = $pdo->lastInsertId();
+            }
 
-        // 2. Insertar en la tabla TORNEOS (corregida la columna a 'imagen_portada')
-        $sqlTorneo = "INSERT INTO torneos (nombre_torneo, descripcion, id_modulo, id_organizador, lugar, fecha_inicio, hora_inicio, estado, privacidad, imagen_portada) 
-                      VALUES (?, ?, ?, ?, ?, ?, ?, 'pendiente', ?, ?)";
-        $stmtTorneo = $pdo->prepare($sqlTorneo);
-        $stmtTorneo->execute([
-            $nombre,
-            $descripcion,
-            $idModulo,
-            $idUsuarioActual,
-            'Montevideo',
-            $fecha,
-            $hora,
-            $privacidad,
+            // 2. Insertar en la tabla TORNEOS
+            $sqlTorneo = "INSERT INTO torneos (nombre_torneo, descripcion, id_modulo, id_organizador, lugar, fecha_inicio, hora_inicio, estado, privacidad, imagen_portada) 
+                          VALUES (?, ?, ?, ?, ?, ?, ?, 'pendiente', ?, ?)";
+            $stmtTorneo = $pdo->prepare($sqlTorneo);
+            $stmtTorneo->execute([
+                $nombre,
+                $descripcion,
+                $idModulo,
+                $idUsuarioActual,
+                'Montevideo',
+                $fecha,
+                $hora,
+                $privacidad,
                 $rutaImagenBD
-        ]);
+            ]);
 
-        $idTorneo = $pdo->lastInsertId();
+            $idTorneo = $pdo->lastInsertId();
 
-        // 3. Insertar la configuración del torneo
-        $sqlConfig = "INSERT INTO configuracion_torneo (id_torneo, max_participantes, formato) VALUES (?, ?, ?)";
-        $stmtConfig = $pdo->prepare($sqlConfig);
-        $stmtConfig->execute([$idTorneo, $cantidad, $formato]);
+            // 3. Insertar la configuración del torneo
+            $sqlConfig = "INSERT INTO configuracion_torneo (id_torneo, max_participantes, formato) VALUES (?, ?, ?)";
+            $stmtConfig = $pdo->prepare($sqlConfig);
+            $stmtConfig->execute([$idTorneo, $cantidad, $formato]);
 
-        // 4. Crear automáticamente las rondas del torneo
-        $sqlRonda = "INSERT INTO rondas (id_torneo, numero_ronda, nombre_ronda, estado_ronda) VALUES (?, ?, ?, ?)";
-        $stmtRonda = $pdo->prepare($sqlRonda);
+            // 4. Crear automáticamente las rondas del torneo
+            $sqlRonda = "INSERT INTO rondas (id_torneo, numero_ronda, nombre_ronda, estado_ronda) VALUES (?, ?, ?, ?)";
+            $stmtRonda = $pdo->prepare($sqlRonda);
 
-        for ($i = 1; $i <= $cantRondas; $i++) {
-            $nombreRonda = obtenerNombreRondaPorNumero($i, $cantRondas);
+            for ($i = 1; $i <= $cantRondas; $i++) {
+                $nombreRonda = obtenerNombreRondaPorNumero($i, $cantRondas);
+                $estadoInicial = ($i === 1 && $fecha <= date('Y-m-d')) ? 'en_curso' : 'pendiente';
+                $stmtRonda->execute([$idTorneo, $i, $nombreRonda, $estadoInicial]);
+            }
 
-            $estadoInicial = ($i === 1 && $fecha <= date('Y-m-d')) ? 'en_curso' : 'pendiente';
+            $pdo->commit();
 
-            $stmtRonda->execute([$idTorneo, $i, $nombreRonda, $estadoInicial]);
+            $mensaje = "¡El torneo '$nombre' se ha creado correctamente!";
+            $tipoMensaje = "exito";
+
+        } catch (PDOException $e) {
+            $pdo->rollBack();
+            $mensaje = "Error en la base de datos: " . $e->getMessage();
+            $tipoMensaje = "error";
         }
-
-        $pdo->commit();
-
-        $mensaje = "¡El torneo '$nombre' se ha creado correctamente!";
-        $tipoMensaje = "exito";
-
-    } catch (PDOException $e) {
-        $pdo->rollBack();
-        $mensaje = "Error en la base de datos: " . $e->getMessage();
-        $tipoMensaje = "error";
+    } else {
+        if (empty($mensaje)) {
+            $mensaje = "Por favor completa todos los campos requeridos.";
+            $tipoMensaje = "error";
+        }
     }
-} else {
-    if (empty($mensaje)) {
-        $mensaje = "Por favor completa todos los campos requeridos.";
-        $tipoMensaje = "error";
-    }
-}
 }
 ?>
 <!DOCTYPE html>
@@ -300,13 +310,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         </div>
 
+        <!-- Menú de Usuario con Foto Dinámica -->
         <div class="profile-dropdown">
             <input type="checkbox" id="profile-toggle" class="dropdown-checkbox">
             <label for="profile-toggle" class="profile-dropdown-button" aria-label="Menú de usuario">
                 <div class="user-avatar">
-                    <svg class="avatar-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
-                        <path d="M320 312C386.3 312 440 258.3 440 192C440 125.7 386.3 72 320 72C253.7 72 200 125.7 200 192C200 258.3 253.7 312 320 312zM290.3 368C191.8 368 112 447.8 112 546.3C112 562.7 125.3 576 141.7 576L498.3 576C514.7 576 528 562.7 528 546.3C528 447.8 448.2 368 349.7 368L290.3 368z" />
-                    </svg>
+                    <?php if ($fotoPerfilActual): ?>
+                        <img src="<?= htmlspecialchars($fotoPerfilActual) ?>" alt="Avatar" class="avatar-img" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">
+                    <?php else: ?>
+                        <svg class="avatar-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+                            <path d="M320 312C386.3 312 440 258.3 440 192C440 125.7 386.3 72 320 72C253.7 72 200 125.7 200 192C200 258.3 253.7 312 320 312zM290.3 368C191.8 368 112 447.8 112 546.3C112 562.7 125.3 576 141.7 576L498.3 576C514.7 576 528 562.7 528 546.3C528 447.8 448.2 368 349.7 368L290.3 368z" />
+                        </svg>
+                    <?php endif; ?>
                 </div>
             </label>
             <label for="profile-toggle" class="dropdown-overlay"></label>
@@ -494,7 +509,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </main>
 
-<!-- 7. Footer -->
+    <!-- Footer -->
     <footer class="main-footer">
         <div class="footer-content">
             <img src="../img/epsilonSoftware2.png" alt="Logo Epsilon Software" class="footer-logo">

@@ -1073,3 +1073,31 @@ body {
         flex: 1 1 calc(40% - 15px) !important;
     }
 }
+
+/* Contenedor del avatar en la barra de navegación */
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Ajuste de la imagen cargada (Navbar y Perfil) */
+.user-avatar img.img-avatar,
+.avatar-usuario img.img-avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Recorta la imagen manteniendo la proporción sin estirarla */
+    border-radius: 50%;
+    display: block;
+}
+
+/* SVG por defecto cuando no hay foto cargada */
+.user-avatar .avatar-svg {
+    width: 100%;
+    height: 100%;
+    fill: currentColor;
+}

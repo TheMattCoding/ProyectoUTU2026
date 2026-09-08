@@ -8,20 +8,22 @@ $idUsuarioBD = $_SESSION['id_usuario'] ?? null;
 
 $nombrePerfil = $_SESSION['usuario'] ?? 'Usuario';
 $correoPerfil = $_SESSION['correo'] ?? 'correo@ejemplo.com';
+$fotoPerfil   = $_SESSION['foto_perfil'] ?? null;
 
 $torneosActivos = [];
 $historialTorneos = [];
 
 if ($idUsuarioBD && isset($pdo)) {
     try {
-        // 1. Obtener datos del usuario
-        $stmtUser = $pdo->prepare("SELECT username, email FROM usuarios WHERE id_usuario = ?");
+        // 1. Obtener datos del usuario (incluyendo foto_perfil)
+        $stmtUser = $pdo->prepare("SELECT username, email, foto_perfil FROM usuarios WHERE id_usuario = ?");
         $stmtUser->execute([$idUsuarioBD]);
         $usuarioBD = $stmtUser->fetch(PDO::FETCH_ASSOC);
 
         if ($usuarioBD) {
             $nombrePerfil = $usuarioBD['username'];
             $correoPerfil = $usuarioBD['email'];
+            $fotoPerfil   = $usuarioBD['foto_perfil'] ?? $fotoPerfil;
         }
 
         // 2. Obtener Torneos Activos donde está inscrito el participante
@@ -57,6 +59,7 @@ if ($idUsuarioBD && isset($pdo)) {
         // En caso de fallo de BD mantenemos variables por defecto
     }
 }
+
     $trofeosPrimero = [];
     $trofeosSegundo = [];
     $trofeosTercero = [];
@@ -69,7 +72,6 @@ if ($idUsuarioBD && isset($pdo)) {
 
     if (!empty($listaTorneos) && is_array($listaTorneos)) {
         foreach ($listaTorneos as $torneo) {
-            // Leemos la posición de forma segura (soporta 'puesto', 'posicion' o 'lugar')
             $puesto = (int)($torneo['puesto'] ?? $torneo['posicion'] ?? $torneo['lugar'] ?? 0);
 
             if ($puesto === 1) {
@@ -79,7 +81,7 @@ if ($idUsuarioBD && isset($pdo)) {
             } elseif ($puesto === 2) {
                 $torneo['puntos'] = 10;
                 $puntosSegundoTotal += 10;
-                $trofeosSegundo[] = $trofeo;
+                $trofeosSegundo[] = $torneo;
             } elseif ($puesto === 3) {
                 $torneo['puntos'] = 5;
                 $puntosTerceroTotal += 5;
@@ -202,9 +204,13 @@ if ($idUsuarioBD && isset($pdo)) {
 
         <label for="profile-toggle" class="profile-dropdown-button" aria-label="Menú de usuario">
             <div class="user-avatar">
-                <svg class="avatar-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
-                    <path d="M320 312C386.3 312 440 258.3 440 192C440 125.7 386.3 72 320 72C253.7 72 200 125.7 200 192C200 258.3 253.7 312 320 312zM290.3 368C191.8 368 112 447.8 112 546.3C112 562.7 125.3 576 141.7 576L498.3 576C514.7 576 528 562.7 528 546.3C528 447.8 448.2 368 349.7 368L290.3 368z" />
-                </svg>
+                <?php if (!empty($fotoPerfil) && file_exists('../' . $fotoPerfil)): ?>
+                    <img src="../<?= htmlspecialchars($fotoPerfil) ?>" alt="Avatar" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                <?php else: ?>
+                    <svg class="avatar-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+                        <path d="M320 312C386.3 312 440 258.3 440 192C440 125.7 386.3 72 320 72C253.7 72 200 125.7 200 192C200 258.3 253.7 312 320 312zM290.3 368C191.8 368 112 447.8 112 546.3C112 562.7 125.3 576 141.7 576L498.3 576C514.7 576 528 562.7 528 546.3C528 447.8 448.2 368 349.7 368L290.3 368z" />
+                    </svg>
+                <?php endif; ?>
             </div>
         </label>
 
@@ -248,9 +254,13 @@ if ($idUsuarioBD && isset($pdo)) {
         <section class="tarjeta-perfil isla-principal">
             <div class="info-perfil-usuario">
                 <div class="avatar-usuario-grande">
-                     <svg class="svg-avatar" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
-                        <path d="M320 312C386.3 312 440 258.3 440 192C440 125.7 386.3 72 320 72C253.7 72 200 125.7 200 192C200 258.3 253.7 312 320 312zM290.3 368C191.8 368 112 447.8 112 546.3C112 562.7 125.3 576 141.7 576L498.3 576C514.7 576 528 562.7 528 546.3C528 447.8 448.2 368 349.7 368L290.3 368z" />
-                     </svg>
+                    <?php if (!empty($fotoPerfil) && file_exists('../' . $fotoPerfil)): ?>
+                        <img src="../<?= htmlspecialchars($fotoPerfil) ?>" alt="Foto de perfil de <?= htmlspecialchars($nombrePerfil) ?>" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                    <?php else: ?>
+                        <svg class="svg-avatar" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+                            <path d="M320 312C386.3 312 440 258.3 440 192C440 125.7 386.3 72 320 72C253.7 72 200 125.7 200 192C200 258.3 253.7 312 320 312zM290.3 368C191.8 368 112 447.8 112 546.3C112 562.7 125.3 576 141.7 576L498.3 576C514.7 576 528 562.7 528 546.3C528 447.8 448.2 368 349.7 368L290.3 368z" />
+                        </svg>
+                    <?php endif; ?>
                 </div>
             <div class="info-texto-usuario">
                 <h1 class="nombre-perfil"><?= htmlspecialchars($nombrePerfil) ?></h1>

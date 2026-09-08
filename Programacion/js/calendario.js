@@ -1,11 +1,27 @@
 document.addEventListener('DOMContentLoaded', () => {
     // Referencia al estado de la vista y fecha
     let fechaActual = new Date();
-    let modoVista = 'global'; // 'global' o 'propio'
+    // Leer la URL para saber si viene con ?vista=propio desde el Perfil
+    const urlParams = new URLSearchParams(window.location.search);
+    const vistaParam = urlParams.get('vista');
 
-    // Elementos del DOM
+    // Definir el modo inicial según la URL
+    let modoVista = (vistaParam === 'propio') ? 'propio' : 'global';
+
+    // Elementos DOM
     const btnGlobal = document.getElementById('btn-tab-global');
     const btnPropio = document.getElementById('btn-tab-propio');
+
+    // Activar visualmente la pestaña correcta según el parámetro
+    if (modoVista === 'propio' && btnPropio && !btnPropio.classList.contains('deshabilitado')) {
+        btnPropio.classList.add('activo');
+        if (btnGlobal) btnGlobal.classList.remove('activo');
+    } else {
+        modoVista = 'global';
+        if (btnGlobal) btnGlobal.classList.add('activo');
+        if (btnPropio) btnPropio.classList.remove('activo');
+    }
+    // Elementos DOM para el calendario
     const tituloMesAnio = document.getElementById('titulo-mes-anio');
     const grillaDias = document.getElementById('grilla-dias');
     const agendaMovil = document.getElementById('agenda-movil');
@@ -169,16 +185,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         return divGrupo;
     }
-    document.addEventListener('DOMContentLoaded', () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('vista') === 'propio') {
-        const btnPropio = document.getElementById('btn-tab-propio');
-        if (btnPropio && !btnPropio.disabled) {
-            btnPropio.click();
-        }
-    }
-    });
-
+    
     // Inicializar la grilla con los datos cargados
     renderizarCalendario();
 });
