@@ -39,12 +39,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 5. Manejo de Modalidad (Individual / Equipos)
+    // 5. Manejo de Modalidad (Individual / Equipos) y restricción de caracteres/valores
     const modalidad = document.getElementById('modalidad');
     const cantidad = document.getElementById('cantidad');
     const labelCantidad = document.getElementById('label-cantidad');
     const grupoParticipantesEquipo = document.getElementById('grupo-participantes-equipo');
     const participantesEquipo = document.getElementById('participantes_equipo');
+    const cantidadRondas = document.getElementById('cantidad_rondas');
 
     if (modalidad && cantidad && labelCantidad && grupoParticipantesEquipo && participantesEquipo) {
         function actualizarModalidad() {
@@ -64,6 +65,33 @@ document.addEventListener('DOMContentLoaded', () => {
                 grupoParticipantesEquipo.style.display = 'flex';
                 participantesEquipo.required = true;
             }
+        }
+
+        // Función que impide escribir más del límite máximo o dígitos extra
+        function limitarEntradaNumerica(input) {
+            if (!input.value) return;
+
+            const maxValor = parseInt(input.max, 10);
+            const minValor = parseInt(input.min, 10);
+            let valorActual = parseInt(input.value, 10);
+
+            // Si el valor tipeado supera el max permitido por el campo, ajusta al máximo
+            if (maxValor && valorActual > maxValor) {
+                input.value = maxValor;
+            }
+
+            // Opcional: Recorte por cantidad máxima de dígitos según el atributo max
+            const digitosMaximos = maxValor ? maxValor.toString().length : 3;
+            if (input.value.length > digitosMaximos) {
+                input.value = input.value.slice(0, digitosMaximos);
+            }
+        }
+
+        // Asignar los eventos 'input'
+        cantidad.addEventListener('input', () => limitarEntradaNumerica(cantidad));
+        participantesEquipo.addEventListener('input', () => limitarEntradaNumerica(participantesEquipo));
+        if (cantidadRondas) {
+            cantidadRondas.addEventListener('input', () => limitarEntradaNumerica(cantidadRondas));
         }
 
         modalidad.addEventListener('change', actualizarModalidad);

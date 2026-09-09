@@ -443,7 +443,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                             <div class="grupo-formulario columna-expandible" id="grupo-participantes-equipo">
                                 <label for="participantes_equipo">Participantes por equipo</label>
-                                <input type="number" id="participantes_equipo" name="participantes_equipo" placeholder="Ej: 5" min="1" max="15" required>
+                                <input type="number" id="participantes_equipo" name="participantes_equipo" placeholder="Ej: 5" min="1" required>
                             </div>
                         </div>
 
