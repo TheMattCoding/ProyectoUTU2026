@@ -25,10 +25,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion'])) {
         switch ($_POST['accion']) {
             case 'asignar_organizador':
                 $id_torneo = (int)$_POST['id_torneo'];
-                $id_organizador = (int)$_POST['id_organizador'];
+                // Convertir a NULL si se selecciona 'Sin asignar' (cadena vacía)
+                $id_organizador = !empty($_POST['id_organizador']) ? (int)$_POST['id_organizador'] : null;
+                
                 $stmt = $pdo->prepare("UPDATE torneos SET id_organizador = ? WHERE id_torneo = ?");
                 $stmt->execute([$id_organizador, $id_torneo]);
-                $mensaje = "Organizador asignado con éxito al torneo.";
+                $mensaje = "Organizador actualizado con éxito en el torneo.";
                 break;
 
             case 'eliminar_torneo':
@@ -47,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion'])) {
 
             case 'editar_participante':
                 $id_usuario = (int)$_POST['id_usuario'];
-                $username = trim($_POST['username']);
+                $username = trim($_POST['username'] ?? '');
                 
                 if (!empty($username)) {
                     $stmt = $pdo->prepare("UPDATE usuarios SET username = ? WHERE id_usuario = ?");
@@ -72,7 +74,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion'])) {
 
 // --- CONSULTAS DE DATOS ADAPTADAS A LA NUEVA BD ---
 $totalTorneos = $pdo->query("SELECT COUNT(*) FROM torneos")->fetchColumn() ?: 0;
-// Contamos participantes/equipos registrados
 $totalEquipos = $pdo->query("SELECT COUNT(*) FROM equipos")->fetchColumn() ?: 0;
 $partidosPendientes = $pdo->query("SELECT COUNT(*) FROM enfrentamientos WHERE estado_enfrentamiento = 'pendiente'")->fetchColumn() ?: 0;
 
@@ -299,151 +300,161 @@ $inscripciones = $stmtInscripciones->fetchAll();
 
             <hr class="divisor-isla">
 
-            <!-- 2. Gestión de Torneos -->
-            <section class="seccion-tabla">
-                <h3>Gestión de Torneos</h3>
+            <!-- Navegación por pestañas -->
+            <div class="tab-navigation">
+                <button class="tab-btn active" onclick="mostrarPestana(event, 'gestion')">Gestión del Panel</button>
+                <button class="tab-btn" onclick="mostrarPestana(event, 'monitoreo')">Monitoreo del Sistema</button>
+            </div>
 
-                <div class="barra-filtros">
-                    <input type="text" id="buscar-torneo" class="input-busqueda-tabla" placeholder="Buscar torneo por nombre...">
-                    <select id="ordenar-torneo" class="select-ordenar-tabla">
-                        <option value="defecto">Ordenar por...</option>
-                        <option value="nombre-asc">Nombre (A - Z)</option>
-                        <option value="nombre-desc">Nombre (Z - A)</option>
-                        <option value="fecha-desc">Fecha (Más reciente primero)</option>
-                        <option value="fecha-asc">Fecha (Más antiguo primero)</option>
-                    </select>
-                </div>
+            <!-- PESTAÑA 1: GESTIÓN -->
+            <div id="pestana-gestion" class="tab-content active">
+                
+                <!-- 2. Gestión de Torneos -->
+                <section class="seccion-tabla">
+                    <h3>Gestión de Torneos</h3>
 
-                <div class="contenedor-tabla-adaptable">
-                    <table class="tabla-panel" id="tabla-torneos">
-                        <thead>
-                            <tr>
-                                <th>Torneo</th>
-                                <th>Fecha Inicio</th>
-                                <th>Estado</th>
-                                <th>Organizador Asignado</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($torneos as $torneo): ?>
-                                <tr data-nombre="<?= strtolower(htmlspecialchars($torneo['nombre_torneo'])) ?>" data-fecha="<?= htmlspecialchars($torneo['fecha_inicio'] ?? '0000-00-00') ?>">
-                                    <td><strong><?= htmlspecialchars($torneo['nombre_torneo']) ?></strong></td>
-                                    <td><?= htmlspecialchars($torneo['fecha_inicio'] ?? 'Sin fecha') ?></td>
-                                    <td><span class="etiqueta-estado-exito"><?= htmlspecialchars($torneo['estado']) ?></span></td>
-                                    <td>
-                                        <form method="POST" class="form-inline">
-                                            <input type="hidden" name="accion" value="asignar_organizador">
-                                            <input type="hidden" name="id_torneo" value="<?= $torneo['id_torneo'] ?>">
-                                            <select name="id_organizador" class="select-tabla">
-                                                <option value="">Sin asignar</option>
-                                                <?php foreach ($organizadores as $org): ?>
-                                                    <option value="<?= $org['id_usuario'] ?>" <?= $torneo['id_organizador'] == $org['id_usuario'] ? 'selected' : '' ?>>
-                                                        <?= htmlspecialchars($org['username']) ?>
-                                                    </option>
-                                                <?php endforeach; ?>
-                                            </select>
-                                            <button type="submit" class="btn-accion btn-guardar">Guardar</button>
-                                        </form>
-                                    </td>
-                                    <td>
-                                        <form method="POST" onsubmit="return confirm('¿Seguro que deseas eliminar este torneo?');" class="form-accion-inline">
-                                            <input type="hidden" name="accion" value="eliminar_torneo">
-                                            <input type="hidden" name="id_torneo" value="<?= $torneo['id_torneo'] ?>">
-                                            <button type="submit" class="btn-accion btn-eliminar">Eliminar</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                            <?php if (empty($torneos)): ?>
-                                <tr><td colspan="5" class="tabla-vacia">No hay torneos registrados.</td></tr>
-                            <?php endif; ?>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
+                    <div class="barra-filtros">
+                        <input type="text" id="buscar-torneo" class="input-busqueda-tabla" placeholder="Buscar torneo por nombre...">
+                        <select id="ordenar-torneo" class="select-ordenar-tabla">
+                            <option value="defecto">Ordenar por...</option>
+                            <option value="nombre-asc">Nombre (A - Z)</option>
+                            <option value="nombre-desc">Nombre (Z - A)</option>
+                            <option value="fecha-desc">Fecha (Más reciente primero)</option>
+                            <option value="fecha-asc">Fecha (Más antiguo primero)</option>
+                        </select>
+                    </div>
 
-            <hr class="divisor-isla">
-
-            <!-- 3. Sacar Participantes de un Torneo -->
-            <section class="seccion-tabla">
-                <h3>Inscripciones a Torneos</h3>
-
-                <div class="barra-filtros">
-                    <input type="text" id="buscar-inscripcion" class="input-busqueda-tabla" placeholder="Buscar por torneo o participante...">
-                    <select id="ordenar-inscripcion" class="select-ordenar-tabla">
-                        <option value="defecto">Ordenar por...</option>
-                        <option value="torneo-asc">Nombre del Torneo (A - Z)</option>
-                        <option value="torneo-desc">Nombre del Torneo (Z - A)</option>
-                        <option value="participante-asc">Participante (A - Z)</option>
-                    </select>
-                </div>
-
-                <div class="contenedor-tabla-adaptable">
-                    <table class="tabla-panel" id="tabla-inscripciones">
-                        <thead>
-                            <tr>
-                                <th>Torneo</th>
-                                <th>Participante</th>
-                                <th>Estado Inscripción</th>
-                                <th>Acción</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($inscripciones as $insc): 
-                                $nombreSujeto = ($insc['nombre'] || $insc['apellido']) 
-                                    ? trim($insc['nombre'] . ' ' . $insc['apellido']) 
-                                    : 'Sin Identificar';
-                            ?>
-                                <tr data-torneo="<?= strtolower(htmlspecialchars($insc['nombre_torneo'])) ?>" data-sujeto="<?= strtolower(htmlspecialchars($nombreSujeto)) ?>">
-                                    <td><?= htmlspecialchars($insc['nombre_torneo']) ?></td>
-                                    <td><?= htmlspecialchars($nombreSujeto) ?></td>
-                                    <td><span class="etiqueta-estado-exito"><?= htmlspecialchars($insc['estado_inscripcion']) ?></span></td>
-                                    <td>
-                                        <form method="POST" onsubmit="return confirm('¿Remover participante de este torneo?');">
-                                            <input type="hidden" name="accion" value="sacar_participante_torneo">
-                                            <input type="hidden" name="id_inscripcion" value="<?= $insc['id_inscripcion'] ?>">
-                                            <button type="submit" class="btn-accion btn-sacar">Sacar del Torneo</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                            <?php if (empty($inscripciones)): ?>
-                                <tr><td colspan="4" class="tabla-vacia">No hay inscripciones registradas.</td></tr>
-                            <?php endif; ?>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-
-            <hr class="divisor-isla">
-
-            <!-- 4. Gestión de Participantes -->
-            <section class="seccion-tabla">
-                <h3>Gestión Global de Participantes</h3>
-                <div class="contenedor-tabla-adaptable">
-                    <table class="tabla-panel">
-                        <thead>
-                            <tr>
-                                <th>Usuario</th>
-                                <th>Nombre y Apellido</th>
-                                <th>CI</th>
-                                <th>Teléfono</th>
-                                <th>Correo</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($participantes as $part): ?>
+                    <div class="contenedor-tabla-adaptable">
+                        <table class="tabla-panel" id="tabla-torneos">
+                            <thead>
                                 <tr>
-                                    <form method="POST">
-                                        <input type="hidden" name="accion" value="editar_participante">
-                                        <input type="hidden" name="id_usuario" value="<?= $part['id_usuario'] ?>">
+                                    <th>Torneo</th>
+                                    <th>Fecha Inicio</th>
+                                    <th>Estado</th>
+                                    <th>Organizador Asignado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($torneos as $torneo): ?>
+                                    <tr data-nombre="<?= strtolower(htmlspecialchars($torneo['nombre_torneo'] ?? '')) ?>" data-fecha="<?= htmlspecialchars($torneo['fecha_inicio'] ?? '0000-00-00') ?>">
+                                        <td><strong><?= htmlspecialchars($torneo['nombre_torneo'] ?? '') ?></strong></td>
+                                        <td><?= htmlspecialchars($torneo['fecha_inicio'] ?? 'Sin fecha') ?></td>
+                                        <td><span class="etiqueta-estado-exito"><?= htmlspecialchars($torneo['estado'] ?? '') ?></span></td>
                                         <td>
-                                            <input type="text" name="username" value="<?= htmlspecialchars($part['username']) ?>" required class="input-tabla width-sm">
+                                            <form method="POST" class="form-inline">
+                                                <input type="hidden" name="accion" value="asignar_organizador">
+                                                <input type="hidden" name="id_torneo" value="<?= $torneo['id_torneo'] ?>">
+                                                <select name="id_organizador" class="select-tabla">
+                                                    <option value="">Sin asignar</option>
+                                                    <?php foreach ($organizadores as $org): ?>
+                                                        <option value="<?= $org['id_usuario'] ?>" <?= ($torneo['id_organizador'] ?? null) == $org['id_usuario'] ? 'selected' : '' ?>>
+                                                            <?= htmlspecialchars($org['username']) ?>
+                                                        </option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                                <button type="submit" class="btn-accion btn-guardar">Guardar</button>
+                                            </form>
                                         </td>
                                         <td>
-                                            <?= htmlspecialchars($part['nombre'] . ' ' . $part['apellido']) ?>
+                                            <form method="POST" onsubmit="return confirm('¿Seguro que deseas eliminar este torneo?');" class="form-accion-inline">
+                                                <input type="hidden" name="accion" value="eliminar_torneo">
+                                                <input type="hidden" name="id_torneo" value="<?= $torneo['id_torneo'] ?>">
+                                                <button type="submit" class="btn-accion btn-eliminar">Eliminar</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                                <?php if (empty($torneos)): ?>
+                                    <tr><td colspan="5" class="tabla-vacia">No hay torneos registrados.</td></tr>
+                                <?php endif; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <hr class="divisor-isla">
+
+                <!-- 3. Sacar Participantes de un Torneo -->
+                <section class="seccion-tabla">
+                    <h3>Inscripciones a Torneos</h3>
+
+                    <div class="barra-filtros">
+                        <input type="text" id="buscar-inscripcion" class="input-busqueda-tabla" placeholder="Buscar por torneo o participante...">
+                        <select id="ordenar-inscripcion" class="select-ordenar-tabla">
+                            <option value="defecto">Ordenar por...</option>
+                            <option value="torneo-asc">Nombre del Torneo (A - Z)</option>
+                            <option value="torneo-desc">Nombre del Torneo (Z - A)</option>
+                            <option value="participante-asc">Participante (A - Z)</option>
+                        </select>
+                    </div>
+
+                    <div class="contenedor-tabla-adaptable">
+                        <table class="tabla-panel" id="tabla-inscripciones">
+                            <thead>
+                                <tr>
+                                    <th>Torneo</th>
+                                    <th>Participante</th>
+                                    <th>Estado Inscripción</th>
+                                    <th>Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($inscripciones as $insc): 
+                                    $nombreSujeto = ($insc['nombre'] || $insc['apellido']) 
+                                        ? trim(($insc['nombre'] ?? '') . ' ' . ($insc['apellido'] ?? '')) 
+                                        : 'Sin Identificar';
+                                ?>
+                                    <tr data-torneo="<?= strtolower(htmlspecialchars($insc['nombre_torneo'] ?? '')) ?>" data-sujeto="<?= strtolower(htmlspecialchars($nombreSujeto)) ?>">
+                                        <td><?= htmlspecialchars($insc['nombre_torneo'] ?? '') ?></td>
+                                        <td><?= htmlspecialchars($nombreSujeto) ?></td>
+                                        <td><span class="etiqueta-estado-exito"><?= htmlspecialchars($insc['estado_inscripcion'] ?? '') ?></span></td>
+                                        <td>
+                                            <form method="POST" onsubmit="return confirm('¿Remover participante de este torneo?');">
+                                                <input type="hidden" name="accion" value="sacar_participante_torneo">
+                                                <input type="hidden" name="id_inscripcion" value="<?= $insc['id_inscripcion'] ?>">
+                                                <button type="submit" class="btn-accion btn-sacar">Sacar del Torneo</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                                <?php if (empty($inscripciones)): ?>
+                                    <tr><td colspan="4" class="tabla-vacia">No hay inscripciones registradas.</td></tr>
+                                <?php endif; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <hr class="divisor-isla">
+
+                <!-- 4. Gestión de Participantes -->
+                <section class="seccion-tabla">
+                    <h3>Gestión Global de Participantes</h3>
+                    <div class="contenedor-tabla-adaptable">
+                        <table class="tabla-panel">
+                            <thead>
+                                <tr>
+                                    <th>Usuario</th>
+                                    <th>Nombre y Apellido</th>
+                                    <th>CI</th>
+                                    <th>Teléfono</th>
+                                    <th>Correo</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($participantes as $part): ?>
+                                    <tr>
+                                        <td>
+                                            <form id="form-edit-<?= $part['id_usuario'] ?>" method="POST" style="display:none;">
+                                                <input type="hidden" name="accion" value="editar_participante">
+                                                <input type="hidden" name="id_usuario" value="<?= $part['id_usuario'] ?>">
+                                            </form>
+                                            <input type="text" name="username" value="<?= htmlspecialchars($part['username'] ?? '') ?>" required class="input-tabla width-sm" form="form-edit-<?= $part['id_usuario'] ?>">
+                                        </td>
+                                        <td>
+                                            <?= htmlspecialchars(($part['nombre'] ?? '') . ' ' . ($part['apellido'] ?? '')) ?>
                                         </td>
                                         <td class="texto-secundario">
                                             <?= htmlspecialchars($part['ci'] ?? '-') ?>
@@ -452,26 +463,38 @@ $inscripciones = $stmtInscripciones->fetchAll();
                                             <?= htmlspecialchars($part['telefono'] ?? '-') ?>
                                         </td>
                                         <td class="texto-secundario">
-                                            <?= htmlspecialchars($part['email']) ?>
+                                            <?= htmlspecialchars($part['email'] ?? '-') ?>
                                         </td>
                                         <td>
-                                            <button type="submit" class="btn-accion btn-guardar">Guardar</button>
-                                    </form>
-                                            <form method="POST" onsubmit="return confirm('¿Seguro que deseas eliminar este participante permanentemente?');" class="form-accion-inline">
-                                                <input type="hidden" name="accion" value="eliminar_participante">
-                                                <input type="hidden" name="id_participante" value="<?= $part['id_participante'] ?>">
-                                                <button type="submit" class="btn-accion btn-eliminar">Eliminar</button>
-                                            </form>
+                                            <div class="acciones-contenedor">
+                                                <button type="submit" class="btn-accion btn-guardar" form="form-edit-<?= $part['id_usuario'] ?>">Guardar</button>
+
+                                                <form method="POST" onsubmit="return confirm('¿Seguro que deseas eliminar este participante permanentemente?');" class="form-accion-inline">
+                                                    <input type="hidden" name="accion" value="eliminar_participante">
+                                                    <input type="hidden" name="id_participante" value="<?= $part['id_participante'] ?>">
+                                                    <button type="submit" class="btn-accion btn-eliminar">Eliminar</button>
+                                                </form>
+                                            </div>
                                         </td>
-                                </tr>
-                            <?php endforeach; ?>
-                            <?php if (empty($participantes)): ?>
-                                <tr><td colspan="6" class="tabla-vacia">No hay participantes registrados.</td></tr>
-                            <?php endif; ?>
-                        </tbody>
-                    </table>
+                                    </tr>
+                                <?php endforeach; ?>
+                                <?php if (empty($participantes)): ?>
+                                    <tr><td colspan="6" class="tabla-vacia">No hay participantes registrados.</td></tr>
+                                <?php endif; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+            </div>
+
+            <!-- PESTAÑA 2: MONITOREO (GRAFANA) -->
+            <div id="pestana-monitoreo" class="tab-content" style="display: none;">
+                <div class="card-monitoreo">
+                    <h3 style="color: #fff; margin-bottom: 15px;">Métricas y Monitoreo en Tiempo Real</h3>
+                    <iframe src="http://localhost:3000" width="100%" height="650" frameborder="0"></iframe>
                 </div>
-            </section>
+            </div>
 
         </article>
 
@@ -591,6 +614,23 @@ $inscripciones = $stmtInscripciones->fetchAll();
     </section>
 
     <!-- JavaScript -->
+    <script>
+        function mostrarPestana(evt, nombrePestana) {
+            const contenidos = document.querySelectorAll('.tab-content');
+            contenidos.forEach(c => c.style.display = 'none');
+
+            const botones = document.querySelectorAll('.tab-btn');
+            botones.forEach(b => b.classList.remove('active'));
+
+            if (nombrePestana === 'gestion') {
+                document.getElementById('pestana-gestion').style.display = 'block';
+            } else if (nombrePestana === 'monitoreo') {
+                document.getElementById('pestana-monitoreo').style.display = 'block';
+            }
+
+            evt.currentTarget.classList.add('active');
+        }
+    </script>
     <script src="../js/seccionSobreNosotros.js"></script>
     <script src="../js/seccionAyuda.js"></script>
     <script src="../js/dashboard.js"></script>

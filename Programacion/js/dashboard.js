@@ -1,76 +1,112 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // --- NAVEGACIÓN POR PESTAÑAS (TABS) ---
+    window.mostrarPestana = function (evt, nombrePestana) {
+        const contenidos = document.querySelectorAll('.tab-content');
+        contenidos.forEach(c => c.style.display = 'none');
 
-    // --- FILTRADO Y ORDEN DE TORNEOS ---
-    const inputBuscarTorneo = document.getElementById('buscar-torneo');
-    const selectOrdenarTorneo = document.getElementById('ordenar-torneo');
-    const tbodyTorneos = document.querySelector('#tabla-torneos tbody');
+        const botones = document.querySelectorAll('.tab-btn');
+        botones.forEach(b => b.classList.remove('active'));
 
-    function filtrarYOrdenarTorneos() {
-        const texto = inputBuscarTorneo.value.toLowerCase().trim();
-        const criterio = selectOrdenarTorneo.value;
-        const filas = Array.from(tbodyTorneos.querySelectorAll('tr[data-nombre]'));
-
-        filas.forEach(fila => {
-            const nombre = fila.getAttribute('data-nombre') || '';
-            fila.style.display = nombre.includes(texto) ? '' : 'none';
-        });
-
-        if (criterio !== 'defecto') {
-            filas.sort((a, b) => {
-                if (criterio === 'nombre-asc') {
-                    return a.getAttribute('data-nombre').localeCompare(b.getAttribute('data-nombre'));
-                } else if (criterio === 'nombre-desc') {
-                    return b.getAttribute('data-nombre').localeCompare(a.getAttribute('data-nombre'));
-                } else if (criterio === 'fecha-asc') {
-                    return a.getAttribute('data-fecha').localeCompare(b.getAttribute('data-fecha'));
-                } else if (criterio === 'fecha-desc') {
-                    return b.getAttribute('data-fecha').localeCompare(a.getAttribute('data-fecha'));
-                }
-                return 0;
-            });
-            filas.forEach(fila => tbodyTorneos.appendChild(fila));
+        const pestanaObjetivo = document.getElementById(`pestana-${nombrePestana}`);
+        if (pestanaObjetivo) {
+            pestanaObjetivo.style.display = 'block';
         }
-    }
 
-    if (inputBuscarTorneo && selectOrdenarTorneo) {
-        inputBuscarTorneo.addEventListener('input', filtrarYOrdenarTorneos);
-        selectOrdenarTorneo.addEventListener('change', filtrarYOrdenarTorneos);
-    }
-
-    // --- FILTRADO Y ORDEN DE INSCRIPCIONES ---
-    const inputBuscarInscripcion = document.getElementById('buscar-inscripcion');
-    const selectOrdenarInscripcion = document.getElementById('ordenar-inscripcion');
-    const tbodyInscripciones = document.querySelector('#tabla-inscripciones tbody');
-
-    function filtrarYOrdenarInscripciones() {
-        const texto = inputBuscarInscripcion.value.toLowerCase().trim();
-        const criterio = selectOrdenarInscripcion.value;
-        const filas = Array.from(tbodyInscripciones.querySelectorAll('tr[data-torneo]'));
-
-        filas.forEach(fila => {
-            const torneo = fila.getAttribute('data-torneo') || '';
-            const sujeto = fila.getAttribute('data-sujeto') || '';
-            const coincide = torneo.includes(texto) || sujeto.includes(texto);
-            fila.style.display = coincide ? '' : 'none';
-        });
-
-        if (criterio !== 'defecto') {
-            filas.sort((a, b) => {
-                if (criterio === 'torneo-asc') {
-                    return a.getAttribute('data-torneo').localeCompare(b.getAttribute('data-torneo'));
-                } else if (criterio === 'torneo-desc') {
-                    return b.getAttribute('data-torneo').localeCompare(a.getAttribute('data-torneo'));
-                } else if (criterio === 'participante-asc') {
-                    return a.getAttribute('data-sujeto').localeCompare(b.getAttribute('data-sujeto'));
-                }
-                return 0;
-            });
-            filas.forEach(fila => tbodyInscripciones.appendChild(fila));
+        if (evt && evt.currentTarget) {
+            evt.currentTarget.classList.add('active');
         }
+    };
+
+    // --- BUSCADOR Y ORDENAMIENTO EN TABLA TORNEOS ---
+    const buscarTorneo = document.getElementById('buscar-torneo');
+    const ordenarTorneo = document.getElementById('ordenar-torneo');
+    const tablaTorneos = document.getElementById('tabla-torneos');
+
+    if (buscarTorneo && tablaTorneos) {
+        buscarTorneo.addEventListener('input', () => {
+            const query = buscarTorneo.value.toLowerCase().trim();
+            const filas = tablaTorneos.querySelectorAll('tbody tr[data-nombre]');
+
+            filas.forEach(fila => {
+                const nombre = fila.getAttribute('data-nombre') || '';
+                fila.style.display = nombre.includes(query) ? '' : 'none';
+            });
+        });
     }
 
-    if (inputBuscarInscripcion && selectOrdenarInscripcion) {
-        inputBuscarInscripcion.addEventListener('input', filtrarYOrdenarInscripciones);
-        selectOrdenarInscripcion.addEventListener('change', filtrarYOrdenarInscripciones);
+    if (ordenarTorneo && tablaTorneos) {
+        ordenarTorneo.addEventListener('change', () => {
+            const tbody = tablaTorneos.querySelector('tbody');
+            const filas = Array.from(tbody.querySelectorAll('tr[data-nombre]'));
+            const criterio = ordenarTorneo.value;
+
+            filas.sort((a, b) => {
+                const nombreA = a.getAttribute('data-nombre') || '';
+                const nombreB = b.getAttribute('data-nombre') || '';
+                const fechaA = a.getAttribute('data-fecha') || '';
+                const fechaB = b.getAttribute('data-fecha') || '';
+
+                switch (criterio) {
+                    case 'nombre-asc':
+                        return nombreA.localeCompare(nombreB);
+                    case 'nombre-desc':
+                        return nombreB.localeCompare(nombreA);
+                    case 'fecha-asc':
+                        return fechaA.localeCompare(fechaB);
+                    case 'fecha-desc':
+                        return fechaB.localeCompare(fechaA);
+                    default:
+                        return 0;
+                }
+            });
+
+            filas.forEach(fila => tbody.appendChild(fila));
+        });
+    }
+
+    // --- BUSCADOR Y ORDENAMIENTO EN TABLA INSCRIPCIONES ---
+    const buscarInscripcion = document.getElementById('buscar-inscripcion');
+    const ordenarInscripcion = document.getElementById('ordenar-inscripcion');
+    const tablaInscripciones = document.getElementById('tabla-inscripciones');
+
+    if (buscarInscripcion && tablaInscripciones) {
+        buscarInscripcion.addEventListener('input', () => {
+            const query = buscarInscripcion.value.toLowerCase().trim();
+            const filas = tablaInscripciones.querySelectorAll('tbody tr[data-torneo]');
+
+            filas.forEach(fila => {
+                const torneo = fila.getAttribute('data-torneo') || '';
+                const sujeto = fila.getAttribute('data-sujeto') || '';
+                fila.style.display = (torneo.includes(query) || sujeto.includes(query)) ? '' : 'none';
+            });
+        });
+    }
+
+    if (ordenarInscripcion && tablaInscripciones) {
+        ordenarInscripcion.addEventListener('change', () => {
+            const tbody = tablaInscripciones.querySelector('tbody');
+            const filas = Array.from(tbody.querySelectorAll('tr[data-torneo]'));
+            const criterio = ordenarInscripcion.value;
+
+            filas.sort((a, b) => {
+                const torneoA = a.getAttribute('data-torneo') || '';
+                const torneoB = b.getAttribute('data-torneo') || '';
+                const sujetoA = a.getAttribute('data-sujeto') || '';
+                const sujetoB = b.getAttribute('data-sujeto') || '';
+
+                switch (criterio) {
+                    case 'torneo-asc':
+                        return torneoA.localeCompare(torneoB);
+                    case 'torneo-desc':
+                        return torneoB.localeCompare(torneoA);
+                    case 'participante-asc':
+                        return sujetoA.localeCompare(sujetoB);
+                    default:
+                        return 0;
+                }
+            });
+
+            filas.forEach(fila => tbody.appendChild(fila));
+        });
     }
 });
