@@ -6,8 +6,6 @@
     <title>SGDM - Bienvenido</title>
     
     <link rel="icon" type="image/jpeg" href="img/logoapp2.jpeg">
-
-    <!-- Enlace al archivo CSS en la carpeta css -->
     <link rel="stylesheet" href="css/bienvenida.css">
 </head>
 <body>
@@ -22,6 +20,22 @@
         
         <a href="php/inicio.php" class="btn-enter">Ingresar a la plataforma</a>
     </main>
+
+    <!-- Script para transición al salir -->
+    <script>
+        document.querySelector('.btn-enter').addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const targetUrl = this.getAttribute('href');
+            const welcomeCard = document.querySelector('.welcome-card');
+            
+            welcomeCard.classList.add('fade-out');
+            
+            setTimeout(function() {
+                window.location.href = targetUrl;
+            }, 380);
+        });
+    </script>
 
 </body>
 </html>

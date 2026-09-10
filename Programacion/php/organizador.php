@@ -1,6 +1,7 @@
 <?php
 require_once 'logica/auth.php';
 require_once 'db.php';
+require_once 'logica/gestorTorneos.php';
 
 requerirRol(['organizador', 'administrador']);
 
@@ -24,21 +25,36 @@ $mensajeExito = '';
 $mensajeError = '';
 $accion = $_POST['accion'] ?? '';
 
-// ==========================================
-// AUTO-ACTIVAR PRIMERA RONDA SI LLEGÓ LA FECHA
-// ==========================================
-try {
-    $sqlAutoActivar = "UPDATE rondas r
-                       INNER JOIN torneos t ON r.id_torneo = t.id_torneo
-                       SET r.estado_ronda = 'en_curso'
-                       WHERE t.fecha_inicio <= CURDATE() 
-                         AND r.numero_ronda = 1 
-                         AND r.estado_ronda = 'pendiente'";
-    $pdo->query($sqlAutoActivar);
-} catch (PDOException $e) {
-    // Silencioso
-}
+// 1. AUTO-INICIO AUTOMÁTICO (por fecha y hora)
+verificarYAutoIniciarTorneos($pdo);
 
+// 2. PROCESAMIENTO DE ACCIONES DEL ORGANIZADOR
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $accion = $_POST['accion'] ?? '';
+
+    // Cambiar estado manualmente o forzar inicio
+    if ($accion === 'cambiar_estado_torneo') {
+        $idTorneo = filter_var($_POST['id_torneo'] ?? 0, FILTER_VALIDATE_INT);
+        $nuevoEstado = $_POST['nuevo_estado'] ?? '';
+
+        if ($idTorneo && !empty($nuevoEstado)) {
+            if ($nuevoEstado === 'en_curso') {
+                // Forzar el inicio manual del torneo (incluso con participantes incompletos)
+                $res = iniciarTorneo($pdo, $idTorneo, true);
+                if ($res['exito']) {
+                    $mensajeExito = $res['mensaje'];
+                } else {
+                    $mensajeError = $res['mensaje'];
+                }
+            } else {
+                // Actualización manual simple a 'pendiente' o 'finalizado'
+                $stmtEst = $pdo->prepare("UPDATE torneos SET estado = ? WHERE id_torneo = ?");
+                $stmtEst->execute([$nuevoEstado, $idTorneo]);
+                $mensajeExito = "Estado del torneo actualizado a '$nuevoEstado'.";
+            }
+        }
+    }
+}
 // ==========================================
 // PROCESAMIENTO DE FORMULARIOS (POST)
 // ==========================================
@@ -99,13 +115,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $sqlBuscarResultado = "SELECT id_resultado FROM resultados WHERE id_enfrentamiento = :id";
                 $stmtBuscar = $pdo->prepare($sqlBuscarResultado);
 
-                $sqlInsertResultado = "INSERT INTO resultados (id_enfrentamiento, puntuacion_local, puntuacion_visitante, id_ganador, id_usuario_registro)
-                                       VALUES (:id, :m_local, :m_visita, :id_ganador, :id_usuario)";
+                $sqlInsertResultado = "INSERT INTO resultados (id_enfrentamiento, puntuacion, id_ganador, id_usuario_registro)
+                                       VALUES (:id, :m_local, :id_ganador, :id_usuario)";
                 $stmtInsert = $pdo->prepare($sqlInsertResultado);
 
                 $sqlUpdateResultado = "UPDATE resultados 
-                                       SET puntuacion_local = :m_local, 
-                                           puntuacion_visitante = :m_visita, 
+                                       SET puntuacion = :m_local, 
                                            id_ganador = :id_ganador, 
                                            id_usuario_registro = :id_usuario
                                        WHERE id_enfrentamiento = :id";
@@ -169,8 +184,8 @@ try {
                         COALESCE(vis_p.nombre, 'Por definir') AS equipo_visita,
                         r.nombre_ronda,
                         t.nombre_torneo,
-                        res.puntuacion_local AS marcador_local,
-                        res.puntuacion_visitante AS marcador_visita
+                        res.puntuacion AS marcador_local,
+                        0 AS marcador_visita
                     FROM enfrentamientos e
                     INNER JOIN rondas r ON e.id_ronda = r.id_ronda
                     INNER JOIN torneos t ON r.id_torneo = t.id_torneo
@@ -394,8 +409,25 @@ try {
                                                 </span>
                                             </td>
                                             <td data-etiqueta="Acción">
-                                                <a href="detalleTorneo.php?id=<?php echo $itemTorneo['id_torneo']; ?>" class="btn-secundario-chico">Ver Detalle</a>
-                                            </td>
+                                            <div style="display: flex; gap: 6px; align-items: center;">
+                                            <a href="detalleTorneo.php?id=<?php echo $itemTorneo['id_torneo']; ?>" class="btn-secundario-chico">Ver Detalle</a>
+                                            <form action="organizador.php" method="POST" style="margin: 0;">
+                                                <input type="hidden" name="accion" value="cambiar_estado_torneo">
+                                                <input type="hidden" name="id_torneo" value="<?php echo $itemTorneo['id_torneo']; ?>">
+                                            <?php if ($estado === 'pendiente'): ?>
+                                                <input type="hidden" name="nuevo_estado" value="en_curso">
+                                                    <button type="submit" class="btn-guardar" onclick="return confirm('¿Iniciar torneo manualmente con los participantes actuales?');">
+                                                        Iniciar Torneo
+                                                    </button>
+                                                <?php elseif ($estado === 'en_curso'): ?>
+                                            <input type="hidden" name="nuevo_estado" value="finalizado">
+                                                <button type="submit" class="btn-secundario-chico" style="background-color: #d90429; color: white;" onclick="return confirm('¿Desea marcar el torneo como finalizado?');">
+                                                    Finalizar
+                                                </button>
+                                            <?php endif; ?>
+                                            </form>
+                                        </div>
+                                    </td>
                                         </tr>
                                     <?php endforeach; ?>
                                 <?php else: ?>

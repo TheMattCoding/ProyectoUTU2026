@@ -285,9 +285,8 @@
 }
 
 .btn-guardar {
-    background-color: var(--blanco);
     color: #111111;
-    background-color: #7c7c7c;
+    background-color: #9C8255;
     padding: 10px 24px;
     border-radius: 20px;
     font-size: 13px;
@@ -296,7 +295,7 @@
     align-self: flex-start;
 }
 
-.btn-guardar:hover { background-color: #e0e0e0; }
+.btn-guardar:hover { background-color: #D4AF37; }
 
 .btn-peligro {
     background-color: #ff453a;
@@ -312,9 +311,8 @@
 .btn-peligro:hover { background-color: #ff3b30; }
 
 .btn-secundario-sm {
-    background-color: #c59b27;
+    background-color: #9C8255;
     color: var(--blanco);
-    border: 1px solid #9C8255;
     padding: 6px 14px;
     border-radius: 12px;
     font-size: 12px;

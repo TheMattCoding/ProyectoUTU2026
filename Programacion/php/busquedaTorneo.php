@@ -187,8 +187,8 @@ $torneos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 </p>
             <?php else: ?>
                 <?php foreach ($torneos as $torneo): 
-    $imagenPortada = '../img/logoapp2.jpeg'; // Imagen por defecto
-    $campoImagen   = $torneo['imagen_portada'] ?? $torneo['imagen'] ?? $torneo['portada'] ?? $torneo['foto_portada'] ?? null;
+                    $imagenPortada = '../img/logoapp2.jpeg'; // Imagen por defecto
+                    $campoImagen   = $torneo['imagen_portada'] ?? null;
 
                     if (!empty($campoImagen)) {
                         if (strpos($campoImagen, 'http') === 0) {
@@ -212,7 +212,10 @@ $torneos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         </div>
                         <div class="info-tarjeta">
                             <span class="fecha-torneo">
-                                <?php echo $torneo['fecha_inicio'] ? date('d/m', strtotime($torneo['fecha_inicio'])) : '--/--'; ?>
+                                <?php 
+                                    $timeInicio = !empty($torneo['fecha_inicio']) ? strtotime($torneo['fecha_inicio']) : false;
+                                    echo $timeInicio ? date('d/m', $timeInicio) : '--/--'; 
+                                ?>
                             </span>
                             <a href="detalleTorneo.php?id=<?php echo $torneo['id_torneo']; ?>" class="btn btn-secondary btn-ver-mas">Ver más</a>
                         </div>
