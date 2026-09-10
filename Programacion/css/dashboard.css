@@ -68,64 +68,67 @@
 .texto-exito { color: #2ecc71; }
 .texto-peligro { color: #ff6b6b; }
 
-/* --- 4. BLOQUE INTERMEDIO (GRÁFICO Y CONSOLA) --- */
-.seccion-intermedia {
+/* --- 4. NAVEGACIÓN POR PESTAÑAS (TABS) --- */
+.tab-navigation {
     display: flex;
-    gap: 30px;
+    gap: 12px;
+    border-bottom: 1px solid #262626;
+    padding-bottom: 12px;
+}
+
+.tab-btn {
+    background-color: #262626;
+    color: #aaaaaa;
+    border: 1px solid #333333;
+    padding: 9px 18px;
+    border-radius: 8px;
+    font-size: 13.5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.tab-btn:hover {
+    background-color: #333333;
+    color: #ffffff;
+}
+
+.tab-btn.active {
+    background-color: #D4AF37;
+    color: #111111;
+    font-weight: 700;
+    border-color: #D4AF37;
+}
+
+.tab-content {
     width: 100%;
 }
 
-.bloque-grafico {
-    flex: 2;
-}
-
-.bloque-consola {
-    flex: 1;
-}
-
-.grafico-marcador {
-    border: 2px dashed #262626;
-    border-radius: 14px;
-    height: 240px;
-    box-sizing: border-box;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: rgba(255, 255, 255, 0.01);
-}
-
-.texto-marcador {
-    color: #555555;
-    font-size: 14px;
-    font-weight: 500;
-}
-
-.consola-terminal {
+/* --- 5. MONITOREO Y MONITOREO EN TIEMPO REAL (GRAFANA) --- */
+.card-monitoreo {
     background-color: #111111;
-    border-radius: 14px;
-    padding: 15px;
-    height: 240px;
-    overflow-y: auto;
-    font-family: monospace;
-    font-size: 13px;
-    border: 1px solid #222222;
+    border-radius: 16px;
+    padding: 20px;
+    border: 1px solid #262626;
     box-sizing: border-box;
 }
 
-.linea-log {
-    margin-bottom: 10px;
-    padding-bottom: 6px;
-    border-bottom: 1px solid #1a1a1a;
-    line-height: 1.4;
-    color: #aaaaaa;
+.card-monitoreo iframe {
+    border-radius: 12px;
+    border: 1px solid #222222;
+    background-color: #181b1f;
 }
 
-.linea-log.linea-error { color: #ff6b6b; }
-.linea-log.linea-advertencia { color: #feca57; }
-
-/* --- 5. BLOQUE INFERIOR (TABLA DE HISTORIAL) --- */
+/* --- 6. BLOQUE DE TABLAS Y CONTENIDO --- */
 .seccion-tabla {
     width: 100%;
+}
+
+.seccion-tabla h3 {
+    margin-top: 0;
+    margin-bottom: 16px;
+    color: #ffffff;
+    font-size: 18px;
 }
 
 .tabla-panel {
@@ -158,117 +161,6 @@
     font-weight: 600;
 }
 
-/* ==========================================================================
-   6. RESPONSIVE COMPACTO (PANTALLAS CELULARES)
-   ========================================================================== */
-@media (max-width: 768px) {
-    .cabecera-panel h2 {
-        font-size: 22px;
-    }
-
-    .isla-organizador-unica {
-        padding: 20px 15px;
-        gap: 20px;
-        border-radius: 20px;
-    }
-
-    /* Transformación de KPIs de Grid a Filas Flexibles compactas */
-    .seccion-kpis {
-        grid-template-columns: 1fr;
-        gap: 12px;
-    }
-
-    .tarjeta-kpi {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding-bottom: 8px;
-        border-bottom: 1px solid #222222;
-    }
-
-    .tarjeta-kpi:last-child {
-        border-bottom: none;
-        padding-bottom: 0;
-    }
-
-    .tarjeta-kpi h3 {
-        margin: 0;
-    }
-
-    .valor-kpi {
-        font-size: 22px;
-    }
-
-    /* El gráfico y la consola se apilan verticalmente */
-    .seccion-intermedia {
-        flex-direction: column;
-        gap: 20px;
-    }
-
-    .grafico-marcador {
-        height: 180px;
-    }
-
-    .consola-terminal {
-        height: 150px;
-    }
-
-    /* Caja de seguridad para que la tabla no rompa el ancho total */
-    .contenedor-tabla-adaptable {
-        width: 100%;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-    }
-
-    .tabla-panel {
-        min-width: 450px;
-    }
-}
-.seccion-lista-torneos {
-    display: flex;
-    flex-direction: column;
-    gap: 12px; /* Separación entre tarjetas */
-    width: 100%;
-}
-
-.tarjeta-torneo-registro {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #222222; /* Un gris un poco más claro que la isla */
-    padding: 16px 20px;
-    border-radius: 12px;
-    border: 1px solid #2d2d2d;
-}
-
-.detalles-torneo {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-
-.detalles-torneo h4 {
-    margin: 0;
-    font-size: 14.5px;
-    color: #ffffff;
-    font-weight: 600;
-}
-
-.fecha-torneo {
-    font-size: 12px;
-    color: #888888;
-}
-
-/* Estados */
-.etiqueta-estado-exito {
-    background-color: rgba(46, 204, 113, 0.1);
-    color: #2ecc71;
-    padding: 4px 10px;
-    border-radius: 6px;
-    font-size: 11px;
-    font-weight: 600;
-}
-
 .etiqueta-estado-finalizado {
     background-color: rgba(136, 136, 136, 0.1);
     color: #aaaaaa;
@@ -277,6 +169,7 @@
     font-size: 11px;
     font-weight: 600;
 }
+
 /* Mensajes de Alerta */
 .alert-mensaje {
     padding: 12px;
@@ -296,26 +189,7 @@
     color: #ff6b6b;
 }
 
-/* Ajustes de Navbar Búsqueda */
-.nav-search-form {
-    display: flex;
-    flex: 1;
-    max-width: 420px;
-    margin: 0 12px;
-}
-
-.nav-search-container {
-    margin: 0;
-    width: 100%;
-}
-
-/* Textos e Informativos */
-.subtitulo-ayuda {
-    color: #aaa;
-    font-size: 12px;
-    margin-top: -8px;
-}
-
+/* Textos Informativos */
 .texto-secundario {
     color: #888;
     font-size: 12px;
@@ -334,7 +208,13 @@
 }
 
 .form-accion-inline {
-    display: inline;
+    display: inline-block;
+}
+
+.acciones-contenedor {
+    display: flex;
+    gap: 6px;
+    align-items: center;
 }
 
 .input-tabla,
@@ -343,11 +223,21 @@
     color: #fff;
     border: 1px solid #444;
     border-radius: 4px;
-    padding: 4px;
+    padding: 6px 8px;
+    font-size: 13.5px;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.input-tabla:focus,
+.select-tabla:focus {
+    border-color: #D4AF37;
 }
 
 .input-tabla.width-sm {
-    width: 90px;
+    min-width: 110px;
+    width: 100%;
+    max-width: 150px;
 }
 
 .input-tabla.width-xs {
@@ -358,18 +248,23 @@
 .btn-accion {
     color: #fff;
     border: none;
-    padding: 4px 8px;
+    padding: 6px 12px;
     border-radius: 4px;
     cursor: pointer;
     font-size: 13px;
-    transition: opacity 0.2s;
+    font-weight: 500;
+    transition: opacity 0.2s, transform 0.1s;
 }
 
 .btn-accion:hover {
-    opacity: 0.85;
+    opacity: 0.88;
 }
 
-.btn-guardar { background: #D4AF37; }
+.btn-accion:active {
+    transform: scale(0.98);
+}
+
+.btn-guardar { background: #D4AF37; color: #111; font-weight: 600; }
 .btn-eliminar { background: #e74c3c; }
 .btn-sacar    { background: #e67e22; }
 .btn-editar   { background: #3498db; }
@@ -414,4 +309,67 @@
 
 .select-ordenar-tabla:focus {
     border-color: #D4AF37;
+}
+
+/* --- 7. RESPONSIVE COMPACTO (DISPOSITIVOS MÓVILES) --- */
+@media (max-width: 768px) {
+    .cabecera-panel h2 {
+        font-size: 22px;
+    }
+
+    .isla-organizador-unica {
+        padding: 20px 15px;
+        gap: 20px;
+        border-radius: 20px;
+    }
+
+    .seccion-kpis {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .tarjeta-kpi {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 8px;
+        border-bottom: 1px solid #222222;
+    }
+
+    .tarjeta-kpi:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+    }
+
+    .tarjeta-kpi h3 {
+        margin: 0;
+    }
+
+    .valor-kpi {
+        font-size: 22px;
+    }
+
+    .tab-navigation {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .tab-btn {
+        width: 100%;
+        text-align: center;
+    }
+
+    .contenedor-tabla-adaptable {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .tabla-panel {
+        min-width: 450px;
+    }
+
+    .card-monitoreo iframe {
+        height: 450px;
+    }
 }
