@@ -216,7 +216,9 @@ if ($idUsuarioBD && isset($pdo)) {
             <input type="text" class="search-input" placeholder="Buscar un torneo" aria-label="Buscar torneos" name="query">
         </div>
     </form>
-
+        <a href="busquedaTorneo.php" class="btn-ver-torneos-nav">
+            Ver todos los torneos
+        </a>
    <div class="notifications-dropdown">
     <input type="checkbox" id="noti-toggle" class="dropdown-checkbox">
 

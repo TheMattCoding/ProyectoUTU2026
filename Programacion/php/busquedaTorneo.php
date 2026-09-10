@@ -116,7 +116,9 @@ $torneos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <input type="text" class="search-input" placeholder="Buscar un torneo" aria-label="Buscar torneos" name="query" value="<?= htmlspecialchars($busqueda) ?>">
             </div>
         </form>
-
+        <a href="busquedaTorneo.php" class="btn-ver-torneos-nav">
+            Ver todos los torneos
+        </a>
         <div class="notifications-dropdown">
     <input type="checkbox" id="noti-toggle" class="dropdown-checkbox">
 
