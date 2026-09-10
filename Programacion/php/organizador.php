@@ -1,6 +1,7 @@
 <?php
 require_once 'logica/auth.php';
 require_once 'db.php';
+require_once 'logica/notificaciones.php';
 require_once 'logica/gestorTorneos.php';
 
 requerirRol(['organizador', 'administrador']);
@@ -87,6 +88,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         ':id_torneo'       => $idTorneo,
                         ':id_participante' => $idParticipante
                     ]);
+                    $stmtInscribir->execute([
+                        ':id_torneo'       => $idTorneo,
+                        ':id_participante' => $idParticipante
+                    ]);
+
+                    // Notificar al participante inscrito
+                    mandarNotificacion($pdo, $idParticipante, "Has sido inscrito a un nuevo torneo.", "detalleTorneo.php?id=" . $idTorneo);
+
+                    $mensajeExito = "Participante inscrito correctamente en el torneo.";
 
                     $mensajeExito = "Participante inscrito correctamente en el torneo.";
                 }
