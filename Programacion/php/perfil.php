@@ -13,22 +13,34 @@ if ($idUsuarioActual) {
 }
 requerirLogin();
 
+
 $rolActual   = $_SESSION['rol'] ?? 'visitante';
 $idUsuarioBD = $_SESSION['id_usuario'] ?? null;
+
 
 $nombrePerfil = $_SESSION['usuario'] ?? 'Usuario';
 $correoPerfil = $_SESSION['correo'] ?? 'correo@ejemplo.com';
 $fotoPerfil   = $_SESSION['foto_perfil'] ?? null;
 
+
 $torneosActivos = [];
 $historialTorneos = [];
+$trofeosPrimero = [];
+$trofeosSegundo = [];
+$trofeosTercero = [];
+
+
+$posicionGlobal = 'S/R';
+$rankingGlobal = [];
+
 
 if ($idUsuarioBD && isset($pdo)) {
     try {
-        // 1. Obtener datos del usuario (incluyendo foto_perfil)
+        // 1. Obtener datos del usuario
         $stmtUser = $pdo->prepare("SELECT username, email, foto_perfil FROM usuarios WHERE id_usuario = ?");
         $stmtUser->execute([$idUsuarioBD]);
         $usuarioBD = $stmtUser->fetch(PDO::FETCH_ASSOC);
+
 
         if ($usuarioBD) {
             $nombrePerfil = $usuarioBD['username'];
@@ -36,69 +48,96 @@ if ($idUsuarioBD && isset($pdo)) {
             $fotoPerfil   = $usuarioBD['foto_perfil'] ?? $fotoPerfil;
         }
 
-        // 2. Obtener Torneos Activos donde está inscrito el participante
+
+        // 2. Torneos Activos
         $stmtActivos = $pdo->prepare("
-            SELECT t.id_torneo, t.nombre_torneo 
+            SELECT t.id_torneo, t.nombre_torneo
             FROM inscripciones_torneo i
             JOIN participantes p ON i.id_participante = p.id_participante
             JOIN torneos t ON i.id_torneo = t.id_torneo
-            WHERE p.id_usuario = :id_usuario
+            WHERE p.id_usuario = :id_usuario AND t.estado != 'finalizado'
         ");
         $stmtActivos->execute([':id_usuario' => $idUsuarioBD]);
         $torneosActivos = $stmtActivos->fetchAll(PDO::FETCH_ASSOC);
 
-        // 3. Obtener historial de torneos del usuario
+
+        // 3. Historial de Torneos con Posición y Puntos asignados
         $stmtHistorial = $pdo->prepare("
-            SELECT 
+            SELECT
                 t.id_torneo,
                 t.nombre_torneo,
                 t.fecha_inicio,
-                t.estado
+                t.estado,
+                m.nombre_modulo AS deporte,
+                i.posicion_final
             FROM inscripciones_torneo i
             JOIN participantes p ON i.id_participante = p.id_participante
             JOIN torneos t ON i.id_torneo = t.id_torneo
-            WHERE p.id_usuario = :id_usuario
-            AND t.estado = 'finalizado'
+            JOIN modulos_competencia m ON t.id_modulo = m.id_modulo
+            WHERE p.id_usuario = :id_usuario AND t.estado = 'finalizado'
             ORDER BY t.fecha_inicio DESC
         ");
-
         $stmtHistorial->execute([':id_usuario' => $idUsuarioBD]);
         $historialTorneos = $stmtHistorial->fetchAll(PDO::FETCH_ASSOC);
 
-    } catch (PDOException $e) {
-        // En caso de fallo de BD mantenemos variables por defecto
-    }
-}
 
-    $trofeosPrimero = [];
-    $trofeosSegundo = [];
-    $trofeosTercero = [];
-
-    $puntosPrimeroTotal = 0;
-    $puntosSegundoTotal = 0;
-    $puntosTerceroTotal = 0;
-
-    $listaTorneos = $historial ?? $historialTorneos ?? []; 
-
-    if (!empty($listaTorneos) && is_array($listaTorneos)) {
-        foreach ($listaTorneos as $torneo) {
-            $puesto = (int)($torneo['puesto'] ?? $torneo['posicion'] ?? $torneo['lugar'] ?? 0);
-
+        // Clasificación de Trofeos del Usuario
+        foreach ($historialTorneos as $torneo) {
+            $puesto = (int)($torneo['posicion_final'] ?? 0);
             if ($puesto === 1) {
                 $torneo['puntos'] = 15;
-                $puntosPrimeroTotal += 15;
                 $trofeosPrimero[] = $torneo;
             } elseif ($puesto === 2) {
                 $torneo['puntos'] = 10;
-                $puntosSegundoTotal += 10;
                 $trofeosSegundo[] = $torneo;
             } elseif ($puesto === 3) {
                 $torneo['puntos'] = 5;
-                $puntosTerceroTotal += 5;
                 $trofeosTercero[] = $torneo;
             }
         }
+
+
+        // 4. Obtener Ranking Global General
+        $queryRanking = "
+            SELECT
+                u.id_usuario,
+                u.username,
+                m.nombre_modulo AS deporte,
+                t.nombre_torneo,
+                SUM(
+                    CASE
+                        WHEN i.posicion_final = 1 THEN 15
+                        WHEN i.posicion_final = 2 THEN 10
+                        WHEN i.posicion_final = 3 THEN 5
+                        ELSE 0
+                    END
+                ) AS total_puntos
+            FROM usuarios u
+            JOIN participantes p ON u.id_usuario = p.id_usuario
+            JOIN inscripciones_torneo i ON p.id_participante = i.id_participante
+            JOIN torneos t ON i.id_torneo = t.id_torneo
+            JOIN modulos_competencia m ON t.id_modulo = m.id_modulo
+            WHERE t.estado = 'finalizado'
+            GROUP BY u.id_usuario, m.id_modulo
+            ORDER BY total_puntos DESC
+            LIMIT 10
+        ";
+        $rankingGlobal = $pdo->query($queryRanking)->fetchAll(PDO::FETCH_ASSOC);
+
+
+        // Calcular Posición Relativa del Usuario Conectado
+        foreach ($rankingGlobal as $index => $pos) {
+            if ($pos['id_usuario'] == $idUsuarioBD) {
+                $posicionGlobal = '#' . ($index + 1);
+                break;
+            }
+        }
+
+
+    } catch (PDOException $e) {
+        // Manejo silencioso de excepciones en la base de datos
     }
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -114,10 +153,13 @@ if ($idUsuarioBD && isset($pdo)) {
 </head>
 <body>
 
+
     <!-- 5. Menú lateral -->
     <input type="checkbox" id="menu-toggle" class="menu-checkbox">
 
+
     <div class="sidebar">
+
 
         <!--5. Movil cerrar menú -->
         <div class="sidebar-header">
@@ -129,16 +171,19 @@ if ($idUsuarioBD && isset($pdo)) {
             <a href="inicio.php" class="sidebar-link">Inicio</a>
             <a href="calendario.php" class="sidebar-link">Calendario de torneos</a>
 
+
             <!-- Solo Organizadores y Administradores -->
             <?php if (in_array($rolActual, ['organizador', 'administrador'])): ?>
                 <a href="organizador.php" class="sidebar-link">Panel Organizador</a>
             <?php endif; ?>
+
 
             <!-- Solo Administradores -->
             <?php if ($rolActual === 'administrador'): ?>
                 <a href="formularioTorneo.php" class="sidebar-link">Crea tu torneo</a>
                 <a href="dashboard.php" class="sidebar-link">Panel Administrador</a>
             <?php endif; ?>
+
 
             <!-- Usuarios registrados (No visitantes) -->
             <?php if ($rolActual !== 'visitante'): ?>
@@ -147,7 +192,9 @@ if ($idUsuarioBD && isset($pdo)) {
         </nav>
     </div>
 
+
     <label for="menu-toggle" class="sidebar-overlay"></label>
+
 
     <!-- 2. Navbar y Menú hamburguesa -->
 <nav class="navbar" aria-label="Navegación principal">
@@ -158,6 +205,7 @@ if ($idUsuarioBD && isset($pdo)) {
             <span class="line"></span>
         </div>
     </label>
+
 
     <!-- 3. Búsqueda de Torneo -->
     <form action="busquedaTorneo.php" method="GET" class="search-form" style="display: flex; flex: 1; max-width: 420px; margin: 0 12px;">
@@ -207,9 +255,11 @@ if ($idUsuarioBD && isset($pdo)) {
     </div>
 </div>
 
+
     <!-- 5. Apartado de perfil -->
     <div class="profile-dropdown">
         <input type="checkbox" id="profile-toggle" class="dropdown-checkbox">
+
 
         <label for="profile-toggle" class="profile-dropdown-button" aria-label="Menú de usuario">
             <div class="user-avatar">
@@ -223,7 +273,9 @@ if ($idUsuarioBD && isset($pdo)) {
             </div>
         </label>
 
+
         <label for="profile-toggle" class="dropdown-overlay"></label>
+
 
         <div class="profile-menu-card">
             <div class="profile-menu-header">
@@ -277,6 +329,7 @@ if ($idUsuarioBD && isset($pdo)) {
             </div>
             </div>
 
+
             <div class="seccion-perfil seccion-trofeos">
                 <h2 class="titulo-seccion">Tus trofeos</h2>
                 <div class="fila-trofeos">
@@ -287,12 +340,14 @@ if ($idUsuarioBD && isset($pdo)) {
                         </svg>
                     </button>
 
+
                     <!-- Trofeo 2.º lugar -->
                     <button type="button" class="btn-trofeo-modal" data-target="seccion-trofeo-2" title="Ver trofeos de 2.º lugar">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" style="width: 30px; height: 30px; fill: currentColor; vertical-align: middle;">
                             <path d="M320.3 192L235.7 51.1C229.2 40.3 215.6 36.4 204.4 42L117.8 85.3C105.9 91.2 101.1 105.6 107 117.5L176.6 256.6C146.5 290.5 128.3 335.1 128.3 384C128.3 490 214.3 576 320.3 576C426.3 576 512.3 490 512.3 384C512.3 335.1 494 290.5 464 256.6L533.6 117.5C539.5 105.6 534.7 91.2 522.9 85.3L436.2 41.9C425 36.3 411.3 40.3 404.9 51L320.3 192zM351.1 334.5C352.5 337.3 355.1 339.2 358.1 339.6L408.2 346.9C415.9 348 418.9 357.4 413.4 362.9L377.1 398.3C374.9 400.5 373.9 403.5 374.4 406.6L383 456.5C384.3 464.1 376.3 470 369.4 466.4L324.6 442.8C321.9 441.4 318.6 441.4 315.9 442.8L271.1 466.4C264.2 470 256.2 464.2 257.5 456.5L266.1 406.6C266.6 403.6 265.6 400.5 263.4 398.3L227.1 362.9C221.5 357.5 224.6 348.1 232.3 346.9L282.4 339.6C285.4 339.2 288.1 337.2 289.4 334.5L311.8 289.1C315.2 282.1 325.1 282.1 328.6 289.1L351 334.5z"/>
                         </svg>
                     </button>
+
 
                     <!-- Trofeo 3.er lugar -->
                     <button type="button" class="btn-trofeo-modal" data-target="seccion-trofeo-3" title="Ver trofeos de 3.er lugar">
@@ -304,195 +359,236 @@ if ($idUsuarioBD && isset($pdo)) {
             </div>
         </section>
 
-        <div class="fila-sub-islas">
+
+       <div class="fila-sub-islas">
             <section class="tarjeta-perfil isla-ranking">
                 <div class="ranking-header">
-                <div class="ranking-user-info">
-                    <span class="ranking-label">Tu Ranking Global:</span>
-                    <span class="ranking-posicion">#12</span>
+                    <div class="ranking-user-info">
+                        <span class="ranking-label">Tu Ranking Global:</span>
+                        <span class="ranking-posicion"><?= $posicionGlobal ?></span>
+                    </div>
+                    <div class="ranking-user-name">
+                        <span class="ranking-usuario-nombre"><?= htmlspecialchars($nombrePerfil) ?></span>
+                    </div>
                 </div>
-                <div class="ranking-user-name">
-                    <span class="ranking-usuario-nombre"><?= htmlspecialchars($nombrePerfil) ?></span>
-                </div>
-                </div>
-        </div>
-        <div class="ranking-tabs">
-            <button type="button" class="tab-btn active">Global</button>
-            <button type="button" class="tab-btn">Fútbol</button>
-            <button type="button" class="tab-btn">Básquetbol</button>
-            <button type="button" class="tab-btn">Vóley</button>
-        </div>
-        <div class="ranking-tabla-container">
-            <table class="tabla-ranking">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Jugador</th>
-                        <th>Deporte</th>
-                        <th>Puntos</th>
-                        <th>Torneo</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="top-3">
-                        <td class="posicion-num">1</td>
-                        <td class="col-jugador">
-                            <span class="nombre-jugador">MateoSilva</span>
-                        </td>
-                        <td>Fútbol</td>
-                        <td class="col-puntos">450 pts</td>
-                        <td>Copa de Verano</td>
-                    </tr>
-                    <tr class="top-3">
-                        <td class="posicion-num">2</td>
-                        <td class="col-jugador">
-                            <span class="nombre-jugador">Martina_</span>
-                        </td>
-                        <td>Básquetbol</td>
-                        <td class="col-puntos">320 pts</td>
-                        <td>Voley 2026</td>
-                    </tr>
-                    <tr class="top-3">
-                        <td class="posicion-num">3</td>
-                        <td class="col-jugador">
-                            <span class="nombre-jugador">LucasGamer</span>
-                        </td>
-                        <td>Vóley</td>
-                        <td class="col-puntos">180 pts</td>
-                        <td>Torneo Relámpago</td>
-                    </tr>
-                    <tr class="fuera_top-3">
-                        <td class="posicion-num">4</td>
-                        <td class="col-jugador">
-                            <span class="nombre-jugador">Valentina_22</span>
-                        </td>
-                        <td>Fútbol</td>
-                        <td class="col-puntos">50 pts</td>
-                        <td>Copa Invierno</td>
-                    </tr>
-                    <tr class="fuera_top-3">
-                        <td class="posicion-num">5</td>
-                        <td class="col-jugador">
-                            <span class="nombre-jugador">IgnacioPro</span>
-                        </td>
-                        <td>Básquetbol</td>
-                        <td class="col-puntos">35 pts</td>
-                        <td>Voley 2026</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        </section>
-           <section class="tarjeta-perfil isla-secundaria">
-                <h2 class="titulo-seccion">Tus torneos</h2>
-                <div class="cuerpo-isla">
-                    <?php if (!empty($torneosActivos)): ?>
-                        <ul style="list-style: none; padding: 0; margin: 0 0 15px 0;">
-                            <?php foreach ($torneosActivos as $torneo): ?>
-                                <li style="margin-bottom: 8px;">
-                                    <a href="detalleTorneo.php?id=<?= $torneo['id_torneo'] ?>" style="color: var(--gold-bright, #D4AF37); text-decoration: none; font-weight: bold; font-size: 14px;">
-                                        <?= htmlspecialchars($torneo['nombre_torneo']) ?>
-                                    </a>
-                                </li>
-                            <?php endforeach; ?>
-                        </ul>
-                    <?php else: ?>
-                        <p class="descripcion-isla">Revisa tus inscripciones activas, los fixtures asignados y tus próximas partidas en la comunidad.</p>
-                    <?php endif; ?>
-                </div>
-                <!-- Apunta directo a la pestaña "Mi Calendario" -->
-                <a href="calendario.php?vista=propio" class="enlace-accion-tarjeta">Ver torneos activos →</a>
-            </section>
 
-            <section class="tarjeta-perfil isla-secundaria">
-                <h2 class="titulo-seccion">Historial</h2>
-                <div class="cuerpo-isla">
-                    <p class="descripcion-isla">Consulta los resultados de tus competencias anteriores, tablas de posiciones y tus estadísticas de juego.</p>
+
+                <div class="ranking-tabs">
+                    <button type="button" class="tab-btn active" data-deporte="todos">Global</button>
+                    <button type="button" class="tab-btn" data-deporte="Fútbol">Fútbol</button>
+                    <button type="button" class="tab-btn" data-deporte="Básquetbol">Básquetbol</button>
+                    <button type="button" class="tab-btn" data-deporte="Vóley">Vóley</button>
+                    <button type="button" class="tab-btn" data-deporte="Videojuegos">Videojuegos</button>
                 </div>
-                <a href="#" class="enlace-accion-tarjeta" id="abrir-historial">
-                    Historial de torneos →
-                </a>
+
+
+                <div class="ranking-tabla-container">
+                    <table class="tabla-ranking">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Jugador</th>
+                                <th>Deporte</th>
+                                <th>Puntos</th>
+                                <th>Torneo</th>
+                            </tr>
+                        </thead>
+                        <tbody id="body-ranking">
+                            <?php if (!empty($rankingGlobal)): ?>
+                                <?php foreach ($rankingGlobal as $i => $row): ?>
+                                    <tr class="<?= $i < 3 ? 'top-3' : 'fuera_top-3' ?>" data-deporte="<?= htmlspecialchars($row['deporte']) ?>">
+                                        <td class="posicion-num"><?= $i + 1 ?></td>
+                                        <td class="col-jugador"><span class="nombre-jugador"><?= htmlspecialchars($row['username']) ?></span></td>
+                                        <td><?= htmlspecialchars($row['deporte']) ?></td>
+                                        <td class="col-puntos"><?= $row['total_puntos'] ?> pts</td>
+                                        <td><?= htmlspecialchars($row['nombre_torneo']) ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <tr><td colspan="5" style="text-align: center;">No hay registros cargados aún.</td></tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
             </section>
+           <!-- COLUMNA DERECHA: Agrupa Tus torneos e Historial -->
+            <div class="columna-derecha-islas">
+                <section class="tarjeta-perfil isla-secundaria">
+                    <h2 class="titulo-seccion">Tus torneos</h2>
+                    <div class="cuerpo-isla">
+                        <?php if (!empty($torneosActivos)): ?>
+                            <?php
+                                $limiteVisibles = 4;
+                                $torneosVisibles = array_slice($torneosActivos, 0, $limiteVisibles);
+                                $restantes = count($torneosActivos) - $limiteVisibles;
+                            ?>
+                            <ul class="lista-torneos-activos">
+                                <?php foreach ($torneosVisibles as $torneo): ?>
+                                    <li>
+                                        <a href="detalleTorneo.php?id=<?= $torneo['id_torneo'] ?>">
+                                            <?= htmlspecialchars($torneo['nombre_torneo']) ?>
+                                        </a>
+                                    </li>
+                                <?php endforeach; ?>
+                            </ul>
+
+
+                            <?php if ($restantes > 0): ?>
+                                <span class="badge-mas-torneos">+<?= $restantes ?> más</span>
+                            <?php endif; ?>
+                        <?php else: ?>
+                            <p class="descripcion-isla">Revisa tus inscripciones activas, los fixtures asignados y tus próximas partidas en la comunidad.</p>
+                        <?php endif; ?>
+                    </div>
+                    <!-- Apunta directo a la pestaña "Mi Calendario" -->
+                    <a href="calendario.php?vista=propio" class="enlace-accion-tarjeta">Ver torneos activos →</a>
+                </section>
+                <section class="tarjeta-perfil isla-secundaria">
+                    <h2 class="titulo-seccion">Historial</h2>
+                    <div class="cuerpo-isla">
+                        <p class="descripcion-isla">Consulta los resultados de tus competencias anteriores, tablas de posiciones y tus estadísticas de juego.</p>
+                    </div>
+                    <a href="#" class="enlace-accion-tarjeta" id="abrir-historial">
+                        Historial de torneos →
+                    </a>
+                </section>
+            </div>
+
+
             <!-- Ventana del historial de torneos -->
             <div id="fondo-historial" class="fondo-seccion"></div>
+
 
             <section id="seccion-historial" class="seccion-desplegable" aria-hidden="true">
                 <button type="button" id="cerrar-historial" class="boton-cerrar-seccion">
                     ×
                 </button>
 
+
                 <h2 class="titulo-seccion">Historial de torneos</h2>
+
 
                 <div class="cuerpo-isla">
 
+
                     <?php if (!empty($historialTorneos)): ?>
+
 
                         <?php foreach ($historialTorneos as $torneo): ?>
 
+
                             <div class="item-historial">
                                 <h3><?= htmlspecialchars($torneo['nombre_torneo']) ?></h3>
+
 
                                 <p>
                                     Fecha:
                                     <?= htmlspecialchars($torneo['fecha_inicio']) ?>
                                 </p>
 
-                                <a href="calendario.php?vista=torneo&id=<?= $torneo['id_torneo'] ?>">
+
+                                <a href="detalleTorneo.php?id=<?= $torneo['id_torneo'] ?>" class="enlace-accion-tarjeta">
                                     Ver torneo →
                                 </a>
                             </div>
 
+
                         <?php endforeach; ?>
 
+
                     <?php else: ?>
+
 
                         <p class="descripcion-isla">
                             Todavía no tenés torneos finalizados en tu historial.
                         </p>
 
+
                     <?php endif; ?>
+
 
                 </div>
             </section>
 
+
             <!-- Fondo oscuro para modales de trofeos -->
             <div id="fondo-trofeos" class="fondo-seccion"></div>
+
 
             <!-- Modal 1.er Lugar -->
             <section id="seccion-trofeo-1" class="seccion-desplegable modal-trofeo-estilo" aria-hidden="true">
                 <button type="button" class="cerrar-modal-trofeo boton-cerrar-seccion">×</button>
                 <h2 class="titulo-seccion">Trofeos de 1.er Lugar (15 pts c/u)</h2>
                 <div class="cuerpo-isla">
-                    <p class="descripcion-isla">No tenés trofeos de primer lugar registrados todavía.</p>
+                    <?php if (!empty($trofeosPrimero)): ?>
+                        <?php foreach ($trofeosPrimero as $t): ?>
+                            <div class="item-historial flex-entre">
+                                <div>
+                                    <h3><?= htmlspecialchars($t['nombre_torneo']) ?></h3>
+                                    <p>Deporte: <?= htmlspecialchars($t['deporte']) ?> | Fecha: <?= htmlspecialchars($t['fecha_inicio']) ?></p>
+                                </div>
+                                <span class="puntos-badge">+15 pts</span>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <p class="descripcion-isla">No tenés trofeos de primer lugar registrados todavía.</p>
+                    <?php endif; ?>
                 </div>
             </section>
+
 
             <!-- Modal 2.º Lugar -->
             <section id="seccion-trofeo-2" class="seccion-desplegable modal-trofeo-estilo" aria-hidden="true">
                 <button type="button" class="cerrar-modal-trofeo boton-cerrar-seccion">×</button>
                 <h2 class="titulo-seccion">Trofeos de 2.º Lugar (10 pts c/u)</h2>
                 <div class="cuerpo-isla">
-                    <p class="descripcion-isla">No tenés trofeos de segundo lugar registrados todavía.</p>
+                    <?php if (!empty($trofeosSegundo)): ?>
+                        <?php foreach ($trofeosSegundo as $t): ?>
+                            <div class="item-historial flex-entre">
+                                <div>
+                                    <h3><?= htmlspecialchars($t['nombre_torneo']) ?></h3>
+                                    <p>Deporte: <?= htmlspecialchars($t['deporte']) ?> | Fecha: <?= htmlspecialchars($t['fecha_inicio']) ?></p>
+                                </div>
+                                <span class="puntos-badge">+10 pts</span>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <p class="descripcion-isla">No tenés trofeos de segundo lugar registrados todavía.</p>
+                    <?php endif; ?>
                 </div>
             </section>
+
 
             <!-- Modal 3.er Lugar -->
             <section id="seccion-trofeo-3" class="seccion-desplegable modal-trofeo-estilo" aria-hidden="true">
                 <button type="button" class="cerrar-modal-trofeo boton-cerrar-seccion">×</button>
                 <h2 class="titulo-seccion">Trofeos de 3.er Lugar (5 pts c/u)</h2>
                 <div class="cuerpo-isla">
-                    <p class="descripcion-isla">No tenés trofeos de tercer lugar registrados todavía.</p>
+                    <?php if (!empty($trofeosTercero)): ?>
+                        <?php foreach ($trofeosTercero as $t): ?>
+                            <div class="item-historial flex-entre">
+                                <div>
+                                    <h3><?= htmlspecialchars($t['nombre_torneo']) ?></h3>
+                                    <p>Deporte: <?= htmlspecialchars($t['deporte']) ?> | Fecha: <?= htmlspecialchars($t['fecha_inicio']) ?></p>
+                                </div>
+                                <span class="puntos-badge">+5 pts</span>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <p class="descripcion-isla">No tenés trofeos de tercer lugar registrados todavía.</p>
+                    <?php endif; ?>
                 </div>
             </section>
         </div>
     </div>
     </main>
 
+
 <!-- 7. Footer -->
     <footer class="main-footer">
         <div class="footer-content">
             <img src="../img/epsilonSoftware2.png" alt="Logo Epsilon Software" class="footer-logo">
-        
+       
             <div class="footer-right-group">
                 <nav class="footer-links" aria-label="Enlaces de pie de página">
                     <button type="button" id="btn-seccion-nosotros" class="footer-link-btn">Sobre nosotros</button>
@@ -503,8 +599,10 @@ if ($idUsuarioBD && isset($pdo)) {
         </div>
     </footer>
 
+
     <!-- Fondo Oscurecido para Modales -->
     <div id="fondo-seccion-nosotros" class="fondo-seccion"></div>
+
 
     <!-- Modal Sobre Nosotros -->
     <section id="seccion-sobre-nosotros" class="seccion-desplegable" aria-hidden="true">
@@ -513,20 +611,24 @@ if ($idUsuarioBD && isset($pdo)) {
             <button type="button" id="btn-cerrar-seccion-nosotros" class="btn-cerrar-seccion" aria-label="Cerrar sección">&times;</button>
         </div>
 
+
         <div class="seccion-contenido">
             <div class="logo-empresa-contenedor">
                 <img src="../img/epsilonSoftware2.png" alt="Logo Epsilon Software" class="logo-modal">
             </div>
+
 
             <div class="bloque-nosotros">
                 <h4 class="subtitulo-nosotros">Misión</h4>
                 <p class="texto-nosotros">Proporcionar a comunidades y organizadores una plataforma intuitiva y eficiente para la gestión integral de torneos deportivos y de eSports, centralizando fixtures, inscripciones y resultados en un solo lugar.</p>
             </div>
 
+
             <div class="bloque-nosotros">
                 <h4 class="subtitulo-nosotros">Visión</h4>
                 <p class="texto-nosotros">Ser la solución digital referente en el desarrollo y automatización de eventos competitivos, impulsando el crecimiento del talento deportivo y gaming en la región.</p>
             </div>
+
 
             <div class="detalles-nosotros">
                 <div class="item-detalle">
@@ -545,6 +647,7 @@ if ($idUsuarioBD && isset($pdo)) {
         </div>
     </section>
 
+
     <!-- Modal Ayuda y Soporte -->
     <section id="seccion-ayuda" class="seccion-desplegable" aria-hidden="true">
         <div class="seccion-encabezado">
@@ -552,21 +655,24 @@ if ($idUsuarioBD && isset($pdo)) {
             <button type="button" id="btn-cerrar-seccion-ayuda" class="btn-cerrar-seccion" aria-label="Cerrar sección">&times;</button>
         </div>
 
+
         <div class="seccion-contenido">
             <!-- 1. Preguntas Frecuentes (FAQ) -->
             <div class="bloque-nosotros">
                 <h4 class="subtitulo-nosotros">Preguntas Frecuentes</h4>
-                
+               
                 <details class="item-faq">
                     <summary class="pregunta-faq">¿Cómo me inscribo a un torneo?</summary>
                     <p class="texto-nosotros">Ve a la sección de torneos, selecciona la competencia deseada y presiona en "Inscribirse".</p>
                 </details>
+
 
                 <details class="item-faq">
                     <summary class="pregunta-faq">¿Cómo edito la información de mi perfil?</summary>
                     <p class="texto-nosotros">Haz clic en la seccion de configuración del menú lateral y accede a la pestaña "Editar perfil" para actualizar tus datos personales.</p>
                 </details>
             </div>
+
 
             <!-- 2. Soporte Técnico y Contacto Directo -->
             <div class="bloque-nosotros">
@@ -582,6 +688,7 @@ if ($idUsuarioBD && isset($pdo)) {
                     </div>
                 </div>
             </div>
+
 
             <!-- 3 y 4. Guías, Tutoriales y Reporte de Errores -->
             <div class="bloque-nosotros">
@@ -601,10 +708,12 @@ if ($idUsuarioBD && isset($pdo)) {
         </div>
     </section>
 
+
     <!-- JavaScript -->
     <script src="../js/seccionSobreNosotros.js"></script>
     <script src="../js/seccionAyuda.js"></script>
     <script src="../js/perfil.js"></script>
-    
+
+
 </body>
 </html>

@@ -79,5 +79,31 @@ document.addEventListener('DOMContentLoaded', function () {
         const fondoTrofeos = document.getElementById('fondo-trofeos');
         if (fondoTrofeos) fondoTrofeos.classList.remove('activo');
     }
+// --- FILTRADO DE RANKING POR DEPORTE/DISCIPLINA ---
+    const botonesTab = document.querySelectorAll('.ranking-tabs .tab-btn');
+    const filasRanking = document.querySelectorAll('#body-ranking tr');
 
+    botonesTab.forEach(boton => {
+        boton.addEventListener('click', function () {
+            // 1. Quitar la clase active a todos los botones y asignarla al seleccionado
+            botonesTab.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+
+            const deporteSeleccionado = this.getAttribute('data-deporte').trim().toLowerCase();
+
+            // 2. Mostrar u ocultar filas según el deporte seleccionado
+            filasRanking.forEach(fila => {
+                const deporteFila = fila.getAttribute('data-deporte');
+                
+                // Si la fila no tiene el atributo data-deporte (ej. mensaje de tabla vacía), la ignoramos
+                if (!deporteFila) return;
+
+                if (deporteSeleccionado === 'todos' || deporteFila.trim().toLowerCase() === deporteSeleccionado) {
+                    fila.style.display = '';
+                } else {
+                    fila.style.display = 'none';
+                }
+            });
+        });
+    });
 });
