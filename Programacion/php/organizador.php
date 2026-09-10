@@ -3,6 +3,7 @@ require_once 'logica/auth.php';
 require_once 'db.php';
 require_once 'logica/notificaciones.php';
 require_once 'logica/gestorTorneos.php';
+require_once 'logica/avanzarTorneo.php';
 
 requerirRol(['organizador', 'administrador']);
 
@@ -24,23 +25,23 @@ if (!empty($fotoPerfilRaw)) {
 
 $mensajeExito = '';
 $mensajeError = '';
-$accion = $_POST['accion'] ?? '';
+$pestanaActiva = 'torneos'; // Pestaña por defecto
 
 // 1. AUTO-INICIO AUTOMÁTICO (por fecha y hora)
 verificarYAutoIniciarTorneos($pdo);
 
-// 2. PROCESAMIENTO DE ACCIONES DEL ORGANIZADOR
+// 2. PROCESAMIENTO DE FORMULARIOS (POST)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $accion = $_POST['accion'] ?? '';
 
-    // Cambiar estado manualmente o forzar inicio
+    // A) Cambiar estado manualmente o forzar inicio
     if ($accion === 'cambiar_estado_torneo') {
+        $pestanaActiva = 'torneos';
         $idTorneo = filter_var($_POST['id_torneo'] ?? 0, FILTER_VALIDATE_INT);
         $nuevoEstado = $_POST['nuevo_estado'] ?? '';
 
         if ($idTorneo && !empty($nuevoEstado)) {
             if ($nuevoEstado === 'en_curso') {
-                // Forzar el inicio manual del torneo (incluso con participantes incompletos)
                 $res = iniciarTorneo($pdo, $idTorneo, true);
                 if ($res['exito']) {
                     $mensajeExito = $res['mensaje'];
@@ -48,28 +49,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $mensajeError = $res['mensaje'];
                 }
             } else {
-                // Actualización manual simple a 'pendiente' o 'finalizado'
                 $stmtEst = $pdo->prepare("UPDATE torneos SET estado = ? WHERE id_torneo = ?");
                 $stmtEst->execute([$nuevoEstado, $idTorneo]);
                 $mensajeExito = "Estado del torneo actualizado a '$nuevoEstado'.";
             }
         }
     }
-}
-// ==========================================
-// PROCESAMIENTO DE FORMULARIOS (POST)
-// ==========================================
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    // 1. Inscripción manual de participantes
+    // B) Inscripción manual de participantes
     if ($accion === 'inscribir_participante') {
+        $pestanaActiva = 'participantes';
         $idTorneo = filter_var($_POST['id_torneo'] ?? 0, FILTER_VALIDATE_INT);
         $idParticipante = filter_var($_POST['id_participante'] ?? 0, FILTER_VALIDATE_INT);
 
         if ($idTorneo && $idParticipante) {
             try {
-                // Verificar si el participante ya se encuentra inscrito en el torneo
-                $sqlVerificar = "SELECT COUNT(*) FROM INSCRIPCIONES_TORNEO 
+                $sqlVerificar = "SELECT COUNT(*) FROM inscripciones_torneo 
                                  WHERE id_torneo = :id_torneo AND id_participante = :id_participante";
                 $stmtVerificar = $pdo->prepare($sqlVerificar);
                 $stmtVerificar->execute([
@@ -80,24 +75,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if ($stmtVerificar->fetchColumn() > 0) {
                     $mensajeError = "El participante ya está inscrito en este torneo.";
                 } else {
-                    // Inserta en la tabla de inscripciones
-                    $sqlInscribir = "INSERT INTO INSCRIPCIONES_TORNEO (id_torneo, id_participante, estado_inscripcion) 
-                                     VALUES (:id_torneo, :id_participante, 'confirmado')";
+                    // Se agrega fecha_inscripcion (NOW() / CURRENT_TIMESTAMP) para evitar fallos por NOT NULL
+                    $sqlInscribir = "INSERT INTO inscripciones_torneo (id_torneo, id_participante, estado_inscripcion, fecha_inscripcion) 
+                                     VALUES (:id_torneo, :id_participante, 'confirmado', NOW())";
                     $stmtInscribir = $pdo->prepare($sqlInscribir);
                     $stmtInscribir->execute([
                         ':id_torneo'       => $idTorneo,
                         ':id_participante' => $idParticipante
                     ]);
-                    $stmtInscribir->execute([
-                        ':id_torneo'       => $idTorneo,
-                        ':id_participante' => $idParticipante
-                    ]);
 
-                    // Notificar al participante inscrito
                     mandarNotificacion($pdo, $idParticipante, "Has sido inscrito a un nuevo torneo.", "detalleTorneo.php?id=" . $idTorneo);
-
-                    $mensajeExito = "Participante inscrito correctamente en el torneo.";
-
                     $mensajeExito = "Participante inscrito correctamente en el torneo.";
                 }
             } catch (PDOException $e) {
@@ -108,8 +95,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // 2. Cargar/Guardar resultados múltiples
+    // C) Cargar/Guardar resultados múltiples
     if ($accion === 'guardar_resultados') {
+        $pestanaActiva = 'fixtures';
         $resultados = $_POST['resultados'] ?? [];
 
         if (!empty($resultados) && is_array($resultados)) {
@@ -121,20 +109,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                               WHERE id_enfrentamiento = :id";
                 $stmtEstado = $pdo->prepare($sqlEstado);
 
-                // Consulta para verificar existencia o realizar actualización/inserción
-                $sqlBuscarResultado = "SELECT id_resultado FROM resultados WHERE id_enfrentamiento = :id";
-                $stmtBuscar = $pdo->prepare($sqlBuscarResultado);
-
                 $sqlInsertResultado = "INSERT INTO resultados (id_enfrentamiento, puntuacion, id_ganador, id_usuario_registro)
                                        VALUES (:id, :m_local, :id_ganador, :id_usuario)";
                 $stmtInsert = $pdo->prepare($sqlInsertResultado);
 
-                $sqlUpdateResultado = "UPDATE resultados 
-                                       SET puntuacion = :m_local, 
-                                           id_ganador = :id_ganador, 
-                                           id_usuario_registro = :id_usuario
-                                       WHERE id_enfrentamiento = :id";
-                $stmtUpdate = $pdo->prepare($sqlUpdateResultado);
+                $torneosAfectados = [];
 
                 foreach ($resultados as $idEnfrentamiento => $datos) {
                     $mLocal = filter_var($datos['local'] ?? null, FILTER_VALIDATE_INT);
@@ -144,19 +123,51 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     if ($idEnfrentamiento && $mLocal !== false && $mVisita !== false) {
                         $stmtEstado->execute([':id' => $idEnfrentamiento]);
+
+                        $idGanador = null;
+                        if ($mLocal > $mVisita) {
+                            $idGanador = $idLocal;
+                        } elseif ($mVisita > $mLocal) {
+                            $idGanador = $idVisitante;
+                        }
+
+                        $stmtInsert->execute([
+                            ':id' => $idEnfrentamiento,
+                            ':m_local' => $mLocal,
+                            ':id_ganador' => $idGanador,
+                            ':id_usuario' => $idUsuarioActual
+                        ]);
+
+                        $stmtTorneoId = $pdo->prepare("
+                            SELECT r.id_torneo 
+                            FROM rondas r 
+                            JOIN enfrentamientos e ON e.id_ronda = r.id_ronda 
+                            WHERE e.id_enfrentamiento = ?
+                        ");
+                        $stmtTorneoId->execute([$idEnfrentamiento]);
+                        $idTorneoAfectado = $stmtTorneoId->fetchColumn();
+                        if ($idTorneoAfectado) {
+                            $torneosAfectados[$idTorneoAfectado] = true;
+                        }
                     }
                 }
 
                 $pdo->commit();
+
+                foreach (array_keys($torneosAfectados) as $idT) {
+                    verificarYAvanzarTorneo($pdo, (int)$idT);
+                }
+
                 $mensajeExito = "Marcadores guardados con éxito.";
             } catch (PDOException $e) {
-                $pdo->rollBack();
+                if ($pdo->inTransaction()) {
+                    $pdo->rollBack();
+                }
                 $mensajeError = "Error al guardar los marcadores: " . $e->getMessage();
             }
         }
     }
 }
-
 
 // ==========================================
 // CONSULTA DE TORNEOS, PARTIDOS Y PARTICIPANTES
@@ -181,11 +192,9 @@ try {
     }
     $torneosAsignados = $stmtT->fetchAll(PDO::FETCH_ASSOC);
 
-    // 2. Obtener lista de Participantes registrados
     $stmtP = $pdo->query("SELECT id_participante, CONCAT(nombre, ' ', apellido) AS nombre_participante FROM participantes ORDER BY nombre ASC, apellido ASC");
     $listaParticipantes = $stmtP->fetchAll(PDO::FETCH_ASSOC);
 
-    // 3. Obtener partidos pendientes
     $sqlPartidos = "SELECT 
                         e.id_enfrentamiento,
                         e.id_local,
@@ -242,7 +251,7 @@ try {
         <div class="mensaje-sql-error"><?= htmlspecialchars($errorBaseDatos) ?></div>
     <?php endif; ?>
 
-    <!-- 5. Menú lateral -->
+    <!-- Menú lateral -->
     <input type="checkbox" id="menu-toggle" class="menu-checkbox">
 
     <div class="sidebar">
@@ -361,10 +370,11 @@ try {
     </nav>
 
     <main class="main-container">
-        <input type="radio" name="grupo-pestanas-organizador" id="radio-pestana-torneos" checked class="control-radio-pestana">
-        <input type="radio" name="grupo-pestanas-organizador" id="radio-pestana-fixtures" class="control-radio-pestana">
-        <input type="radio" name="grupo-pestanas-organizador" id="radio-pestana-participantes" class="control-radio-pestana">
-        <input type="radio" name="grupo-pestanas-organizador" id="radio-pestana-reportes" class="control-radio-pestana">
+        <!-- Control dinámico de pestaña activa según $pestanaActiva -->
+        <input type="radio" name="grupo-pestanas-organizador" id="radio-pestana-torneos" <?= $pestanaActiva === 'torneos' ? 'checked' : '' ?> class="control-radio-pestana">
+        <input type="radio" name="grupo-pestanas-organizador" id="radio-pestana-fixtures" <?= $pestanaActiva === 'fixtures' ? 'checked' : '' ?> class="control-radio-pestana">
+        <input type="radio" name="grupo-pestanas-organizador" id="radio-pestana-participantes" <?= $pestanaActiva === 'participantes' ? 'checked' : '' ?> class="control-radio-pestana">
+        <input type="radio" name="grupo-pestanas-organizador" id="radio-pestana-reportes" <?= $pestanaActiva === 'reportes' ? 'checked' : '' ?> class="control-radio-pestana">
 
         <div class="contenedor-organizador">
             
@@ -378,6 +388,19 @@ try {
 
             <section class="tarjeta-contenido-organizador">
                 
+                <!-- Mensajes de Alertas Generales (visibles arriba de cualquier pestaña activa) -->
+                <?php if (!empty($mensajeExito)): ?>
+                    <div style="background-color: #1b4332; color: #2ec4b6; border: 1px solid #2ec4b6; padding: 12px 15px; border-radius: 6px; margin-bottom: 20px;">
+                        ✓ <?php echo htmlspecialchars($mensajeExito); ?>
+                    </div>
+                <?php endif; ?>
+
+                <?php if (!empty($mensajeError)): ?>
+                    <div style="background-color: #4a151b; color: #ff6b6b; border: 1px solid #ff6b6b; padding: 12px 15px; border-radius: 6px; margin-bottom: 20px;">
+                        ✕ <?php echo htmlspecialchars($mensajeError); ?>
+                    </div>
+                <?php endif; ?>
+
                 <!-- Pestaña: Torneos Asignados -->
                 <div class="seccion-organizador panel-torneos">
                     <div class="encabezado-seccion-enlinea">
@@ -398,6 +421,17 @@ try {
                             <tbody>
                                 <?php if (!empty($torneosAsignados)): ?>
                                     <?php foreach ($torneosAsignados as $itemTorneo): ?>
+                                        <?php 
+                                            // Normalizar formato de estado (reemplazar espacios por guiones bajos)
+                                            $estadoRaw = strtolower(trim($itemTorneo['estado'] ?? 'pendiente'));
+                                            $estadoNorm = str_replace(' ', '_', $estadoRaw);
+
+                                            $claseInsignia = match($estadoNorm) {
+                                                'en_curso' => 'insignia-exito',
+                                                'abierto', 'inscripciones', 'pendiente' => 'insignia-advertencia',
+                                                default => 'insignia-secundario'
+                                            };
+                                        ?>
                                         <tr>
                                             <td data-etiqueta="Torneo">
                                                 <strong><?php echo htmlspecialchars($itemTorneo['nombre_torneo'] ?? 'Sin nombre'); ?></strong>
@@ -406,38 +440,31 @@ try {
                                                 <?php echo htmlspecialchars($itemTorneo['disciplina'] ?? 'General'); ?>
                                             </td>
                                             <td data-etiqueta="Estado">
-                                                <?php 
-                                                    $estado = strtolower($itemTorneo['estado'] ?? 'pendiente');
-                                                    $claseInsignia = match($estado) {
-                                                        'en curso' => 'insignia-exito',
-                                                        'abierto', 'inscripciones' => 'insignia-advertencia',
-                                                        default => 'insignia-secundario'
-                                                    };
-                                                ?>
                                                 <span class="insignia <?php echo $claseInsignia; ?>">
-                                                    <?php echo ucfirst($estado); ?>
+                                                    <?php echo ucfirst(str_replace('_', ' ', $estadoNorm)); ?>
                                                 </span>
                                             </td>
                                             <td data-etiqueta="Acción">
-                                            <div style="display: flex; gap: 6px; align-items: center;">
-                                            <a href="detalleTorneo.php?id=<?php echo $itemTorneo['id_torneo']; ?>" class="btn-secundario-chico">Ver Detalle</a>
-                                            <form action="organizador.php" method="POST" style="margin: 0;">
-                                                <input type="hidden" name="accion" value="cambiar_estado_torneo">
-                                                <input type="hidden" name="id_torneo" value="<?php echo $itemTorneo['id_torneo']; ?>">
-                                            <?php if ($estado === 'pendiente'): ?>
-                                                <input type="hidden" name="nuevo_estado" value="en_curso">
-                                                    <button type="submit" class="btn-guardar" onclick="return confirm('¿Iniciar torneo manualmente con los participantes actuales?');">
-                                                        Iniciar Torneo
-                                                    </button>
-                                                <?php elseif ($estado === 'en_curso'): ?>
-                                            <input type="hidden" name="nuevo_estado" value="finalizado">
-                                                <button type="submit" class="btn-secundario-chico" style="background-color: #d90429; color: white;" onclick="return confirm('¿Desea marcar el torneo como finalizado?');">
-                                                    Finalizar
-                                                </button>
-                                            <?php endif; ?>
-                                            </form>
-                                        </div>
-                                    </td>
+                                                <div style="display: flex; gap: 6px; align-items: center;">
+                                                    <a href="detalleTorneo.php?id=<?php echo $itemTorneo['id_torneo']; ?>" class="btn-secundario-chico">Ver Detalle</a>
+                                                    <form action="organizador.php" method="POST" style="margin: 0;">
+                                                        <input type="hidden" name="accion" value="cambiar_estado_torneo">
+                                                        <input type="hidden" name="id_torneo" value="<?php echo $itemTorneo['id_torneo']; ?>">
+                                                        
+                                                        <?php if (in_array($estadoNorm, ['pendiente', 'abierto', 'inscripciones'])): ?>
+                                                            <input type="hidden" name="nuevo_estado" value="en_curso">
+                                                            <button type="submit" class="btn-guardar" onclick="return confirm('¿Iniciar torneo manualmente con los participantes actuales?');">
+                                                                Iniciar Torneo
+                                                            </button>
+                                                        <?php elseif ($estadoNorm === 'en_curso'): ?>
+                                                            <input type="hidden" name="nuevo_estado" value="finalizado">
+                                                            <button type="submit" class="btn-secundario-chico" style="background-color: #d90429; color: white;" onclick="return confirm('¿Desea marcar el torneo como finalizado?');">
+                                                                Finalizar
+                                                            </button>
+                                                        <?php endif; ?>
+                                                    </form>
+                                                </div>
+                                            </td>
                                         </tr>
                                     <?php endforeach; ?>
                                 <?php else: ?>
@@ -491,18 +518,6 @@ try {
                 <div class="seccion-organizador panel-participantes">
                     <h3 class="titulo-seccion">Inscribir Participantes</h3>
                     <p class="subtitulo-seccion">Seleccioná un participante registrado para agregarlo al torneo.</p>
-
-                    <?php if (!empty($mensajeExito)): ?>
-                        <div style="background-color: #1b4332; color: #2ec4b6; border: 1px solid #2ec4b6; padding: 10px; border-radius: 6px; margin-bottom: 15px;">
-                            ✓ <?php echo htmlspecialchars($mensajeExito); ?>
-                        </div>
-                    <?php endif; ?>
-
-                    <?php if (!empty($mensajeError)): ?>
-                        <div style="background-color: #4a151b; color: #ff6b6b; border: 1px solid #ff6b6b; padding: 10px; border-radius: 6px; margin-bottom: 15px;">
-                            ✕ <?php echo htmlspecialchars($mensajeError); ?>
-                        </div>
-                    <?php endif; ?>
 
                     <form action="organizador.php" method="POST" class="formulario-organizador">
                         <input type="hidden" name="accion" value="inscribir_participante">
@@ -619,7 +634,6 @@ try {
         </div>
 
         <div class="seccion-contenido">
-            <!-- 1. Preguntas Frecuentes (FAQ) -->
             <div class="bloque-nosotros">
                 <h4 class="subtitulo-nosotros">Preguntas Frecuentes</h4>
                 
@@ -634,7 +648,6 @@ try {
                 </details>
             </div>
 
-            <!-- 2. Soporte Técnico y Contacto Directo -->
             <div class="bloque-nosotros">
                 <h4 class="subtitulo-nosotros">Soporte Técnico y Contacto Directo</h4>
                 <div class="detalles-nosotros">
@@ -649,7 +662,6 @@ try {
                 </div>
             </div>
 
-            <!-- 3 y 4. Guías, Tutoriales y Reporte de Errores -->
             <div class="bloque-nosotros">
                 <h4 class="subtitulo-nosotros">Recursos y Reporte de Errores</h4>
                 <p class="texto-nosotros">¿Encontraste un fallo o un error? Puedes notificarlo o consultar nuestra documentación oficial:</p>

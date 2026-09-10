@@ -26,19 +26,6 @@ if (!empty($fotoPerfilRaw)) {
 $mensaje = '';
 $tipoMensaje = '';
 
-// Función auxiliar para determinar el nombre de la ronda
-function obtenerNombreRondaPorNumero($numeroActual, $totalRondas) {
-    $distanciaAlFinal = $totalRondas - $numeroActual;
-
-    return match ($distanciaAlFinal) {
-        1 => 'Final',
-        2 => 'Semifinal',
-        3 => 'Cuartos de Final',
-        4 => 'Octavos de Final',
-        default => "Ronda $numeroActual"
-    };
-}
-
 // Procesar el formulario cuando se envía mediante POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nombre = trim($_POST['nombre_torneo'] ?? '');
@@ -48,7 +35,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $fecha = $_POST['fecha_inicio'] ?? '';
     $hora = $_POST['hora_inicio'] ?? '';
     $cantidad = !empty($_POST['max_participantes']) ? (int)$_POST['max_participantes'] : NULL;
-    $cantRondas = !empty($_POST['cantidad_rondas']) ? (int)$_POST['cantidad_rondas'] : 1;
     $privacidad = $_POST['privacidad'] ?? '';
     $descripcion = trim($_POST['descripcion'] ?? '');
 
@@ -78,17 +64,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (empty($mensaje)) {
-    if ($disciplina === 'Otra') {
-        $disciplina = trim($_POST['otra_disciplina'] ?? '');
-    }
+        if ($disciplina === 'Otra') {
+            $disciplina = trim($_POST['otra_disciplina'] ?? '');
+        }
 
-    if (empty($disciplina)) {
-        $mensaje = "Por favor, indica la disciplina.";
-        $tipoMensaje = "error";
-    } elseif (!preg_match('/^[\p{L}\p{N}\s\-]+$/u', $disciplina)) {
-        $mensaje = "La disciplina solo puede contener letras, números, espacios y guiones.";
-        $tipoMensaje = "error";
-    }
+        if (empty($disciplina)) {
+            $mensaje = "Por favor, indica la disciplina.";
+            $tipoMensaje = "error";
+        } elseif (!preg_match('/^[\p{L}\p{N}\s\-]+$/u', $disciplina)) {
+            $mensaje = "La disciplina solo puede contener letras, números, espacios y guiones.";
+            $tipoMensaje = "error";
+        }
     }
 
     if (empty($fecha)) {
@@ -123,11 +109,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $mensaje = "Los equipos deben tener al menos 1 participante.";
             $tipoMensaje = "error";
         }
-    }
-
-    if ($cantRondas < 1 || $cantRondas > 20) {
-        $mensaje = "La cantidad de rondas debe estar entre 1 y 20.";
-        $tipoMensaje = "error";
     }
 
     if (empty($formato) || empty($modalidad) || empty($privacidad)) {
@@ -176,20 +157,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmtConfig = $pdo->prepare($sqlConfig);
             $stmtConfig->execute([$idTorneo, $cantidad, $formato]);
 
-            // 4. Crear automáticamente las rondas del torneo
-            $sqlRonda = "INSERT INTO rondas (id_torneo, numero_ronda, nombre_ronda, estado_ronda) VALUES (?, ?, ?, ?)";
-            $stmtRonda = $pdo->prepare($sqlRonda);
-
-            // Se calcula el momento de inicio combinado (fecha + hora)
-            $inicioTorneoTimestamp = strtotime("$fecha $hora");
-            $ahoraTimestamp = time();
-
-            for ($i = 1; $i <= $cantRondas; $i++) {
-                $nombreRonda = obtenerNombreRondaPorNumero($i, $cantRondas);
-                $estadoInicial = ($i === 1 && $inicioTorneoTimestamp <= $ahoraTimestamp) ? 'en_curso' : 'pendiente';
-                $stmtRonda->execute([$idTorneo, $i, $nombreRonda, $estadoInicial]);
-            }
-
             $pdo->commit();
 
             $mensaje = "¡El torneo '$nombre' se ha creado correctamente!";
@@ -217,34 +184,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
 
-    <!-- 5. Menú lateral -->
+    <!-- Menú lateral -->
     <input type="checkbox" id="menu-toggle" class="menu-checkbox">
 
     <div class="sidebar">
 
-        <!-- 5. Móvil cerrar menú -->
         <div class="sidebar-header">
             <span class="sidebar-title">Menú</span>
             <label for="menu-toggle" class="close-sidebar-btn" aria-label="Cerrar menú">X</label>
         </div>
         
         <nav class="sidebar-nav">
-            <!-- Visible para todos (incluyendo visitantes) -->
             <a href="inicio.php" class="sidebar-link">Inicio</a>
             <a href="calendario.php" class="sidebar-link">Calendario de torneos</a>
 
-            <!-- Solo Organizadores y Administradores -->
             <?php if (in_array($rolActual, ['organizador', 'administrador'])): ?>
                 <a href="organizador.php" class="sidebar-link">Panel Organizador</a>
             <?php endif; ?>
 
-            <!-- Solo Administradores -->
             <?php if ($rolActual === 'administrador'): ?>
                 <a href="formularioTorneo.php" class="sidebar-link active">Crea tu torneo</a>
                 <a href="dashboard.php" class="sidebar-link">Panel Administrador</a>
             <?php endif; ?>
 
-            <!-- Solo Usuarios Registrados (no visitantes) -->
             <?php if ($rolActual !== 'visitante'): ?>
                 <a href="configuracion.php" class="sidebar-link">Configuración</a>
             <?php endif; ?>
@@ -449,11 +411,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
 
                         <div class="grupo-formulario columna-expandible">
-                            <label for="cantidad_rondas">Cantidad de Rondas</label>
-                            <input type="number" id="cantidad_rondas" name="cantidad_rondas" min="1" max="20" value="1" required>
-                        </div>
-
-                        <div class="grupo-formulario columna-expandible">
                             <label for="privacidad">Privacidad</label>
                             <select id="privacidad" name="privacidad" required>
                                 <option value="" disabled selected>Seleccione la privacidad</option>
@@ -514,10 +471,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </footer>
 
-    <!-- Fondo Oscurecido para Modales -->
+    <!-- Modales -->
     <div id="fondo-seccion-nosotros" class="fondo-seccion"></div>
 
-    <!-- Modal Sobre Nosotros -->
     <section id="seccion-sobre-nosotros" class="seccion-desplegable" aria-hidden="true">
         <div class="seccion-encabezado">
             <h3 class="seccion-titulo">Sobre Nosotros</h3>
@@ -556,7 +512,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </section>
 
-    <!-- Modal Ayuda y Soporte -->
     <section id="seccion-ayuda" class="seccion-desplegable" aria-hidden="true">
         <div class="seccion-encabezado">
             <h3 class="seccion-titulo">Centro de Ayuda</h3>
@@ -564,7 +519,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
 
         <div class="seccion-contenido">
-            <!-- 1. Preguntas Frecuentes (FAQ) -->
             <div class="bloque-nosotros">
                 <h4 class="subtitulo-nosotros">Preguntas Frecuentes</h4>
                 
@@ -579,7 +533,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </details>
             </div>
 
-            <!-- 2. Soporte Técnico y Contacto Directo -->
             <div class="bloque-nosotros">
                 <h4 class="subtitulo-nosotros">Soporte Técnico y Contacto Directo</h4>
                 <div class="detalles-nosotros">
@@ -594,7 +547,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
             </div>
 
-            <!-- 3 y 4. Guías, Tutoriales y Reporte de Errores -->
             <div class="bloque-nosotros">
                 <h4 class="subtitulo-nosotros">Recursos y Reporte de Errores</h4>
                 <p class="texto-nosotros">¿Encontraste un fallo o un error? Puedes notificarlo o consultar nuestra documentación oficial:</p>
@@ -612,7 +564,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </section>
 
-    <!-- JavaScript -->
     <script src="../js/seccionSobreNosotros.js"></script>
     <script src="../js/seccionAyuda.js"></script>
 </body>

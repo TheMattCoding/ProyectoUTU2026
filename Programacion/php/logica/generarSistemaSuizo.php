@@ -22,9 +22,10 @@ function obtenerPuntajesSuizo(PDO $pdo, int $idTorneo): array {
 
     // 2. Obtener todos los equipos inscritos
     $stmtEquipos = $pdo->prepare("
-        SELECT id_equipo FROM inscripciones_torneo 
-        WHERE id_torneo = ? AND id_equipo IS NOT NULL
-    ");
+        SELECT COALESCE(id_equipo, id_participante) AS id_participante 
+        FROM inscripciones_torneo 
+        WHERE id_torneo = ? AND (id_equipo IS NOT NULL OR id_participante IS NOT NULL)
+        ");
     $stmtEquipos->execute([$idTorneo]);
     $equipos = $stmtEquipos->fetchAll(PDO::FETCH_COLUMN);
 
