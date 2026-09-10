@@ -413,6 +413,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <option value="" disabled selected>Seleccione el formato</option>
                                     <option value="eliminatoria">Eliminación directa</option>
                                     <option value="liga">Liga (Todos contra todos)</option>
+                                    <option value="suizo">Sistema Suizo</option>
                                 </select>
                             </div>
                             <div class="grupo-formulario columna-expandible">

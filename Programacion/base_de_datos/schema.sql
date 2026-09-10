@@ -83,6 +83,7 @@ CREATE TABLE inscripciones_torneo (
     id_equipo INT,
     id_participante INT,
     estado_inscripcion VARCHAR(20) DEFAULT 'pendiente',
+    posicion_final INT DEFAULT NULL AFTER estado_inscripcion,
     FOREIGN KEY (id_torneo) REFERENCES torneos(id_torneo) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (id_equipo) REFERENCES equipos(id_equipo) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (id_participante) REFERENCES participantes(id_participante) ON DELETE CASCADE ON UPDATE CASCADE
