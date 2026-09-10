@@ -2,6 +2,59 @@
 session_start();
 require_once '../db.php';
 
+session_start();
+require_once '../db.php';
+require_once 'notificaciones.php'; // 1. Incluimos las funciones de notificación
+
+if (!isset($_SESSION['id_usuario']) || $_SERVER['REQUEST_METHOD'] !== 'POST') {
+    header('Location: ../../login.php');
+    exit;
+}
+
+$id_torneo = filter_input(INPUT_POST, 'id_torneo', FILTER_VALIDATE_INT);
+$id_usuario = $_SESSION['id_usuario'];
+
+if (!$id_torneo) {
+    header('Location: ../busquedaTorneo.php');
+    exit;
+}
+
+try {
+    $stmtPart = $pdo->prepare("SELECT id_participante FROM participantes WHERE id_usuario = ?");
+    $stmtPart->execute([$id_usuario]);
+    $participante = $stmtPart->fetch(PDO::FETCH_ASSOC);
+
+    if (!$participante) {
+        $stmtInsPart = $pdo->prepare("INSERT INTO participantes (id_usuario) VALUES (?)");
+        $stmtInsPart->execute([$id_usuario]);
+        $id_participante = $pdo->lastInsertId();
+    } else {
+        $id_participante = $participante['id_participante'];
+    }
+
+    $stmtCheck = $pdo->prepare("SELECT COUNT(*) FROM inscripciones_torneo WHERE id_torneo = ? AND id_participante = ?");
+    $stmtCheck->execute([$id_torneo, $id_participante]);
+
+    if ($stmtCheck->fetchColumn() > 0) {
+        header('Location: ../detalleTorneo.php?id=' . $id_torneo . '&estado=error');
+        exit;
+    }
+
+    // Insertar la inscripción
+    $stmtInscripcion = $pdo->prepare("INSERT INTO inscripciones_torneo (id_torneo, id_participante, estado_inscripcion) VALUES (?, ?, 'Confirmado')");
+    $stmtInscripcion->execute([$id_torneo, $id_participante]);
+
+    // 2. Enviar notificación
+    mandarNotificacion($pdo, $id_usuario, "Te has inscrito exitosamente al torneo.", "detalleTorneo.php?id=" . $id_torneo);
+
+    header('Location: ../detalleTorneo.php?id=' . $id_torneo . '&estado=inscrito');
+    exit;
+
+} catch (PDOException $e) {
+    header('Location: ../detalleTorneo.php?id=' . $id_torneo . '&estado=error');
+    exit;
+}
+?>
 // Validar que exista la sesión de usuario y se envíe por POST
 if (!isset($_SESSION['id_usuario']) || $_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Location: ../../login.php');
