@@ -104,9 +104,15 @@
 }
 
 .fecha-torneo {
-    color: var(--white);
+    color: #ffffff !important;
+    background-color: rgba(0, 0, 0, 0.65);
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 13px;
     font-weight: bold;
-    font-size: 14px;
+    backdrop-filter: blur(4px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    letter-spacing: 0.5px;
 }
 
 .btn-ver-mas {

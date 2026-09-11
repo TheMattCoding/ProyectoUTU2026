@@ -145,17 +145,6 @@ $inscripciones = $stmtInscripciones->fetchAll();
             <a href="dashboard.php" class="sidebar-link active">Panel Administrador</a>
             <a href="configuracion.php" class="sidebar-link">Configuración</a>
         </nav>
-
-        <div class="sidebar-footer">
-            <div class="theme-switch-container">
-                <span class="theme-label">Modo Oscuro</span>
-                <button class="theme-toggle-btn" aria-label="Cambiar tema">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 18px; height: 18px; fill: currentColor; vertical-align: middle;">
-                        <path d="M256 0C114.6 0 0 114.6 0 256S114.6 512 256 512c68.8 0 131.3-27.2 177.3-71.4 7.3-7 9.4-17.9 5.3-27.1s-13.7-14.9-23.8-14.1c-4.9 .4-9.8 .6-14.8 .6-101.6 0-184-82.4-184-184 0-72.1 41.5-134.6 102.1-164.8 9.1-4.5 14.3-14.3 13.1-24.4S322.6 8.5 312.7 6.3C294.4 2.2 275.4 0 256 0z"/>
-                    </svg>
-                </button>
-            </div>
-        </div>
     </div>
 
     <label for="menu-toggle" class="sidebar-overlay"></label>
@@ -300,8 +289,6 @@ $inscripciones = $stmtInscripciones->fetchAll();
                 </div>
             </section>
 
-            <hr class="divisor-isla">
-
             <!-- Navegación por pestañas -->
             <div class="tab-navigation">
                 <button class="tab-btn active" onclick="mostrarPestana(event, 'gestion')">Gestión del Panel</button>
@@ -311,8 +298,16 @@ $inscripciones = $stmtInscripciones->fetchAll();
             <!-- PESTAÑA 1: GESTIÓN -->
             <div id="pestana-gestion" class="tab-content active">
                 
+                <!-- Botones de Filtrado de Tablas -->
+                <div class="subtab-navigation">
+                    <button class="subtab-btn active" onclick="filtrarTablaGestion(event, 'torneos')">Gestión de Torneos</button>
+                    <button class="subtab-btn" onclick="filtrarTablaGestion(event, 'inscripciones')">Inscripción a Torneos</button>
+                    <button class="subtab-btn" onclick="filtrarTablaGestion(event, 'participantes')">Gestión Global de Participantes</button>
+                    <button class="subtab-btn btn-todos" onclick="filtrarTablaGestion(event, 'todos')">Ver Todas</button>
+                </div>
+
                 <!-- 2. Gestión de Torneos -->
-                <section class="seccion-tabla">
+                <section class="seccion-tabla subseccion-gestion" id="subseccion-torneos">
                     <h3>Gestión de Torneos</h3>
 
                     <div class="barra-filtros">
@@ -375,10 +370,8 @@ $inscripciones = $stmtInscripciones->fetchAll();
                     </div>
                 </section>
 
-                <hr class="divisor-isla">
-
                 <!-- 3. Sacar Participantes de un Torneo -->
-                <section class="seccion-tabla">
+                <section class="seccion-tabla subseccion-gestion" id="subseccion-inscripciones" style="display: none;">
                     <h3>Inscripciones a Torneos</h3>
 
                     <div class="barra-filtros">
@@ -428,10 +421,8 @@ $inscripciones = $stmtInscripciones->fetchAll();
                     </div>
                 </section>
 
-                <hr class="divisor-isla">
-
-                <!-- 4. Gestión de Participantes -->
-                <section class="seccion-tabla">
+                <!-- 4. Gestión Global de Participantes -->
+                <section class="seccion-tabla subseccion-gestion" id="subseccion-participantes" style="display: none;">
                     <h3>Gestión Global de Participantes</h3>
                     <div class="contenedor-tabla-adaptable">
                         <table class="tabla-panel">
@@ -615,24 +606,6 @@ $inscripciones = $stmtInscripciones->fetchAll();
         </div>
     </section>
 
-    <!-- JavaScript -->
-    <script>
-        function mostrarPestana(evt, nombrePestana) {
-            const contenidos = document.querySelectorAll('.tab-content');
-            contenidos.forEach(c => c.style.display = 'none');
-
-            const botones = document.querySelectorAll('.tab-btn');
-            botones.forEach(b => b.classList.remove('active'));
-
-            if (nombrePestana === 'gestion') {
-                document.getElementById('pestana-gestion').style.display = 'block';
-            } else if (nombrePestana === 'monitoreo') {
-                document.getElementById('pestana-monitoreo').style.display = 'block';
-            }
-
-            evt.currentTarget.classList.add('active');
-        }
-    </script>
     <script src="../js/seccionSobreNosotros.js"></script>
     <script src="../js/seccionAyuda.js"></script>
     <script src="../js/dashboard.js"></script>

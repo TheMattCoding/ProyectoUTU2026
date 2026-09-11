@@ -73,6 +73,7 @@
 }
 
 .avatar-usuario-grande {
+    position: relative;
     width: 100px;
     height: 100px;
     background-color: var(--bg-dark, #151515);
@@ -84,6 +85,34 @@
     justify-content: center;
     font-size: 45px;
     box-shadow: 0 0 15px rgb(255, 255, 255);
+}
+
+.btn-lupa-editar {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 32px;
+    height: 32px;
+    background-color: #ffffff;
+    color: var(--bg-dark, #151515);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--search-bg, #222222);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    transition: transform 0.2s ease, background-color 0.2s ease;
+    text-decoration: none;
+}
+
+.btn-lupa-editar svg {
+    width: 18px;
+    height: 18px;
+}
+
+.btn-lupa-editar:hover {
+    transform: scale(1.15);
+    background-color:var(--gold-bright);
 }
 
 .svg-avatar {
@@ -194,7 +223,6 @@
     color: #ffffff;
 }
 
-/* Indicador de torneos adicionales */
 .badge-mas-torneos {
     display: inline-block;
     font-size: 12px;

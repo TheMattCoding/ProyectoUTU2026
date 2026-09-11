@@ -339,7 +339,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <!-- Deportes -->
                                 <option value="Fútbol">Fútbol</option>
                                 <option value="Básquetbol">Básquetbol</option>
-                                <option value="Vóleibol">Vóleibol</option>
+                                <option value="Vóley">Vóley</option>
                                 <option value="Handball">Handball</option>
                                 <option value="Rugby">Rugby</option>
                                 <option value="Hockey">Hockey</option>

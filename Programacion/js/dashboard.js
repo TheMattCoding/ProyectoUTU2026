@@ -17,6 +17,29 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    // --- FILTRADO DE TABLAS EN PESTAÑA GESTIÓN ---
+    window.filtrarTablaGestion = function (evt, seccion) {
+        const secciones = document.querySelectorAll('.subseccion-gestion');
+        const botones = document.querySelectorAll('.subtab-btn');
+
+        // Desactivar estado activo de botones
+        botones.forEach(b => b.classList.remove('active'));
+
+        if (seccion === 'todos') {
+            secciones.forEach(s => s.style.display = 'block');
+        } else {
+            secciones.forEach(s => s.style.display = 'none');
+            const objetivo = document.getElementById(`subseccion-${seccion}`);
+            if (objetivo) {
+                objetivo.style.display = 'block';
+            }
+        }
+
+        if (evt && evt.currentTarget) {
+            evt.currentTarget.classList.add('active');
+        }
+    };
+
     // --- BUSCADOR Y ORDENAMIENTO EN TABLA TORNEOS ---
     const buscarTorneo = document.getElementById('buscar-torneo');
     const ordenarTorneo = document.getElementById('ordenar-torneo');
