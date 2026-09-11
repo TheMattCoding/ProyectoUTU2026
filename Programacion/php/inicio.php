@@ -183,7 +183,7 @@ $imgProximo = obtenerImagenPortada($proximoTorneo);
             </div>
         </form>
         <a href="busquedaTorneo.php" class="btn-ver-torneos-nav">
-            Ver todos los torneos
+            Ver torneos
         </a>
         <!-- 4. Campana de Notificaciones -->
         <div class="notifications-dropdown">

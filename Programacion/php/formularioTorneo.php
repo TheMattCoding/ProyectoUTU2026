@@ -234,7 +234,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         </form>
         <a href="busquedaTorneo.php" class="btn-ver-torneos-nav">
-            Ver todos los torneos
+            Ver torneos
         </a>
         <div class="notifications-dropdown">
             <input type="checkbox" id="noti-toggle" class="dropdown-checkbox">

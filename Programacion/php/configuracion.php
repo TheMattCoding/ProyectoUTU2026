@@ -115,7 +115,7 @@ unset($_SESSION['mensaje_exito'], $_SESSION['mensaje_error'], $_SESSION['pestana
             </div>
         </form>
             <a href="busquedaTorneo.php" class="btn-ver-torneos-nav">
-                Ver todos los torneos
+                Ver torneos
             </a>
 
         <!-- Campana de Notificaciones -->
