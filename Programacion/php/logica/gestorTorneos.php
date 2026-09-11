@@ -31,7 +31,7 @@ function iniciarTorneo(PDO $pdo, int $idTorneo, bool $forzarManual = false): arr
     // 2. Contar participantes confirmados
     $stmtInscritos = $pdo->prepare("
         SELECT COUNT(*) FROM inscripciones_torneo 
-        WHERE id_torneo = ? AND id_equipo IS NOT NULL
+        WHERE id_torneo = ? AND (id_equipo IS NOT NULL OR id_participante IS NOT NULL)
     ");
     $stmtInscritos->execute([$idTorneo]);
     $cantidadInscritos = (int)$stmtInscritos->fetchColumn();
@@ -51,19 +51,25 @@ function iniciarTorneo(PDO $pdo, int $idTorneo, bool $forzarManual = false): arr
     }
 
     // 4. Ejecutar generador según el formato
+    $formato = strtolower(trim($torneo['formato'] ?? ''));
     $resultado = false;
-    switch ($torneo['formato']) {
+
+    switch ($formato) {
         case 'eliminatoria':
+        case 'eliminacion_directa':
+        case 'eliminacion directa':
             $resultado = generarFixtureEliminacionDirecta($pdo, $idTorneo);
             break;
         case 'liga':
             $resultado = generarFixtureLiga($pdo, $idTorneo);
             break;
         case 'suizo':
+        case 'sistema_suizo':
+        case 'sistema suizo':
             $resultado = generarRondaSuizo($pdo, $idTorneo);
             break;
         default:
-            return ['exito' => false, 'mensaje' => 'Formato de torneo no válido.'];
+            return ['exito' => false, 'mensaje' => "Formato de torneo no válido: '$formato'"];
     }
 
     if ($resultado) {

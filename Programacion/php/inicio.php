@@ -182,7 +182,9 @@ $imgProximo = obtenerImagenPortada($proximoTorneo);
                 <input type="text" class="search-input" placeholder="Buscar un torneo" aria-label="Buscar torneos" name="query">
             </div>
         </form>
-
+        <a href="busquedaTorneo.php" class="btn-ver-torneos-nav">
+            Ver torneos
+        </a>
         <!-- 4. Campana de Notificaciones -->
         <div class="notifications-dropdown">
         <input type="checkbox" id="noti-toggle" class="dropdown-checkbox">

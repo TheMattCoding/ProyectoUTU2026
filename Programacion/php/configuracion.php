@@ -38,10 +38,13 @@ $apellido   = $usuarioDatos['apellido'] ?? $_SESSION['apellido'] ?? '';
 $telefono   = $usuarioDatos['telefono'] ?? $_SESSION['telefono'] ?? '';
 $fotoPerfil = $usuarioDatos['foto_perfil'] ?? $_SESSION['foto_perfil'] ?? null;
 
-// Mensajes de feedback
+// Mensajes de feedback y persistencia de estado
 $mensajeExito = $_SESSION['mensaje_exito'] ?? null;
 $mensajeError = $_SESSION['mensaje_error'] ?? null;
-unset($_SESSION['mensaje_exito'], $_SESSION['mensaje_error']);
+$pestanaActiva = $_SESSION['pestana_activa'] ?? 'perfil';
+$ultimoInputId = $_SESSION['ultimo_input_id'] ?? null;
+
+unset($_SESSION['mensaje_exito'], $_SESSION['mensaje_error'], $_SESSION['pestana_activa'], $_SESSION['ultimo_input_id']);
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -56,7 +59,7 @@ unset($_SESSION['mensaje_exito'], $_SESSION['mensaje_error']);
 </head>
 <body>
 
-    <!-- 5. Menú lateral -->
+    <!-- Menú lateral -->
     <input type="checkbox" id="menu-toggle" class="menu-checkbox">
 
     <div class="sidebar">
@@ -92,129 +95,113 @@ unset($_SESSION['mensaje_exito'], $_SESSION['mensaje_error']);
 
     <label for="menu-toggle" class="sidebar-overlay"></label>
 
-    <!-- 2. Navbar y Menú hamburguesa -->
+    <!-- Navbar y Menú hamburguesa -->
     <nav class="navbar" aria-label="Navegación principal">
-    <label for="menu-toggle" class="nav-button" aria-label="Abrir menú de navegación">
-        <div class="hamburger-box">
-            <span class="line"></span>
-            <span class="line"></span>
-            <span class="line"></span>
-        </div>
-    </label>
-
-    <!-- 3. Búsqueda de Torneo -->
-    <form action="busquedaTorneo.php" method="GET" class="search-form" style="display: flex; flex: 1; max-width: 420px; margin: 0 12px;">
-        <div class="search-container" style="margin: 0; width: 100%;">
-            <svg class="search-google-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" fill="#777777"/>
-            </svg>
-            <input type="text" class="search-input" placeholder="Buscar un torneo" aria-label="Buscar torneos" name="query">
-        </div>
-    </form>
-
-    <!-- 4. Campana de Notificaciones -->
-    <div class="notifications-dropdown">
-    <input type="checkbox" id="noti-toggle" class="dropdown-checkbox">
-
-    <label for="noti-toggle" class="notifications-dropdown-button" aria-label="Notificaciones">
-        <div class="notifications-icon-wrapper">
-            <svg class="bell-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z" fill="#cccccc"/>
-            </svg>
-            <?php if ($cant_sin_leer > 0): ?>
-                <span class="notification-dot"></span>
-            <?php endif; ?>
-        </div>
-    </label>
-
-    <label for="noti-toggle" class="dropdown-overlay"></label>
-
-    <div class="notifications-menu-card">
-        <div class="notifications-menu-header">
-            <span class="notifications-menu-title">Notificaciones</span>
-        </div>
-        <div class="notifications-menu-divider"></div>
-        <div class="notifications-menu-list">
-            <?php if (empty($mis_notis)): ?>
-                <div style="padding: 15px; text-align: center; color: #777;">No hay notificaciones.</div>
-            <?php else: ?>
-                <?php foreach ($mis_notis as $n): ?>
-                    <a href="<?= htmlspecialchars($n['enlace']) ?>" class="notification-item <?= $n['leida'] ? '' : 'unread' ?>">
-                        <div class="noti-indicator"></div>
-                        <div class="noti-content">
-                            <p class="noti-text"><?= htmlspecialchars($n['mensaje']) ?></p>
-                        </div>
-                    </a>
-                <?php endforeach; ?>
-            <?php endif; ?>
-        </div>
-    </div>
-</div>
-
-    <!-- 5. Apartado de perfil en Navbar -->
-    <div class="profile-dropdown">
-        <input type="checkbox" id="profile-toggle" class="dropdown-checkbox">
-
-        <label for="profile-toggle" class="profile-dropdown-button" aria-label="Menú de usuario">
-            <div class="user-avatar">
-                <?php if (!empty($fotoPerfil) && file_exists('../' . $fotoPerfil)): ?>
-                    <img src="../<?= htmlspecialchars($fotoPerfil) ?>" alt="Avatar" class="img-avatar">
-                <?php else: ?>
-                    <svg class="avatar-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
-                        <path d="M320 312C386.3 312 440 258.3 440 192C440 125.7 386.3 72 320 72C253.7 72 200 125.7 200 192C200 258.3 253.7 312 320 312zM290.3 368C191.8 368 112 447.8 112 546.3C112 562.7 125.3 576 141.7 576L498.3 576C514.7 576 528 562.7 528 546.3C528 447.8 448.2 368 349.7 368L290.3 368z" />
-                    </svg>
-                <?php endif; ?>
+        <label for="menu-toggle" class="nav-button" aria-label="Abrir menú de navegación">
+            <div class="hamburger-box">
+                <span class="line"></span>
+                <span class="line"></span>
+                <span class="line"></span>
             </div>
         </label>
 
-        <label for="profile-toggle" class="dropdown-overlay"></label>
-
-        <div class="profile-menu-card">
-            <div class="profile-menu-header">
-                <span class="profile-menu-name">
-                    <?= htmlspecialchars($_SESSION['nombre'] ?? $_SESSION['usuario'] ?? 'Invitado') ?>
-                </span>
+        <!-- Búsqueda de Torneo -->
+        <form action="busquedaTorneo.php" method="GET" class="search-form" style="display: flex; flex: 1; max-width: 420px; margin: 0 12px;">
+            <div class="search-container" style="margin: 0; width: 100%;">
+                <svg class="search-google-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" fill="#777777"/>
+                </svg>
+                <input type="text" class="search-input" placeholder="Buscar un torneo" aria-label="Buscar torneos" name="query">
             </div>
-            <div class="profile-menu-divider"></div>
-            <nav class="profile-menu-links">
-                <?php if ($rolActual === 'visitante'): ?>
-                    <a href="logica/login.php" class="profile-menu-item">
-                        <svg class="avatar-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                            <path d="M352 96l64 0c17.7 0 32 14.3 32 32l0 256c0 17.7-14.3 32-32 32l-64 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l64 0c53 0 96-43 96-96l0-256c0-53-43-96-96-96l-64 0c-17.7 0-32 14.3-32 32s14.3 32 32 32zm-9.4 182.6c12.5-12.5 12.5-32.8 0-45.3l-128-128c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L242.7 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l210.7 0-73.4 73.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l128-128z"/>
-                        </svg> Iniciar sesión
-                    </a>
-                <?php else: ?>
-                    <a href="perfil.php" class="profile-menu-item">
+        </form>
+            <a href="busquedaTorneo.php" class="btn-ver-torneos-nav">
+                Ver torneos
+            </a>
+
+        <!-- Campana de Notificaciones -->
+        <div class="notifications-dropdown">
+            <input type="checkbox" id="noti-toggle" class="dropdown-checkbox">
+
+            <label for="noti-toggle" class="notifications-dropdown-button" aria-label="Notificaciones">
+                <div class="notifications-icon-wrapper">
+                    <svg class="bell-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z" fill="#cccccc"/>
+                    </svg>
+                    <?php if ($cant_sin_leer > 0): ?>
+                        <span class="notification-dot"></span>
+                    <?php endif; ?>
+                </div>
+            </label>
+
+            <label for="noti-toggle" class="dropdown-overlay"></label>
+
+            <div class="notifications-menu-card">
+                <div class="notifications-menu-header">
+                    <span class="notifications-menu-title">Notificaciones</span>
+                </div>
+                <div class="notifications-menu-divider"></div>
+                <div class="notifications-menu-list">
+                    <?php if (empty($mis_notis)): ?>
+                        <div style="padding: 15px; text-align: center; color: #777;">No hay notificaciones.</div>
+                    <?php else: ?>
+                        <?php foreach ($mis_notis as $n): ?>
+                            <a href="<?= htmlspecialchars($n['enlace']) ?>" class="notification-item <?= $n['leida'] ? '' : 'unread' ?>">
+                                <div class="noti-indicator"></div>
+                                <div class="noti-content">
+                                    <p class="noti-text"><?= htmlspecialchars($n['mensaje']) ?></p>
+                                </div>
+                            </a>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+
+        <!-- Perfil en Navbar -->
+        <div class="profile-dropdown">
+            <input type="checkbox" id="profile-toggle" class="dropdown-checkbox">
+
+            <label for="profile-toggle" class="profile-dropdown-button" aria-label="Menú de usuario">
+                <div class="user-avatar">
+                    <?php if (!empty($fotoPerfil) && file_exists('../' . $fotoPerfil)): ?>
+                        <img src="../<?= htmlspecialchars($fotoPerfil) ?>" alt="Avatar" class="img-avatar">
+                    <?php else: ?>
                         <svg class="avatar-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
                             <path d="M320 312C386.3 312 440 258.3 440 192C440 125.7 386.3 72 320 72C253.7 72 200 125.7 200 192C200 258.3 253.7 312 320 312zM290.3 368C191.8 368 112 447.8 112 546.3C112 562.7 125.3 576 141.7 576L498.3 576C514.7 576 528 562.7 528 546.3C528 447.8 448.2 368 349.7 368L290.3 368z" />
-                        </svg> Perfil
-                    </a>
-                    <div class="profile-menu-divider"></div>
-                    <a href="logica/logout.php" class="profile-menu-item logout-item">
-                        <svg class="avatar-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                            <path d="M377.9 105.9L468.1 196c11.1 11.1 11.1 29.1 0 40.2l-90.1 90.1c-11.5 11.5-30.1 11.5-41.6 0s-11.5-30.1 0-41.6l39.3-39.3L160 245.4c-16.3 0-29.4-13.2-29.4-29.4s13.2-29.4 29.4-29.4l215.7 0-39.3-39.3c-11.5-11.5-11.5-30.1 0-41.6s30.1-11.5 41.6 0zM120 96c0-13.3-10.7-24-24-24C43 72 0 115 0 168L0 344c0 53 43 96 96 96c13.3 0 24-10.7 24-24s-10.7-24-24-24c-26.5 0-48-21.5-48-48l0-176c0-26.5 21.5-48 48-48c13.3 0 24-10.7 24-24z"/>
-                        </svg> Cierre de sesión
-                    </a>
-                <?php endif; ?>
-            </nav>
+                        </svg>
+                    <?php endif; ?>
+                </div>
+            </label>
+
+            <label for="profile-toggle" class="dropdown-overlay"></label>
+
+            <div class="profile-menu-card">
+                <div class="profile-menu-header">
+                    <span class="profile-menu-name">
+                        <?= htmlspecialchars($_SESSION['nombre'] ?? $_SESSION['usuario'] ?? 'Invitado') ?>
+                    </span>
+                </div>
+                <div class="profile-menu-divider"></div>
+                <nav class="profile-menu-links">
+                    <?php if ($rolActual === 'visitante'): ?>
+                        <a href="logica/login.php" class="profile-menu-item">Iniciar sesión</a>
+                    <?php else: ?>
+                        <a href="perfil.php" class="profile-menu-item">Perfil</a>
+                        <div class="profile-menu-divider"></div>
+                        <a href="logica/logout.php" class="profile-menu-item logout-item">Cierre de sesión</a>
+                    <?php endif; ?>
+                </nav>
+            </div>
         </div>
-    </div>
-</nav>
+    </nav>
 
     <main class="contenedor-principal">
-        
-        <?php if ($mensajeExito): ?>
-            <div class="alerta alerta-exito"><?= htmlspecialchars($mensajeExito) ?></div>
-        <?php endif; ?>
-        <?php if ($mensajeError): ?>
-            <div class="alerta alerta-error"><?= htmlspecialchars($mensajeError) ?></div>
-        <?php endif; ?>
 
-        <!-- Control de pestañas -->
-        <input type="radio" name="grupo-pestanas-config" id="radio-pestana-perfil" checked class="control-radio-pestana">
-        <input type="radio" name="grupo-pestanas-config" id="radio-pestana-seguridad" class="control-radio-pestana">
-        <input type="radio" name="grupo-pestanas-config" id="radio-pestana-notificaciones" class="control-radio-pestana">
-        <input type="radio" name="grupo-pestanas-config" id="radio-pestana-borrar" class="control-radio-pestana">
+        <!-- Control de pestañas con estado activo recordado -->
+        <input type="radio" name="grupo-pestanas-config" id="radio-pestana-perfil" class="control-radio-pestana" <?= ($pestanaActiva === 'perfil') ? 'checked' : '' ?>>
+        <input type="radio" name="grupo-pestanas-config" id="radio-pestana-seguridad" class="control-radio-pestana" <?= ($pestanaActiva === 'seguridad') ? 'checked' : '' ?>>
+        <input type="radio" name="grupo-pestanas-config" id="radio-pestana-notificaciones" class="control-radio-pestana" <?= ($pestanaActiva === 'notificaciones') ? 'checked' : '' ?>>
+        <input type="radio" name="grupo-pestanas-config" id="radio-pestana-borrar" class="control-radio-pestana" <?= ($pestanaActiva === 'borrar') ? 'checked' : '' ?>>
 
         <div class="envoltura-configuracion">
             
@@ -232,9 +219,19 @@ unset($_SESSION['mensaje_exito'], $_SESSION['mensaje_error']);
                 <div id="perfil" class="seccion-configuracion panel-perfil">
                     <h3 class="titulo-seccion">Información del Perfil</h3>
                     <p class="subtitulo-seccion">Personaliza tu identidad dentro de la plataforma de torneos.</p>
+
+                    <!-- Alertas específicas de la pestaña Perfil -->
+                    <?php if ($mensajeExito && $pestanaActiva === 'perfil'): ?>
+                        <div class="alerta alerta-exito"><?= htmlspecialchars($mensajeExito) ?></div>
+                    <?php endif; ?>
+                    <?php if ($mensajeError && $pestanaActiva === 'perfil'): ?>
+                        <div class="alerta alerta-error"><?= htmlspecialchars($mensajeError) ?></div>
+                    <?php endif; ?>
         
                     <form action="logica/actualizarConfiguracion.php" method="POST" enctype="multipart/form-data" id="form-perfil" class="formulario-configuracion">
                         <input type="hidden" name="accion" value="actualizar_perfil">
+                        <input type="hidden" name="pestana_activa" value="perfil">
+                        <input type="hidden" name="ultimo_input_id" class="campo-ultimo-input" value="">
             
                         <!-- Avatar y Cambio de Foto -->
                         <div class="contenedor-edicion-avatar">
@@ -291,9 +288,19 @@ unset($_SESSION['mensaje_exito'], $_SESSION['mensaje_error']);
                 <div id="seguridad" class="seccion-configuracion panel-seguridad">
                     <h3 class="titulo-seccion">Seguridad de la Cuenta</h3>
                     <p class="subtitulo-seccion">Gestiona tus credenciales de acceso de forma segura.</p>
+
+                    <!-- Alertas específicas de la pestaña Seguridad -->
+                    <?php if ($mensajeExito && $pestanaActiva === 'seguridad'): ?>
+                        <div class="alerta alerta-exito"><?= htmlspecialchars($mensajeExito) ?></div>
+                    <?php endif; ?>
+                    <?php if ($mensajeError && $pestanaActiva === 'seguridad'): ?>
+                        <div class="alerta alerta-error"><?= htmlspecialchars($mensajeError) ?></div>
+                    <?php endif; ?>
                     
                     <form action="logica/actualizarConfiguracion.php" method="POST" id="form-seguridad" class="formulario-configuracion">
                         <input type="hidden" name="accion" value="cambiar_password">
+                        <input type="hidden" name="pestana_activa" value="seguridad">
+                        <input type="hidden" name="ultimo_input_id" class="campo-ultimo-input" value="">
 
                         <div class="grupo-formulario">
                             <label for="contrasena-actual" class="etiqueta-formulario">Contraseña actual</label>
@@ -321,13 +328,23 @@ unset($_SESSION['mensaje_exito'], $_SESSION['mensaje_error']);
                 <div id="notificaciones" class="seccion-configuracion panel-notificaciones">
                     <h3 class="titulo-seccion">Preferencias de Alertas</h3>
                     <p class="subtitulo-seccion">Elige qué eventos del torneo querés recibir.</p>
+
+                    <!-- Alertas específicas de Notificaciones -->
+                    <?php if ($mensajeExito && $pestanaActiva === 'notificaciones'): ?>
+                        <div class="alerta alerta-exito"><?= htmlspecialchars($mensajeExito) ?></div>
+                    <?php endif; ?>
+                    <?php if ($mensajeError && $pestanaActiva === 'notificaciones'): ?>
+                        <div class="alerta alerta-error"><?= htmlspecialchars($mensajeError) ?></div>
+                    <?php endif; ?>
                     
                     <form action="logica/actualizarConfiguracion.php" method="POST" class="formulario-configuracion">
                         <input type="hidden" name="accion" value="guardar_notificaciones">
+                        <input type="hidden" name="pestana_activa" value="notificaciones">
+                        <input type="hidden" name="ultimo_input_id" class="campo-ultimo-input" value="">
                         
                         <div class="grupo-checkbox">
                             <label class="contenedor-interruptor">
-                                <input type="checkbox" name="noti_fixtures" checked>
+                                <input type="checkbox" id="noti_fixtures" name="noti_fixtures" checked>
                                 <span class="deslizador"></span>
                                 <span class="etiqueta-interruptor">Publicación de Fixtures</span>
                             </label>
@@ -343,9 +360,19 @@ unset($_SESSION['mensaje_exito'], $_SESSION['mensaje_error']);
                 <div id="borrar-cuenta" class="seccion-configuracion panel-borrar">
                     <h3 class="titulo-seccion titulo-peligro">Eliminar Cuenta Permanentemente</h3>
                     <p class="subtitulo-seccion">Esta acción es irreversible. Se perderán tus datos de usuario en el sistema.</p>
+
+                    <!-- Alertas específicas de Borrar Cuenta -->
+                    <?php if ($mensajeExito && $pestanaActiva === 'borrar'): ?>
+                        <div class="alerta alerta-exito"><?= htmlspecialchars($mensajeExito) ?></div>
+                    <?php endif; ?>
+                    <?php if ($mensajeError && $pestanaActiva === 'borrar'): ?>
+                        <div class="alerta alerta-error"><?= htmlspecialchars($mensajeError) ?></div>
+                    <?php endif; ?>
                     
                     <form action="logica/actualizarConfiguracion.php" method="POST" id="form-borrar-cuenta" class="formulario-configuracion">
                         <input type="hidden" name="accion" value="borrar_cuenta">
+                        <input type="hidden" name="pestana_activa" value="borrar">
+                        <input type="hidden" name="ultimo_input_id" class="campo-ultimo-input" value="">
                         
                         <div class="grupo-formulario">
                             <label for="contrasena-borrado" class="etiqueta-formulario">Escriba su contraseña actual para confirmar el borrado</label>
@@ -362,7 +389,7 @@ unset($_SESSION['mensaje_exito'], $_SESSION['mensaje_error']);
         </div>
     </main>
 
-    <!-- 7. Footer -->
+    <!-- Footer -->
     <footer class="main-footer">
         <div class="footer-content">
             <img src="../img/epsilonSoftware2.png" alt="Logo Epsilon Software" class="footer-logo">
@@ -479,6 +506,46 @@ unset($_SESSION['mensaje_exito'], $_SESSION['mensaje_error']);
     <script src="../js/seccionSobreNosotros.js"></script>
     <script src="../js/seccionAyuda.js"></script>
     <script src="../js/configuracion.js"></script>
-    
+
+    <!-- Script de captura y restauración de foco en inputs -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let ultimoInputIdGuardado = <?= json_encode($ultimoInputId) ?>;
+
+            // Registrar eventos de foco en todos los inputs
+            document.querySelectorAll('.formulario-configuracion input, .formulario-configuracion select').forEach(function(elem) {
+                elem.addEventListener('focus', function() {
+                    if (this.id) {
+                        ultimoInputIdGuardado = this.id;
+                        document.querySelectorAll('.campo-ultimo-input').forEach(function(hidden) {
+                            hidden.value = elem.id;
+                        });
+                    }
+                });
+            });
+
+            // Asegurar que el input hidden tenga el valor antes de enviar
+            document.querySelectorAll('.formulario-configuracion').forEach(function(form) {
+                form.addEventListener('submit', function() {
+                    const hidden = form.querySelector('.campo-ultimo-input');
+                    if (hidden && ultimoInputIdGuardado) {
+                        hidden.value = ultimoInputIdGuardado;
+                    }
+                });
+            });
+
+            // Reenfocar el input tras la recarga
+            if (ultimoInputIdGuardado) {
+                const elementoTarget = document.getElementById(ultimoInputIdGuardado);
+                if (elementoTarget) {
+                    elementoTarget.focus();
+                    if (elementoTarget.setSelectionRange && ['text', 'email', 'tel', 'password'].includes(elementoTarget.type)) {
+                        const largoTexto = elementoTarget.value.length;
+                        elementoTarget.setSelectionRange(largoTexto, largoTexto);
+                    }
+                }
+            }
+        });
+    </script>
 </body>
 </html>

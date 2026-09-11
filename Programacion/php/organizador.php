@@ -1,8 +1,11 @@
 <?php
 require_once 'logica/auth.php';
 require_once 'db.php';
-require_once 'logica/notificaciones.php';
 require_once 'logica/gestorTorneos.php';
+require_once 'logica/avanzarTorneo.php';
+
+$pestanaActiva = $_POST['pestana_activa'] ?? 'torneos';
+$idTorneoSeleccionado = $_POST['id_torneo'] ?? 0; // Guarda el torneo seleccionado en el select
 
 requerirRol(['organizador', 'administrador']);
 
@@ -31,7 +34,6 @@ verificarYAutoIniciarTorneos($pdo);
 
 // 2. PROCESAMIENTO DE ACCIONES DEL ORGANIZADOR
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $accion = $_POST['accion'] ?? '';
 
     // Cambiar estado manualmente o forzar inicio
     if ($accion === 'cambiar_estado_torneo') {
@@ -40,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($idTorneo && !empty($nuevoEstado)) {
             if ($nuevoEstado === 'en_curso') {
-                // Forzar el inicio manual del torneo (incluso con participantes incompletos)
+                // Forzar el inicio manual del torneo
                 $res = iniciarTorneo($pdo, $idTorneo, true);
                 if ($res['exito']) {
                     $mensajeExito = $res['mensaje'];
@@ -48,20 +50,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $mensajeError = $res['mensaje'];
                 }
             } else {
-                // Actualización manual simple a 'pendiente' o 'finalizado'
+                // Actualización manual simple
                 $stmtEst = $pdo->prepare("UPDATE torneos SET estado = ? WHERE id_torneo = ?");
                 $stmtEst->execute([$nuevoEstado, $idTorneo]);
                 $mensajeExito = "Estado del torneo actualizado a '$nuevoEstado'.";
             }
         }
     }
-}
-// ==========================================
-// PROCESAMIENTO DE FORMULARIOS (POST)
-// ==========================================
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    // 1. Inscripción manual de participantes
+    // Inscripción manual de participantes
     if ($accion === 'inscribir_participante') {
         $idTorneo = filter_var($_POST['id_torneo'] ?? 0, FILTER_VALIDATE_INT);
         $idParticipante = filter_var($_POST['id_participante'] ?? 0, FILTER_VALIDATE_INT);
@@ -80,7 +77,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if ($stmtVerificar->fetchColumn() > 0) {
                     $mensajeError = "El participante ya está inscrito en este torneo.";
                 } else {
-                    // Inserta en la tabla de inscripciones
                     $sqlInscribir = "INSERT INTO INSCRIPCIONES_TORNEO (id_torneo, id_participante, estado_inscripcion) 
                                      VALUES (:id_torneo, :id_participante, 'confirmado')";
                     $stmtInscribir = $pdo->prepare($sqlInscribir);
@@ -88,15 +84,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         ':id_torneo'       => $idTorneo,
                         ':id_participante' => $idParticipante
                     ]);
-                    $stmtInscribir->execute([
-                        ':id_torneo'       => $idTorneo,
-                        ':id_participante' => $idParticipante
-                    ]);
-
-                    // Notificar al participante inscrito
-                    mandarNotificacion($pdo, $idParticipante, "Has sido inscrito a un nuevo torneo.", "detalleTorneo.php?id=" . $idTorneo);
-
-                    $mensajeExito = "Participante inscrito correctamente en el torneo.";
 
                     $mensajeExito = "Participante inscrito correctamente en el torneo.";
                 }
@@ -108,55 +95,69 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // 2. Cargar/Guardar resultados múltiples
-    if ($accion === 'guardar_resultados') {
-        $resultados = $_POST['resultados'] ?? [];
+    // Cargar/Guardar resultado individual
+    if ($accion === 'guardar_resultado_individual') {
+        $idEnfrentamiento = filter_var($_POST['id_enfrentamiento'] ?? 0, FILTER_VALIDATE_INT);
+        $mLocal = filter_var($_POST['marcador_local'] ?? null, FILTER_VALIDATE_INT);
+        $mVisita = filter_var($_POST['marcador_visita'] ?? null, FILTER_VALIDATE_INT);
+        $idLocal = filter_var($_POST['id_local'] ?? 0, FILTER_VALIDATE_INT);
+        $idVisitante = filter_var($_POST['id_visitante'] ?? 0, FILTER_VALIDATE_INT);
+        $idTorneo = filter_var($_POST['id_torneo'] ?? 0, FILTER_VALIDATE_INT);
 
-        if (!empty($resultados) && is_array($resultados)) {
+        if ($idEnfrentamiento && $mLocal !== false && $mVisita !== false) {
             try {
                 $pdo->beginTransaction();
 
-                $sqlEstado = "UPDATE enfrentamientos 
-                              SET estado_enfrentamiento = 'finalizado' 
-                              WHERE id_enfrentamiento = :id";
-                $stmtEstado = $pdo->prepare($sqlEstado);
+                $idGanador = null;
+                if ($mLocal > $mVisita && $idLocal > 0) {
+                    $idGanador = $idLocal;
+                } elseif ($mVisita > $mLocal && $idVisitante > 0) {
+                    $idGanador = $idVisitante;
+                }
 
-                // Consulta para verificar existencia o realizar actualización/inserción
-                $sqlBuscarResultado = "SELECT id_resultado FROM resultados WHERE id_enfrentamiento = :id";
-                $stmtBuscar = $pdo->prepare($sqlBuscarResultado);
+                $stmtEstado = $pdo->prepare("UPDATE enfrentamientos SET estado_enfrentamiento = 'finalizado' WHERE id_enfrentamiento = ?");
+                $stmtEstado->execute([$idEnfrentamiento]);
 
-                $sqlInsertResultado = "INSERT INTO resultados (id_enfrentamiento, puntuacion, id_ganador, id_usuario_registro)
-                                       VALUES (:id, :m_local, :id_ganador, :id_usuario)";
-                $stmtInsert = $pdo->prepare($sqlInsertResultado);
+                $stmtBuscar = $pdo->prepare("SELECT id_resultado, fecha_registro FROM resultados WHERE id_enfrentamiento = ?");
+                $stmtBuscar->execute([$idEnfrentamiento]);
+                $resExistente = $stmtBuscar->fetch(PDO::FETCH_ASSOC);
 
-                $sqlUpdateResultado = "UPDATE resultados 
-                                       SET puntuacion = :m_local, 
-                                           id_ganador = :id_ganador, 
-                                           id_usuario_registro = :id_usuario
-                                       WHERE id_enfrentamiento = :id";
-                $stmtUpdate = $pdo->prepare($sqlUpdateResultado);
-
-                foreach ($resultados as $idEnfrentamiento => $datos) {
-                    $mLocal = filter_var($datos['local'] ?? null, FILTER_VALIDATE_INT);
-                    $mVisita = filter_var($datos['visita'] ?? null, FILTER_VALIDATE_INT);
-                    $idLocal = filter_var($datos['id_local'] ?? null, FILTER_VALIDATE_INT);
-                    $idVisitante = filter_var($datos['id_visitante'] ?? null, FILTER_VALIDATE_INT);
-
-                    if ($idEnfrentamiento && $mLocal !== false && $mVisita !== false) {
-                        $stmtEstado->execute([':id' => $idEnfrentamiento]);
+                if ($resExistente) {
+                    $horasTranscurridas = (time() - strtotime($resExistente['fecha_registro'])) / 3600;
+                    if ($horasTranscurridas > 48) {
+                        throw new Exception("El plazo de 2 días para modificar este resultado ha expirado.");
                     }
+
+                    $sqlUpdate = $pdo->prepare("
+                        UPDATE resultados 
+                        SET puntuacion = ?, id_ganador = ?, id_usuario_registro = ?, fecha_registro = NOW()
+                        WHERE id_enfrentamiento = ?
+                    ");
+                    $sqlUpdate->execute([$mLocal, $idGanador, $idUsuarioActual, $idEnfrentamiento]);
+                } else {
+                    $sqlInsert = $pdo->prepare("
+                        INSERT INTO resultados (id_enfrentamiento, puntuacion, id_ganador, id_usuario_registro, fecha_registro)
+                        VALUES (?, ?, ?, ?, NOW())
+                    ");
+                    $sqlInsert->execute([$idEnfrentamiento, $mLocal, $idGanador, $idUsuarioActual]);
                 }
 
                 $pdo->commit();
-                $mensajeExito = "Marcadores guardados con éxito.";
-            } catch (PDOException $e) {
-                $pdo->rollBack();
-                $mensajeError = "Error al guardar los marcadores: " . $e->getMessage();
+
+                if ($idTorneo) {
+                    verificarYAvanzarTorneo($pdo, $idTorneo);
+                }
+
+                $mensajeExito = "Marcador guardado correctamente.";
+            } catch (Exception $e) {
+                if ($pdo->inTransaction()) $pdo->rollBack();
+                $mensajeError = $e->getMessage();
             }
+        } else {
+            $mensajeError = "Por favor ingresá un marcador válido.";
         }
     }
 }
-
 
 // ==========================================
 // CONSULTA DE TORNEOS, PARTIDOS Y PARTICIPANTES
@@ -185,26 +186,29 @@ try {
     $stmtP = $pdo->query("SELECT id_participante, CONCAT(nombre, ' ', apellido) AS nombre_participante FROM participantes ORDER BY nombre ASC, apellido ASC");
     $listaParticipantes = $stmtP->fetchAll(PDO::FETCH_ASSOC);
 
-    // 3. Obtener partidos pendientes
     $sqlPartidos = "SELECT 
-                        e.id_enfrentamiento,
-                        e.id_local,
-                        e.id_visitante,
-                        COALESCE(loc_p.nombre, 'Por definir') AS equipo_local,
-                        COALESCE(vis_p.nombre, 'Por definir') AS equipo_visita,
-                        r.nombre_ronda,
-                        t.nombre_torneo,
-                        res.puntuacion AS marcador_local,
-                        0 AS marcador_visita
-                    FROM enfrentamientos e
-                    INNER JOIN rondas r ON e.id_ronda = r.id_ronda
-                    INNER JOIN torneos t ON r.id_torneo = t.id_torneo
-                    LEFT JOIN equipos loc ON e.id_local = loc.id_equipo
-                    LEFT JOIN participantes loc_p ON loc.id_participante = loc_p.id_participante
-                    LEFT JOIN equipos vis ON e.id_visitante = vis.id_equipo
-                    LEFT JOIN participantes vis_p ON vis.id_participante = vis_p.id_participante
-                    LEFT JOIN resultados res ON e.id_enfrentamiento = res.id_enfrentamiento
-                    WHERE e.estado_enfrentamiento != 'finalizado'";
+                    e.id_enfrentamiento,
+                    e.id_local,
+                    e.id_visitante,
+                    e.estado_enfrentamiento,
+                    COALESCE(loc_p.nombre, 'Por definir') AS equipo_local,
+                    COALESCE(vis_p.nombre, 'Por definir') AS equipo_visita,
+                    r.nombre_ronda,
+                    t.id_torneo,
+                    t.nombre_torneo,
+                    res.puntuacion AS marcador_local,
+                    0 AS marcador_visita,
+                    res.fecha_registro
+                FROM enfrentamientos e
+                INNER JOIN rondas r ON e.id_ronda = r.id_ronda
+                INNER JOIN torneos t ON r.id_torneo = t.id_torneo
+                LEFT JOIN equipos loc ON e.id_local = loc.id_equipo
+                LEFT JOIN participantes loc_p ON loc.id_participante = loc_p.id_participante
+                LEFT JOIN equipos vis ON e.id_visitante = vis.id_equipo
+                LEFT JOIN participantes vis_p ON vis.id_participante = vis_p.id_participante
+                LEFT JOIN resultados res ON e.id_enfrentamiento = res.id_enfrentamiento
+                WHERE e.estado_enfrentamiento = 'pendiente'
+                   OR (e.estado_enfrentamiento = 'finalizado' AND res.fecha_registro >= NOW() - INTERVAL 2 DAY)";
 
     if ($rolActual !== 'administrador') {
         $sqlPartidos .= " AND t.id_organizador = :id_organizador";
@@ -214,7 +218,6 @@ try {
         $stmtPartidos = $pdo->prepare($sqlPartidos);
         $stmtPartidos->execute();
     }
-    
     $partidosPendientes = $stmtPartidos->fetchAll(PDO::FETCH_ASSOC);
 
 } catch (PDOException $e) {
@@ -296,7 +299,9 @@ try {
                 <input type="text" class="search-input" placeholder="Buscar un torneo" aria-label="Buscar torneos" name="query">
             </div>
         </form>
-
+            <a href="busquedaTorneo.php" class="btn-ver-torneos-nav">
+                Ver torneos
+            </a>
         <div class="notifications-dropdown">
             <input type="checkbox" id="noti-toggle" class="dropdown-checkbox">
             <label for="noti-toggle" class="notifications-dropdown-button" aria-label="Notificaciones">
@@ -361,11 +366,10 @@ try {
     </nav>
 
     <main class="main-container">
-        <input type="radio" name="grupo-pestanas-organizador" id="radio-pestana-torneos" checked class="control-radio-pestana">
-        <input type="radio" name="grupo-pestanas-organizador" id="radio-pestana-fixtures" class="control-radio-pestana">
-        <input type="radio" name="grupo-pestanas-organizador" id="radio-pestana-participantes" class="control-radio-pestana">
-        <input type="radio" name="grupo-pestanas-organizador" id="radio-pestana-reportes" class="control-radio-pestana">
-
+        <input type="radio" name="grupo-pestanas-organizador" id="radio-pestana-torneos" class="control-radio-pestana" <?php echo ($pestanaActiva === 'torneos') ? 'checked' : ''; ?>>
+        <input type="radio" name="grupo-pestanas-organizador" id="radio-pestana-fixtures" class="control-radio-pestana" <?php echo ($pestanaActiva === 'fixtures') ? 'checked' : ''; ?>>
+        <input type="radio" name="grupo-pestanas-organizador" id="radio-pestana-participantes" class="control-radio-pestana" <?php echo ($pestanaActiva === 'participantes') ? 'checked' : ''; ?>>
+        <input type="radio" name="grupo-pestanas-organizador" id="radio-pestana-reportes" class="control-radio-pestana" <?php echo ($pestanaActiva === 'reportes') ? 'checked' : ''; ?>>
         <div class="contenedor-organizador">
             
             <aside class="pestanas-organizador">
@@ -378,13 +382,26 @@ try {
 
             <section class="tarjeta-contenido-organizador">
                 
-                <!-- Pestaña: Torneos Asignados -->
+                <!-- Pestaña 1: Torneos Asignados -->
                 <div class="seccion-organizador panel-torneos">
                     <div class="encabezado-seccion-enlinea">
                         <h3 class="titulo-seccion">Tus Competencias</h3>
                     </div>
                     <p class="subtitulo-seccion">Lista de torneos bajo tu estricta supervisión y desarrollo.</p>
                     
+                    <!-- Alertas Pestaña Torneos -->
+                    <?php if (!empty($mensajeExito) && $pestanaActiva === 'torneos'): ?>
+                        <div style="background-color: #1b4332; color: #2ec4b6; border: 1px solid #2ec4b6; padding: 10px; border-radius: 6px; margin-bottom: 15px;">
+                            ✓ <?php echo htmlspecialchars($mensajeExito); ?>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if (!empty($mensajeError) && $pestanaActiva === 'torneos'): ?>
+                        <div style="background-color: #4a151b; color: #ff6b6b; border: 1px solid #ff6b6b; padding: 10px; border-radius: 6px; margin-bottom: 15px;">
+                            ✕ <?php echo htmlspecialchars($mensajeError); ?>
+                        </div>
+                    <?php endif; ?>
+
                     <div class="contenedor-tabla">
                         <table class="tabla-datos">
                             <thead>
@@ -419,25 +436,26 @@ try {
                                                 </span>
                                             </td>
                                             <td data-etiqueta="Acción">
-                                            <div style="display: flex; gap: 6px; align-items: center;">
-                                            <a href="detalleTorneo.php?id=<?php echo $itemTorneo['id_torneo']; ?>" class="btn-secundario-chico">Ver Detalle</a>
-                                            <form action="organizador.php" method="POST" style="margin: 0;">
-                                                <input type="hidden" name="accion" value="cambiar_estado_torneo">
-                                                <input type="hidden" name="id_torneo" value="<?php echo $itemTorneo['id_torneo']; ?>">
-                                            <?php if ($estado === 'pendiente'): ?>
-                                                <input type="hidden" name="nuevo_estado" value="en_curso">
-                                                    <button type="submit" class="btn-guardar" onclick="return confirm('¿Iniciar torneo manualmente con los participantes actuales?');">
-                                                        Iniciar Torneo
-                                                    </button>
-                                                <?php elseif ($estado === 'en_curso'): ?>
-                                            <input type="hidden" name="nuevo_estado" value="finalizado">
-                                                <button type="submit" class="btn-secundario-chico" style="background-color: #d90429; color: white;" onclick="return confirm('¿Desea marcar el torneo como finalizado?');">
-                                                    Finalizar
-                                                </button>
-                                            <?php endif; ?>
-                                            </form>
-                                        </div>
-                                    </td>
+                                                <div style="display: flex; gap: 6px; align-items: center;">
+                                                    <a href="detalleTorneo.php?id=<?php echo $itemTorneo['id_torneo']; ?>" class="btn-secundario-chico">Ver Detalle</a>
+                                                    <form action="organizador.php" method="POST" style="margin: 0;">
+                                                        <input type="hidden" name="pestana_activa" value="torneos">
+                                                        <input type="hidden" name="accion" value="cambiar_estado_torneo">
+                                                        <input type="hidden" name="id_torneo" value="<?php echo $itemTorneo['id_torneo']; ?>">
+                                                        <?php if ($estado === 'pendiente'): ?>
+                                                            <input type="hidden" name="nuevo_estado" value="en_curso">
+                                                            <button type="submit" class="btn-guardar" onclick="return confirm('¿Iniciar torneo manualmente con los participantes actuales?');">
+                                                                Iniciar Torneo
+                                                            </button>
+                                                        <?php elseif ($estado === 'en_curso'): ?>
+                                                            <input type="hidden" name="nuevo_estado" value="finalizado">
+                                                            <button type="submit" class="btn-secundario-chico" style="background-color: #d90429; color: white;" onclick="return confirm('¿Desea marcar el torneo como finalizado?');">
+                                                                Finalizar
+                                                            </button>
+                                                        <?php endif; ?>
+                                                    </form>
+                                                </div>
+                                            </td>
                                         </tr>
                                     <?php endforeach; ?>
                                 <?php else: ?>
@@ -450,69 +468,95 @@ try {
                     </div>
                 </div>
 
-                <!-- Pestaña: Fixtures y Resultados -->
+                <!-- Pestaña 2: Fixtures y Resultados -->
                 <div class="seccion-organizador panel-fixtures">
                     <h3 class="titulo-seccion">Gestión de Fixtures y Rondas</h3>
-                    <p class="subtitulo-seccion">Controlá el estado de las llaves y digitá las puntuaciones oficiales.</p>
+                    <p class="subtitulo-seccion">Cargá resultados individualmente o corregilos hasta 48hs después de guardados.</p>
 
-                    <form action="organizador.php" method="POST" class="formulario-organizador">
-                        <input type="hidden" name="accion" value="guardar_resultados">
-
-                        <?php if (!empty($partidosPendientes)): ?>
-                            <?php foreach ($partidosPendientes as $partido): ?>
-                                <?php $idEnf = $partido['id_enfrentamiento']; ?>
-                                <input type="hidden" name="resultados[<?php echo $idEnf; ?>][id_local]" value="<?php echo $partido['id_local']; ?>">
-                                <input type="hidden" name="resultados[<?php echo $idEnf; ?>][id_visitante]" value="<?php echo $partido['id_visitante']; ?>">
-
-                                <div class="etiqueta-partido-torneo">
-                                    <?php echo htmlspecialchars($partido['nombre_torneo']); ?> - <?php echo htmlspecialchars($partido['nombre_ronda']); ?>
-                                </div>
-                                <div class="tarjeta-fila-partido">
-                                    <span class="nombre-equipo texto-derecha"><?php echo htmlspecialchars($partido['equipo_local']); ?></span>
-                                    <div class="entradas-marcador-partido">
-                                        <input type="number" name="resultados[<?php echo $idEnf; ?>][local]" class="control-formulario-entrada entrada-marcador" value="<?php echo $partido['marcador_local'] ?? 0; ?>" min="0" required>
-                                        <span class="divisor-marcador">vs</span>
-                                        <input type="number" name="resultados[<?php echo $idEnf; ?>][visita]" class="control-formulario-entrada entrada-marcador" value="<?php echo $partido['marcador_visita'] ?? 0; ?>" min="0" required>
-                                    </div>
-                                    <span class="nombre-equipo texto-izquierda"><?php echo htmlspecialchars($partido['equipo_visita']); ?></span>
-                                </div>
-                            <?php endforeach; ?>
-
-                            <div class="acciones-formulario">
-                                <button type="submit" class="btn-guardar">Guardar marcadores</button>
-                            </div>
-                        <?php else: ?>
-                            <p class="texto-sin-partidos">No hay partidos pendientes para cargar resultados en la ronda activa.</p>
-                        <?php endif; ?>
-                    </form>
-                </div>
-
-                <!-- Pestaña: Inscribir Participantes -->
-                <div class="seccion-organizador panel-participantes">
-                    <h3 class="titulo-seccion">Inscribir Participantes</h3>
-                    <p class="subtitulo-seccion">Seleccioná un participante registrado para agregarlo al torneo.</p>
-
-                    <?php if (!empty($mensajeExito)): ?>
+                    <!-- Alertas Pestaña Fixtures -->
+                    <?php if (!empty($mensajeExito) && $pestanaActiva === 'fixtures'): ?>
                         <div style="background-color: #1b4332; color: #2ec4b6; border: 1px solid #2ec4b6; padding: 10px; border-radius: 6px; margin-bottom: 15px;">
                             ✓ <?php echo htmlspecialchars($mensajeExito); ?>
                         </div>
                     <?php endif; ?>
 
-                    <?php if (!empty($mensajeError)): ?>
+                    <?php if (!empty($mensajeError) && $pestanaActiva === 'fixtures'): ?>
+                        <div style="background-color: #4a151b; color: #ff6b6b; border: 1px solid #ff6b6b; padding: 10px; border-radius: 6px; margin-bottom: 15px;">
+                            ✕ <?php echo htmlspecialchars($mensajeError); ?>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if (!empty($partidosPendientes)): ?>
+                        <?php foreach ($partidosPendientes as $partido): ?>
+                            <?php 
+                                $idEnf = $partido['id_enfrentamiento'];
+                                $esFinalizado = ($partido['estado_enfrentamiento'] === 'finalizado');
+                            ?>
+                            <form action="organizador.php" method="POST" class="formulario-organizador-partido" style="margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom: 15px;">
+                                <input type="hidden" name="pestana_activa" value="fixtures">
+                                <input type="hidden" name="accion" value="guardar_resultado_individual">
+                                <input type="hidden" name="id_enfrentamiento" value="<?php echo $idEnf; ?>">
+                                <input type="hidden" name="id_torneo" value="<?php echo $partido['id_torneo']; ?>">
+                                <input type="hidden" name="id_local" value="<?php echo $partido['id_local']; ?>">
+                                <input type="hidden" name="id_visitante" value="<?php echo $partido['id_visitante']; ?>">
+
+                                <div class="etiqueta-partido-torneo" style="display: flex; justify-content: space-between;">
+                                    <span><?php echo htmlspecialchars($partido['nombre_torneo']); ?> - <?php echo htmlspecialchars($partido['nombre_ronda']); ?></span>
+                                    <?php if ($esFinalizado): ?>
+                                        <span style="color: #2ec4b6; font-size: 0.85em;">Finalizado (Editable)</span>
+                                    <?php endif; ?>
+                                </div>
+
+                                <div class="tarjeta-fila-partido">
+                                    <span class="nombre-equipo texto-derecha"><?php echo htmlspecialchars($partido['equipo_local']); ?></span>
+                                    <div class="entradas-marcador-partido">
+                                        <input type="number" name="marcador_local" class="control-formulario-entrada entrada-marcador" value="<?php echo $partido['marcador_local'] ?? 0; ?>" min="0" required>
+                                        <span class="divisor-marcador">vs</span>
+                                        <input type="number" name="marcador_visita" class="control-formulario-entrada entrada-marcador" value="<?php echo $partido['marcador_visita'] ?? 0; ?>" min="0" required>
+                                    </div>
+                                    <span class="nombre-equipo texto-izquierda"><?php echo htmlspecialchars($partido['equipo_visita']); ?></span>
+                                    
+                                    <button type="submit" class="btn-guardar" style="margin-left: 10px; padding: 6px 12px;">
+                                        <?php echo $esFinalizado ? 'Actualizar' : 'Guardar'; ?>
+                                    </button>
+                                </div>
+                            </form>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <p class="texto-sin-partidos">No hay partidos pendientes ni en plazo de modificación.</p>
+                    <?php endif; ?>
+                </div>
+
+                <!-- Pestaña 3: Inscribir Participantes -->
+                <div class="seccion-organizador panel-participantes">
+                    <h3 class="titulo-seccion">Inscribir Participantes</h3>
+                    <p class="subtitulo-seccion">Seleccioná un participante registrado para agregarlo al torneo.</p>
+
+                    <!-- Alertas Pestaña Participantes -->
+                    <?php if (!empty($mensajeExito) && $pestanaActiva === 'participantes'): ?>
+                        <div style="background-color: #1b4332; color: #2ec4b6; border: 1px solid #2ec4b6; padding: 10px; border-radius: 6px; margin-bottom: 15px;">
+                            ✓ <?php echo htmlspecialchars($mensajeExito); ?>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if (!empty($mensajeError) && $pestanaActiva === 'participantes'): ?>
                         <div style="background-color: #4a151b; color: #ff6b6b; border: 1px solid #ff6b6b; padding: 10px; border-radius: 6px; margin-bottom: 15px;">
                             ✕ <?php echo htmlspecialchars($mensajeError); ?>
                         </div>
                     <?php endif; ?>
 
                     <form action="organizador.php" method="POST" class="formulario-organizador">
+                        <input type="hidden" name="pestana_activa" value="participantes">
                         <input type="hidden" name="accion" value="inscribir_participante">
 
                         <div class="grupo-formulario">
                             <label for="id_torneo" class="etiqueta-formulario">Seleccionar Torneo</label>
                             <select name="id_torneo" id="id_torneo" class="control-formulario-entrada" required>
-                                <option value="" disabled selected>Seleccioná un torneo</option>
+                                <option value="" disabled <?php echo empty($idTorneoSeleccionado) ? 'selected' : ''; ?>>Seleccioná un torneo</option>
                                 <?php foreach ($torneosAsignados as $t): ?>
-                                    <option value="<?php echo $t['id_torneo']; ?>"><?php echo htmlspecialchars($t['nombre_torneo']); ?></option>
+                                    <option value="<?php echo $t['id_torneo']; ?>" <?php echo ($idTorneoSeleccionado == $t['id_torneo']) ? 'selected' : ''; ?>>
+                                        <?php echo htmlspecialchars($t['nombre_torneo']); ?>
+                                    </option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
@@ -533,7 +577,7 @@ try {
                     </form>
                 </div>
 
-                <!-- Pestaña: Reportes -->
+                <!-- Pestaña 4: Reportes -->
                 <div class="seccion-organizador panel-reportes">
                     <h3 class="titulo-seccion">Métricas y Reportes Operativos</h3>
                     <p class="subtitulo-seccion">Exporta las planillas de juego o analiza los datos de rendimiento de la competencia.</p>

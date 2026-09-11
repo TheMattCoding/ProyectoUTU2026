@@ -118,6 +118,7 @@ CREATE TABLE resultados (
     puntuacion INT DEFAULT 0,
     id_ganador INT,
     id_usuario_registro INT NOT NULL,
+    fecha_registro DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (id_enfrentamiento) REFERENCES enfrentamientos(id_enfrentamiento) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (id_ganador) REFERENCES equipos(id_equipo) ON DELETE SET NULL ON UPDATE CASCADE,
     FOREIGN KEY (id_usuario_registro) REFERENCES usuarios(id_usuario) ON DELETE RESTRICT ON UPDATE CASCADE
