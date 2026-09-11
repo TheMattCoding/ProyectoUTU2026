@@ -130,7 +130,14 @@
 }
 
 /*==============14. Formulario de Configuración ======================*/
-   
+
+.cuadrícula-fila-formulario {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+}
+
 .formulario-configuracion {
     display: flex;
     flex-direction: column;
@@ -262,7 +269,7 @@
 }
 
 .contenedor-interruptor input:checked + .deslizador { 
-    background-color: #ffffff; 
+    background-color: #22C55E; 
 }
 
 .contenedor-interruptor input:checked + .deslizador::before {
@@ -330,6 +337,15 @@
 /*============== 16. Version de Escritorio (media query) =====================*/
 
 @media (min-width: 1024px) {
+    
+    .panel-seguridad .cuadrícula-fila-formulario {
+        flex-direction: row;
+        gap: 20px;
+    }
+
+    .panel-seguridad .cuadrícula-fila-formulario .grupo-formulario {
+        flex: 1;
+    }
     .envoltura-configuracion {
         max-width: 1150px; 
         flex-direction: row;
@@ -371,7 +387,7 @@
         align-self: auto;
     }
 }
-/* Estilos para alertas de confirmación o error */
+
 .alerta {
     width: 100%;
     max-width: 450px;
@@ -395,10 +411,3 @@
     color: #ff5252;
     border: 1px solid #d32f2f;
 }
-
-@media (min-width: 1024px) {
-    .alerta {
-        max-width: 1150px;
-    }
-}
-

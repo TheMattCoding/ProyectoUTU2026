@@ -38,12 +38,6 @@
     box-sizing: border-box;
 }
 
-.divisor-isla {
-    border: 0;
-    border-top: 1px solid #262626;
-    margin: 0;
-}
-
 /* --- 3. BLOQUE SUPERIOR (KPIs EN REJILLA) --- */
 .seccion-kpis {
     display: grid;
@@ -102,6 +96,44 @@
 
 .tab-content {
     width: 100%;
+    min-width: 0;
+}
+
+/* --- NAVEGACIÓN SECUNDARIA (SUBTABS FILTRADO) --- */
+.subtab-navigation {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.subtab-btn {
+    background-color: #111111;
+    color: #888888;
+    border: 1px solid #333333;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.subtab-btn:hover {
+    background-color: #222222;
+    color: #ffffff;
+}
+
+.subtab-btn.active {
+    background-color: #2b2b2b;
+    color: #D4AF37;
+    border-color: #D4AF37;
+    font-weight: 600;
+}
+
+.subtab-btn.btn-todos {
+    margin-right: auto;
+    border-color: #444444;
 }
 
 /* --- 5. MONITOREO Y MONITOREO EN TIEMPO REAL (GRAFANA) --- */
@@ -120,36 +152,53 @@
 }
 
 /* --- 6. BLOQUE DE TABLAS Y CONTENIDO --- */
+
 .seccion-tabla {
     width: 100%;
+    background-color: #121212;
+    border: 1px solid #2d2d2d;
+    border-radius: 16px;
+    padding: 24px;
+    box-sizing: border-box;
+    margin-bottom: 24px;
+    overflow: hidden;
+}
+
+.seccion-tabla:last-child {
+    margin-bottom: 0;
 }
 
 .seccion-tabla h3 {
     margin-top: 0;
-    margin-bottom: 16px;
+    margin-bottom: 20px;
     color: #ffffff;
-    font-size: 18px;
+    font-size: 19px;
+    font-weight: 600;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #262626;
 }
 
 .tabla-panel {
     width: 100%;
     border-collapse: collapse;
     text-align: left;
+    table-layout: fixed;
 }
 
 .tabla-panel th {
     color: #666666;
     font-weight: 600;
-    font-size: 13px;
-    padding: 10px;
+    font-size: 12px;
+    padding: 8px 4px;
     border-bottom: 1px solid #262626;
 }
 
 .tabla-panel td {
-    padding: 12px 10px;
+    padding: 8px 4px;
     border-bottom: 1px solid #202020;
     color: #ffffff;
-    font-size: 13.5px;
+    font-size: 12px;
+    word-wrap: break-word; 
 }
 
 .etiqueta-estado-exito {
@@ -170,7 +219,6 @@
     font-weight: 600;
 }
 
-/* Mensajes de Alerta */
 .alert-mensaje {
     padding: 12px;
     border-radius: 8px;
@@ -192,7 +240,7 @@
 /* Textos Informativos */
 .texto-secundario {
     color: #888;
-    font-size: 12px;
+    font-size: 11.5px;
 }
 
 .tabla-vacia {
@@ -200,21 +248,29 @@
     color: #888;
 }
 
+.contenedor-tabla-adaptable {
+    width: 100%;
+    max-width: 100%;
+}
+
 /* Formularios e Inputs en Tablas */
 .form-inline {
     display: flex;
     gap: 6px;
     align-items: center;
+    flex-wrap: wrap;
 }
 
 .form-accion-inline {
-    display: inline-block;
+    display: block;
+    width: 100%;
 }
 
 .acciones-contenedor {
     display: flex;
-    gap: 6px;
-    align-items: center;
+    flex-direction: column;
+    gap: 4px;
+    width: 100%;
 }
 
 .input-tabla,
@@ -223,10 +279,11 @@
     color: #fff;
     border: 1px solid #444;
     border-radius: 4px;
-    padding: 6px 8px;
-    font-size: 13.5px;
+    padding: 4px 6px;
+    font-size: 12px;
     outline: none;
     box-sizing: border-box;
+    width: 100%;
 }
 
 .input-tabla:focus,
@@ -235,24 +292,27 @@
 }
 
 .input-tabla.width-sm {
-    min-width: 110px;
     width: 100%;
-    max-width: 150px;
+    max-width: 100px;
 }
 
 .input-tabla.width-xs {
-    width: 80px;
+    width: 50px;
 }
 
 /* Botones de Acción */
 .btn-accion {
     color: #fff;
     border: none;
-    padding: 6px 12px;
+    padding: 4px 6px;
     border-radius: 4px;
     cursor: pointer;
-    font-size: 13px;
+    font-size: 11px;
     font-weight: 500;
+    text-align: center;
+    box-sizing: border-box;
+    width: 100%;
+    display: block;
     transition: opacity 0.2s, transform 0.1s;
 }
 
@@ -264,8 +324,17 @@
     transform: scale(0.98);
 }
 
-.btn-guardar { background: #D4AF37; color: #111; font-weight: 600; }
-.btn-eliminar { background: #e74c3c; }
+.btn-guardar { 
+    background: #D4AF37; 
+    color: #111; 
+    font-weight: 600; 
+}
+
+.btn-eliminar { 
+    background: #e74c3c; 
+    color: #ffffff; 
+}
+
 .btn-sacar    { background: #e67e22; }
 .btn-editar   { background: #3498db; }
 
@@ -359,17 +428,74 @@
         text-align: center;
     }
 
-    .contenedor-tabla-adaptable {
-        width: 100%;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-    }
-
-    .tabla-panel {
-        min-width: 450px;
-    }
-
     .card-monitoreo iframe {
         height: 450px;
     }
+
+    .tabla-panel, 
+    .tabla-panel thead, 
+    .tabla-panel tbody, 
+    .tabla-panel th, 
+    .tabla-panel td, 
+    .tabla-panel tr {
+        display: block;
+    }
+
+    .tabla-panel thead {
+        display: none;
+    }
+
+    .tabla-panel tr {
+        margin-bottom: 16px;
+        border: 1px solid #333333;
+        border-radius: 12px;
+        padding: 12px 14px;
+        background: #181818;
+    }
+
+    .tabla-panel td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #262626;
+        padding: 8px 0;
+        text-align: right;
+        font-size: 13px;
+    }
+
+    .tabla-panel td:last-child {
+        border-bottom: none;
+        margin-top: 6px;
+    }
+
+    /* Estilo base de los títulos de columna en celular */
+    .tabla-panel td::before {
+        font-weight: 600;
+        color: #888888;
+        font-size: 11.5px;
+        text-transform: uppercase;
+        margin-right: 12px;
+        text-align: left;
+    }
+
+    /* Nombres para la Tabla 1: Torneos */
+    #tabla-torneos td:nth-of-type(1)::before { content: "Torneo:"; }
+    #tabla-torneos td:nth-of-type(2)::before { content: "Fecha Inicio:"; }
+    #tabla-torneos td:nth-of-type(3)::before { content: "Estado:"; }
+    #tabla-torneos td:nth-of-type(4)::before { content: "Organizador:"; }
+    #tabla-torneos td:nth-of-type(5)::before { content: "Acciones:"; }
+
+    /* Nombres para la Tabla 2: Inscripciones */
+    #tabla-inscripciones td:nth-of-type(1)::before { content: "Torneo:"; }
+    #tabla-inscripciones td:nth-of-type(2)::before { content: "Participante:"; }
+    #tabla-inscripciones td:nth-of-type(3)::before { content: "Estado:"; }
+    #tabla-inscripciones td:nth-of-type(4)::before { content: "Acción:"; }
+
+    /* Nombres para la Tabla 3: Gestión Global de Participantes */
+    .seccion-tabla:nth-of-type(3) .tabla-panel td:nth-of-type(1)::before { content: "Usuario:"; }
+    .seccion-tabla:nth-of-type(3) .tabla-panel td:nth-of-type(2)::before { content: "Nombre:"; }
+    .seccion-tabla:nth-of-type(3) .tabla-panel td:nth-of-type(3)::before { content: "Cédula:"; }
+    .seccion-tabla:nth-of-type(3) .tabla-panel td:nth-of-type(4)::before { content: "Teléfono:"; }
+    .seccion-tabla:nth-of-type(3) .tabla-panel td:nth-of-type(5)::before { content: "Email:"; }
+    .seccion-tabla:nth-of-type(3) .tabla-panel td:nth-of-type(6)::before { content: "Acciones:"; }
 }

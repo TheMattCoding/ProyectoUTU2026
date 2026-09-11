@@ -27,34 +27,6 @@
     letter-spacing: 0.5px;
 }
 
-.sidebar-link.active-link {
-    background-color: rgba(255, 255, 255, 0.1);
-    border-left: 4px solid #ffffff;
-    font-weight: bold;
-}
-
-/* ==========================================================================
-   2. Ajustes Navbar / Búsqueda
-   ========================================================================== */
-.navbar-search-form {
-    display: flex;
-    flex: 1;
-    max-width: 420px;
-    margin: 0 12px;
-}
-
-.navbar-search-container {
-    margin: 0;
-    width: 100%;
-}
-
-.icono-tema {
-    width: 18px;
-    height: 18px;
-    fill: currentColor;
-    vertical-align: middle;
-}
-
 /* ==========================================================================
    3. Navegación por Radio Hack (Sin JavaScript)
    ========================================================================== */
@@ -108,6 +80,7 @@
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
+    min-width: 0; 
 }
 
 .seccion-organizador {
@@ -127,13 +100,6 @@
     font-weight: bold;
     color: #ffffff;
     margin-bottom: 4px;
-}
-
-.grupo-formulario { 
-    margin-bottom: 15px; 
-    font-size: 13px; 
-    font-weight: 500; 
-    color: #cccccc;
 }
 
 .encabezado-seccion-enlinea {
@@ -191,6 +157,7 @@
    ========================================================================== */
 .contenedor-tabla { 
     width: 100%; 
+    overflow-x: auto; /* AGREGAR ESTA LÍNEA */
 }
 
 .tabla-datos { 
@@ -330,7 +297,7 @@
    8. Reportes
    ========================================================================== */
 .cuadricula-acciones-reporte { display: flex; flex-direction: column; gap: 12px; }
-.tarjeta-descarga-reporte { display: flex; justify-content: space-between; align-items: center; background-color: #222222; padding: 16px; border-radius: 14px; border: 1px solid #2c2c2e; gap: 10px; }
+.tarjeta-descarga-reporte { display: flex; justify-content: space-between; align-items: center; background-color: #222222; padding: 16px; border-radius: 14px; border: 1px solid #2c2c2e; gap: 10px; flex-wrap: wrap;}
 .tarjeta-descarga-reporte h5 { font-size: 14px; font-weight: 500; color: #ffffff; margin: 0; }
 
 /* ==========================================================================
