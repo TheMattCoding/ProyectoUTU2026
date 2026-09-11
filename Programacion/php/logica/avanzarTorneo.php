@@ -81,19 +81,24 @@ function verificarYAvanzarTorneo(PDO $pdo, int $idTorneo): void {
     }
 }
 
-/**
- * Genera el siguiente cruce de eliminación directa con los ganadores.
- */
 function avanzarEliminacionDirecta(PDO $pdo, int $idTorneo, int $idRondaActual, int $numRondaActual): void {
-    // Obtener ganadores de la ronda recién finalizada
-    $stmtGanadores = $pdo->prepare("
-        SELECT r.id_ganador 
+    // 1. Obtener ganadores y perdedores de la ronda recién finalizada
+    $stmtPartidos = $pdo->prepare("
+        SELECT e.id_local, e.id_visitante, r.id_ganador 
         FROM resultados r
         JOIN enfrentamientos e ON r.id_enfrentamiento = e.id_enfrentamiento
         WHERE e.id_ronda = ? AND r.id_ganador IS NOT NULL
     ");
-    $stmtGanadores->execute([$idRondaActual]);
-    $ganadores = $stmtGanadores->fetchAll(PDO::FETCH_COLUMN);
+    $stmtPartidos->execute([$idRondaActual]);
+    $enfrentamientos = $stmtPartidos->fetchAll(PDO::FETCH_ASSOC);
+
+    $ganadores = [];
+    $perdedores = [];
+
+    foreach ($enfrentamientos as $enf) {
+        $ganadores[] = $enf['id_ganador'];
+        $perdedores[] = ($enf['id_ganador'] == $enf['id_local']) ? $enf['id_visitante'] : $enf['id_local'];
+    }
 
     $numGanadores = count($ganadores);
 
@@ -106,25 +111,39 @@ function avanzarEliminacionDirecta(PDO $pdo, int $idTorneo, int $idRondaActual, 
 
     $siguienteNumRonda = $numRondaActual + 1;
 
-    // Verificar si la siguiente ronda fue pre-creada (por manejo de BYEs)
-    $stmtRondaSig = $pdo->prepare("SELECT id_ronda FROM rondas WHERE id_torneo = ? AND numero_ronda = ?");
-    $stmtRondaSig->execute([$idTorneo, $siguienteNumRonda]);
-    $idRondaSiguiente = $stmtRondaSig->fetchColumn();
-
-    if (!$idRondaSiguiente) {
-        $nombreRonda = obtenerNombreRonda($numGanadores);
+    // Caso especial: Si venimos de Semifinales (2 ganadores)
+    if ($numGanadores === 2) {
+        // Crear Ronda para las Finales
         $stmtInsRonda = $pdo->prepare("
             INSERT INTO rondas (id_torneo, numero_ronda, nombre_ronda, estado_ronda) 
-            VALUES (?, ?, ?, 'en_curso')
+            VALUES (?, ?, 'Finales', 'en_curso')
         ");
-        $stmtInsRonda->execute([$idTorneo, $siguienteNumRonda, $nombreRonda]);
+        $stmtInsRonda->execute([$idTorneo, $siguienteNumRonda]);
         $idRondaSiguiente = $pdo->lastInsertId();
-    } else {
-        $stmtAct = $pdo->prepare("UPDATE rondas SET estado_ronda = 'en_curso' WHERE id_ronda = ?");
-        $stmtAct->execute([$idRondaSiguiente]);
+
+        $stmtEnfrentamiento = $pdo->prepare("
+            INSERT INTO enfrentamientos (id_ronda, id_local, id_visitante, estado_enfrentamiento) 
+            VALUES (?, ?, ?, 'pendiente')
+        ");
+
+        // Partido por 3er y 4to Puesto
+        $stmtEnfrentamiento->execute([$idRondaSiguiente, $perdedores[0], $perdedores[1]]);
+
+        // Partido de la Grande Final
+        $stmtEnfrentamiento->execute([$idRondaSiguiente, $ganadores[0], $ganadores[1]]);
+
+        return;
     }
 
-    // Crear enfrentamientos emparejando ganadores
+    // Flujo estándar para rondas anteriores (Cuartos, Octavos, etc.)
+    $nombreRonda = obtenerNombreRonda($numGanadores);
+    $stmtInsRonda = $pdo->prepare("
+        INSERT INTO rondas (id_torneo, numero_ronda, nombre_ronda, estado_ronda) 
+        VALUES (?, ?, ?, 'en_curso')
+    ");
+    $stmtInsRonda->execute([$idTorneo, $siguienteNumRonda, $nombreRonda]);
+    $idRondaSiguiente = $pdo->lastInsertId();
+
     $stmtEnfrentamiento = $pdo->prepare("
         INSERT INTO enfrentamientos (id_ronda, id_local, id_visitante, estado_enfrentamiento) 
         VALUES (?, ?, ?, 'pendiente')

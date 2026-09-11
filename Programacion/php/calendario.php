@@ -130,7 +130,7 @@ if ($idUsuarioActual) {
             </div>
         </form>
         <a href="busquedaTorneo.php" class="btn-ver-torneos-nav">
-            Ver todos los torneos
+            Ver torneos
         </a>
         <!-- Notificaciones -->
         <div class="notifications-dropdown">
