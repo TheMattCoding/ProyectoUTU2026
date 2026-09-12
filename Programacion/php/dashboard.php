@@ -192,21 +192,27 @@ $inscripciones = $stmtInscripciones->fetchAll();
                 </div>
                 <div class="notifications-menu-divider"></div>
                 <div class="notifications-menu-list">
-                    <a href="#" class="notification-item unread">
-                        <div class="noti-indicator"></div>
-                        <div class="noti-content">
-                            <p class="noti-text">Tu inscripción para la <strong>Copa de Invierno</strong> ha sido confirmada exitosamente.</p>
-                            <span class="noti-time">Hace 10 min</span>
+                <?php if (empty($mis_notis)): ?>
+                    <div>No hay notificaciones.</div>
+                <?php else: ?>
+                    <?php foreach ($mis_notis as $n): ?>
+                        <div>
+                            <a href="<?= htmlspecialchars($n['enlace']) ?>" class="notification-item unread">
+                                <div class="noti-indicator"></div>
+                                <div class="noti-content">
+                                    <p class="noti-text"><?= htmlspecialchars($n['mensaje']) ?></p>
+                                </div>
+                            </a>
+                
+                            <!-- Botón para borrar/descartar -->
+                            <form action="logica/eliminarNotificacion.php" method="POST">
+                                <input type="hidden" name="id_notificacion" value="<?= htmlspecialchars($n['id']) ?>">
+                                <button class="eliminar_notificacion" type="submit" title="Eliminar notificación">&times;</button>
+                            </form>
                         </div>
-                    </a>
-                    <a href="#" class="notification-item">
-                        <div class="noti-indicator"></div>
-                        <div class="noti-content">
-                            <p class="noti-text">El fixture del <strong>Torneo Relámpago</strong> ya se encuentra disponible.</p>
-                            <span class="noti-time">Hace 2 horas</span>
-                        </div>
-                    </a>
-                </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </div>
             </div>
         </div>
 
