@@ -253,14 +253,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
                 <div class="notifications-menu-divider"></div>
                 <div class="notifications-menu-list">
-                    <a href="#" class="notification-item unread">
-                        <div class="noti-indicator"></div>
-                        <div class="noti-content">
-                            <p class="noti-text">Tu inscripción para la <strong>Copa de Invierno</strong> ha sido confirmada exitosamente.</p>
-                            <span class="noti-time">Hace 10 min</span>
-                        </div>
-                    </a>
-                </div>
+                <?php if (empty($mis_notis)): ?>
+                    <div style="padding: 15px; text-align: center; color: #777;">No hay notificaciones.</div>
+                <?php else: ?>
+                    <?php foreach ($mis_notis as $n): ?>
+                        <a href="<?= htmlspecialchars($n['enlace']) ?>" class="notification-item unread" style="display: flex; align-items: center; text-decoration: none; padding: 10px; border-bottom: 1px solid #2a2a2a;">
+                            <div class="noti-indicator" style="width: 8px; height: 8px; background-color: #D4AF37; border-radius: 50%; margin-right: 10px;"></div>
+                            <div class="noti-content">
+                                <p class="noti-text" style="margin: 0; color: #fff; font-size: 14px;"><?= htmlspecialchars($n['mensaje']) ?></p>
+                            </div>
+                        </a>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </div>
             </div>
         </div>
 

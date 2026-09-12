@@ -209,15 +209,23 @@ $imgProximo = obtenerImagenPortada($proximoTorneo);
             <div class="notifications-menu-divider"></div>
             <div class="notifications-menu-list">
                 <?php if (empty($mis_notis)): ?>
-                    <div style="padding: 15px; text-align: center; color: #777;">No hay notificaciones.</div>
+                    <div>No hay notificaciones.</div>
                 <?php else: ?>
                     <?php foreach ($mis_notis as $n): ?>
-                        <a href="<?= htmlspecialchars($n['enlace']) ?>" class="notification-item <?= $n['leida'] ? '' : 'unread' ?>">
-                            <div class="noti-indicator"></div>
-                            <div class="noti-content">
-                                <p class="noti-text"><?= htmlspecialchars($n['mensaje']) ?></p>
-                            </div>
-                        </a>
+                        <div>
+                            <a href="<?= htmlspecialchars($n['enlace']) ?>" class="notification-item unread">
+                                <div class="noti-indicator"></div>
+                                <div class="noti-content">
+                                    <p class="noti-text"><?= htmlspecialchars($n['mensaje']) ?></p>
+                                </div>
+                            </a>
+                
+                            <!-- Botón para borrar/descartar -->
+                            <form action="logica/eliminarNotificacion.php" method="POST">
+                                <input type="hidden" name="id_notificacion" value="<?= htmlspecialchars($n['id']) ?>">
+                                <button class="eliminar_notificacion" type="submit" title="Eliminar notificación">&times;</button>
+                            </form>
+                        </div>
                     <?php endforeach; ?>
                 <?php endif; ?>
             </div>

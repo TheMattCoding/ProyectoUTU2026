@@ -311,6 +311,8 @@ body {
     font-size: 13px;
     line-height: 1.4;
     transition: background-color 0.2s ease;
+    padding-right: 36px;
+    position: relative;
 }
 
 .profile-menu-item:hover, .notification-item:hover {
@@ -336,6 +338,23 @@ body {
     display: flex;
     flex-direction: column;
     gap: 2px;
+    flex: 1;
+}
+
+.eliminar_notificacion {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--gold-muted);
+    font-size: 16px;
+    padding: 0 4px;
+    margin-left: auto;
+    align-self: center;
+    transition: color 0.2s ease;
+}
+
+.eliminar_notificacion:hover {
+    color: #ffffff;
 }
 
 .noti-text strong {
@@ -366,6 +385,24 @@ body {
 .dropdown-overlay.active,
 .dropdown-checkbox:checked ~ .dropdown-overlay {
     display: block;
+}
+
+.notifications-menu-list > div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+}
+
+.notifications-menu-list > div .notification-item {
+    flex: 1;
+    padding-right: 8px;
+}
+
+.notifications-menu-list > div form {
+    display: flex;
+    align-items: center;
+    padding-right: 12px;
 }
 
 /*============== 5. Menú Lateral ======================*/
