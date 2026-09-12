@@ -54,7 +54,7 @@ try {
     header('Location: ../detalleTorneo.php?id=' . $id_torneo . '&estado=error');
     exit;
 }
-?>
+
 // Validar que exista la sesión de usuario y se envíe por POST
 if (!isset($_SESSION['id_usuario']) || $_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Location: ../../login.php');
@@ -105,3 +105,4 @@ try {
     header('Location: ../detalleTorneo.php?id=' . $id_torneo . '&estado=error');
     exit;
 }
+?>

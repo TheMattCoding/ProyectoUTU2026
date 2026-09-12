@@ -318,10 +318,22 @@ if ($idUsuarioActual && $idTorneo) {
             </div>
         </section>
 
-        <!-- Botón dinámico -->
+       <!-- Botón dinámico -->
         <?php if ($yaInscrito): ?>
             <button type="button" id="btn-inscrito" class="btn-principal btn-deshabilitado" disabled>
                 ✓ YA ESTÁS PARTICIPANDO
+            </button>
+        <?php elseif ($torneo['estado'] === 'en_curso'): ?>
+            <button type="button" class="btn-principal btn-deshabilitado" disabled>
+                TORNEO EN CURSO
+            </button>
+        <?php elseif ($torneo['estado'] === 'finalizado'): ?>
+            <button type="button" class="btn-principal btn-deshabilitado" disabled>
+                TORNEO FINALIZADO
+            </button>
+        <?php elseif ($torneo['estado'] === 'cancelado'): ?>
+            <button type="button" class="btn-principal btn-deshabilitado" disabled>
+                TORNEO CANCELADO
             </button>
         <?php else: ?>
             <button type="button" id="btn-abrir-modal" class="btn-principal">
