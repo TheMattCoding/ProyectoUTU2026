@@ -1,37 +1,37 @@
 <?php
 session_start();
 require_once '../db.php';
-
-session_start();
-require_once '../db.php';
-require_once 'notificaciones.php'; // 1. Incluimos las funciones de notificación
+require_once 'notificaciones.php';
 
 if (!isset($_SESSION['id_usuario']) || $_SERVER['REQUEST_METHOD'] !== 'POST') {
-    header('Location: ../../login.php');
+    header('Location: ../login.php');
     exit;
 }
 
 $id_torneo = filter_input(INPUT_POST, 'id_torneo', FILTER_VALIDATE_INT);
 $id_usuario = $_SESSION['id_usuario'];
+$rolActual = $_SESSION['rol'] ?? 'visitante';
 
-if (!$id_torneo) {
+if (!$id_torneo || $rolActual === 'administrador' || $rolActual === 'visitante') {
     header('Location: ../busquedaTorneo.php');
     exit;
 }
 
 try {
+    // 1. Obtener o crear ID de participante
     $stmtPart = $pdo->prepare("SELECT id_participante FROM participantes WHERE id_usuario = ?");
     $stmtPart->execute([$id_usuario]);
     $participante = $stmtPart->fetch(PDO::FETCH_ASSOC);
 
     if (!$participante) {
-        $stmtInsPart = $pdo->prepare("INSERT INTO participantes (id_usuario) VALUES (?)");
+        $stmtInsPart = $pdo->prepare("INSERT INTO participantes (id_usuario, nombre, apellido) VALUES (?, 'Usuario', 'SGDM')");
         $stmtInsPart->execute([$id_usuario]);
         $id_participante = $pdo->lastInsertId();
     } else {
         $id_participante = $participante['id_participante'];
     }
 
+    // 2. Verificar que no exista inscripción previa
     $stmtCheck = $pdo->prepare("SELECT COUNT(*) FROM inscripciones_torneo WHERE id_torneo = ? AND id_participante = ?");
     $stmtCheck->execute([$id_torneo, $id_participante]);
 
@@ -40,14 +40,11 @@ try {
         exit;
     }
 
-    // Insertar la inscripción
-    $stmtInscripcion = $pdo->prepare("INSERT INTO inscripciones_torneo (id_torneo, id_participante, estado_inscripcion) VALUES (?, ?, 'Confirmado')");
+    // 3. Insertar inscripción con estado 'pendiente'
+    $stmtInscripcion = $pdo->prepare("INSERT INTO inscripciones_torneo (id_torneo, id_participante, estado_inscripcion) VALUES (?, ?, 'pendiente')");
     $stmtInscripcion->execute([$id_torneo, $id_participante]);
 
-    // 2. Enviar notificación
-    mandarNotificacion($pdo, $id_usuario, "Te has inscrito exitosamente al torneo.", "detalleTorneo.php?id=" . $id_torneo);
-
-    header('Location: ../detalleTorneo.php?id=' . $id_torneo . '&estado=inscrito');
+    header('Location: ../detalleTorneo.php?id=' . $id_torneo . '&estado=solicitado');
     exit;
 
 } catch (PDOException $e) {
@@ -102,6 +99,13 @@ try {
 
 } catch (PDOException $e) {
     // Redireccionar con error ante fallos de BD
+    header('Location: ../detalleTorneo.php?id=' . $id_torneo . '&estado=error');
+    exit;
+}
+$rolActual = $_SESSION['rol'] ?? 'visitante';
+
+// Denegar la inscripción si es administrador o visitante
+if ($rolActual === 'administrador' || $rolActual === 'visitante' || (int)$id_usuario === 1) {
     header('Location: ../detalleTorneo.php?id=' . $id_torneo . '&estado=error');
     exit;
 }

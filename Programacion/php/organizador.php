@@ -90,8 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $mensajeExito = "Participante inscrito correctamente en el torneo.";
                 }
                     $mensajeExito = "Participante inscrito correctamente en el torneo.";
-                }
-            } catch (PDOException $e) {
+                } catch (PDOException $e) {
                 $mensajeError = "Error al inscribir participante: " . $e->getMessage();
                 $mensajeError = "Error al inscribir participante: " . $e->getMessage();
             }

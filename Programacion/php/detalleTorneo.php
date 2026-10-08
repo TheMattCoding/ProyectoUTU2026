@@ -89,22 +89,23 @@ $fechaFormateada = !empty($torneo['fecha_inicio'] && !empty($torneo['hora_inicio
     ? date('d/m/Y - h:i A', strtotime($torneo['fecha_inicio'] . ' ' . $torneo['hora_inicio'])) 
     : 'Por confirmar';
 
-// Verificación usando la relación de id_usuario -> id_participante
-$yaInscrito = false;
+// Verificación de estado de inscripción del usuario
+$estadoInscripcionUser = null;
 if ($idUsuarioActual && $idTorneo) {
     $stmtPart = $pdo->prepare("SELECT id_participante FROM participantes WHERE id_usuario = :id_usuario");
     $stmtPart->execute([':id_usuario' => $idUsuarioActual]);
     $idParticipante = $stmtPart->fetchColumn();
 
     if ($idParticipante) {
-        $stmtCheck = $pdo->prepare("SELECT COUNT(*) FROM inscripciones_torneo WHERE id_torneo = :id_torneo AND id_participante = :id_participante");
+        $stmtCheck = $pdo->prepare("SELECT estado_inscripcion FROM inscripciones_torneo WHERE id_torneo = :id_torneo AND id_participante = :id_participante");
         $stmtCheck->execute([
             ':id_torneo'       => $idTorneo,
             ':id_participante' => $idParticipante
         ]);
-        $yaInscrito = $stmtCheck->fetchColumn() > 0;
+        $estadoInscripcionUser = strtolower($stmtCheck->fetchColumn() ?: '');
     }
 }
+$yaInscrito = in_array($estadoInscripcionUser, ['confirmado', 'pendiente']);
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -137,6 +138,8 @@ if ($idUsuarioActual && $idTorneo) {
             <!-- Visible para todos (incluyendo visitantes) -->
             <a href="inicio.php" class="sidebar-link">Inicio</a>
             <a href="calendario.php" class="sidebar-link">Calendario de torneos</a>
+            <a href="busquedaUsuario.php" class="sidebar-link">Buscar Usuarios</a>
+            <a href="resultadosTorneo.php" class="sidebar-link">Resultados y Posiciones</a>
 
             <!-- Solo Organizadores y Administradores -->
             <?php if (in_array($rolActual, ['organizador', 'administrador'])): ?>
@@ -198,33 +201,42 @@ if ($idUsuarioActual && $idTorneo) {
     <label for="noti-toggle" class="dropdown-overlay"></label>
 
     <div class="notifications-menu-card">
-        <div class="notifications-menu-header">
-            <span class="notifications-menu-title">Notificaciones</span>
-        </div>
-        <div class="notifications-menu-divider"></div>
-        <div class="notifications-menu-list">
-                <?php if (empty($mis_notis)): ?>
-                    <div>No hay notificaciones.</div>
-                <?php else: ?>
-                    <?php foreach ($mis_notis as $n): ?>
-                        <div>
-                            <a href="<?= htmlspecialchars($n['enlace']) ?>" class="notification-item unread">
-                                <div class="noti-indicator"></div>
-                                <div class="noti-content">
-                                    <p class="noti-text"><?= htmlspecialchars($n['mensaje']) ?></p>
-                                </div>
-                            </a>
-                
-                            <!-- Botón para borrar/descartar -->
-                            <form action="logica/eliminarNotificacion.php" method="POST">
-                                <input type="hidden" name="id_notificacion" value="<?= htmlspecialchars($n['id']) ?>">
-                                <button class="eliminar_notificacion" type="submit" title="Eliminar notificación">&times;</button>
-                            </form>
-                        </div>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-            </div>
+    <div class="notifications-menu-header">
+        <span class="notifications-menu-title">Notificaciones</span>
     </div>
+    <div class="notifications-menu-divider"></div>
+    
+    <div class="notifications-menu-list">
+        <?php if (empty($mis_notis)): ?>
+            <div class="notifications-empty">
+                <div class="notifications-empty-icon">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                        <line x1="2" y1="2" x2="22" y2="22"></line>
+                    </svg>
+                </div>
+                <span class="notifications-empty-title">Estás al día</span>
+                <span class="notifications-empty-desc">No tenés notificaciones pendientes por el momento.</span>
+            </div>
+        <?php else: ?>
+            <?php foreach ($mis_notis as $n): ?>
+                <div>
+                    <a href="<?= htmlspecialchars($n['enlace']) ?>" class="notification-item unread">
+                        <div class="noti-indicator"></div>
+                        <div class="noti-content">
+                            <p class="noti-text"><?= htmlspecialchars($n['mensaje']) ?></p>
+                        </div>
+                    </a>
+                    <form action="logica/eliminarNotificacion.php" method="POST">
+                        <input type="hidden" name="id_notificacion" value="<?= htmlspecialchars($n['id']) ?>">
+                        <button class="eliminar_notificacion" type="submit" title="Eliminar notificación">&times;</button>
+                    </form>
+                </div>
+            <?php endforeach; ?>
+        <?php endif; ?>
+    </div>
+</div>
 </div>
         <!-- Perfil -->
         <div class="profile-dropdown">
@@ -326,27 +338,51 @@ if ($idUsuarioActual && $idTorneo) {
             </div>
         </section>
 
-       <!-- Botón dinámico -->
-        <?php if ($yaInscrito): ?>
-            <button type="button" id="btn-inscrito" class="btn-principal btn-deshabilitado" disabled>
-                ✓ YA ESTÁS PARTICIPANDO
-            </button>
-        <?php elseif ($torneo['estado'] === 'en_curso'): ?>
-            <button type="button" class="btn-principal btn-deshabilitado" disabled>
-                TORNEO EN CURSO
-            </button>
-        <?php elseif ($torneo['estado'] === 'finalizado'): ?>
-            <button type="button" class="btn-principal btn-deshabilitado" disabled>
-                TORNEO FINALIZADO
-            </button>
-        <?php elseif ($torneo['estado'] === 'cancelado'): ?>
-            <button type="button" class="btn-principal btn-deshabilitado" disabled>
-                TORNEO CANCELADO
-            </button>
-        <?php else: ?>
-            <button type="button" id="btn-abrir-modal" class="btn-principal">
-                INSCRIBIRSE AHORA
-            </button>
+       <!-- Botón dinámico según estado de aprobación -->
+<?php if ($estadoInscripcionUser === 'pendiente'): ?>
+    <button type="button" class="btn-principal btn-deshabilitado" style="background-color: #ff9f0a; color: #111;" disabled>
+        SOLICITUD PENDIENTE DE APROBACIÓN
+    </button>
+<?php elseif ($estadoInscripcionUser === 'confirmado'): ?>
+    <button type="button" id="btn-inscrito" class="btn-principal btn-deshabilitado" disabled>
+        ✓ YA ESTÁS PARTICIPANDO
+    </button>
+<?php elseif ($torneo['estado'] === 'en_curso'): ?>
+    <button type="button" class="btn-principal btn-deshabilitado" disabled>
+        TORNEO EN CURSO
+    </button>
+<?php elseif ($torneo['estado'] === 'finalizado'): ?>
+    <button type="button" class="btn-principal btn-deshabilitado" disabled>
+        TORNEO FINALIZADO
+    </button>
+<?php elseif ($rolActual !== 'administrador' && $rolActual !== 'visitante' && (int)$idUsuarioActual !== 1): ?>
+    <button type="button" id="btn-abrir-modal" class="btn-principal">
+        INSCRIBIRSE AHORA
+    </button>
+<?php endif; ?>
+
+        <!-- Ventana Flotante Modal (solo para roles autorizados) -->
+        <?php if ($rolActual !== 'administrador' && $rolActual !== 'visitante' && (int)$idUsuarioActual !== 1): ?>
+        <div id="modal-inscripcion" class="modal-overlay">
+            <div class="modal-contenido">
+                <button type="button" id="btn-cerrar-modal" class="modal-cerrar">&times;</button>
+                <h3>Inscripción al Torneo</h3>
+                <p class="modal-subtitulo">Ingresa los datos para confirmar tu participación.</p>
+            
+                <form action="logica/inscribir.php" method="POST">
+                    <input type="hidden" name="id_torneo" value="<?php echo $idTorneo; ?>">
+                
+                    <div class="grupo-entrada">
+                        <label for="nombre_equipo" class="etiqueta-entrada">Nombre del Equipo / Participante:</label>
+                        <input type="text" id="nombre_equipo" name="nombre_equipo" required placeholder="Ej: Epsilon FC / Tu Nombre" class="control-formulario-entrada">
+                    </div>
+
+                    <button type="submit" class="btn-principal">
+                        CONFIRMAR INSCRIPCIÓN
+                    </button>
+                </form>
+            </div>
+        </div>
         <?php endif; ?>
 
         <!-- Ventana Flotante Modal -->

@@ -197,6 +197,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <nav class="sidebar-nav">
             <a href="inicio.php" class="sidebar-link">Inicio</a>
             <a href="calendario.php" class="sidebar-link">Calendario de torneos</a>
+            <a href="busquedaUsuario.php" class="sidebar-link">Buscar Usuarios</a>
+            <a href="resultadosTorneo.php" class="sidebar-link">Resultados y Posiciones</a>
 
             <?php if (in_array($rolActual, ['organizador', 'administrador'])): ?>
                 <a href="organizador.php" class="sidebar-link">Panel Organizador</a>
@@ -248,24 +250,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </label>
             <label for="noti-toggle" class="dropdown-overlay"></label>
             <div class="notifications-menu-card">
-                <div class="notifications-menu-header">
-                    <span class="notifications-menu-title">Notificaciones</span>
+    <div class="notifications-menu-header">
+        <span class="notifications-menu-title">Notificaciones</span>
+    </div>
+    <div class="notifications-menu-divider"></div>
+    
+    <div class="notifications-menu-list">
+        <?php if (empty($mis_notis)): ?>
+            <div class="notifications-empty">
+                <div class="notifications-empty-icon">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                        <line x1="2" y1="2" x2="22" y2="22"></line>
+                    </svg>
                 </div>
-                <div class="notifications-menu-divider"></div>
-                <div class="notifications-menu-list">
-                <?php if (empty($mis_notis)): ?>
-                    <div style="padding: 15px; text-align: center; color: #777;">No hay notificaciones.</div>
-                <?php else: ?>
-                    <?php foreach ($mis_notis as $n): ?>
-                        <a href="<?= htmlspecialchars($n['enlace']) ?>" class="notification-item unread" style="display: flex; align-items: center; text-decoration: none; padding: 10px; border-bottom: 1px solid #2a2a2a;">
-                            <div class="noti-indicator" style="width: 8px; height: 8px; background-color: #D4AF37; border-radius: 50%; margin-right: 10px;"></div>
-                            <div class="noti-content">
-                                <p class="noti-text" style="margin: 0; color: #fff; font-size: 14px;"><?= htmlspecialchars($n['mensaje']) ?></p>
-                            </div>
-                        </a>
-                    <?php endforeach; ?>
-                <?php endif; ?>
+                <span class="notifications-empty-title">Estás al día</span>
+                <span class="notifications-empty-desc">No tenés notificaciones pendientes por el momento.</span>
             </div>
+        <?php else: ?>
+            <?php foreach ($mis_notis as $n): ?>
+                <div>
+                    <a href="<?= htmlspecialchars($n['enlace']) ?>" class="notification-item unread">
+                        <div class="noti-indicator"></div>
+                        <div class="noti-content">
+                            <p class="noti-text"><?= htmlspecialchars($n['mensaje']) ?></p>
+                        </div>
+                    </a>
+                    <form action="logica/eliminarNotificacion.php" method="POST">
+                        <input type="hidden" name="id_notificacion" value="<?= htmlspecialchars($n['id']) ?>">
+                        <button class="eliminar_notificacion" type="submit" title="Eliminar notificación">&times;</button>
+                    </form>
+                </div>
+            <?php endforeach; ?>
+        <?php endif; ?>
+    </div>
+</div>
             </div>
         </div>
 

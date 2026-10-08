@@ -4,23 +4,23 @@ function obtenerMisNotificaciones($pdo, $id_usuario) {
     $notificaciones = [];
     $descartadas = $_SESSION['notis_descartadas'] ?? [];
 
-    // 1. Te has inscrito al torneo
+    // 1. Solicitud aprobada
     $sqlInscrito = "SELECT t.id_torneo, 
-                           CONCAT('Te has inscrito al torneo \"', t.nombre_torneo, '\"') AS mensaje,
+                           CONCAT('Tu inscripción al torneo \"', t.nombre_torneo, '\" ha sido APROBADA.') AS mensaje,
                            t.fecha_inicio AS fecha_orden
                     FROM inscripciones_torneo i
                     INNER JOIN participantes p ON i.id_participante = p.id_participante
                     INNER JOIN torneos t ON i.id_torneo = t.id_torneo
-                    WHERE p.id_usuario = :id1 AND i.estado_inscripcion = 'Confirmado'";
+                    WHERE p.id_usuario = :id1 AND LOWER(i.estado_inscripcion) = 'confirmado'";
 
-    // 2. Ya no perteneces al torneo (cancelado, rechazado o expulsado/baneado)
+    // 2. Solicitud rechazada o cancelada
     $sqlNoPertenece = "SELECT t.id_torneo, 
-                              CONCAT('Ya no perteneces al torneo \"', t.nombre_torneo, '\"') AS mensaje,
+                              CONCAT('Tu solicitud de inscripción al torneo \"', t.nombre_torneo, '\" fue RECHAZADA.') AS mensaje,
                               t.fecha_inicio AS fecha_orden
                        FROM inscripciones_torneo i
                        INNER JOIN participantes p ON i.id_participante = p.id_participante
                        INNER JOIN torneos t ON i.id_torneo = t.id_torneo
-                       WHERE p.id_usuario = :id2 AND i.estado_inscripcion IN ('baneado', 'cancelado', 'rechazada')";
+                       WHERE p.id_usuario = :id2 AND LOWER(i.estado_inscripcion) IN ('baneado', 'cancelado', 'rechazada')";
 
     // 3. Comienza en menos de 1 hora
     $sqlPorComenzar = "SELECT t.id_torneo, 
@@ -30,7 +30,7 @@ function obtenerMisNotificaciones($pdo, $id_usuario) {
                        INNER JOIN participantes p ON i.id_participante = p.id_participante
                        INNER JOIN torneos t ON i.id_torneo = t.id_torneo
                        WHERE p.id_usuario = :id3 
-                         AND i.estado_inscripcion = 'Confirmado'
+                         AND LOWER(i.estado_inscripcion) = 'confirmado'
                          AND t.estado = 'pendiente'
                          AND TIMESTAMP(t.fecha_inicio, t.hora_inicio) BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 1 HOUR)";
 
@@ -42,7 +42,7 @@ function obtenerMisNotificaciones($pdo, $id_usuario) {
                    INNER JOIN participantes p ON i.id_participante = p.id_participante
                    INNER JOIN torneos t ON i.id_torneo = t.id_torneo
                    WHERE p.id_usuario = :id4 
-                     AND i.estado_inscripcion = 'Confirmado'
+                     AND LOWER(i.estado_inscripcion) = 'confirmado'
                      AND t.estado = 'en_curso'";
 
     // 5. Avance de ronda
@@ -54,7 +54,7 @@ function obtenerMisNotificaciones($pdo, $id_usuario) {
                           INNER JOIN torneos t ON i.id_torneo = t.id_torneo
                           INNER JOIN rondas r ON r.id_torneo = t.id_torneo
                           WHERE p.id_usuario = :id5 
-                            AND i.estado_inscripcion = 'Confirmado'
+                            AND LOWER(i.estado_inscripcion) = 'confirmado'
                             AND r.estado_ronda = 'en_curso'";
 
     $query = "($sqlInscrito) UNION ALL ($sqlNoPertenece) UNION ALL ($sqlPorComenzar) UNION ALL ($sqlComenzo) UNION ALL ($sqlSiguienteRonda)
@@ -73,10 +73,8 @@ function obtenerMisNotificaciones($pdo, $id_usuario) {
         $filas = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         foreach ($filas as $f) {
-            // Clave única basada en el ID del torneo y el texto del mensaje
             $idUnico = md5($f['id_torneo'] . '_' . $f['mensaje']);
 
-            // Omitir si la notificación fue eliminada en esta sesión
             if (in_array($idUnico, $descartadas)) {
                 continue;
             }

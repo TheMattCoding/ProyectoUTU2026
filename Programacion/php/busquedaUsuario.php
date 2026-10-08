@@ -27,47 +27,45 @@ if (!empty($fotoPerfilRaw)) {
     }
 }
 
-// Comodines % para la búsqueda parcial por coincidencia de letras/palabras
+// Búsqueda de usuarios por nombre de usuario o nombre/apellido
 $paramBusqueda = '%' . $busqueda . '%';
 
-// Asignamos marcadores de posición independientes (:q1, :q2) para evitar el error HY093
-$sql = "SELECT t.*, 
-               m.nombre_modulo AS disciplina,
-               c.max_participantes,
-               (SELECT COUNT(*) FROM inscripciones_torneo i WHERE i.id_torneo = t.id_torneo) AS total_inscritos
-        FROM torneos t
-        LEFT JOIN modulos_competencia m ON t.id_modulo = m.id_modulo
-        LEFT JOIN configuracion_torneo c ON t.id_torneo = c.id_torneo
-        WHERE t.nombre_torneo LIKE :q1 
-           OR m.nombre_modulo LIKE :q2
-        ORDER BY t.id_torneo DESC";
+$sql = "SELECT u.id_usuario, u.username, u.email, u.foto_perfil, 
+               COALESCE(r.nombre_rol, 'usuario') AS rol,
+               p.nombre, p.apellido
+        FROM usuarios u
+        LEFT JOIN roles r ON u.id_rol = r.id_rol
+        LEFT JOIN participantes p ON u.id_usuario = p.id_usuario
+        WHERE u.username LIKE :q1 
+           OR p.nombre LIKE :q2 
+           OR p.apellido LIKE :q3
+        ORDER BY u.username ASC";
 
 $stmt = $pdo->prepare($sql);
 $stmt->execute([
     ':q1' => $paramBusqueda,
-    ':q2' => $paramBusqueda
+    ':q2' => $paramBusqueda,
+    ':q3' => $paramBusqueda
 ]);
 
-$torneos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$usuariosEncontrados = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SGDM - Resultados de Búsqueda</title>
+    <title>SGDM - Buscar Usuarios</title>
     <link rel="stylesheet" href="../css/inicio.css">
-    <link rel="stylesheet" href="../css/busqueda.css">
+    <link rel="stylesheet" href="../css/busquedaUsuario.css">
     <link rel="icon" type="image/png" href="../img/logoapp2.jpeg">
 </head>
 <body>
 
-    <!-- 5. Menú lateral -->
+    <!-- Menú lateral -->
     <input type="checkbox" id="menu-toggle" class="menu-checkbox">
 
     <div class="sidebar">
-
-        <!-- 5. Móvil cerrar menú -->
         <div class="sidebar-header">
             <span class="sidebar-title">Menú</span>
             <label for="menu-toggle" class="close-sidebar-btn" aria-label="Cerrar menú">X</label>
@@ -77,9 +75,8 @@ $torneos = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <!-- Visible para todos (incluyendo visitantes) -->
             <a href="inicio.php" class="sidebar-link">Inicio</a>
             <a href="calendario.php" class="sidebar-link">Calendario de torneos</a>
-            <a href="busquedaUsuario.php" class="sidebar-link">Buscar Usuarios</a>
-            <a href="resultadosTorneo.php" class="sidebar-link">Resultados y posiciones</a>
-
+            <a href="busquedaUsuario.php" class="sidebar-link active">Buscar Usuarios</a>
+            <a href="resultadosTorneo.php" class="sidebar-link">Resultados y Posiciones</a>
 
             <!-- Solo Organizadores y Administradores -->
             <?php if (in_array($rolActual, ['organizador', 'administrador'])): ?>
@@ -116,29 +113,31 @@ $torneos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <svg class="search-google-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                     <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" fill="#777777"/>
                 </svg>
-                <input type="text" class="search-input" placeholder="Buscar un torneo" aria-label="Buscar torneos" name="query" value="<?= htmlspecialchars($busqueda) ?>">
+                <input type="text" class="search-input" placeholder="Buscar un torneo" aria-label="Buscar torneos" name="query">
             </div>
         </form>
         <a href="busquedaTorneo.php" class="btn-ver-torneos-nav">
             Ver torneos
         </a>
+
+        <!-- Notificaciones -->
         <div class="notifications-dropdown">
-    <input type="checkbox" id="noti-toggle" class="dropdown-checkbox">
+            <input type="checkbox" id="noti-toggle" class="dropdown-checkbox">
 
-    <label for="noti-toggle" class="notifications-dropdown-button" aria-label="Notificaciones">
-        <div class="notifications-icon-wrapper">
-            <svg class="bell-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z" fill="#cccccc"/>
-            </svg>
-            <?php if ($cant_sin_leer > 0): ?>
-                <span class="notification-dot"></span>
-            <?php endif; ?>
-        </div>
-    </label>
+            <label for="noti-toggle" class="notifications-dropdown-button" aria-label="Notificaciones">
+                <div class="notifications-icon-wrapper">
+                    <svg class="bell-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z" fill="#cccccc"/>
+                    </svg>
+                    <?php if ($cant_sin_leer > 0): ?>
+                        <span class="notification-dot"></span>
+                    <?php endif; ?>
+                </div>
+            </label>
 
-    <label for="noti-toggle" class="dropdown-overlay"></label>
+            <label for="noti-toggle" class="dropdown-overlay"></label>
 
-    <div class="notifications-menu-card">
+            <div class="notifications-menu-card">
     <div class="notifications-menu-header">
         <span class="notifications-menu-title">Notificaciones</span>
     </div>
@@ -175,8 +174,9 @@ $torneos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <?php endif; ?>
     </div>
 </div>
-</div>
+        </div>
 
+        <!-- Perfil -->
         <div class="profile-dropdown">
             <input type="checkbox" id="profile-toggle" class="dropdown-checkbox">
             <label for="profile-toggle" class="profile-dropdown-button" aria-label="Menú de usuario">
@@ -210,57 +210,50 @@ $torneos = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
         </div>
     </nav>
-    
+
     <main class="main-container">
         <div class="cabecera-resultados">
-            <h2 class="titulo-resultados">
-                <?php if (!empty($busqueda)): ?>
-                    Resultados para: <span class="palabra-clave">"<?php echo htmlspecialchars($busqueda); ?>"</span>
-                <?php else: ?>
-                    Todos los torneos disponibles
-                <?php endif; ?>
-            </h2>
+            <h2 class="titulo-resultados">Búsqueda de Usuarios</h2>
         </div>
 
-        <section class="lista-torneos">
-            <?php if (empty($torneos)): ?>
-                <p style="color: #aaa; margin: 20px 0; grid-column: 1 / -1;">
-                    No se encontraron torneos que coincidan con tu búsqueda.
+        <form action="busquedaUsuario.php" method="GET" class="form-busqueda-usuario">
+            <input type="text" name="query" class="input-busqueda-user" placeholder="Ingresa nombre de usuario..." value="<?= htmlspecialchars($busqueda) ?>">
+            <button type="submit" class="btn-buscar-user">Buscar</button>
+        </form>
+
+        <section class="grid-usuarios">
+            <?php if (empty($usuariosEncontrados)): ?>
+                <p style="color: #aaa; grid-column: 1 / -1;">
+                    No se encontraron usuarios que coincidan con la búsqueda.
                 </p>
             <?php else: ?>
-                <?php foreach ($torneos as $torneo): 
-                    $imagenPortada = '../img/logoapp2.jpeg'; // Imagen por defecto
-                    $campoImagen   = $torneo['imagen_portada'] ?? null;
-
-                    if (!empty($campoImagen)) {
-                        if (strpos($campoImagen, 'http') === 0) {
-                            $imagenPortada = $campoImagen;
-                        } else {
-                            $nombreArchivo = basename($campoImagen);
-                            $rutaFisica   = __DIR__ . '/../img/portadas/' . $nombreArchivo;
-                            $rutaRelativa = '../img/portadas/' . $nombreArchivo;
-
-                            if (file_exists($rutaFisica)) {
-                                $imagenPortada = $rutaRelativa;
-                            }
-                        }
+                <?php foreach ($usuariosEncontrados as $user): 
+                    $fotoUser = null;
+                    if (!empty($user['foto_perfil'])) {
+                        $fotoUser = (strpos($user['foto_perfil'], '../') === 0 || strpos($user['foto_perfil'], 'http') === 0) 
+                            ? $user['foto_perfil'] 
+                            : '../' . ltrim($user['foto_perfil'], '/');
                     }
+                    $nombreCompleto = trim(($user['nombre'] ?? '') . ' ' . ($user['apellido'] ?? ''));
+                    $rolClase = strtolower($user['rol']);
                 ?>
-                    <article class="tarjeta-torneo">
-                        <div class="contenedor-imagen">
-                            <img src="<?php echo htmlspecialchars($imagenPortada); ?>" alt="<?php echo htmlspecialchars($torneo['nombre_torneo']); ?>" class="imagen-torneo">
-                            <div class="superposicion-tarjeta"></div>
-                            <h3 class="titulo-torneo"><?php echo htmlspecialchars($torneo['nombre_torneo']); ?></h3>
+                    <article class="tarjeta-usuario">
+                        <div class="avatar-usuario-busqueda">
+                            <?php if ($fotoUser): ?>
+                                <img src="<?= htmlspecialchars($fotoUser) ?>" alt="<?= htmlspecialchars($user['username']) ?>" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">
+                            <?php else: ?>
+                                <svg class="avatar-svg" style="width: 45px; height: 45px; fill: #888;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+                                    <path d="M320 312C386.3 312 440 258.3 440 192C440 125.7 386.3 72 320 72C253.7 72 200 125.7 200 192C200 258.3 253.7 312 320 312zM290.3 368C191.8 368 112 447.8 112 546.3C112 562.7 125.3 576 141.7 576L498.3 576C514.7 576 528 562.7 528 546.3C528 447.8 448.2 368 349.7 368L290.3 368z" />
+                                </svg>
+                            <?php endif; ?>
                         </div>
-                        <div class="info-tarjeta">
-                            <span class="fecha-torneo">
-                                <?php 
-                                    $timeInicio = !empty($torneo['fecha_inicio']) ? strtotime($torneo['fecha_inicio']) : false;
-                                    echo $timeInicio ? date('d/m', $timeInicio) : '--/--'; 
-                                ?>
-                            </span>
-                            <a href="detalleTorneo.php?id=<?php echo $torneo['id_torneo']; ?>" class="btn btn-secondary btn-ver-mas">Ver más</a>
-                        </div>
+                        <div class="username-card">@<?= htmlspecialchars($user['username']) ?></div>
+                        <?php if ($nombreCompleto): ?>
+                            <div class="nombre-completo-card"><?= htmlspecialchars($nombreCompleto) ?></div>
+                        <?php endif; ?>
+                        <span class="badge-rol <?= htmlspecialchars($rolClase) ?>">
+                            <?= htmlspecialchars(ucfirst($user['rol'])) ?>
+                        </span>
                     </article>
                 <?php endforeach; ?>
             <?php endif; ?>
@@ -324,7 +317,7 @@ $torneos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
     </section>
 
-    <!-- Modal Ayuda y Soporte -->
+    <!-- Modal Ayuda -->
     <section id="seccion-ayuda" class="seccion-desplegable" aria-hidden="true">
         <div class="seccion-encabezado">
             <h3 class="seccion-titulo">Centro de Ayuda</h3>
@@ -332,55 +325,16 @@ $torneos = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
 
         <div class="seccion-contenido">
-            <!-- 1. Preguntas Frecuentes (FAQ) -->
             <div class="bloque-nosotros">
                 <h4 class="subtitulo-nosotros">Preguntas Frecuentes</h4>
-                
                 <details class="item-faq">
-                    <summary class="pregunta-faq">¿Cómo me inscribo a un torneo?</summary>
-                    <p class="texto-nosotros">Ve a la sección de torneos, selecciona la competencia deseada y presiona en "Inscribirse".</p>
+                    <summary class="pregunta-faq">¿Cómo busco a un usuario?</summary>
+                    <p class="texto-nosotros">Escribe el nombre de usuario en el campo de búsqueda y presiona "Buscar".</p>
                 </details>
-
-                <details class="item-faq">
-                    <summary class="pregunta-faq">¿Cómo edito la información de mi perfil?</summary>
-                    <p class="texto-nosotros">Haz clic en la seccion de configuración del menú lateral y accede a la pestaña "Editar perfil" para actualizar tus datos personales.</p>
-                </details>
-            </div>
-
-            <!-- 2. Soporte Técnico y Contacto Directo -->
-            <div class="bloque-nosotros">
-                <h4 class="subtitulo-nosotros">Soporte Técnico y Contacto Directo</h4>
-                <div class="detalles-nosotros">
-                    <div class="item-detalle">
-                        <span class="etiqueta-detalle">Correo de soporte:</span>
-                        <span class="valor-detalle">epsilonsoftwarecontacto@gmail.com</span>
-                    </div>
-                    <div class="item-detalle">
-                        <span class="etiqueta-detalle">Horarios de atención:</span>
-                        <span class="valor-detalle">Lunes a Viernes de 09:00 a 18:00 hs</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 3 y 4. Guías, Tutoriales y Reporte de Errores -->
-            <div class="bloque-nosotros">
-                <h4 class="subtitulo-nosotros">Recursos y Reporte de Errores</h4>
-                <p class="texto-nosotros">¿Encontraste un fallo o un error? Puedes notificarlo o consultar nuestra documentación oficial:</p>
-                <div class="detalles-nosotros">
-                    <div class="item-detalle">
-                        <span class="etiqueta-detalle">Manual de usuario:</span>
-                        <a href="#" class="valor-detalle enlace-ayuda" target="_blank" rel="noopener">Ver Guía en PDF</a>
-                    </div>
-                    <div class="item-detalle">
-                        <span class="etiqueta-detalle">Reportar fallo (Bug):</span>
-                        <a href="https://mail.google.com/mail/?view=cm&fs=1&to=epsilonsoftwarecontacto@gmail.com&su=Error&body=Descripción%20del%20error:%0A%0APágina/Sección:%0A%0APasos%20para%20reproducirlo:" class="valor-detalle enlace-ayuda" target="_blank" rel="noopener">Enviar reporte de error</a>
-                    </div>
-                </div>
             </div>
         </div>
     </section>
 
-    <!-- JavaScript -->
     <script src="../js/seccionSobreNosotros.js"></script>
     <script src="../js/seccionAyuda.js"></script>
 

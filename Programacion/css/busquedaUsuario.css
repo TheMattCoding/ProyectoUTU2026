@@ -1,0 +1,271 @@
+/*==================================================================
+  BUSQUEDAUSUARIO.CSS
+  Estilos para la búsqueda de usuarios y resultados en grilla.
+  Requiere importación previa de inicio.css
+==================================================================*/
+
+/*============== 1. Encabezado y Secciones de Página ==============*/
+
+.page-header,
+.cabecera-resultados {
+    width: 100%;
+    max-width: 1150px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 8px;
+}
+
+.page-title,
+.titulo-resultados {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text-color, #111111);
+    letter-spacing: -0.5px;
+    margin: 0;
+}
+
+.page-subtitle {
+    font-size: 0.9rem;
+    color: #666666;
+    margin-top: 4px;
+}
+
+/*============== 2. Formulario de Búsqueda de Usuarios ==============*/
+
+.form-busqueda-usuario {
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.input-busqueda-user {
+    flex: 1;
+    height: 42px;
+    padding: 0 16px;
+    background-color: var(--bg-dark, #151515);
+    border: 1.5px solid var(--search-border, #444444);
+    border-radius: 24px;
+    color: #ffffff;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input-busqueda-user::placeholder {
+    color: #888888;
+}
+
+.input-busqueda-user:focus {
+    border-color: var(--gold-bright, #D4AF37);
+    box-shadow: 0 0 8px rgba(212, 175, 55, 0.2);
+}
+
+.btn-buscar-user {
+    background-color: var(--gold-dark, #9C8255);
+    color: #ffffff;
+    border: none;
+    padding: 0 24px;
+    border-radius: 24px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn-buscar-user:hover {
+    background-color: var(--gold-bright, #D4AF37);
+    color: #151515;
+    transform: translateY(-1px);
+}
+
+/*============== 3. Grilla y Tarjetas de Usuarios ==============*/
+
+.grid-usuarios {
+    width: 100%;
+    max-width: 1150px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.tarjeta-usuario {
+    background-color: var(--bg-dark, #151515);
+    border: 1px solid var(--search-border, #444444);
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.tarjeta-usuario:hover {
+    transform: translateY(-4px);
+    border-color: var(--gold-bright, #D4AF37);
+    box-shadow: 0 8px 20px rgba(212, 175, 55, 0.15);
+}
+
+.avatar-usuario-busqueda {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-bottom: 12px;
+    border: 2px solid var(--gold-bright, #D4AF37);
+    background-color: #222222;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.avatar-usuario-busqueda img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.username-card {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #ffffff;
+    word-break: break-all;
+}
+
+.nombre-completo-card {
+    font-size: 0.85rem;
+    color: var(--gold-muted, #A89880);
+    margin-top: 4px;
+}
+
+/*============== 4. Badges de Rol ==============*/
+
+.badge-rol {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.badge-rol.administrador {
+    background-color: rgba(212, 175, 55, 0.15);
+    color: var(--gold-bright, #D4AF37);
+    border: 1px solid var(--gold-bright, #D4AF37);
+}
+
+.badge-rol.organizador {
+    background-color: rgba(52, 152, 219, 0.15);
+    color: #3498db;
+    border: 1px solid #3498db;
+}
+
+.badge-rol.usuario {
+    background-color: rgba(255, 255, 255, 0.08);
+    color: #cccccc;
+    border: 1px solid #555555;
+}
+
+/*============== 5. Grillas y Paneles Genéricos ==============*/
+
+.content-grid {
+    width: 100%;
+    max-width: 1150px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+}
+
+.content-card {
+    background-color: var(--bg-dark, #151515);
+    border: 1px solid var(--search-border, #444444);
+    border-radius: 16px;
+    padding: 24px;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.content-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--search-border, #444444);
+    padding-bottom: 12px;
+}
+
+.content-card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--gold-bright, #D4AF37);
+}
+
+/*============== 6. Tablas de Datos ===============*/
+
+.table-responsive-container {
+    width: 100%;
+    max-width: 1150px;
+    background-color: var(--bg-dark, #151515);
+    border: 1px solid var(--search-border, #444444);
+    border-radius: 16px;
+    overflow-x: auto;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    color: #dddddd;
+    font-size: 0.9rem;
+}
+
+.data-table th {
+    background-color: #1c1c1c;
+    color: var(--gold-bright, #D4AF37);
+    font-weight: 600;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--search-border, #444444);
+    white-space: nowrap;
+}
+
+.data-table td {
+    padding: 14px 18px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    vertical-align: middle;
+}
+
+.data-table tbody tr:hover {
+    background-color: rgba(212, 175, 55, 0.05);
+}
+
+.data-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/*============== 7. Ajustes Responsivos ==============*/
+
+@media (min-width: 1024px) {
+    .page-header,
+    .cabecera-resultados {
+        margin-bottom: 16px;
+    }
+    
+    .page-title,
+    .titulo-resultados {
+        font-size: 2rem;
+    }
+}
