@@ -62,13 +62,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($accion === 'inscribir_participante') {
         $idTorneo = filter_var($_POST['id_torneo'] ?? 0, FILTER_VALIDATE_INT);
         $idParticipante = filter_var($_POST['id_participante'] ?? 0, FILTER_VALIDATE_INT);
-        $idParticipante = filter_var($_POST['id_participante'] ?? 0, FILTER_VALIDATE_INT);
 
-        if ($idTorneo && $idParticipante) {
         if ($idTorneo && $idParticipante) {
             try {
                 // Verificar si el participante ya se encuentra inscrito en el torneo
-                $sqlVerificar = "SELECT COUNT(*) FROM INSCRIPCIONES_TORNEO 
+                $sqlVerificar = "SELECT COUNT(*) FROM inscripciones_torneo 
                                  WHERE id_torneo = :id_torneo AND id_participante = :id_participante";
                 $stmtVerificar = $pdo->prepare($sqlVerificar);
                 $stmtVerificar->execute([
@@ -79,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if ($stmtVerificar->fetchColumn() > 0) {
                     $mensajeError = "El participante ya está inscrito en este torneo.";
                 } else {
-                    $sqlInscribir = "INSERT INTO INSCRIPCIONES_TORNEO (id_torneo, id_participante, estado_inscripcion) 
+                    $sqlInscribir = "INSERT INTO inscripciones_torneo (id_torneo, id_participante, estado_inscripcion) 
                                      VALUES (:id_torneo, :id_participante, 'confirmado')";
                     $stmtInscribir = $pdo->prepare($sqlInscribir);
                     $stmtInscribir->execute([
@@ -89,13 +87,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     $mensajeExito = "Participante inscrito correctamente en el torneo.";
                 }
-                    $mensajeExito = "Participante inscrito correctamente en el torneo.";
-                } catch (PDOException $e) {
-                $mensajeError = "Error al inscribir participante: " . $e->getMessage();
+            } catch (PDOException $e) {
                 $mensajeError = "Error al inscribir participante: " . $e->getMessage();
             }
         } else {
-            $mensajeError = "Por favor, seleccioná un torneo y un participante válidos.";
             $mensajeError = "Por favor, seleccioná un torneo y un participante válidos.";
         }
     }
