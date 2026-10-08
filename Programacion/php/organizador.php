@@ -62,7 +62,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($accion === 'inscribir_participante') {
         $idTorneo = filter_var($_POST['id_torneo'] ?? 0, FILTER_VALIDATE_INT);
         $idParticipante = filter_var($_POST['id_participante'] ?? 0, FILTER_VALIDATE_INT);
+        $idParticipante = filter_var($_POST['id_participante'] ?? 0, FILTER_VALIDATE_INT);
 
+        if ($idTorneo && $idParticipante) {
         if ($idTorneo && $idParticipante) {
             try {
                 // Verificar si el participante ya se encuentra inscrito en el torneo
@@ -87,10 +89,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     $mensajeExito = "Participante inscrito correctamente en el torneo.";
                 }
+                    $mensajeExito = "Participante inscrito correctamente en el torneo.";
+                }
             } catch (PDOException $e) {
+                $mensajeError = "Error al inscribir participante: " . $e->getMessage();
                 $mensajeError = "Error al inscribir participante: " . $e->getMessage();
             }
         } else {
+            $mensajeError = "Por favor, seleccioná un torneo y un participante válidos.";
             $mensajeError = "Por favor, seleccioná un torneo y un participante válidos.";
         }
     }
@@ -161,6 +167,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // ==========================================
 // CONSULTA DE TORNEOS, PARTIDOS Y PARTICIPANTES
+// CONSULTA DE TORNEOS, PARTIDOS Y PARTICIPANTES
 // ==========================================
 try {
     // 1. Obtener lista de Torneos
@@ -214,7 +221,11 @@ try {
         $sqlPartidos .= " AND t.id_organizador = :id_organizador";
         $stmtPartidos = $pdo->prepare($sqlPartidos);
         $stmtPartidos->execute([':id_organizador' => $idUsuarioActual]);
+        $stmtPartidos = $pdo->prepare($sqlPartidos);
+        $stmtPartidos->execute([':id_organizador' => $idUsuarioActual]);
     } else {
+        $stmtPartidos = $pdo->prepare($sqlPartidos);
+        $stmtPartidos->execute();
         $stmtPartidos = $pdo->prepare($sqlPartidos);
         $stmtPartidos->execute();
     }
@@ -223,6 +234,7 @@ try {
 } catch (PDOException $e) {
     $errorBaseDatos = "Error SQL: " . $e->getMessage();
     $torneosAsignados = [];
+    $listaParticipantes = [];
     $listaParticipantes = [];
     $partidosPendientes = [];
 }
