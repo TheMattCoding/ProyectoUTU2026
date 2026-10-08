@@ -146,6 +146,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // ---------------------------------------------------------
+    // GUARDAR PREFERENCIAS DE NOTIFICACIONES EN SESIÓN
+    // ---------------------------------------------------------
+    elseif ($accion === 'guardar_notificaciones') {
+        $_SESSION['preferencias_notificacion'] = [
+            'noti_fixtures'               => isset($_POST['noti_fixtures']) ? 1 : 0,
+            'noti_resultados'             => isset($_POST['noti_resultados']) ? 1 : 0,
+            'noti_cancelaciones'          => isset($_POST['noti_cancelaciones']) ? 1 : 0,
+            'noti_proximos'               => isset($_POST['noti_proximos']) ? 1 : 0,
+            'noti_inscripcion_confirmada' => isset($_POST['noti_inscripcion_confirmada']) ? 1 : 0,
+            'noti_inscripcion_rechazada'  => isset($_POST['noti_inscripcion_rechazada']) ? 1 : 0,
+        ];
+
+        $_SESSION['mensaje_exito'] = 'Preferencias de notificaciones guardadas correctamente.';
+    }
+    
+    // ---------------------------------------------------------
     // 3. ELIMINAR CUENTA
     // ---------------------------------------------------------
     elseif ($accion === 'borrar_cuenta') {

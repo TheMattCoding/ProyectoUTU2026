@@ -31,6 +31,15 @@ if ($idUsuario) {
     $usuarioDatos = $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
 }
 
+$prefNotis = $_SESSION['preferencias_notificacion'] ?? [
+    'noti_fixtures'               => 1,
+    'noti_resultados'             => 1,
+    'noti_cancelaciones'          => 1,
+    'noti_proximos'               => 1,
+    'noti_inscripcion_confirmada' => 1,
+    'noti_inscripcion_rechazada'  => 1
+];
+
 $username   = $usuarioDatos['username'] ?? $_SESSION['usuario'] ?? 'Usuario';
 $email      = $usuarioDatos['email'] ?? $_SESSION['correo'] ?? '';
 $nombre     = $usuarioDatos['nombre'] ?? $_SESSION['nombre'] ?? '';
@@ -345,36 +354,75 @@ unset($_SESSION['mensaje_exito'], $_SESSION['mensaje_error'], $_SESSION['pestana
                 </div>
 
                 <!-- 3. Notificaciones -->
-                <div id="notificaciones" class="seccion-configuracion panel-notificaciones">
-                    <h3 class="titulo-seccion">Preferencias de Alertas</h3>
-                    <p class="subtitulo-seccion">Elige qué eventos del torneo querés recibir.</p>
+<div id="notificaciones" class="seccion-configuracion panel-notificaciones">
+    <h3 class="titulo-seccion">Preferencias de Alertas</h3>
+    <p class="subtitulo-seccion">Elige qué eventos del torneo querés recibir en tus notificaciones.</p>
 
-                    <!-- Alertas específicas de Notificaciones -->
-                    <?php if ($mensajeExito && $pestanaActiva === 'notificaciones'): ?>
-                        <div class="alerta alerta-exito"><?= htmlspecialchars($mensajeExito) ?></div>
-                    <?php endif; ?>
-                    <?php if ($mensajeError && $pestanaActiva === 'notificaciones'): ?>
-                        <div class="alerta alerta-error"><?= htmlspecialchars($mensajeError) ?></div>
-                    <?php endif; ?>
-                    
-                    <form action="logica/actualizarConfiguracion.php" method="POST" class="formulario-configuracion">
-                        <input type="hidden" name="accion" value="guardar_notificaciones">
-                        <input type="hidden" name="pestana_activa" value="notificaciones">
-                        <input type="hidden" name="ultimo_input_id" class="campo-ultimo-input" value="">
-                        
-                        <div class="grupo-checkbox">
-                            <label class="contenedor-interruptor">
-                                <input type="checkbox" id="noti_fixtures" name="noti_fixtures" checked>
-                                <span class="deslizador"></span>
-                                <span class="etiqueta-interruptor">Publicación de Fixtures</span>
-                            </label>
-                        </div>
+    <?php if ($mensajeExito && $pestanaActiva === 'notificaciones'): ?>
+        <div class="alerta alerta-exito"><?= htmlspecialchars($mensajeExito) ?></div>
+    <?php endif; ?>
+    <?php if ($mensajeError && $pestanaActiva === 'notificaciones'): ?>
+        <div class="alerta alerta-error"><?= htmlspecialchars($mensajeError) ?></div>
+    <?php endif; ?>
+    
+    <form action="logica/actualizarConfiguracion.php" method="POST" class="formulario-configuracion">
+        <input type="hidden" name="accion" value="guardar_notificaciones">
+        <input type="hidden" name="pestana_activa" value="notificaciones">
+        <input type="hidden" name="ultimo_input_id" class="campo-ultimo-input" value="">
+        
+        <div class="grupo-checkbox">
+            <label class="contenedor-interruptor">
+                <input type="checkbox" id="noti_fixtures" name="noti_fixtures" value="1" <?= !empty($prefNotis['noti_fixtures']) ? 'checked' : '' ?>>
+                <span class="deslizador"></span>
+                <span class="etiqueta-interruptor">Publicación de Fixtures y Rondas</span>
+            </label>
+        </div>
 
-                        <div class="acciones-formulario">
-                            <button type="submit" class="btn-guardar">Guardar alertas</button>
-                        </div>
-                    </form>
-                </div>
+        <div class="grupo-checkbox">
+            <label class="contenedor-interruptor">
+                <input type="checkbox" id="noti_resultados" name="noti_resultados" value="1" <?= !empty($prefNotis['noti_resultados']) ? 'checked' : '' ?>>
+                <span class="deslizador"></span>
+                <span class="etiqueta-interruptor">Resultados de Torneos y Marcadores</span>
+            </label>
+        </div>
+
+        <div class="grupo-checkbox">
+            <label class="contenedor-interruptor">
+                <input type="checkbox" id="noti_cancelaciones" name="noti_cancelaciones" value="1" <?= !empty($prefNotis['noti_cancelaciones']) ? 'checked' : '' ?>>
+                <span class="deslizador"></span>
+                <span class="etiqueta-interruptor">Cancelaciones de Torneos</span>
+            </label>
+        </div>
+
+        <div class="grupo-checkbox">
+            <label class="contenedor-interruptor">
+                <input type="checkbox" id="noti_proximos" name="noti_proximos" value="1" <?= !empty($prefNotis['noti_proximos']) ? 'checked' : '' ?>>
+                <span class="deslizador"></span>
+                <span class="etiqueta-interruptor">Próximos Torneos por Comenzar</span>
+            </label>
+        </div>
+
+        <div class="grupo-checkbox">
+            <label class="contenedor-interruptor">
+                <input type="checkbox" id="noti_inscripcion_confirmada" name="noti_inscripcion_confirmada" value="1" <?= !empty($prefNotis['noti_inscripcion_confirmada']) ? 'checked' : '' ?>>
+                <span class="deslizador"></span>
+                <span class="etiqueta-interruptor">Inscripciones Confirmadas / Aprobadas</span>
+            </label>
+        </div>
+
+        <div class="grupo-checkbox">
+            <label class="contenedor-interruptor">
+                <input type="checkbox" id="noti_inscripcion_rechazada" name="noti_inscripcion_rechazada" value="1" <?= !empty($prefNotis['noti_inscripcion_rechazada']) ? 'checked' : '' ?>>
+                <span class="deslizador"></span>
+                <span class="etiqueta-interruptor">Inscripciones Canceladas o Rechazadas</span>
+            </label>
+        </div>
+
+        <div class="acciones-formulario">
+            <button type="submit" class="btn-guardar">Guardar preferencias</button>
+        </div>
+    </form>
+</div>
 
                 <!-- 4. Borrar cuenta -->
                 <div id="borrar-cuenta" class="seccion-configuracion panel-borrar">
