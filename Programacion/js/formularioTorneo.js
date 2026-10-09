@@ -97,4 +97,30 @@ document.addEventListener('DOMContentLoaded', () => {
         modalidad.addEventListener('change', actualizarModalidad);
         actualizarModalidad();
     }
+
+    // 6. Manejo de Ubicación (Departamento + Dirección exacta o Remoto)
+    const selectLugar = document.getElementById('lugar');
+    const inputDireccion = document.getElementById('direccion_lugar');
+
+    if (selectLugar && inputDireccion) {
+        selectLugar.addEventListener('change', function() {
+            if (this.value !== "") {
+                // Mostrar el input y hacerlo obligatorio
+                inputDireccion.style.display = "block";
+                inputDireccion.required = true; 
+                
+                // Cambiar el placeholder si es "Online" o si es un departamento físico
+                if (this.value === "Online") {
+                    inputDireccion.placeholder = "Ej: Enlace de Discord, código de lobby, plataforma...";
+                } else {
+                    inputDireccion.placeholder = "Ej: Dirección exacta, club o polideportivo...";
+                }
+            } else {
+                // Ocultar y limpiar si no hay selección
+                inputDireccion.style.display = "none";
+                inputDireccion.required = false;
+                inputDireccion.value = ""; 
+            }
+        });
+    }
 });     

@@ -290,7 +290,7 @@ $inscripciones = $stmtInscripciones->fetchAll();
 
         <article class="isla-organizador-unica">
             
-            <!-- 1. Estadísticas del Sistema (KPIs) -->
+          <!-- 1. Estadísticas del Sistema (KPIs) -->
             <section class="seccion-kpis">
                 <div class="tarjeta-kpi">
                     <h3>Torneos Creados</h3>
@@ -306,10 +306,10 @@ $inscripciones = $stmtInscripciones->fetchAll();
                 </div>
             </section>
 
-            <!-- Navegación por pestañas -->
             <div class="tab-navigation">
                 <button class="tab-btn active" onclick="mostrarPestana(event, 'gestion')">Gestión del Panel</button>
-                <button class="tab-btn" onclick="mostrarPestana(event, 'monitoreo')">Monitoreo del Sistema</button>
+
+                <button type="button" class="tab-btn" onclick="window.open('http://10.0.0.115:3000', '_blank')">Monitoreo del Sistema</button>
             </div>
 
             <!-- PESTAÑA 1: GESTIÓN -->
@@ -495,17 +495,7 @@ $inscripciones = $stmtInscripciones->fetchAll();
                         </table>
                     </div>
                 </section>
-
             </div>
-
-            <!-- PESTAÑA 2: MONITOREO (GRAFANA) -->
-            <div id="pestana-monitoreo" class="tab-content" style="display: none;">
-                <div class="card-monitoreo">
-                    <h3 style="color: #fff; margin-bottom: 15px;">Métricas y Monitoreo en Tiempo Real</h3>
-                    <iframe src="http://localhost:3000" width="100%" height="650" frameborder="0"></iframe>
-                </div>
-            </div>
-
         </article>
 
     </main>

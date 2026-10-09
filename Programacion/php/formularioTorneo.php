@@ -37,6 +37,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $cantidad = !empty($_POST['max_participantes']) ? (int)$_POST['max_participantes'] : NULL;
     $privacidad = $_POST['privacidad'] ?? '';
     $descripcion = trim($_POST['descripcion'] ?? '');
+    $departamento = trim($_POST['lugar'] ?? '');
+    $direccion = trim($_POST['direccion_lugar'] ?? '');
+    $ubicacion = $departamento;
+    if (!empty($direccion)) {
+        $ubicacion .= ' - ' . $direccion;
+    }
 
     // Lógica para subir la imagen de portada ('portada' coincidiendo con el HTML)
     $rutaImagenBD = NULL;
@@ -111,6 +117,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
+    if (empty($ubicacion)) {
+        $mensaje = "Por favor, selecciona o ingresa una ubicación.";
+        $tipoMensaje = "error";
+    }
+
     if (empty($formato) || empty($modalidad) || empty($privacidad)) {
         $mensaje = "Por favor, completa todos los campos obligatorios.";
         $tipoMensaje = "error";
@@ -143,7 +154,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $descripcion,
                 $idModulo,
                 $idUsuarioActual,
-                'Montevideo',
+                $ubicacion,    
                 $fecha,
                 $hora,
                 $privacidad,
@@ -466,11 +477,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </div>
                         </div>
                         
-                        <div class="grupo-formulario">
-                            <label>Ubicación del Torneo</label>
-                            <div class="contenedor-mapa">
-                                <iframe src="https://maps.google.com/maps?q=Montevideo&t=&z=13&ie=UTF8&iwloc=&output=embed" allowfullscreen="" loading="lazy"></iframe>
-                            </div>
+                       <div class="grupo-formulario">
+                            <label for="lugar">Ubicación del Torneo</label>
+                            
+                            <!-- Select del departamento -->
+                            <select id="lugar" name="lugar" required>
+                                <option value="" disabled selected>Seleccione el departamento...</option>
+                                <option value="Artigas">Artigas</option>
+                                <option value="Canelones">Canelones</option>
+                                <option value="Cerro Largo">Cerro Largo</option>
+                                <option value="Colonia">Colonia</option>
+                                <option value="Durazno">Durazno</option>
+                                <option value="Flores">Flores</option>
+                                <option value="Florida">Florida</option>
+                                <option value="Lavalleja">Lavalleja</option>
+                                <option value="Maldonado">Maldonado</option>
+                                <option value="Montevideo">Montevideo</option>
+                                <option value="Paysandú">Paysandú</option>
+                                <option value="Río Negro">Río Negro</option>
+                                <option value="Rivera">Rivera</option>
+                                <option value="Rocha">Rocha</option>
+                                <option value="Salto">Salto</option>
+                                <option value="San José">San José</option>
+                                <option value="Soriano">Soriano</option>
+                                <option value="Tacuarembó">Tacuarembó</option>
+                                <option value="Treinta y Tres">Treinta y Tres</option>
+                                <option value="Online">Online / Remoto</option>
+                            </select>
+
+                            <input type="text" 
+                                   id="direccion_lugar" 
+                                   name="direccion_lugar" 
+                                   placeholder="Ej: Dirección exacta, club o polideportivo..." 
+                                   style="display: none; margin-top: 10px;">
                         </div>
                     </div>
                 </div>
