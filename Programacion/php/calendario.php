@@ -28,12 +28,13 @@ if (!empty($fotoPerfilRaw)) {
     }
 }
 
-// 1. Obtener Torneos Globales
+// 1. Obtener Torneos Globales (excluyendo los privados)
 $stmtGlobal = $pdo->prepare("
     SELECT DISTINCT t.id_torneo, t.nombre_torneo, t.fecha_inicio, t.lugar, m.nombre_modulo AS disciplina
     FROM torneos t
     LEFT JOIN modulos_competencia m ON t.id_modulo = m.id_modulo
     WHERE t.fecha_inicio IS NOT NULL
+      AND t.privacidad != 'privado'
     ORDER BY t.fecha_inicio ASC
 ");
 $stmtGlobal->execute();

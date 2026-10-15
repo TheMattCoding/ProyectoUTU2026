@@ -28,9 +28,10 @@ if (!empty($fotoPerfilRaw)) {
 }
 
 // Comodines % para la búsqueda parcial por coincidencia de letras/palabras
+// Comodines % para la búsqueda parcial por coincidencia de letras/palabras
 $paramBusqueda = '%' . $busqueda . '%';
 
-// Asignamos marcadores de posición independientes (:q1, :q2) para evitar el error HY093
+// Asignamos marcadores de posición independientes para filtrar los privados
 $sql = "SELECT t.*, 
                m.nombre_modulo AS disciplina,
                c.max_participantes,
@@ -38,14 +39,26 @@ $sql = "SELECT t.*,
         FROM torneos t
         LEFT JOIN modulos_competencia m ON t.id_modulo = m.id_modulo
         LEFT JOIN configuracion_torneo c ON t.id_torneo = c.id_torneo
-        WHERE t.nombre_torneo LIKE :q1 
-           OR m.nombre_modulo LIKE :q2
+        WHERE (t.nombre_torneo LIKE :q1 OR m.nombre_modulo LIKE :q2)
+          AND (
+                t.privacidad != 'privado' 
+                OR :rol_actual = 'administrador' 
+                OR t.id_organizador = :id_usuario_org
+                OR EXISTS (
+                    SELECT 1 FROM inscripciones_torneo i_sub
+                    JOIN participantes p_sub ON i_sub.id_participante = p_sub.id_participante
+                    WHERE i_sub.id_torneo = t.id_torneo AND p_sub.id_usuario = :id_usuario_part
+                )
+          )
         ORDER BY t.id_torneo DESC";
 
 $stmt = $pdo->prepare($sql);
 $stmt->execute([
-    ':q1' => $paramBusqueda,
-    ':q2' => $paramBusqueda
+    ':q1'             => $paramBusqueda,
+    ':q2'             => $paramBusqueda,
+    ':rol_actual'     => $rolActual,
+    ':id_usuario_org' => $idUsuarioActual ?? 0,
+    ':id_usuario_part'=> $idUsuarioActual ?? 0
 ]);
 
 $torneos = $stmt->fetchAll(PDO::FETCH_ASSOC);
