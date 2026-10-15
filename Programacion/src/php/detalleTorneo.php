@@ -36,6 +36,7 @@ if (!$idTorneo) {
 $sql = "SELECT t.*, 
                m.nombre_modulo AS disciplina,
                c.max_participantes,
+               c.formato,
                (SELECT COUNT(*) FROM inscripciones_torneo i WHERE i.id_torneo = t.id_torneo) AS total_inscritos
         FROM torneos t
         LEFT JOIN modulos_competencia m ON t.id_modulo = m.id_modulo
@@ -317,11 +318,12 @@ $yaInscrito = in_array($estadoInscripcionUser, ['confirmado', 'pendiente']);
             </p>
         </section>
 
-        <section class="rejilla-info-tecnica">
-            <div class="tarjeta-tecnica">
-                <div class="etiqueta-tarjeta-tecnica">Formato</div>
-                <div class="valor-tarjeta-tecnica"><?php echo htmlspecialchars($torneo['formato'] ?? 'Estándar'); ?></div>
-            </div>
+        <div class="tarjeta-tecnica">
+            <div class="etiqueta-tarjeta-tecnica">Formato</div>
+                <div class="valor-tarjeta-tecnica">
+                     <?php echo htmlspecialchars(!empty($torneo['formato']) ? $torneo['formato'] : 'Estándar'); ?>
+                </div>
+        </div>
             <div class="tarjeta-tecnica">
                 <div class="etiqueta-tarjeta-tecnica">Creador</div>
                 <div class="valor-tarjeta-tecnica"><?php echo htmlspecialchars($nombreCreador); ?></div>
@@ -385,27 +387,6 @@ $yaInscrito = in_array($estadoInscripcionUser, ['confirmado', 'pendiente']);
         </div>
         <?php endif; ?>
 
-        <!-- Ventana Flotante Modal -->
-        <div id="modal-inscripcion" class="modal-overlay">
-            <div class="modal-contenido">
-                <button type="button" id="btn-cerrar-modal" class="modal-cerrar">&times;</button>
-                <h3>Inscripción al Torneo</h3>
-                <p class="modal-subtitulo">Ingresa los datos para confirmar tu participación.</p>
-            
-                <form action="logica/inscribir.php" method="POST">
-                    <input type="hidden" name="id_torneo" value="<?php echo $idTorneo; ?>">
-                
-                    <div class="grupo-entrada">
-                        <label for="nombre_equipo" class="etiqueta-entrada">Nombre del Equipo / Participante:</label>
-                        <input type="text" id="nombre_equipo" name="nombre_equipo" required placeholder="Ej: Epsilon FC / Tu Nombre" class="control-formulario-entrada">
-                    </div>
-
-                    <button type="submit" class="btn-principal">
-                        CONFIRMAR INSCRIPCIÓN
-                    </button>
-                </form>
-            </div>
-        </div>
 
         <!-- Botón para Cancelar Inscripción -->
         <?php if ($yaInscrito): ?>

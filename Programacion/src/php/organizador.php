@@ -508,9 +508,9 @@ try {
                 <!-- Pestaña 1: Torneos Asignados -->
                 <div class="seccion-organizador panel-torneos">
                     <div class="encabezado-seccion-enlinea">
-                        <h3 class="titulo-seccion">Tus Competencias</h3>
+                        <h3 class="titulo-seccion">Torneos Asignados</h3>
                     </div>
-                    <p class="subtitulo-seccion">Lista de torneos bajo tu estricta supervisión y desarrollo.</p>
+                    <p class="subtitulo-seccion">Consulta la lista de torneos bajo tu gestión.</p>
                     
                     <!-- Alertas Pestaña Torneos -->
                     <?php if (!empty($mensajeExito) && $pestanaActiva === 'torneos'): ?>
@@ -752,18 +752,56 @@ try {
 
                 <!-- Pestaña 4: Reportes -->
                 <div class="seccion-organizador panel-reportes">
-                    <h3 class="titulo-seccion">Métricas y Reportes Operativos</h3>
-                    <p class="subtitulo-seccion">Exporta las planillas de juego o analiza los datos de rendimiento de la competencia.</p>
-                    
-                    <div class="cuadricula-acciones-reporte">
-                        <div class="tarjeta-descarga-reporte">
-                            <h5>Lista de Buena Fe (Inscritos)</h5>
-                            <button type="button" class="btn-secundario-chico">Descargar PDF</button>
+                    <h3 class="titulo-seccion">Reportes y Resúmenes de Torneos</h3>
+                    <p class="subtitulo-seccion">Generá e imprimí reportes detallados con las fechas, participantes y resultados de tus competencias.</p>
+
+                    <form action="logica/generarReporte.php" method="GET" target="_blank" class="formulario-organizador" style="margin-bottom: 25px;">
+                        <div class="grupo-formulario">
+                            <label for="id_torneo_reporte" class="etiqueta-formulario">Seleccionar Torneo</label>
+                            <select name="id_torneo" id="id_torneo_reporte" class="control-formulario-entrada" required>
+                                <option value="" disabled selected>Seleccioná un torneo</option>
+                                <option value="todos">Todos mis torneos (Resumen General)</option>
+                                <?php foreach ($torneosAsignados as $t): ?>
+                                    <option value="<?php echo $t['id_torneo']; ?>">
+                                        <?php echo htmlspecialchars($t['nombre_torneo']); ?> (<?php echo ucfirst($t['estado']); ?>)
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
                         </div>
-                        <div class="tarjeta-descarga-reporte">
-                            <h5>Tabla de Goleadores / MVP</h5>
-                            <button type="button" class="btn-secundario-chico">Exportar Excel</button>
+
+                        <div class="grupo-formulario" style="display: flex; gap: 15px;">
+                            <div style="flex: 1;">
+                                <label for="periodo_reporte" class="etiqueta-formulario">Período del Reporte</label>
+                                <select name="periodo" id="periodo_reporte" class="control-formulario-entrada">
+                                    <option value="completo">Histórico completo del torneo</option>
+                                    <option value="semanal">Últimos 7 días (Semanal)</option>
+                                    <option value="mensual">Último mes (Mensual)</option>
+                                </select>
+                            </div>
+                            
+                            <div style="flex: 1;">
+                                <label for="formato_exportacion" class="etiqueta-formulario">Formato de Exportación</label>
+                                <select name="formato" id="formato_exportacion" class="control-formulario-entrada">
+                                    <option value="pdf">Documento PDF</option>
+                                    <option value="excel">Planilla Excel (CSV)</option>
+                                </select>
+                            </div>
                         </div>
+
+                        <div class="acciones-formulario" style="margin-top: 15px;">
+                            <button type="submit" class="btn-guardar" style="display: inline-flex; align-items: center; gap: 8px;">
+                                Generar Reporte
+                            </button>
+                        </div>
+                    </form>
+
+                    <div style="background-color: rgba(255, 255, 255, 0.03); border: 1px solid #333; border-radius: 8px; padding: 15px;">
+                        <h4 style="color: #2ec4b6; margin-bottom: 10px; font-size: 0.95em;">Contenido de los reportes generados:</h4>
+                        <ul style="color: #ccc; font-size: 0.88em; line-height: 1.6; margin-left: 20px;">
+                            <li><strong>Datos Generales:</strong> Nombre de la competencia, disciplina, fecha de inicio/fin y estado actual.</li>
+                            <li><strong>Nómina de Participantes:</strong> Lista de inscritos confirmados y en espera.</li>
+                            <li><strong>Historial de Partidos:</strong> Enfrentamientos organizados por rondas, marcadores finales e identificación de ganadores.</li>
+                        </ul>
                     </div>
                 </div>
 

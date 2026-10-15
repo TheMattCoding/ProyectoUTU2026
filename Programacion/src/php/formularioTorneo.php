@@ -411,9 +411,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <label for="formato">Formato de Clasificación</label>
                                 <select id="formato" name="formato" required>
                                     <option value="" disabled selected>Seleccione el formato</option>
-                                    <option value="eliminatoria">Eliminación directa</option>
-                                    <option value="liga">Liga (Todos contra todos)</option>
-                                    <option value="suizo">Sistema Suizo</option>
+                                    <option value="Eliminatoria Directa">Eliminación directa</option>
+                                    <option value="Liga (Todos contra todos)">Liga (Todos contra todos)</option>
+                                    <option value="Sistema Suizo">Sistema Suizo</option>
                                 </select>
                             </div>
                             <div class="grupo-formulario columna-expandible">
