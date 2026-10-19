@@ -1,7 +1,7 @@
 <?php
 
-$host = 'localhost';
-$dbname = 'sistema_torneos';
+$host = 'db';
+$dbname = 'sgdm_db';
 $username = 'root';
 $password = '';
 
