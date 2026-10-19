@@ -157,7 +157,7 @@ if ($formato === 'excel') {
     <head>
         <meta charset="UTF-8">
         <title>SGDM - Reporte del Torneo</title>
-        <link rel="icon" type="image/png" href="../img/logoapp2.jpeg">
+        <link rel="icon" type="image/jpeg" href="../../img/logoapp2.jpeg">
         <link rel="stylesheet" href="../../css/generarReporte.css">
     </head>
     <body>
