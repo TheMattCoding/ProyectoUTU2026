@@ -26,7 +26,7 @@ function verificarYAvanzarTorneo(PDO $pdo, int $idTorneo): void {
 
         // 2. Obtener la ronda que actualmente está en curso
         $stmtRonda = $pdo->prepare("
-            SELECT id_ronda, numero_ronda 
+            SELECT id_ronda, numero_ronda, nombre_ronda 
             FROM rondas 
             WHERE id_torneo = ? AND estado_ronda = 'en_curso' 
             ORDER BY numero_ronda DESC LIMIT 1
@@ -54,15 +54,16 @@ function verificarYAvanzarTorneo(PDO $pdo, int $idTorneo): void {
         }
 
         // 4. Marcar la ronda actual como finalizada
-        $stmtCerrarRonda = $pdo->prepare("UPDATE rondas SET estado_ronda = 'finalizado' WHERE id_ronda = ?");
+        $stmtCerrarRonda = $pdo->prepare("UPDATE rondas SET estado_ronda = 'finalizada' WHERE id_ronda = ?");
         $stmtCerrarRonda->execute([$idRonda]);
 
         // 5. Determinar el flujo de avance según el formato
         switch ($formato) {
             case 'eliminatoria':
+            case 'eliminatoria directa':
             case 'eliminacion_directa':
             case 'eliminacion directa':
-                avanzarEliminacionDirecta($pdo, $idTorneo, $idRonda, $numRonda);
+                avanzarEliminacionDirecta($pdo, $idTorneo, $idRonda, $numRonda, $rondaActual['nombre_ronda']);
                 break;
 
             case 'suizo':
@@ -72,6 +73,7 @@ function verificarYAvanzarTorneo(PDO $pdo, int $idTorneo): void {
                 break;
 
             case 'liga':
+            case 'todos contra todos':
                 avanzarLiga($pdo, $idTorneo, $numRonda);
                 break;
         }
@@ -81,8 +83,17 @@ function verificarYAvanzarTorneo(PDO $pdo, int $idTorneo): void {
     }
 }
 
-function avanzarEliminacionDirecta(PDO $pdo, int $idTorneo, int $idRondaActual, int $numRondaActual): void {
-    // 1. Obtener ganadores y perdedores de la ronda recién finalizada
+function avanzarEliminacionDirecta(PDO $pdo, int $idTorneo, int $idRondaActual, int $numRondaActual, string $nombreRondaActual): void {
+    
+    // Si la ronda que acaba de finalizar son las "Finales", calcular posiciones finales y concluir torneo
+    if ($nombreRondaActual === 'Finales' || $nombreRondaActual === 'Final') {
+        actualizarPosicionesFinalesEliminatoria($pdo, $idTorneo, $idRondaActual);
+        $stmtFin = $pdo->prepare("UPDATE torneos SET estado = 'finalizado' WHERE id_torneo = ?");
+        $stmtFin->execute([$idTorneo]);
+        return;
+    }
+
+    // Obtener resultados de la ronda que recién terminó
     $stmtPartidos = $pdo->prepare("
         SELECT e.id_local, e.id_visitante, r.id_ganador 
         FROM resultados r
@@ -103,7 +114,6 @@ function avanzarEliminacionDirecta(PDO $pdo, int $idTorneo, int $idRondaActual, 
     $numGanadores = count($ganadores);
 
     if ($numGanadores <= 1) {
-        // Torneo completado
         $stmtFin = $pdo->prepare("UPDATE torneos SET estado = 'finalizado' WHERE id_torneo = ?");
         $stmtFin->execute([$idTorneo]);
         return;
@@ -111,9 +121,8 @@ function avanzarEliminacionDirecta(PDO $pdo, int $idTorneo, int $idRondaActual, 
 
     $siguienteNumRonda = $numRondaActual + 1;
 
-    // Caso especial: Si venimos de Semifinales (2 ganadores)
+    // CASO SEMIFINALES (2 Ganadores): Generar la ronda "Finales" con 3°/4° puesto + Gran Final
     if ($numGanadores === 2) {
-        // Crear Ronda para las Finales
         $stmtInsRonda = $pdo->prepare("
             INSERT INTO rondas (id_torneo, numero_ronda, nombre_ronda, estado_ronda) 
             VALUES (?, ?, 'Finales', 'en_curso')
@@ -126,16 +135,16 @@ function avanzarEliminacionDirecta(PDO $pdo, int $idTorneo, int $idRondaActual, 
             VALUES (?, ?, ?, 'pendiente')
         ");
 
-        // Partido por 3er y 4to Puesto
+        // 1. Partido por 3er y 4to Puesto (entre perdedores)
         $stmtEnfrentamiento->execute([$idRondaSiguiente, $perdedores[0], $perdedores[1]]);
 
-        // Partido de la Grande Final
+        // 2. Partido de la Gran Final (entre ganadores)
         $stmtEnfrentamiento->execute([$idRondaSiguiente, $ganadores[0], $ganadores[1]]);
 
         return;
     }
 
-    // Flujo estándar para rondas anteriores (Cuartos, Octavos, etc.)
+    // Para rondas previas (Cuartos, Octavos)
     $nombreRonda = obtenerNombreRonda($numGanadores);
     $stmtInsRonda = $pdo->prepare("
         INSERT INTO rondas (id_torneo, numero_ronda, nombre_ronda, estado_ronda) 
@@ -157,8 +166,44 @@ function avanzarEliminacionDirecta(PDO $pdo, int $idTorneo, int $idRondaActual, 
 }
 
 /**
- * Genera la siguiente fecha en Sistema Suizo si no se ha alcanzado el límite máximo.
+ * Calcula y asigna los puestos 1°, 2°, 3° y 4° al finalizar la ronda "Finales".
  */
+function actualizarPosicionesFinalesEliminatoria(PDO $pdo, int $idTorneo, int $idRondaFinal): void {
+    $stmt = $pdo->prepare("
+        SELECT e.id_local, e.id_visitante, r.id_ganador 
+        FROM enfrentamientos e
+        LEFT JOIN resultados r ON e.id_enfrentamiento = r.id_enfrentamiento
+        WHERE e.id_ronda = ?
+        ORDER BY e.id_enfrentamiento ASC
+    ");
+    $stmt->execute([$idRondaFinal]);
+    $partidos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    if (count($partidos) >= 2) {
+        $p3erPartido = $partidos[0];
+        $pFinal      = $partidos[1];
+
+        // 3° y 4° Puesto
+        $tercero = $p3erPartido['id_ganador'];
+        $cuarto  = ($tercero == $p3erPartido['id_local']) ? $p3erPartido['id_visitante'] : $p3erPartido['id_local'];
+
+        // 1° y 2° Puesto
+        $primero = $pFinal['id_ganador'];
+        $segundo = ($primero == $pFinal['id_local']) ? $pFinal['id_visitante'] : $pFinal['id_local'];
+
+        $stmtPos = $pdo->prepare("
+            UPDATE inscripciones_torneo 
+            SET posicion_final = ? 
+            WHERE id_torneo = ? AND (id_equipo = ? OR id_participante = ?)
+        ");
+
+        if ($primero) $stmtPos->execute([1, $idTorneo, $primero, $primero]);
+        if ($segundo) $stmtPos->execute([2, $idTorneo, $segundo, $segundo]);
+        if ($tercero) $stmtPos->execute([3, $idTorneo, $tercero, $tercero]);
+        if ($cuarto)  $stmtPos->execute([4, $idTorneo, $cuarto, $cuarto]);
+    }
+}
+
 function avanzarSistemaSuizo(PDO $pdo, int $idTorneo, int $numRondaActual): void {
     $stmtEquipos = $pdo->prepare("
         SELECT COUNT(*) FROM inscripciones_torneo 
@@ -167,7 +212,6 @@ function avanzarSistemaSuizo(PDO $pdo, int $idTorneo, int $numRondaActual): void
     $stmtEquipos->execute([$idTorneo]);
     $numEquipos = (int)$stmtEquipos->fetchColumn();
 
-    // Rondas totales estándar en Suizo = ceil(log2(N))
     $maxRondasSuizo = $numEquipos > 1 ? (int)ceil(log($numEquipos, 2)) : 1;
 
     if ($numRondaActual < $maxRondasSuizo) {
@@ -178,9 +222,6 @@ function avanzarSistemaSuizo(PDO $pdo, int $idTorneo, int $numRondaActual): void
     }
 }
 
-/**
- * Activa la siguiente jornada en formato Liga (donde el fixture ya está totalmente generado).
- */
 function avanzarLiga(PDO $pdo, int $idTorneo, int $numRondaActual): void {
     $siguienteRonda = $numRondaActual + 1;
 
@@ -197,9 +238,6 @@ function avanzarLiga(PDO $pdo, int $idTorneo, int $numRondaActual): void {
     }
 }
 
-/**
- * Cierra el torneo si no quedan enfrentamientos pendientes en ninguna ronda.
- */
 function verificarFinalizacionTorneo(PDO $pdo, int $idTorneo): void {
     $stmt = $pdo->prepare("
         SELECT COUNT(*) 

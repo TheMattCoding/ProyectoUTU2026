@@ -55,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $extensionesPermitidas = ['jpg', 'jpeg', 'png', 'webp'];
 
                         if (in_array($fileExtension, $extensionesPermitidas)) {
-                            $dirDestino = '../../img/perfiles/';
+                            $dirDestino = __DIR__ . '/../img/perfiles/';
                             if (!file_exists($dirDestino)) {
                                 mkdir($dirDestino, 0777, true);
                             }

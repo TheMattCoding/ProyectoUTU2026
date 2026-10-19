@@ -28,7 +28,9 @@ function generarFixtureEliminacionDirecta(PDO $pdo, int $idTorneo): bool {
         $stmtInscriptos = $pdo->prepare("
             SELECT COALESCE(id_equipo, id_participante) AS id_participante 
             FROM inscripciones_torneo 
-            WHERE id_torneo = ? AND (id_equipo IS NOT NULL OR id_participante IS NOT NULL)
+            WHERE id_torneo = ? 
+            AND (id_equipo IS NOT NULL OR id_participante IS NOT NULL)
+            AND LOWER(estado_inscripcion) = 'confirmado'
         ");
         $stmtInscriptos->execute([$idTorneo]);
         $equipos = $stmtInscriptos->fetchAll(PDO::FETCH_COLUMN);
