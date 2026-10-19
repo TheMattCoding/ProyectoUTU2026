@@ -168,16 +168,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     $sqlUpdate = $pdo->prepare("
                         UPDATE resultados 
-                        SET puntuacion = ?, id_ganador = ?, id_usuario_registro = ?, fecha_registro = NOW()
+                        SET puntuacion_local = ?, puntuacion_visitante = ?, id_ganador = ?, id_usuario_registro = ?, fecha_registro = NOW()
                         WHERE id_enfrentamiento = ?
                     ");
-                    $sqlUpdate->execute([$mLocal, $idGanador, $idUsuarioActual, $idEnfrentamiento]);
+                $sqlUpdate->execute([$mLocal, $mVisita, $idGanador, $idUsuarioActual, $idEnfrentamiento]);
                 } else {
                     $sqlInsert = $pdo->prepare("
-                        INSERT INTO resultados (id_enfrentamiento, puntuacion, id_ganador, id_usuario_registro, fecha_registro)
-                        VALUES (?, ?, ?, ?, NOW())
+                        INSERT INTO resultados (id_enfrentamiento, puntuacion_local, puntuacion_visitante, id_ganador, id_usuario_registro, fecha_registro)
+                        VALUES (?, ?, ?, ?, ?, NOW())
                     ");
-                    $sqlInsert->execute([$idEnfrentamiento, $mLocal, $idGanador, $idUsuarioActual]);
+                    $sqlInsert->execute([$idEnfrentamiento, $mLocal, $mVisita, $idGanador, $idUsuarioActual]);
                 }
 
                 $pdo->commit();
@@ -259,8 +259,8 @@ try {
                     r.nombre_ronda,
                     t.id_torneo,
                     t.nombre_torneo,
-                    res.puntuacion AS marcador_local,
-                    0 AS marcador_visita,
+                    res.puntuacion_local AS marcador_local,
+                    res.puntuacion_visitante AS marcador_visita,
                     res.fecha_registro
                 FROM enfrentamientos e
                 INNER JOIN rondas r ON e.id_ronda = r.id_ronda

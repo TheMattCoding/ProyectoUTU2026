@@ -30,14 +30,16 @@ function iniciarTorneo(PDO $pdo, int $idTorneo, bool $forzarManual = false): arr
 
     // 2. Contar participantes confirmados
     $stmtInscritos = $pdo->prepare("
-        SELECT COUNT(*) FROM inscripciones_torneo 
-        WHERE id_torneo = ? AND (id_equipo IS NOT NULL OR id_participante IS NOT NULL)
+    SELECT COUNT(*) FROM inscripciones_torneo 
+    WHERE id_torneo = ? 
+      AND (id_equipo IS NOT NULL OR id_participante IS NOT NULL)
+      AND LOWER(estado_inscripcion) = 'confirmado'
     ");
     $stmtInscritos->execute([$idTorneo]);
     $cantidadInscritos = (int)$stmtInscritos->fetchColumn();
 
     if ($cantidadInscritos < 2) {
-        return ['exito' => false, 'mensaje' => 'Se necesitan al menos 2 participantes inscritos para iniciar.'];
+        return ['exito' => false, 'mensaje' => 'Se necesitan al menos 2 participantes confirmados para iniciar el torneo.'];
     }
 
     // 3. Validar cupos si no es un inicio forzado manualmente

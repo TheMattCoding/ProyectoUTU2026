@@ -29,9 +29,11 @@ function procesarTorneosProgramados(PDO $pdo): void {
 
             // 2. Contar inscriptos confirmados (equipos o participantes)
             $stmtCount = $pdo->prepare("
-                SELECT COUNT(*) 
-                FROM inscripciones_torneo 
-                WHERE id_torneo = ? AND (id_equipo IS NOT NULL OR id_participante IS NOT NULL)
+            SELECT COUNT(*) 
+            FROM inscripciones_torneo 
+            WHERE id_torneo = ? 
+                AND (id_equipo IS NOT NULL OR id_participante IS NOT NULL)
+                AND LOWER(estado_inscripcion) = 'confirmado'
             ");
             $stmtCount->execute([$idTorneo]);
             $cantidadInscriptos = (int)$stmtCount->fetchColumn();
@@ -45,14 +47,20 @@ function procesarTorneosProgramados(PDO $pdo): void {
             }
 
             // 4. Generar el fixture según el formato registrado
+            $formato = strtolower(trim($torneo['formato']));
+
             switch ($formato) {
                 case 'liga':
+                case 'liga (todos contra todos)':
+                case 'todos contra todos':
                     generarFixtureLiga($pdo, $idTorneo);
                     break;
 
                 case 'eliminatoria':
+                case 'eliminatoria directa':
                 case 'eliminacion_directa':
                 case 'eliminacion directa':
+                case 'eliminatoria_directa':
                     generarFixtureEliminacionDirecta($pdo, $idTorneo);
                     break;
 
