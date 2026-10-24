@@ -53,6 +53,42 @@ if ($idTorneoSeleccionado > 0) {
 // 3. Obtener la tabla de posiciones / inscritos del torneo
 $posiciones = [];
 if ($idTorneoSeleccionado > 0) {
+    // Si el torneo está finalizado, intentamos deducir el top 4 desde las Finales si posicion_final está NULL
+    if ($torneoActual && strtolower($torneoActual['estado']) === 'finalizado') {
+        $sqlCheckPos = "SELECT COUNT(*) FROM inscripciones_torneo WHERE id_torneo = :id AND posicion_final IS NOT NULL";
+        $stmtCheck = $pdo->prepare($sqlCheckPos);
+        $stmtCheck->execute([':id' => $idTorneoSeleccionado]);
+        
+        if ((int)$stmtCheck->fetchColumn() === 0) {
+            // Asignación dinámica para Eliminación Directa si no se ejecutó el UPDATE previo
+            $sqlFinales = "SELECT e.id_local, e.id_visitante, res.id_ganador, r.nombre_ronda
+                           FROM enfrentamientos e
+                           JOIN rondas r ON e.id_ronda = r.id_ronda
+                           LEFT JOIN resultados res ON e.id_enfrentamiento = res.id_enfrentamiento
+                           WHERE r.id_torneo = :id AND (r.nombre_ronda = 'Finales' OR r.nombre_ronda = 'Final')
+                           ORDER BY e.id_enfrentamiento ASC";
+            $stmtFin = $pdo->prepare($sqlFinales);
+            $stmtFin->execute([':id' => $idTorneoSeleccionado]);
+            $partidosFinales = $stmtFin->fetchAll(PDO::FETCH_ASSOC);
+
+            if (count($partidosFinales) >= 2) {
+                $p3er = $partidosFinales[0];
+                $p1ro = $partidosFinales[1];
+
+                $campeonId = $p1ro['id_ganador'];
+                $subcampeonId = ($campeonId == $p1ro['id_local']) ? $p1ro['id_visitante'] : $p1ro['id_local'];
+                $terceroId = $p3er['id_ganador'];
+                $cuartoId = ($terceroId == $p3er['id_local']) ? $p3er['id_visitante'] : $p3er['id_local'];
+
+                $stmtUpd = $pdo->prepare("UPDATE inscripciones_torneo SET posicion_final = ? WHERE id_torneo = ? AND (id_equipo = ? OR id_participante = ?)");
+                if ($campeonId) $stmtUpd->execute([1, $idTorneoSeleccionado, $campeonId, $campeonId]);
+                if ($subcampeonId) $stmtUpd->execute([2, $idTorneoSeleccionado, $subcampeonId, $subcampeonId]);
+                if ($terceroId) $stmtUpd->execute([3, $idTorneoSeleccionado, $terceroId, $terceroId]);
+                if ($cuartoId) $stmtUpd->execute([4, $idTorneoSeleccionado, $cuartoId, $cuartoId]);
+            }
+        }
+    }
+
     $sqlPosiciones = "SELECT i.posicion_final, 
                              COALESCE(CONCAT(p.nombre, ' ', p.apellido), u.username, CONCAT('Equipo ', i.id_equipo)) AS competidor,
                              i.estado_inscripcion
@@ -334,65 +370,84 @@ if ($idTorneoSeleccionado > 0) {
                     </h3>
                     
                     <div class="tabla-contenedor">
-                        <table class="tabla-posiciones">
-                            <thead>
-                                <tr>
-                                    <th class="col-pos">#</th>
-                                    <th>Competidor / Equipo</th>
-                                    <th class="col-estado">Estado</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php if (empty($posiciones)): ?>
-                                    <tr>
-                                        <td colspan="3" class="sin-datos">No hay participantes registrados en este torneo.</td>
-                                    </tr>
-                                <?php else: ?>
-                                    <?php foreach ($posiciones as $index => $pos): 
-                                        $numPos = $pos['posicion_final'] ?? ($index + 1);
-                                        $clasePodio = '';
-                                        if ($numPos == 1) $clasePodio = 'podio-oro';
-                                        elseif ($numPos == 2) $clasePodio = 'podio-plata';
-                                        elseif ($numPos == 3) $clasePodio = 'podio-bronce';
-                                    ?>
-                                        <tr class="<?= $clasePodio ?>">
-                                            <td class="col-pos font-bold">
-                                                <?php if ($numPos == 1): ?>
-                                                    <svg class="icono-podio podio-oro-svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
-                                                        <circle cx="12" cy="9" r="6" fill="#D4AF37" stroke="#B89628"/>
-                                                        <path d="M9 14.5L7 22l5-2.5L17 22l-2-7.5" stroke="#D4AF37"/>
-                                                        <text x="12" y="11.5" font-size="8" font-weight="900" fill="#111" text-anchor="middle">1</text>
-                                                    </svg>
-                                                <?php elseif ($numPos == 2): ?>
-                                                    <svg class="icono-podio podio-plata-svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
-                                                        <circle cx="12" cy="9" r="6" fill="#C0C0C0" stroke="#999999"/>
-                                                        <path d="M9 14.5L7 22l5-2.5L17 22l-2-7.5" stroke="#C0C0C0"/>
-                                                        <text x="12" y="11.5" font-size="8" font-weight="900" fill="#111" text-anchor="middle">2</text>
-                                                    </svg>
-                                                <?php elseif ($numPos == 3): ?>
-                                                    <svg class="icono-podio podio-bronce-svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
-                                                        <circle cx="12" cy="9" r="6" fill="#CD7F32" stroke="#A05A1C"/>
-                                                        <path d="M9 14.5L7 22l5-2.5L17 22l-2-7.5" stroke="#CD7F32"/>
-                                                        <text x="12" y="11.5" font-size="8" font-weight="900" fill="#111" text-anchor="middle">3</text>
-                                                    </svg>
-                                                <?php else: ?>
-                                                    <?= $numPos ?>
-                                                <?php endif; ?>
-                                            </td>
-                                            <td class="nombre-competidor font-bold">
-                                                <?= htmlspecialchars($pos['competidor']) ?>
-                                            </td>
-                                            <td class="col-estado">
-                                                <span class="badge-inscripcion <?= strtolower($pos['estado_inscripcion']) ?>">
-                                                    <?= htmlspecialchars(ucfirst($pos['estado_inscripcion'])) ?>
-                                                </span>
-                                            </td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                <?php endif; ?>
-                            </tbody>
-                        </table>
-                    </div>
+    <table class="tabla-posiciones">
+        <thead>
+            <tr>
+                <th class="col-pos">#</th>
+                <th>Competidor / Equipo</th>
+                <th class="col-estado">Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php if (empty($posiciones)): ?>
+                <tr>
+                    <td colspan="3" class="sin-datos">No hay participantes registrados en este torneo.</td>
+                </tr>
+            <?php else: ?>
+                <?php foreach ($posiciones as $index => $pos): 
+                    $numPos = $pos['posicion_final'] ?? ($index + 1);
+                    $clasePodio = '';
+                    if ($numPos == 1) $clasePodio = 'podio-oro';
+                    elseif ($numPos == 2) $clasePodio = 'podio-plata';
+                    elseif ($numPos == 3) $clasePodio = 'podio-bronce';
+                ?>
+                    <tr class="<?= $clasePodio ?>">
+                        <td class="col-pos font-bold">
+                            <?php if ($numPos == 1): ?>
+                                <svg class="icono-podio podio-oro-svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="9" r="6" fill="#D4AF37" stroke="#B89628"/>
+                                    <path d="M9 14.5L7 22l5-2.5L17 22l-2-7.5" stroke="#D4AF37"/>
+                                    <text x="12" y="11.5" font-size="8" font-weight="900" fill="#111" text-anchor="middle">1</text>
+                                </svg>
+                            <?php elseif ($numPos == 2): ?>
+                                <svg class="icono-podio podio-plata-svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="9" r="6" fill="#C0C0C0" stroke="#999999"/>
+                                    <path d="M9 14.5L7 22l5-2.5L17 22l-2-7.5" stroke="#C0C0C0"/>
+                                    <text x="12" y="11.5" font-size="8" font-weight="900" fill="#111" text-anchor="middle">2</text>
+                                </svg>
+                            <?php elseif ($numPos == 3): ?>
+                                <svg class="icono-podio podio-bronce-svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="9" r="6" fill="#CD7F32" stroke="#A05A1C"/>
+                                    <path d="M9 14.5L7 22l5-2.5L17 22l-2-7.5" stroke="#CD7F32"/>
+                                    <text x="12" y="11.5" font-size="8" font-weight="900" fill="#111" text-anchor="middle">3</text>
+                                </svg>
+                            <?php else: ?>
+                                <?= $numPos ?>
+                            <?php endif; ?>
+                        </td>
+                        <td class="nombre-competidor font-bold">
+                            <span class="nombre-texto"><?= htmlspecialchars($pos['competidor']) ?></span>
+                            <?php if ($numPos == 1 && strtolower($torneoActual['estado']) === 'finalizado'): ?>
+                                <span class="badge-campeon" title="¡Campeón del Torneo!">
+                                    <svg class="icono-trofeo-animado" viewBox="0 0 24 24" width="18" height="18" fill="#D4AF37" stroke="#B89628" stroke-width="1.5">
+                                        <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+                                        <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+                                        <path d="M4 22h16"></path>
+                                        <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
+                                        <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
+                                        <path d="M18 2H6v7a6 6 0 0 0 12 0V2z"></path>
+                                    </svg>
+                                    <span class="texto-campeon">CAMPEÓN</span>
+                                </span>
+                            <?php endif; ?>
+                        </td>
+                        <td class="col-estado">
+                            <?php 
+                                $estadoMostrar = (strtolower($torneoActual['estado']) === 'finalizado') 
+                                    ? 'Finalizado' 
+                                    : (strtolower($pos['estado_inscripcion']) === 'pendiente' ? 'Confirmado' : ucfirst($pos['estado_inscripcion']));
+                                $claseBadge = (strtolower($torneoActual['estado']) === 'finalizado') ? 'finalizado' : 'activo';
+                            ?>
+                            <span class="badge-inscripcion <?= $claseBadge ?>">
+                                <?= htmlspecialchars($estadoMostrar) ?>
+                            </span>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        </tbody>
+    </table>
+</div>
                 </section>
 
                 <!-- 2. Enfrentamientos y Resultados por Ronda -->
